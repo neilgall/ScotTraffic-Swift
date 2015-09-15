@@ -1,0 +1,504 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		280493591BA8BB4800990BD1 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 280493581BA8BB4800990BD1 /* AppDelegate.swift */; };
+		2804935B1BA8BB4800990BD1 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2804935A1BA8BB4800990BD1 /* ViewController.swift */; };
+		2804935E1BA8BB4800990BD1 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2804935C1BA8BB4800990BD1 /* Main.storyboard */; };
+		280493601BA8BB4800990BD1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2804935F1BA8BB4800990BD1 /* Assets.xcassets */; };
+		280493631BA8BB4800990BD1 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 280493611BA8BB4800990BD1 /* LaunchScreen.storyboard */; };
+		2804936E1BA8BB4800990BD1 /* ScotTrafficTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2804936D1BA8BB4800990BD1 /* ScotTrafficTests.swift */; };
+		280493791BA8BB4800990BD1 /* ScotTrafficUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 280493781BA8BB4800990BD1 /* ScotTrafficUITests.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		2804936A1BA8BB4800990BD1 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 2804934D1BA8BB4800990BD1 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 280493541BA8BB4800990BD1;
+			remoteInfo = ScotTraffic;
+		};
+		280493751BA8BB4800990BD1 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 2804934D1BA8BB4800990BD1 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 280493541BA8BB4800990BD1;
+			remoteInfo = ScotTraffic;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		280493551BA8BB4800990BD1 /* ScotTraffic.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ScotTraffic.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		280493581BA8BB4800990BD1 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		2804935A1BA8BB4800990BD1 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		2804935D1BA8BB4800990BD1 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		2804935F1BA8BB4800990BD1 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		280493621BA8BB4800990BD1 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		280493641BA8BB4800990BD1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		280493691BA8BB4800990BD1 /* ScotTrafficTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ScotTrafficTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		2804936D1BA8BB4800990BD1 /* ScotTrafficTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScotTrafficTests.swift; sourceTree = "<group>"; };
+		2804936F1BA8BB4800990BD1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		280493741BA8BB4800990BD1 /* ScotTrafficUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ScotTrafficUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		280493781BA8BB4800990BD1 /* ScotTrafficUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScotTrafficUITests.swift; sourceTree = "<group>"; };
+		2804937A1BA8BB4800990BD1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		280493521BA8BB4800990BD1 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		280493661BA8BB4800990BD1 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		280493711BA8BB4800990BD1 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		2804934C1BA8BB4800990BD1 = {
+			isa = PBXGroup;
+			children = (
+				280493571BA8BB4800990BD1 /* ScotTraffic */,
+				2804936C1BA8BB4800990BD1 /* ScotTrafficTests */,
+				280493771BA8BB4800990BD1 /* ScotTrafficUITests */,
+				280493561BA8BB4800990BD1 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		280493561BA8BB4800990BD1 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				280493551BA8BB4800990BD1 /* ScotTraffic.app */,
+				280493691BA8BB4800990BD1 /* ScotTrafficTests.xctest */,
+				280493741BA8BB4800990BD1 /* ScotTrafficUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		280493571BA8BB4800990BD1 /* ScotTraffic */ = {
+			isa = PBXGroup;
+			children = (
+				280493581BA8BB4800990BD1 /* AppDelegate.swift */,
+				2804935A1BA8BB4800990BD1 /* ViewController.swift */,
+				2804935C1BA8BB4800990BD1 /* Main.storyboard */,
+				2804935F1BA8BB4800990BD1 /* Assets.xcassets */,
+				280493611BA8BB4800990BD1 /* LaunchScreen.storyboard */,
+				280493641BA8BB4800990BD1 /* Info.plist */,
+			);
+			path = ScotTraffic;
+			sourceTree = "<group>";
+		};
+		2804936C1BA8BB4800990BD1 /* ScotTrafficTests */ = {
+			isa = PBXGroup;
+			children = (
+				2804936D1BA8BB4800990BD1 /* ScotTrafficTests.swift */,
+				2804936F1BA8BB4800990BD1 /* Info.plist */,
+			);
+			path = ScotTrafficTests;
+			sourceTree = "<group>";
+		};
+		280493771BA8BB4800990BD1 /* ScotTrafficUITests */ = {
+			isa = PBXGroup;
+			children = (
+				280493781BA8BB4800990BD1 /* ScotTrafficUITests.swift */,
+				2804937A1BA8BB4800990BD1 /* Info.plist */,
+			);
+			path = ScotTrafficUITests;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		280493541BA8BB4800990BD1 /* ScotTraffic */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2804937D1BA8BB4800990BD1 /* Build configuration list for PBXNativeTarget "ScotTraffic" */;
+			buildPhases = (
+				280493511BA8BB4800990BD1 /* Sources */,
+				280493521BA8BB4800990BD1 /* Frameworks */,
+				280493531BA8BB4800990BD1 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = ScotTraffic;
+			productName = ScotTraffic;
+			productReference = 280493551BA8BB4800990BD1 /* ScotTraffic.app */;
+			productType = "com.apple.product-type.application";
+		};
+		280493681BA8BB4800990BD1 /* ScotTrafficTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 280493801BA8BB4800990BD1 /* Build configuration list for PBXNativeTarget "ScotTrafficTests" */;
+			buildPhases = (
+				280493651BA8BB4800990BD1 /* Sources */,
+				280493661BA8BB4800990BD1 /* Frameworks */,
+				280493671BA8BB4800990BD1 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				2804936B1BA8BB4800990BD1 /* PBXTargetDependency */,
+			);
+			name = ScotTrafficTests;
+			productName = ScotTrafficTests;
+			productReference = 280493691BA8BB4800990BD1 /* ScotTrafficTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		280493731BA8BB4800990BD1 /* ScotTrafficUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 280493831BA8BB4800990BD1 /* Build configuration list for PBXNativeTarget "ScotTrafficUITests" */;
+			buildPhases = (
+				280493701BA8BB4800990BD1 /* Sources */,
+				280493711BA8BB4800990BD1 /* Frameworks */,
+				280493721BA8BB4800990BD1 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				280493761BA8BB4800990BD1 /* PBXTargetDependency */,
+			);
+			name = ScotTrafficUITests;
+			productName = ScotTrafficUITests;
+			productReference = 280493741BA8BB4800990BD1 /* ScotTrafficUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		2804934D1BA8BB4800990BD1 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0700;
+				ORGANIZATIONNAME = "Neil Gall";
+				TargetAttributes = {
+					280493541BA8BB4800990BD1 = {
+						CreatedOnToolsVersion = 7.0;
+					};
+					280493681BA8BB4800990BD1 = {
+						CreatedOnToolsVersion = 7.0;
+						TestTargetID = 280493541BA8BB4800990BD1;
+					};
+					280493731BA8BB4800990BD1 = {
+						CreatedOnToolsVersion = 7.0;
+						TestTargetID = 280493541BA8BB4800990BD1;
+					};
+				};
+			};
+			buildConfigurationList = 280493501BA8BB4800990BD1 /* Build configuration list for PBXProject "ScotTraffic" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 2804934C1BA8BB4800990BD1;
+			productRefGroup = 280493561BA8BB4800990BD1 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				280493541BA8BB4800990BD1 /* ScotTraffic */,
+				280493681BA8BB4800990BD1 /* ScotTrafficTests */,
+				280493731BA8BB4800990BD1 /* ScotTrafficUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		280493531BA8BB4800990BD1 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				280493631BA8BB4800990BD1 /* LaunchScreen.storyboard in Resources */,
+				280493601BA8BB4800990BD1 /* Assets.xcassets in Resources */,
+				2804935E1BA8BB4800990BD1 /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		280493671BA8BB4800990BD1 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		280493721BA8BB4800990BD1 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		280493511BA8BB4800990BD1 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2804935B1BA8BB4800990BD1 /* ViewController.swift in Sources */,
+				280493591BA8BB4800990BD1 /* AppDelegate.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		280493651BA8BB4800990BD1 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2804936E1BA8BB4800990BD1 /* ScotTrafficTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		280493701BA8BB4800990BD1 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				280493791BA8BB4800990BD1 /* ScotTrafficUITests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		2804936B1BA8BB4800990BD1 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 280493541BA8BB4800990BD1 /* ScotTraffic */;
+			targetProxy = 2804936A1BA8BB4800990BD1 /* PBXContainerItemProxy */;
+		};
+		280493761BA8BB4800990BD1 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 280493541BA8BB4800990BD1 /* ScotTraffic */;
+			targetProxy = 280493751BA8BB4800990BD1 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		2804935C1BA8BB4800990BD1 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				2804935D1BA8BB4800990BD1 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		280493611BA8BB4800990BD1 /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				280493621BA8BB4800990BD1 /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		2804937B1BA8BB4800990BD1 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		2804937C1BA8BB4800990BD1 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		2804937E1BA8BB4800990BD1 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				INFOPLIST_FILE = ScotTraffic/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = uk.co.ScotTraffic;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		2804937F1BA8BB4800990BD1 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				INFOPLIST_FILE = ScotTraffic/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = uk.co.ScotTraffic;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		280493811BA8BB4800990BD1 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				INFOPLIST_FILE = ScotTrafficTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = uk.co.ScotTrafficTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ScotTraffic.app/ScotTraffic";
+			};
+			name = Debug;
+		};
+		280493821BA8BB4800990BD1 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				INFOPLIST_FILE = ScotTrafficTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = uk.co.ScotTrafficTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ScotTraffic.app/ScotTraffic";
+			};
+			name = Release;
+		};
+		280493841BA8BB4800990BD1 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				INFOPLIST_FILE = ScotTrafficUITests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = uk.co.ScotTrafficUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_TARGET_NAME = ScotTraffic;
+				USES_XCTRUNNER = YES;
+			};
+			name = Debug;
+		};
+		280493851BA8BB4800990BD1 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				INFOPLIST_FILE = ScotTrafficUITests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = uk.co.ScotTrafficUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_TARGET_NAME = ScotTraffic;
+				USES_XCTRUNNER = YES;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		280493501BA8BB4800990BD1 /* Build configuration list for PBXProject "ScotTraffic" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2804937B1BA8BB4800990BD1 /* Debug */,
+				2804937C1BA8BB4800990BD1 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		2804937D1BA8BB4800990BD1 /* Build configuration list for PBXNativeTarget "ScotTraffic" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2804937E1BA8BB4800990BD1 /* Debug */,
+				2804937F1BA8BB4800990BD1 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		280493801BA8BB4800990BD1 /* Build configuration list for PBXNativeTarget "ScotTrafficTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				280493811BA8BB4800990BD1 /* Debug */,
+				280493821BA8BB4800990BD1 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		280493831BA8BB4800990BD1 /* Build configuration list for PBXNativeTarget "ScotTrafficUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				280493841BA8BB4800990BD1 /* Debug */,
+				280493851BA8BB4800990BD1 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 2804934D1BA8BB4800990BD1 /* Project object */;
+}
