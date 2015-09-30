@@ -11,13 +11,13 @@ import ScotTraffic
 
 // Must be a class so it can be mutated inside the observer closure
 class Capture<T> {
-    var obs: [Observation] = []
+    var obs = Observations()
     var vals: [T] = []
     
     init(_ o: Observable<T>) {
-        self.obs.append(o.sink {
+        self.obs.sink(o) {
             self.vals.append($0)
-        })
+        }
     }
 }
 
@@ -39,7 +39,7 @@ class FRPTests: XCTestCase {
         s.value = 123
         XCTAssertEqual(c.vals, [123])
         
-        c.obs.removeAll()
+        c.obs.clear()
         s.value = 234
         XCTAssertEqual(c.vals, [123])
     }

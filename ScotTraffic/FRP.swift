@@ -32,8 +32,8 @@ public class Observable<T> {
 public protocol Observation {}
 
 public class Sink<T>: Observation {
-    let source: Observable<T>
-    var id: Int?
+    private let source: Observable<T>
+    private var id: Int?
     
     init(source: Observable<T>) {
         self.source = source
@@ -210,6 +210,23 @@ class Combine5<T1,T2,T3,T4,T5,U> : Observable<U>, Combiner {
             return
         }
         notify(combine(t1, t2, t3, t4, t5))
+    }
+}
+
+// Convenience wrapper for an array of Observation
+public struct Observations {
+    private var observations: [Observation]
+    
+    public init() {
+        self.observations = []
+    }
+    
+    public mutating func sink<T>(source: Observable<T>, closure: T->Void) {
+        observations.append(source.sink(closure))
+    }
+    
+    public mutating func clear() {
+        observations.removeAll()
     }
 }
 
