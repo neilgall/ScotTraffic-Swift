@@ -12,8 +12,13 @@
 		2804935E1BA8BB4800990BD1 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2804935C1BA8BB4800990BD1 /* Main.storyboard */; };
 		280493601BA8BB4800990BD1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2804935F1BA8BB4800990BD1 /* Assets.xcassets */; };
 		280493631BA8BB4800990BD1 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 280493611BA8BB4800990BD1 /* LaunchScreen.storyboard */; };
-		2804936E1BA8BB4800990BD1 /* ScotTrafficTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2804936D1BA8BB4800990BD1 /* ScotTrafficTests.swift */; };
 		280493791BA8BB4800990BD1 /* ScotTrafficUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 280493781BA8BB4800990BD1 /* ScotTrafficUITests.swift */; };
+		28875EA41BBC72FB00E67A16 /* Network.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28875EA31BBC72FB00E67A16 /* Network.swift */; };
+		28875EA71BBC739100E67A16 /* JSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28875EA61BBC739100E67A16 /* JSON.swift */; };
+		28875EA91BBC7A2F00E67A16 /* JSONTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28875EA81BBC7A2F00E67A16 /* JSONTests.swift */; };
+		289201D21BBC580300DA4A9A /* TrafficCameras.swift in Sources */ = {isa = PBXBuildFile; fileRef = 289201D11BBC580300DA4A9A /* TrafficCameras.swift */; };
+		289201D41BBC5AEB00DA4A9A /* FRP.swift in Sources */ = {isa = PBXBuildFile; fileRef = 289201D31BBC5AEB00DA4A9A /* FRP.swift */; };
+		28BFBC5B1BBC91AA00827069 /* FRPTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28BFBC5A1BBC91AA00827069 /* FRPTests.swift */; settings = {ASSET_TAGS = (); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -42,11 +47,17 @@
 		280493621BA8BB4800990BD1 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		280493641BA8BB4800990BD1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		280493691BA8BB4800990BD1 /* ScotTrafficTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ScotTrafficTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		2804936D1BA8BB4800990BD1 /* ScotTrafficTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScotTrafficTests.swift; sourceTree = "<group>"; };
 		2804936F1BA8BB4800990BD1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		280493741BA8BB4800990BD1 /* ScotTrafficUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ScotTrafficUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		280493781BA8BB4800990BD1 /* ScotTrafficUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScotTrafficUITests.swift; sourceTree = "<group>"; };
 		2804937A1BA8BB4800990BD1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		280493861BA8BB7F00990BD1 /* Cartfile */ = {isa = PBXFileReference; lastKnownFileType = text; path = Cartfile; sourceTree = SOURCE_ROOT; };
+		28875EA31BBC72FB00E67A16 /* Network.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Network.swift; sourceTree = "<group>"; };
+		28875EA61BBC739100E67A16 /* JSON.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JSON.swift; sourceTree = "<group>"; };
+		28875EA81BBC7A2F00E67A16 /* JSONTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JSONTests.swift; sourceTree = "<group>"; };
+		289201D11BBC580300DA4A9A /* TrafficCameras.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TrafficCameras.swift; sourceTree = "<group>"; };
+		289201D31BBC5AEB00DA4A9A /* FRP.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FRP.swift; sourceTree = "<group>"; };
+		28BFBC5A1BBC91AA00827069 /* FRPTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FRPTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -97,12 +108,14 @@
 		280493571BA8BB4800990BD1 /* ScotTraffic */ = {
 			isa = PBXGroup;
 			children = (
-				280493581BA8BB4800990BD1 /* AppDelegate.swift */,
-				2804935A1BA8BB4800990BD1 /* ViewController.swift */,
+				289201CE1BBC570300DA4A9A /* App */,
+				289201D01BBC570C00DA4A9A /* Model */,
+				289201CF1BBC570800DA4A9A /* UI */,
 				2804935C1BA8BB4800990BD1 /* Main.storyboard */,
 				2804935F1BA8BB4800990BD1 /* Assets.xcassets */,
 				280493611BA8BB4800990BD1 /* LaunchScreen.storyboard */,
 				280493641BA8BB4800990BD1 /* Info.plist */,
+				280493861BA8BB7F00990BD1 /* Cartfile */,
 			);
 			path = ScotTraffic;
 			sourceTree = "<group>";
@@ -110,7 +123,8 @@
 		2804936C1BA8BB4800990BD1 /* ScotTrafficTests */ = {
 			isa = PBXGroup;
 			children = (
-				2804936D1BA8BB4800990BD1 /* ScotTrafficTests.swift */,
+				28875EA81BBC7A2F00E67A16 /* JSONTests.swift */,
+				28BFBC5A1BBC91AA00827069 /* FRPTests.swift */,
 				2804936F1BA8BB4800990BD1 /* Info.plist */,
 			);
 			path = ScotTrafficTests;
@@ -123,6 +137,33 @@
 				2804937A1BA8BB4800990BD1 /* Info.plist */,
 			);
 			path = ScotTrafficUITests;
+			sourceTree = "<group>";
+		};
+		289201CE1BBC570300DA4A9A /* App */ = {
+			isa = PBXGroup;
+			children = (
+				280493581BA8BB4800990BD1 /* AppDelegate.swift */,
+			);
+			name = App;
+			sourceTree = "<group>";
+		};
+		289201CF1BBC570800DA4A9A /* UI */ = {
+			isa = PBXGroup;
+			children = (
+				2804935A1BA8BB4800990BD1 /* ViewController.swift */,
+			);
+			name = UI;
+			sourceTree = "<group>";
+		};
+		289201D01BBC570C00DA4A9A /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				289201D11BBC580300DA4A9A /* TrafficCameras.swift */,
+				289201D31BBC5AEB00DA4A9A /* FRP.swift */,
+				28875EA61BBC739100E67A16 /* JSON.swift */,
+				28875EA31BBC72FB00E67A16 /* Network.swift */,
+			);
+			name = Model;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -255,6 +296,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				28875EA41BBC72FB00E67A16 /* Network.swift in Sources */,
+				289201D41BBC5AEB00DA4A9A /* FRP.swift in Sources */,
+				289201D21BBC580300DA4A9A /* TrafficCameras.swift in Sources */,
+				28875EA71BBC739100E67A16 /* JSON.swift in Sources */,
 				2804935B1BA8BB4800990BD1 /* ViewController.swift in Sources */,
 				280493591BA8BB4800990BD1 /* AppDelegate.swift in Sources */,
 			);
@@ -264,7 +309,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2804936E1BA8BB4800990BD1 /* ScotTrafficTests.swift in Sources */,
+				28BFBC5B1BBC91AA00827069 /* FRPTests.swift in Sources */,
+				28875EA91BBC7A2F00E67A16 /* JSONTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -481,6 +527,7 @@
 				2804937F1BA8BB4800990BD1 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		280493801BA8BB4800990BD1 /* Build configuration list for PBXNativeTarget "ScotTrafficTests" */ = {
 			isa = XCConfigurationList;
@@ -489,6 +536,7 @@
 				280493821BA8BB4800990BD1 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		280493831BA8BB4800990BD1 /* Build configuration list for PBXNativeTarget "ScotTrafficUITests" */ = {
 			isa = XCConfigurationList;
@@ -497,6 +545,7 @@
 				280493851BA8BB4800990BD1 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
