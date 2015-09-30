@@ -51,7 +51,6 @@
 		280493741BA8BB4800990BD1 /* ScotTrafficUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ScotTrafficUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		280493781BA8BB4800990BD1 /* ScotTrafficUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScotTrafficUITests.swift; sourceTree = "<group>"; };
 		2804937A1BA8BB4800990BD1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		280493861BA8BB7F00990BD1 /* Cartfile */ = {isa = PBXFileReference; lastKnownFileType = text; path = Cartfile; sourceTree = SOURCE_ROOT; };
 		28875EA31BBC72FB00E67A16 /* Network.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Network.swift; sourceTree = "<group>"; };
 		28875EA61BBC739100E67A16 /* JSON.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JSON.swift; sourceTree = "<group>"; };
 		28875EA81BBC7A2F00E67A16 /* JSONTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JSONTests.swift; sourceTree = "<group>"; };
@@ -115,7 +114,6 @@
 				2804935F1BA8BB4800990BD1 /* Assets.xcassets */,
 				280493611BA8BB4800990BD1 /* LaunchScreen.storyboard */,
 				280493641BA8BB4800990BD1 /* Info.plist */,
-				280493861BA8BB7F00990BD1 /* Cartfile */,
 			);
 			path = ScotTraffic;
 			sourceTree = "<group>";
