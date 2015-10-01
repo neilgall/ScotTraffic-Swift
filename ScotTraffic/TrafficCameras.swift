@@ -16,10 +16,10 @@ public enum TrafficCameraDirection {
     
     public static func parse(d: String) -> TrafficCameraDirection? {
         switch d.lowercaseString {
-        case "north": return .North
-        case "south": return .South
-        case "east":  return .East
-        case "west":  return .West
+        case "n": return .North
+        case "s": return .South
+        case "e":  return .East
+        case "w":  return .West
         default: return nil
         }
     }
@@ -39,7 +39,7 @@ public struct TrafficCamera {
 }
 
 extension TrafficCameraLocation: JSONObjectDecodable {
-    public static func decodeJSON(json: JSON) throws -> TrafficCameraLocation {
+    public static func decodeJSON(json: JSONObject) throws -> TrafficCameraLocation {
         return try TrafficCameraLocation(
             name: json <~ "name",
             road: json <~ "road",
@@ -50,10 +50,10 @@ extension TrafficCameraLocation: JSONObjectDecodable {
 }
 
 extension TrafficCamera: JSONObjectDecodable {
-    public static func decodeJSON(json: JSON) throws -> TrafficCamera {
+    public static func decodeJSON(json: JSONObject) throws -> TrafficCamera {
         let direction: String? = try json <~ "direction"
         return try TrafficCamera(
             direction: direction != nil ? TrafficCameraDirection.parse(direction!) : nil,
-            identifier: json <~ "identifier")
+            identifier: json <~ "image")
     }
 }

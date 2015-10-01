@@ -13,6 +13,8 @@
 		280493601BA8BB4800990BD1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2804935F1BA8BB4800990BD1 /* Assets.xcassets */; };
 		280493631BA8BB4800990BD1 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 280493611BA8BB4800990BD1 /* LaunchScreen.storyboard */; };
 		280493791BA8BB4800990BD1 /* ScotTrafficUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 280493781BA8BB4800990BD1 /* ScotTrafficUITests.swift */; };
+		284DE0961BBDCD4200E6A678 /* Either.swift in Sources */ = {isa = PBXBuildFile; fileRef = 284DE0951BBDCD4200E6A678 /* Either.swift */; settings = {ASSET_TAGS = (); }; };
+		284DE0981BBDD0D800E6A678 /* AppModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 284DE0971BBDD0D800E6A678 /* AppModel.swift */; settings = {ASSET_TAGS = (); }; };
 		28875EA41BBC72FB00E67A16 /* Network.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28875EA31BBC72FB00E67A16 /* Network.swift */; };
 		28875EA71BBC739100E67A16 /* JSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28875EA61BBC739100E67A16 /* JSON.swift */; };
 		28875EA91BBC7A2F00E67A16 /* JSONTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28875EA81BBC7A2F00E67A16 /* JSONTests.swift */; };
@@ -51,6 +53,8 @@
 		280493741BA8BB4800990BD1 /* ScotTrafficUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ScotTrafficUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		280493781BA8BB4800990BD1 /* ScotTrafficUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScotTrafficUITests.swift; sourceTree = "<group>"; };
 		2804937A1BA8BB4800990BD1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		284DE0951BBDCD4200E6A678 /* Either.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Either.swift; sourceTree = "<group>"; };
+		284DE0971BBDD0D800E6A678 /* AppModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppModel.swift; sourceTree = "<group>"; };
 		28875EA31BBC72FB00E67A16 /* Network.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Network.swift; sourceTree = "<group>"; };
 		28875EA61BBC739100E67A16 /* JSON.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JSON.swift; sourceTree = "<group>"; };
 		28875EA81BBC7A2F00E67A16 /* JSONTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JSONTests.swift; sourceTree = "<group>"; };
@@ -137,10 +141,21 @@
 			path = ScotTrafficUITests;
 			sourceTree = "<group>";
 		};
+		284DE0991BBDDEB800E6A678 /* Core */ = {
+			isa = PBXGroup;
+			children = (
+				284DE0951BBDCD4200E6A678 /* Either.swift */,
+				289201D31BBC5AEB00DA4A9A /* FRP.swift */,
+				28875EA61BBC739100E67A16 /* JSON.swift */,
+			);
+			name = Core;
+			sourceTree = "<group>";
+		};
 		289201CE1BBC570300DA4A9A /* App */ = {
 			isa = PBXGroup;
 			children = (
 				280493581BA8BB4800990BD1 /* AppDelegate.swift */,
+				284DE0971BBDD0D800E6A678 /* AppModel.swift */,
 			);
 			name = App;
 			sourceTree = "<group>";
@@ -156,9 +171,8 @@
 		289201D01BBC570C00DA4A9A /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				284DE0991BBDDEB800E6A678 /* Core */,
 				289201D11BBC580300DA4A9A /* TrafficCameras.swift */,
-				289201D31BBC5AEB00DA4A9A /* FRP.swift */,
-				28875EA61BBC739100E67A16 /* JSON.swift */,
 				28875EA31BBC72FB00E67A16 /* Network.swift */,
 			);
 			name = Model;
@@ -294,8 +308,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				284DE0961BBDCD4200E6A678 /* Either.swift in Sources */,
 				28875EA41BBC72FB00E67A16 /* Network.swift in Sources */,
 				289201D41BBC5AEB00DA4A9A /* FRP.swift in Sources */,
+				284DE0981BBDD0D800E6A678 /* AppModel.swift in Sources */,
 				289201D21BBC580300DA4A9A /* TrafficCameras.swift in Sources */,
 				28875EA71BBC739100E67A16 /* JSON.swift in Sources */,
 				2804935B1BA8BB4800990BD1 /* ViewController.swift in Sources */,

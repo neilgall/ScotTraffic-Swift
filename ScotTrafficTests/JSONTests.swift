@@ -15,7 +15,7 @@ struct TestType {
 }
 
 extension TestType: JSONObjectDecodable {
-    static func decodeJSON(json: JSON) throws -> TestType {
+    static func decodeJSON(json: JSONObject) throws -> TestType {
         return try TestType(
             a: json <~ "a",
             b: json <~ "b")
@@ -26,7 +26,7 @@ class JSONTests: XCTestCase {
 
     func testStringOk() {
         do {
-            let json = [ "key": "value" ] as JSON
+            let json = [ "key": "value" ] as JSONObject
             let str: String = try json <~ "key"
             XCTAssertEqual(str, "value")
         } catch {
@@ -36,11 +36,12 @@ class JSONTests: XCTestCase {
     
     func testStringMissing() {
         do {
-            let json = JSON()
+            let json = JSONObject()
             let str: String = try json <~ "key"
             XCTFail("unexpected parse: \(str)")
+        } catch (error: JSONError.ExpectedValue("key")) {
         } catch {
-            XCTAssertEqual(error as? JSONError, JSONError.ExpectedValue)
+            XCTFail("\(error)")
         }
     }
     
@@ -49,8 +50,9 @@ class JSONTests: XCTestCase {
             let json = [ "key": 123 ]
             let str: String = try json <~ "key"
             XCTFail("unexpected parse: \(str)")
+        } catch (error: JSONError.ExpectedValue("key")) {
         } catch {
-            XCTAssertEqual(error as? JSONError, JSONError.ExpectedValue)
+            XCTFail("\(error)")
         }
     }
     
@@ -66,7 +68,7 @@ class JSONTests: XCTestCase {
     
     func testOptionalStringMissing() {
         do {
-            let json = JSON()
+            let json = JSONObject()
             let str: String? = try json <~ "key"
             XCTAssertNil(str)
         } catch {
@@ -79,14 +81,25 @@ class JSONTests: XCTestCase {
             let json = [ "key": 123 ]
             let str: String? = try json <~ "key"
             XCTFail("unexpected parse: \(str)")
+        } catch (error: JSONError.ExpectedValue("key")) {
         } catch {
-            XCTAssertEqual(error as? JSONError, JSONError.ExpectedValue)
+            XCTFail("\(error)")
+        }
+    }
+    
+    func testTopLevelStringArray() {
+        do {
+            let json = [ "abc", "def", "ghi" ]
+            let strings: [String] = try decodeJSONArray(json)
+            XCTAssertEqual(strings, [ "abc", "def", "ghi" ])
+        } catch {
+            XCTFail("\(error)")
         }
     }
 
     func testIntegerOk() {
         do {
-            let json = [ "key": 123 ] as JSON
+            let json = [ "key": 123 ] as JSONObject
             let num: Int = try json <~ "key"
             XCTAssertEqual(num, 123)
         } catch {
@@ -96,11 +109,12 @@ class JSONTests: XCTestCase {
     
     func testIntegerMissing() {
         do {
-            let json = JSON()
+            let json = JSONObject()
             let str: Int = try json <~ "key"
             XCTFail("unexpected parse: \(str)")
+        } catch (error: JSONError.ExpectedValue("key")) {
         } catch {
-            XCTAssertEqual(error as? JSONError, JSONError.ExpectedValue)
+            XCTFail("\(error)")
         }
     }
     
@@ -109,8 +123,9 @@ class JSONTests: XCTestCase {
             let json = [ "key": "123" ]
             let num: Int = try json <~ "key"
             XCTFail("unexpected parse: \(num)")
+        } catch (error: JSONError.ExpectedValue("key")) {
         } catch {
-            XCTAssertEqual(error as? JSONError, JSONError.ExpectedValue)
+            XCTFail("\(error)")
         }
     }
     
@@ -126,7 +141,7 @@ class JSONTests: XCTestCase {
     
     func testOptionalIntegerMissing() {
         do {
-            let json = JSON()
+            let json = JSONObject()
             let num: Int? = try json <~ "key"
             XCTAssertNil(num)
         } catch {
@@ -139,14 +154,15 @@ class JSONTests: XCTestCase {
             let json = [ "key": "123" ]
             let num: Int? = try json <~ "key"
             XCTFail("unexpected parse: \(num)")
+        } catch (error: JSONError.ExpectedValue("key")) {
         } catch {
-            XCTAssertEqual(error as? JSONError, JSONError.ExpectedValue)
+            XCTFail("\(error)")
         }
     }
 
     func testBoolFalse() {
         do {
-            let json = [ "bool": false ] as JSON
+            let json = [ "bool": false ] as JSONObject
             let bool: Bool = try json <~ "bool"
             XCTAssertEqual(bool, false)
         } catch {
@@ -156,7 +172,7 @@ class JSONTests: XCTestCase {
 
     func testBoolTrue() {
         do {
-            let json = [ "bool": true ] as JSON
+            let json = [ "bool": true ] as JSONObject
             let bool: Bool = try json <~ "bool"
             XCTAssertEqual(bool, true)
         } catch {
@@ -166,7 +182,7 @@ class JSONTests: XCTestCase {
 
     func testBoolZero() {
         do {
-            let json = [ "bool": 0 ] as JSON
+            let json = [ "bool": 0 ] as JSONObject
             let bool: Bool = try json <~ "bool"
             XCTAssertEqual(bool, false)
         } catch {
@@ -176,7 +192,7 @@ class JSONTests: XCTestCase {
     
     func testBoolOne() {
         do {
-            let json = [ "bool": 1 ] as JSON
+            let json = [ "bool": 1 ] as JSONObject
             let bool: Bool = try json <~ "bool"
             XCTAssertEqual(bool, true)
         } catch {
@@ -186,11 +202,12 @@ class JSONTests: XCTestCase {
     
     func testBoolMissing() {
         do {
-            let json = JSON()
+            let json = JSONObject()
             let bool: Bool = try json <~ "bool"
             XCTFail("unexpected parse: \(bool)")
+        } catch (error: JSONError.ExpectedValue("bool")) {
         } catch {
-            XCTAssertEqual(error as? JSONError, JSONError.ExpectedValue)
+            XCTFail("\(error)")
         }
     }
     
@@ -199,14 +216,15 @@ class JSONTests: XCTestCase {
             let json = [ "bool" : "gah" ]
             let bool: Bool = try json <~ "bool"
             XCTFail("unexpected parse: \(bool)")
+        } catch (error: JSONError.ExpectedValue("bool")) {
         } catch {
-            XCTAssertEqual(error as? JSONError, JSONError.ExpectedValue)
+            XCTFail("\(error)")
         }
     }
     
     func testOptionalBoolOk() {
         do {
-            let json = [ "bool": true ] as JSON
+            let json = [ "bool": true ] as JSONObject
             let bool: Bool? = try json <~ "bool"
             XCTAssertEqual(bool, true)
         } catch {
@@ -216,7 +234,7 @@ class JSONTests: XCTestCase {
 
     func testOptionalBoolMissing() {
         do {
-            let json = JSON()
+            let json = JSONObject()
             let bool: Bool? = try json <~ "bool"
             XCTAssertNil(bool)
         } catch {
@@ -229,8 +247,9 @@ class JSONTests: XCTestCase {
             let json = [ "bool" : "bleh" ]
             let bool: Bool? = try json <~ "bool"
             XCTFail("unexpected parse: \(bool)")
+        } catch (error: JSONError.ExpectedValue("bool")) {
         } catch {
-            XCTAssertEqual(error as? JSONError, JSONError.ExpectedValue)
+            XCTFail("\(error)")
         }
     }
     
@@ -247,11 +266,12 @@ class JSONTests: XCTestCase {
     
     func testTestTypeMissing() {
         do {
-            let json = JSON()
+            let json = JSONObject()
             let test: TestType = try json <~ "foo"
             XCTFail("unexpected parse: \(test)")
+        } catch (error: JSONError.ExpectedDictionary("foo")) {
         } catch {
-            XCTAssertEqual(error as? JSONError, JSONError.ExpectedDictionary)
+            XCTFail("\(error)")
         }
     }
     
@@ -260,8 +280,9 @@ class JSONTests: XCTestCase {
             let json = [ "foo": "bar" ]
             let test: TestType = try json <~ "foo"
             XCTFail("unexpected parse: \(test)")
+        } catch (error: JSONError.ExpectedDictionary("foo")) {
         } catch {
-            XCTAssertEqual(error as? JSONError, JSONError.ExpectedDictionary)
+            XCTFail("\(error)")
         }
     }
     
@@ -279,7 +300,7 @@ class JSONTests: XCTestCase {
     
     func testOptionalTestTypeMissing() {
         do {
-            let json = JSON()
+            let json = JSONObject()
             let test: TestType? = try json <~ "foo"
             XCTAssertNil(test)
         } catch {
@@ -292,8 +313,9 @@ class JSONTests: XCTestCase {
             let json = [ "foo": "bar" ]
             let test: TestType? = try json <~ "foo"
             XCTFail("unexpected parse: \(test)")
+        } catch (error: JSONError.ExpectedDictionary("foo")) {
         } catch {
-            XCTAssertEqual(error as? JSONError, JSONError.ExpectedDictionary)
+            XCTFail("\(error)")
         }
     }
     
@@ -309,11 +331,12 @@ class JSONTests: XCTestCase {
     
     func testStringArrayMissing() {
         do {
-            let json = JSON()
+            let json = JSONObject()
             let strings: [String] = try json <~ "strings"
             XCTFail("unexpected parse: \(strings)")
+        } catch (error: JSONError.ExpectedArray("strings")) {
         } catch {
-            XCTAssertEqual(error as? JSONError, JSONError.ExpectedArray)
+            XCTFail("\(error)")
         }
     }
     
@@ -322,8 +345,9 @@ class JSONTests: XCTestCase {
             let json = [ "strings": "foo" ]
             let strings: [String] = try json <~ "strings"
             XCTFail("unexpected parse: \(strings)")
+        } catch (error: JSONError.ExpectedArray("strings")) {
         } catch {
-            XCTAssertEqual(error as? JSONError, JSONError.ExpectedArray)
+            XCTFail("\(error)")
         }
     }
     
@@ -332,8 +356,9 @@ class JSONTests: XCTestCase {
             let json = [ "strings": [ 123, 456 ] ]
             let strings: [String] = try json <~ "strings"
             XCTFail("unexpected parse: \(strings)")
+        } catch (error:JSONError.ExpectedArray("strings")) {
         } catch {
-            XCTAssertEqual(error as? JSONError, JSONError.ExpectedArray)
+            XCTFail("\(error)")
         }
     }
     
@@ -349,11 +374,12 @@ class JSONTests: XCTestCase {
     
     func testIntegerArrayMissing() {
         do {
-            let json = JSON()
+            let json = JSONObject()
             let ints: [Int] = try json <~ "ints"
             XCTFail("unexpected parse: \(ints)")
+        } catch (error: JSONError.ExpectedArray("ints")) {
         } catch {
-            XCTAssertEqual(error as? JSONError, JSONError.ExpectedArray)
+            XCTFail("\(error)")
         }
     }
     
@@ -362,8 +388,9 @@ class JSONTests: XCTestCase {
             let json = [ "ints" : "foo" ]
             let ints: [Int] = try json <~ "ints"
             XCTFail("unexpected parse: \(ints)")
+        } catch (error: JSONError.ExpectedArray("ints")) {
         } catch {
-            XCTAssertEqual(error as? JSONError, JSONError.ExpectedArray)
+            XCTFail("\(error)")
         }
     }
     
@@ -372,15 +399,30 @@ class JSONTests: XCTestCase {
             let json = [ "ints" : [ "foo", "bar" ] ]
             let ints: [Int] = try json <~ "ints"
             XCTFail("unexpected parse: \(ints)")
+        } catch (error: JSONError.ExpectedArray("ints")) {
         } catch {
-            XCTAssertEqual(error as? JSONError, JSONError.ExpectedArray)
+            XCTFail("\(error)")
         }
     }
     
-    func testTestTypeArrayOk() {
+    func testTestTypeKeyedArrayOk() {
         do {
             let json = [ "objs" : [ [ "a": "abc", "b": 123 ], [ "a": "def", "b": 234] ] ]
             let test: [TestType] = try json <~ "objs"
+            XCTAssertEqual(test.count, 2)
+            XCTAssertEqual(test[0].a, "abc")
+            XCTAssertEqual(test[0].b, 123)
+            XCTAssertEqual(test[1].a, "def")
+            XCTAssertEqual(test[1].b, 234)
+        } catch {
+            XCTFail("\(error)")
+        }
+    }
+
+    func testTestTypeBareArrayOk() {
+        do {
+            let json = [ [ "a": "abc", "b": 123 ], [ "a": "def", "b": 234] ]
+            let test: [TestType] = try decodeJSONArray(json)
             XCTAssertEqual(test.count, 2)
             XCTAssertEqual(test[0].a, "abc")
             XCTAssertEqual(test[0].b, 123)
