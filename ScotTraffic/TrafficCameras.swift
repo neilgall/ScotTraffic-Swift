@@ -38,8 +38,8 @@ public struct TrafficCamera {
     let identifier: String
 }
 
-extension TrafficCameraLocation: JSONDecodable {
-    public static func decode(json: JSON) throws -> TrafficCameraLocation {
+extension TrafficCameraLocation: JSONObjectDecodable {
+    public static func decodeJSON(json: JSON) throws -> TrafficCameraLocation {
         return try TrafficCameraLocation(
             name: json <~ "name",
             road: json <~ "road",
@@ -49,8 +49,8 @@ extension TrafficCameraLocation: JSONDecodable {
     }
 }
 
-extension TrafficCamera: JSONDecodable {
-    public static func decode(json: JSON) throws -> TrafficCamera {
+extension TrafficCamera: JSONObjectDecodable {
+    public static func decodeJSON(json: JSON) throws -> TrafficCamera {
         let direction: String? = try json <~ "direction"
         return try TrafficCamera(
             direction: direction != nil ? TrafficCameraDirection.parse(direction!) : nil,

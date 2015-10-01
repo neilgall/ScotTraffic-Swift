@@ -14,8 +14,8 @@ struct TestType {
     let b: Int
 }
 
-extension TestType: JSONDecodable {
-    static func decode(json: JSON) throws -> TestType {
+extension TestType: JSONObjectDecodable {
+    static func decodeJSON(json: JSON) throws -> TestType {
         return try TestType(
             a: json <~ "a",
             b: json <~ "b")
@@ -40,7 +40,7 @@ class JSONTests: XCTestCase {
             let str: String = try json <~ "key"
             XCTFail("unexpected parse: \(str)")
         } catch {
-            XCTAssertEqual(error as? JSONError, JSONError.ExpectedRawRepresentable)
+            XCTAssertEqual(error as? JSONError, JSONError.ExpectedValue)
         }
     }
     
@@ -50,14 +50,14 @@ class JSONTests: XCTestCase {
             let str: String = try json <~ "key"
             XCTFail("unexpected parse: \(str)")
         } catch {
-            XCTAssertEqual(error as? JSONError, JSONError.ExpectedRawRepresentable)
+            XCTAssertEqual(error as? JSONError, JSONError.ExpectedValue)
         }
     }
     
     func testOptionalStringOk() {
         do {
             let json = [ "key": "value" ]
-            let str: String? = try json <~? "key"
+            let str: String? = try json <~ "key"
             XCTAssertEqual(str, "value")
         } catch {
             XCTFail("\(error)")
@@ -67,7 +67,7 @@ class JSONTests: XCTestCase {
     func testOptionalStringMissing() {
         do {
             let json = JSON()
-            let str: String? = try json <~? "key"
+            let str: String? = try json <~ "key"
             XCTAssertNil(str)
         } catch {
             XCTFail("\(error)")
@@ -77,10 +77,10 @@ class JSONTests: XCTestCase {
     func testOptionalStringNotString() {
         do {
             let json = [ "key": 123 ]
-            let str: String? = try json <~? "key"
+            let str: String? = try json <~ "key"
             XCTFail("unexpected parse: \(str)")
         } catch {
-            XCTAssertEqual(error as? JSONError, JSONError.ExpectedRawRepresentable)
+            XCTAssertEqual(error as? JSONError, JSONError.ExpectedValue)
         }
     }
 
@@ -100,7 +100,7 @@ class JSONTests: XCTestCase {
             let str: Int = try json <~ "key"
             XCTFail("unexpected parse: \(str)")
         } catch {
-            XCTAssertEqual(error as? JSONError, JSONError.ExpectedRawRepresentable)
+            XCTAssertEqual(error as? JSONError, JSONError.ExpectedValue)
         }
     }
     
@@ -110,14 +110,14 @@ class JSONTests: XCTestCase {
             let num: Int = try json <~ "key"
             XCTFail("unexpected parse: \(num)")
         } catch {
-            XCTAssertEqual(error as? JSONError, JSONError.ExpectedRawRepresentable)
+            XCTAssertEqual(error as? JSONError, JSONError.ExpectedValue)
         }
     }
     
     func testOptionalIntegerOk() {
         do {
             let json = [ "key": 123 ]
-            let num: Int? = try json <~? "key"
+            let num: Int? = try json <~ "key"
             XCTAssertEqual(num, 123)
         } catch {
             XCTFail("\(error)")
@@ -127,7 +127,7 @@ class JSONTests: XCTestCase {
     func testOptionalIntegerMissing() {
         do {
             let json = JSON()
-            let num: Int? = try json <~? "key"
+            let num: Int? = try json <~ "key"
             XCTAssertNil(num)
         } catch {
             XCTFail("\(error)")
@@ -137,10 +137,10 @@ class JSONTests: XCTestCase {
     func testOptionalIntegerNotInteger() {
         do {
             let json = [ "key": "123" ]
-            let num: Int? = try json <~? "key"
+            let num: Int? = try json <~ "key"
             XCTFail("unexpected parse: \(num)")
         } catch {
-            XCTAssertEqual(error as? JSONError, JSONError.ExpectedRawRepresentable)
+            XCTAssertEqual(error as? JSONError, JSONError.ExpectedValue)
         }
     }
 
@@ -190,7 +190,7 @@ class JSONTests: XCTestCase {
             let bool: Bool = try json <~ "bool"
             XCTFail("unexpected parse: \(bool)")
         } catch {
-            XCTAssertEqual(error as? JSONError, JSONError.ExpectedRawRepresentable)
+            XCTAssertEqual(error as? JSONError, JSONError.ExpectedValue)
         }
     }
     
@@ -200,14 +200,14 @@ class JSONTests: XCTestCase {
             let bool: Bool = try json <~ "bool"
             XCTFail("unexpected parse: \(bool)")
         } catch {
-            XCTAssertEqual(error as? JSONError, JSONError.ExpectedRawRepresentable)
+            XCTAssertEqual(error as? JSONError, JSONError.ExpectedValue)
         }
     }
     
     func testOptionalBoolOk() {
         do {
             let json = [ "bool": true ] as JSON
-            let bool: Bool? = try json <~? "bool"
+            let bool: Bool? = try json <~ "bool"
             XCTAssertEqual(bool, true)
         } catch {
             XCTFail("\(error)")
@@ -217,7 +217,7 @@ class JSONTests: XCTestCase {
     func testOptionalBoolMissing() {
         do {
             let json = JSON()
-            let bool: Bool? = try json <~? "bool"
+            let bool: Bool? = try json <~ "bool"
             XCTAssertNil(bool)
         } catch {
             XCTFail("\(error)")
@@ -230,7 +230,7 @@ class JSONTests: XCTestCase {
             let bool: Bool? = try json <~ "bool"
             XCTFail("unexpected parse: \(bool)")
         } catch {
-            XCTAssertEqual(error as? JSONError, JSONError.ExpectedRawRepresentable)
+            XCTAssertEqual(error as? JSONError, JSONError.ExpectedValue)
         }
     }
     
@@ -268,7 +268,7 @@ class JSONTests: XCTestCase {
     func testOptionalTestTypeOk() {
         do {
             let json = [ "foo": [ "a": "string", "b": 213 ]]
-            let test: TestType? = try json <~? "foo"
+            let test: TestType? = try json <~ "foo"
             XCTAssertNotNil(test)
             XCTAssertEqual(test!.a, "string")
             XCTAssertEqual(test!.b, 213)
@@ -280,7 +280,7 @@ class JSONTests: XCTestCase {
     func testOptionalTestTypeMissing() {
         do {
             let json = JSON()
-            let test: TestType? = try json <~? "foo"
+            let test: TestType? = try json <~ "foo"
             XCTAssertNil(test)
         } catch {
             XCTFail("\(error)")
@@ -290,7 +290,7 @@ class JSONTests: XCTestCase {
     func testOptionalTestTypeNotDictionary() {
         do {
             let json = [ "foo": "bar" ]
-            let test: TestType? = try json <~? "foo"
+            let test: TestType? = try json <~ "foo"
             XCTFail("unexpected parse: \(test)")
         } catch {
             XCTAssertEqual(error as? JSONError, JSONError.ExpectedDictionary)
@@ -313,7 +313,7 @@ class JSONTests: XCTestCase {
             let strings: [String] = try json <~ "strings"
             XCTFail("unexpected parse: \(strings)")
         } catch {
-            XCTAssertEqual(error as? JSONError, JSONError.ExpectedRawRepresentable)
+            XCTAssertEqual(error as? JSONError, JSONError.ExpectedArray)
         }
     }
     
@@ -323,7 +323,7 @@ class JSONTests: XCTestCase {
             let strings: [String] = try json <~ "strings"
             XCTFail("unexpected parse: \(strings)")
         } catch {
-            XCTAssertEqual(error as? JSONError, JSONError.ExpectedRawRepresentable)
+            XCTAssertEqual(error as? JSONError, JSONError.ExpectedArray)
         }
     }
     
@@ -333,7 +333,7 @@ class JSONTests: XCTestCase {
             let strings: [String] = try json <~ "strings"
             XCTFail("unexpected parse: \(strings)")
         } catch {
-            XCTAssertEqual(error as? JSONError, JSONError.ExpectedRawRepresentable)
+            XCTAssertEqual(error as? JSONError, JSONError.ExpectedArray)
         }
     }
     
@@ -353,7 +353,7 @@ class JSONTests: XCTestCase {
             let ints: [Int] = try json <~ "ints"
             XCTFail("unexpected parse: \(ints)")
         } catch {
-            XCTAssertEqual(error as? JSONError, JSONError.ExpectedRawRepresentable)
+            XCTAssertEqual(error as? JSONError, JSONError.ExpectedArray)
         }
     }
     
@@ -363,7 +363,7 @@ class JSONTests: XCTestCase {
             let ints: [Int] = try json <~ "ints"
             XCTFail("unexpected parse: \(ints)")
         } catch {
-            XCTAssertEqual(error as? JSONError, JSONError.ExpectedRawRepresentable)
+            XCTAssertEqual(error as? JSONError, JSONError.ExpectedArray)
         }
     }
     
@@ -373,7 +373,7 @@ class JSONTests: XCTestCase {
             let ints: [Int] = try json <~ "ints"
             XCTFail("unexpected parse: \(ints)")
         } catch {
-            XCTAssertEqual(error as? JSONError, JSONError.ExpectedRawRepresentable)
+            XCTAssertEqual(error as? JSONError, JSONError.ExpectedArray)
         }
     }
     
