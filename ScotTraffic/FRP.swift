@@ -32,22 +32,16 @@ public class Observable<T> {
 public protocol Observation {}
 
 public class Sink<T>: Observation {
-    private let source: Observable<T>
-    private var id: Int?
+    private var source: Observable<T>
+    private var id: Int
     
-    init(source: Observable<T>) {
+    init(_ source: Observable<T>, _ closure: T->Void) {
         self.source = source
-    }
-    
-    func start(closure: T->Void) -> Sink<T> {
-        id = source.addObserver(closure)
-        return self
+        self.id = source.addObserver(closure)
     }
     
     deinit {
-        if let id = self.id {
-            self.source.removeObserver(id)
-        }
+        source.removeObserver(id)
     }
 }
 
@@ -64,12 +58,11 @@ public class Source<T> : Observable<T> {
 }
 
 class Filter<T> : Observable<T> {
-    let sink: Sink<T>
+    var sink: Sink<T>?
     
-    init(source: Observable<T>, predicate: T->Bool) {
-        self.sink = Sink<T>(source: source)
+    init(_ source: Observable<T>, _ predicate: T->Bool) {
         super.init()
-        self.sink.start() { t in
+        self.sink = Sink<T>(source) { t in
             if predicate(t) {
                 self.notify(t)
             }
@@ -78,135 +71,147 @@ class Filter<T> : Observable<T> {
 }
 
 class Mapped<T,U> : Observable<U> {
-    let sink: Sink<T>
+    var sink: Sink<T>?
     
-    init(source: Observable<T>, function: T->U) {
-        self.sink = Sink<T>(source: source)
+    init(_ source: Observable<T>, _ transform: T->U) {
         super.init()
-        self.sink.start() { t in
-            let u = function(t)
+        self.sink = Sink<T>(source) { t in
+            let u = transform(t)
             self.notify(u)
         }
     }
 }
 
 class Union<T> : Observable<T> {
-    let sinks: [Sink<T>]
+    var sinks: [Sink<T>]?
     
-    init(sources: [Observable<T>]) {
-        self.sinks = sources.map { Sink<T>(source: $0) }
+    init(_ sources: [Observable<T>]) {
         super.init()
-        for sink in self.sinks {
-            sink.start() { t in
+        self.sinks = sources.map {
+            Sink<T>($0) { t in
                 self.notify(t)
             }
         }
     }
 }
 
-protocol Combiner {
-    func update()
-}
-
-class Latest<T> {
-    let sink: Sink<T>
+class Latest<T> : Observable<T> {
+    var sink: Sink<T>?
     var value: T?
     
-    init(source: Observable<T>, combiner: Combiner) {
-        self.sink = Sink<T>(source: source)
-        self.sink.start() {
-            self.value = $0
-            combiner.update()
+    init(_ source: Observable<T>) {
+        super.init()
+        self.sink = Sink<T>(source) { value in
+            self.value = value
+            self.notify(value)
         }
     }
 }
 
-class Combine2<T1,T2,U> : Observable<U>, Combiner {
+class Combine2<T1,T2,U> : Observable<U> {
     let combine: (T1,T2)->U
-    var latest1: Latest<T1>?
-    var latest2: Latest<T2>?
+    let latest1: Latest<T1>
+    let latest2: Latest<T2>
+    var sinks: [Observation] = []
     
-    init(s1: Observable<T1>, s2: Observable<T2>, combine: (T1,T2)->U) {
+    init(_ s1: Observable<T1>, _ s2: Observable<T2>, combine: (T1,T2)->U) {
         self.combine = combine
+        latest1 = Latest(s1)
+        latest2 = Latest(s2)
         super.init()
-        self.latest1 = Latest(source: s1, combiner: self)
-        self.latest2 = Latest(source: s2, combiner: self)
+        sinks.append(latest1.sink { _ in self.update() })
+        sinks.append(latest2.sink { _ in self.update() })
     }
     
     func update() {
-        guard let t1 = latest1?.value, t2 = latest2?.value else {
+        guard let t1 = latest1.value, t2 = latest2.value else {
             return
         }
         notify(combine(t1, t2))
     }
 }
 
-class Combine3<T1,T2,T3,U> : Observable<U>, Combiner {
+class Combine3<T1,T2,T3,U> : Observable<U> {
     let combine: (T1,T2,T3)->U
-    var latest1: Latest<T1>?
-    var latest2: Latest<T2>?
-    var latest3: Latest<T3>?
+    let latest1: Latest<T1>
+    let latest2: Latest<T2>
+    let latest3: Latest<T3>
+    var sinks: [Observation] = []
     
-    init(s1: Observable<T1>, s2: Observable<T2>, s3: Observable<T3>, combine: (T1,T2,T3)->U) {
+    init(_ s1: Observable<T1>, _ s2: Observable<T2>, _ s3: Observable<T3>, combine: (T1,T2,T3)->U) {
         self.combine = combine
+        latest1 = Latest(s1)
+        latest2 = Latest(s2)
+        latest3 = Latest(s3)
         super.init()
-        self.latest1 = Latest(source: s1, combiner: self)
-        self.latest2 = Latest(source: s2, combiner: self)
-        self.latest3 = Latest(source: s3, combiner: self)
+        sinks.append(latest1.sink { _ in self.update() })
+        sinks.append(latest2.sink { _ in self.update() })
+        sinks.append(latest3.sink { _ in self.update() })
     }
     
     func update() {
-        guard let t1 = latest1?.value, t2 = latest2?.value, t3 = latest3?.value else {
+        guard let t1 = latest1.value, t2 = latest2.value, t3 = latest3.value else {
             return
         }
         notify(combine(t1, t2, t3))
     }
 }
 
-class Combine4<T1,T2,T3,T4,U> : Observable<U>, Combiner {
+class Combine4<T1,T2,T3,T4,U> : Observable<U> {
     let combine: (T1,T2,T3,T4)->U
-    var latest1: Latest<T1>?
-    var latest2: Latest<T2>?
-    var latest3: Latest<T3>?
-    var latest4: Latest<T4>?
+    let latest1: Latest<T1>
+    let latest2: Latest<T2>
+    let latest3: Latest<T3>
+    let latest4: Latest<T4>
+    var sinks: [Observation] = []
     
-    init(s1: Observable<T1>, s2: Observable<T2>, s3: Observable<T3>, s4: Observable<T4>, combine: (T1,T2,T3,T4)->U) {
+    init(_ s1: Observable<T1>, _ s2: Observable<T2>, _ s3: Observable<T3>, _ s4: Observable<T4>, combine: (T1,T2,T3,T4)->U) {
         self.combine = combine
+        latest1 = Latest(s1)
+        latest2 = Latest(s2)
+        latest3 = Latest(s3)
+        latest4 = Latest(s4)
         super.init()
-        self.latest1 = Latest(source: s1, combiner: self)
-        self.latest2 = Latest(source: s2, combiner: self)
-        self.latest3 = Latest(source: s3, combiner: self)
-        self.latest4 = Latest(source: s4, combiner: self)
+        sinks.append(latest1.sink { _ in self.update() })
+        sinks.append(latest2.sink { _ in self.update() })
+        sinks.append(latest3.sink { _ in self.update() })
+        sinks.append(latest4.sink { _ in self.update() })
     }
     
     func update() {
-        guard let t1 = latest1?.value, t2 = latest2?.value, t3 = latest3?.value, t4 = latest4?.value else {
+        guard let t1 = latest1.value, t2 = latest2.value, t3 = latest3.value, t4 = latest4.value else {
             return
         }
         notify(combine(t1, t2, t3, t4))
     }
 }
 
-class Combine5<T1,T2,T3,T4,T5,U> : Observable<U>, Combiner {
+class Combine5<T1,T2,T3,T4,T5,U> : Observable<U> {
     let combine: (T1,T2,T3,T4,T5)->U
-    var latest1: Latest<T1>?
-    var latest2: Latest<T2>?
-    var latest3: Latest<T3>?
-    var latest4: Latest<T4>?
-    var latest5: Latest<T5>?
+    let latest1: Latest<T1>
+    let latest2: Latest<T2>
+    let latest3: Latest<T3>
+    let latest4: Latest<T4>
+    let latest5: Latest<T5>
+    var sinks: [Observation] = []
     
-    init(s1: Observable<T1>, s2: Observable<T2>, s3: Observable<T3>, s4: Observable<T4>, s5: Observable<T5>, combine: (T1,T2,T3,T4,T5)->U) {
+    init(_ s1: Observable<T1>, _ s2: Observable<T2>, _ s3: Observable<T3>, _ s4: Observable<T4>, _ s5: Observable<T5>, combine: (T1,T2,T3,T4,T5)->U) {
         self.combine = combine
+        latest1 = Latest(s1)
+        latest2 = Latest(s2)
+        latest3 = Latest(s3)
+        latest4 = Latest(s4)
+        latest5 = Latest(s5)
         super.init()
-        self.latest1 = Latest(source: s1, combiner: self)
-        self.latest2 = Latest(source: s2, combiner: self)
-        self.latest3 = Latest(source: s3, combiner: self)
-        self.latest4 = Latest(source: s4, combiner: self)
-        self.latest5 = Latest(source: s5, combiner: self)
+        sinks.append(latest1.sink { _ in self.update() })
+        sinks.append(latest2.sink { _ in self.update() })
+        sinks.append(latest3.sink { _ in self.update() })
+        sinks.append(latest4.sink { _ in self.update() })
+        sinks.append(latest5.sink { _ in self.update() })
     }
     
     func update() {
-        guard let t1 = latest1?.value, t2 = latest2?.value, t3 = latest3?.value, t4 = latest4?.value, t5 = latest5?.value else {
+        guard let t1 = latest1.value, t2 = latest2.value, t3 = latest3.value, t4 = latest4.value, t5 = latest5.value else {
             return
         }
         notify(combine(t1, t2, t3, t4, t5))
@@ -232,34 +237,38 @@ public struct Observations {
 
 public extension Observable {
     public func sink(sink: T->Void) -> Sink<T> {
-        return Sink(source: self).start(sink)
+        return Sink(self, sink)
     }
     
-    public func map<U>(function: T->U) -> Observable<U> {
-        return Mapped(source: self, function: function)
+    public func latest() -> Observable<T> {
+        return Latest(self)
+    }
+    
+    public func map<U>(transform: T->U) -> Observable<U> {
+        return Mapped(self, transform)
     }
     
     public func filter(predicate: T->Bool) -> Observable<T> {
-        return Filter(source: self, predicate: predicate)
+        return Filter(self, predicate)
     }
 }
 
 public func union<T>(sources: Observable<T>...) -> Observable<T> {
-    return Union<T>(sources: sources)
+    return Union<T>(sources)
 }
 
 public func combine<T1, T2, U>(s1: Observable<T1>, _ s2: Observable<T2>, combine: (T1,T2)->U) -> Observable<U> {
-    return Combine2(s1: s1, s2: s2, combine: combine)
+    return Combine2(s1, s2, combine: combine)
 }
 
 public func combine<T1, T2, T3, U>(s1: Observable<T1>, _ s2: Observable<T2>, _ s3: Observable<T3>, combine: (T1,T2,T3)->U) -> Observable<U> {
-    return Combine3(s1: s1, s2: s2, s3: s3, combine: combine)
+    return Combine3(s1, s2, s3, combine: combine)
 }
 
 public func combine<T1, T2, T3, T4, U>(s1: Observable<T1>, _ s2: Observable<T2>, _ s3: Observable<T3>, _ s4: Observable<T4>, combine: (T1,T2,T3,T4)->U) -> Observable<U> {
-    return Combine4(s1: s1, s2: s2, s3: s3, s4: s4, combine: combine)
+    return Combine4(s1, s2, s3, s4, combine: combine)
 }
 
 public func combine<T1, T2, T3, T4, T5, U>(s1: Observable<T1>, _ s2: Observable<T2>, _ s3: Observable<T3>, _ s4: Observable<T4>, _ s5: Observable<T5>, combine: (T1,T2,T3,T4,T5)->U) -> Observable<U> {
-    return Combine5(s1: s1, s2: s2, s3: s3, s4: s4, s5: s5, combine: combine)
+    return Combine5(s1, s2, s3, s4, s5, combine: combine)
 }
