@@ -47,7 +47,7 @@ public class HTTPFetcher: NSObject, NSURLSessionDelegate {
     }
     
     public func fetchJSONArrayAtPath(path: String, completion: Either<JSONArray,NSError> -> Void) {
-        fetchJSONAtPath(path) { completion($0.fmap { ($0 as? JSONArray)! }) }
+        fetchJSONAtPath(path) { completion($0.map { ($0 as? JSONArray)! }) }
     }
         
     private func errorWithCode(code: Int) -> NSError {

@@ -14,7 +14,7 @@ public enum Either<V, E: ErrorType> {
 
     // Simple map on V; E is passed through unchanged
     //
-    func fmap<U> (transform: V->U) -> Either<U,E> {
+    func map<U> (transform: V->U) -> Either<U,E> {
         switch self {
             
         case .Value(let v):
@@ -29,7 +29,7 @@ public enum Either<V, E: ErrorType> {
     // Throwable transformation on V; if the transform succeeds this is
     // like the simple map(); else the resulting Either becomes an .Error
     //
-    func fmap<U> (transform: V throws -> U) -> Either<U,E> {
+    func map<U> (transform: V throws -> U) -> Either<U,E> {
         switch self {
             
         case .Value(let v):
@@ -44,4 +44,38 @@ public enum Either<V, E: ErrorType> {
 
         }
     }
+}
+
+// FRP operations on Either
+
+class SplitEitherValue<V,E: ErrorType> : Observable<V> {
+    var sink: Sink<Either<V,E>>?
+    
+    init(_ source: Observable<Either<V,E>>) {
+        super.init()
+        self.sink = Sink<Either<V,E>>(source) {
+            switch $0 {
+            case .Value(let v): self.notify(v)
+            case .Error: break
+            }
+        }
+    }
+}
+
+class SplitEitherError<V,E: ErrorType> : Observable<E> {
+    var sink: Sink<Either<V,E>>?
+    
+    init(_ source: Observable<Either<V,E>>) {
+        super.init()
+        self.sink = Sink<Either<V,E>>(source) {
+            switch $0 {
+            case .Value: break
+            case .Error(let e): self.notify(e)
+            }
+        }
+    }
+}
+
+public func splitObservableEither<V,E>(either: Observable<Either<V,E>>) -> (Observable<V>, Observable<E>) {
+    return (SplitEitherValue(either), SplitEitherError(either))
 }
