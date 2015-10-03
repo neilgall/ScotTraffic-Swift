@@ -226,7 +226,7 @@ public struct Observations {
         self.observations = []
     }
     
-    public mutating func sink<T>(source: Observable<T>, closure: T->Void) {
+    public mutating func add<T>(source: Observable<T>, closure: T->Void) {
         observations.append(source.sink(closure))
     }
     

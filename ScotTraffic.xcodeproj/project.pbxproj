@@ -21,6 +21,10 @@
 		289201D21BBC580300DA4A9A /* TrafficCameras.swift in Sources */ = {isa = PBXBuildFile; fileRef = 289201D11BBC580300DA4A9A /* TrafficCameras.swift */; };
 		289201D41BBC5AEB00DA4A9A /* FRP.swift in Sources */ = {isa = PBXBuildFile; fileRef = 289201D31BBC5AEB00DA4A9A /* FRP.swift */; };
 		28BFBC5B1BBC91AA00827069 /* FRPTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28BFBC5A1BBC91AA00827069 /* FRPTests.swift */; settings = {ASSET_TAGS = (); }; };
+		28DB3BF31BC025D0001AAC2A /* Functions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28DB3BF21BC025D0001AAC2A /* Functions.swift */; settings = {ASSET_TAGS = (); }; };
+		28DB3BF51BC02892001AAC2A /* SafetyCameras.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28DB3BF41BC02892001AAC2A /* SafetyCameras.swift */; settings = {ASSET_TAGS = (); }; };
+		28DB3BF81BC02968001AAC2A /* Weather.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28DB3BF71BC02968001AAC2A /* Weather.swift */; settings = {ASSET_TAGS = (); }; };
+		28DB3BFA1BC02C88001AAC2A /* Incidents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28DB3BF91BC02C88001AAC2A /* Incidents.swift */; settings = {ASSET_TAGS = (); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -61,6 +65,10 @@
 		289201D11BBC580300DA4A9A /* TrafficCameras.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TrafficCameras.swift; sourceTree = "<group>"; };
 		289201D31BBC5AEB00DA4A9A /* FRP.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FRP.swift; sourceTree = "<group>"; };
 		28BFBC5A1BBC91AA00827069 /* FRPTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FRPTests.swift; sourceTree = "<group>"; };
+		28DB3BF21BC025D0001AAC2A /* Functions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Functions.swift; sourceTree = "<group>"; };
+		28DB3BF41BC02892001AAC2A /* SafetyCameras.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SafetyCameras.swift; sourceTree = "<group>"; };
+		28DB3BF71BC02968001AAC2A /* Weather.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Weather.swift; sourceTree = "<group>"; };
+		28DB3BF91BC02C88001AAC2A /* Incidents.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Incidents.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -147,6 +155,7 @@
 				284DE0951BBDCD4200E6A678 /* Either.swift */,
 				289201D31BBC5AEB00DA4A9A /* FRP.swift */,
 				28875EA61BBC739100E67A16 /* JSON.swift */,
+				28DB3BF21BC025D0001AAC2A /* Functions.swift */,
 			);
 			name = Core;
 			sourceTree = "<group>";
@@ -173,6 +182,9 @@
 			children = (
 				284DE0991BBDDEB800E6A678 /* Core */,
 				289201D11BBC580300DA4A9A /* TrafficCameras.swift */,
+				28DB3BF41BC02892001AAC2A /* SafetyCameras.swift */,
+				28DB3BF91BC02C88001AAC2A /* Incidents.swift */,
+				28DB3BF71BC02968001AAC2A /* Weather.swift */,
 				28875EA31BBC72FB00E67A16 /* Network.swift */,
 			);
 			name = Model;
@@ -310,6 +322,10 @@
 			files = (
 				284DE0961BBDCD4200E6A678 /* Either.swift in Sources */,
 				28875EA41BBC72FB00E67A16 /* Network.swift in Sources */,
+				28DB3BF51BC02892001AAC2A /* SafetyCameras.swift in Sources */,
+				28DB3BFA1BC02C88001AAC2A /* Incidents.swift in Sources */,
+				28DB3BF81BC02968001AAC2A /* Weather.swift in Sources */,
+				28DB3BF31BC025D0001AAC2A /* Functions.swift in Sources */,
 				289201D41BBC5AEB00DA4A9A /* FRP.swift in Sources */,
 				284DE0981BBDD0D800E6A678 /* AppModel.swift in Sources */,
 				289201D21BBC580300DA4A9A /* TrafficCameras.swift in Sources */,

@@ -10,20 +10,67 @@ import Foundation
 
 public class AppModel {
     let fetcher: HTTPFetcher
-    let trafficCameraLocations: Observable<Either<[TrafficCameraLocation], NSError>>
+    let trafficCameraLocations: Observable<[TrafficCameraLocation]>
+    let safetyCameras: Observable<[SafetyCamera]>
+    let incidents: Observable<[Incident]>
+    let errorSources: Observable<NSError>
     var observations = Observations()
     
     public init() {
         self.fetcher = HTTPFetcher(baseURL: NSURL(string: "http://dev.scottraffic.co.uk")!)
-        
-        let trafficCamerasSource = HTTPJSONArraySource(fetcher: self.fetcher, path: "trafficcameras.json")
-        self.trafficCameraLocations = trafficCamerasSource.map { $0.map(Array.decodeJSON) }
 
-        observations.sink(self.trafficCameraLocations) {
+        // -- Traffic Cameras --
+        
+        let trafficCamerasSource = HTTPDataSource(fetcher: self.fetcher, path: "trafficcameras.json")
+        let trafficCameraLocations = trafficCamerasSource.map {
+            $0.map(Array<TrafficCameraLocation>.decodeJSON <== JSONArrayFromData)
+        }
+        self.trafficCameraLocations = valueFromEither(trafficCameraLocations)
+        
+        
+        // -- Safety Cameras --
+        
+        let safetyCamerasSource = HTTPDataSource(fetcher: self.fetcher, path: "safetycameras.json")
+        let safetyCameras = safetyCamerasSource.map {
+            $0.map(Array<SafetyCamera>.decodeJSON <== JSONArrayFromData)
+        }
+        self.safetyCameras = valueFromEither(safetyCameras)
+ 
+        
+        // -- Incidents / Roadworks --
+        
+        let incidentsSource = HTTPDataSource(fetcher: self.fetcher, path: "incidents.json")
+        let incidents = incidentsSource.map {
+            $0.map(Array<Incident>.decodeJSON <== JSONArrayFromData)
+        }
+        self.incidents = valueFromEither(incidents)
+        
+        
+        // -- Merge errors from all sources
+        
+        self.errorSources = union(
+            errorFromEither(trafficCameraLocations),
+            errorFromEither(safetyCameras),
+            errorFromEither(incidents)
+        )
+        
+        
+        // --
+
+        observations.add(self.trafficCameraLocations) { _ in
+        }
+        observations.add(self.safetyCameras) { _ in
+        }
+        observations.add(self.incidents) {
             print($0)
         }
-        
+        observations.add(self.errorSources) {
+            print($0)
+        }
+
         trafficCamerasSource.start()
+        safetyCamerasSource.start()
+        incidentsSource.start()
     }
     
 }

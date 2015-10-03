@@ -6,9 +6,13 @@
 //  Copyright © 2015 Neil Gall. All rights reserved.
 //
 
-import Foundation
+import UIKit
 
 let HTTPFetcherErrorDomain = "HTTPFetcherErrorDomain"
+
+public enum NetworkError : ErrorType {
+    case CannotParseImage
+}
 
 public class HTTPFetcher: NSObject, NSURLSessionDelegate {
     let baseURL: NSURL
@@ -24,9 +28,9 @@ public class HTTPFetcher: NSObject, NSURLSessionDelegate {
     public func URLSession(session: NSURLSession, didBecomeInvalidWithError error: NSError?) {
     }
     
-    public func fetchJSONAtPath(path: String, completion: Either<JSONValue,NSError> -> Void) {
+    public func fetchDataAtPath(path: String, completion: Either<NSData,NSError> -> Void) {
         guard let url = NSURL(string: path, relativeToURL: baseURL) else {
-            completion(Either.Error(self.errorWithCode(1)))
+            completion(Either.Error(HTTPFetcher.errorWithCode(1)))
             return
         }
         
@@ -35,37 +39,43 @@ public class HTTPFetcher: NSObject, NSURLSessionDelegate {
                 completion(Either.Error(error))
                 
             } else if let data = data {
-                do {
-                    let json = try NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions())
-                    completion(Either.Value(json))
-                } catch {
-                    completion(Either.Error(error as NSError))
-                }
+                completion(Either.Value(data))
             }
         }
         task.resume()
     }
     
-    public func fetchJSONArrayAtPath(path: String, completion: Either<JSONArray,NSError> -> Void) {
-        fetchJSONAtPath(path) { completion($0.map { ($0 as? JSONArray)! }) }
-    }
-        
-    private func errorWithCode(code: Int) -> NSError {
+    private static func errorWithCode(code: Int) -> NSError {
         return NSError(domain: HTTPFetcherErrorDomain, code: code, userInfo: nil)
     }
 }
 
-public class HTTPJSONArraySource: Source<Either<JSONArray,NSError>> {
+class HTTPDataSource: Source<Either<NSData,NSError>> {
     let fetcher: HTTPFetcher
     let path: String
     
-    public init(fetcher: HTTPFetcher, path: String) {
+    init(fetcher: HTTPFetcher, path: String) {
         self.fetcher = fetcher
         self.path = path
-        super.init(initial: Either.Value(emptyJSON))
+        super.init(initial: Either.Value(NSData()))
     }
     
-    public func start() {
-        self.fetcher.fetchJSONArrayAtPath(path) { self.value = $0 }
+    func start() {
+        self.fetcher.fetchDataAtPath(path) { self.value = $0 }
     }
+}
+
+public func JSONArrayFromData(data: NSData) throws -> JSONArray {
+    let json = try NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions())
+    guard let array = json as? JSONArray else {
+        throw JSONError.ExpectedArray
+    }
+    return array
+}
+
+public func UIImageFromData(data: NSData) throws -> UIImage {
+    guard let image = UIImage(data: data) else {
+        throw NetworkError.CannotParseImage
+    }
+    return image
 }

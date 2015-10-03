@@ -12,6 +12,7 @@ public enum JSONError : ErrorType {
     case ExpectedDictionary
     case ExpectedArray
     case ExpectedValue
+    case ParseError
 }
 
 public typealias JSONValue = AnyObject
@@ -158,3 +159,4 @@ public func <~ <T: JSONObjectDecodable>(json: JSONObject, key: String) throws ->
     }
     return try T.decodeJSON(dict)
 }
+

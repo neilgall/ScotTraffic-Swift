@@ -76,6 +76,10 @@ class SplitEitherError<V,E: ErrorType> : Observable<E> {
     }
 }
 
-public func splitObservableEither<V,E>(either: Observable<Either<V,E>>) -> (Observable<V>, Observable<E>) {
-    return (SplitEitherValue(either), SplitEitherError(either))
+public func valueFromEither<V,E>(either: Observable<Either<V,E>>) -> Observable<V> {
+    return SplitEitherValue(either)
+}
+
+public func errorFromEither<V,E>(either: Observable<Either<V,E>>) -> Observable<E> {
+    return SplitEitherError(either)
 }

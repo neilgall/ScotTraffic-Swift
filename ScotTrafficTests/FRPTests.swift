@@ -15,7 +15,7 @@ class Capture<T> {
     var vals: [T] = []
     
     init(_ o: Observable<T>) {
-        self.obs.sink(o) {
+        self.obs.add(o) {
             self.vals.append($0)
         }
     }
