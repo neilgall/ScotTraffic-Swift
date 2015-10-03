@@ -10,15 +10,20 @@ import Foundation
 
 public class AppModel {
     let fetcher: HTTPFetcher
+    
     let trafficCameraLocations: Observable<[TrafficCameraLocation]>
     let safetyCameras: Observable<[SafetyCamera]>
-    let incidents: Observable<[Incident]>
+    let alerts: Observable<[Incident]>
+    let roadworks: Observable<[Incident]>
     let weather: Observable<[Weather]>
+    let settings: Settings
+    
     let errorSources: Observable<AppError>
-    var observations = Observations()
+    let fetchStarters: [PeriodicStarter]
     
     public init() {
         self.fetcher = HTTPFetcher(baseURL: NSURL(string: "http://dev.scottraffic.co.uk")!)
+        self.settings = Settings(userDefaults: NSUserDefaults.standardUserDefaults())
 
         // -- Traffic Cameras --
         
@@ -44,7 +49,9 @@ public class AppModel {
         let incidents = incidentsSource.map {
             $0.map(Array<Incident>.decodeJSON <== JSONArrayFromData)
         }
-        self.incidents = valueFromEither(incidents)
+        let allIncidents = valueFromEither(incidents)
+        self.alerts = allIncidents.map { $0.filter { $0.type == IncidentType.Alert } }
+        self.roadworks = allIncidents.map { $0.filter { $0.type == IncidentType.Roadworks } }
         
         
         // -- Weather --
@@ -65,25 +72,10 @@ public class AppModel {
             errorFromEither(weather)
         )
         
+        // -- Auto refresh --
         
-        // --
-
-        observations.add(self.trafficCameraLocations) { _ in
-        }
-        observations.add(self.safetyCameras) { _ in
-        }
-        observations.add(self.incidents) { _ in
-        }
-        observations.add(self.weather) {
-            print($0)
-        }
-        observations.add(self.errorSources) {
-            print($0)
-        }
-
-        trafficCamerasSource.start()
-        safetyCamerasSource.start()
-        incidentsSource.start()
-        weatherSource.start()
+        let fiveMinuteRefresh = PeriodicStarter(startables: [trafficCamerasSource, incidentsSource], period: 300)
+        let halfHourlyRefresh = PeriodicStarter(startables: [safetyCamerasSource, weatherSource], period: 1800)
+        self.fetchStarters = [fiveMinuteRefresh, halfHourlyRefresh]
     }
 }

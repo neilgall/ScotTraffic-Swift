@@ -7,20 +7,30 @@
 //
 
 import CoreLocation
+import MapKit
 
 public enum IncidentType {
     case Alert
     case Roadworks
 }
 
-public struct Incident {
-    let type: IncidentType
-    let title: String
-    let text: String
-    let latitude: CLLocationDegrees
-    let longitude: CLLocationDegrees
-    let date: NSDate
-    let url: NSURL
+public final class Incident : MapItem {
+    public let type: IncidentType
+    public let name: String
+    public let road: String = ""
+    public let text: String
+    public let mapPoint: MKMapPoint
+    public let date: NSDate
+    public let url: NSURL
+    
+    public init(type: IncidentType, name: String, text: String, mapPoint: MKMapPoint, date: NSDate, url: NSURL) {
+        self.type = type
+        self.name = name
+        self.text = text
+        self.mapPoint = mapPoint
+        self.date = date
+        self.url = url
+    }
 }
 
 extension IncidentType: JSONValueDecodable {
@@ -53,10 +63,9 @@ extension Incident: JSONObjectDecodable {
         
         return try Incident(
             type: json <~ "type",
-            title: json <~ "title",
+            name: json <~ "title",
             text: json <~ "desc",
-            latitude: json <~ "lat",
-            longitude: json <~ "lon",
+            mapPoint: MKMapPointForCoordinate(CLLocationCoordinate2DMake(json <~ "lat", json <~ "lon")),
             date: date,
             url: url)
     }

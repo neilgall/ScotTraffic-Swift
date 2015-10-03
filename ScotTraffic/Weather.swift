@@ -31,7 +31,7 @@ public enum WindDirection {
     case NorthNorthWest
 }
 
-public struct Weather {
+public final class Weather {
     let identifier: Int
     let name: String
     let latitude: CLLocationDegrees
@@ -40,6 +40,17 @@ public struct Weather {
     let windSpeed: WindSpeedKPH
     let windDirection: WindDirection
     let weatherType: String
+    
+    public init(identifier: Int, name: String, latitude: CLLocationDegrees, longitude: CLLocationDegrees, temperature: Celcius, windSpeed: WindSpeedKPH, windDirection: WindDirection, weatherType: String) {
+        self.identifier = identifier
+        self.name = name
+        self.latitude = latitude
+        self.longitude = longitude
+        self.temperature = temperature
+        self.windSpeed = windSpeed
+        self.windDirection = windDirection
+        self.weatherType = weatherType
+    }
 }
 
 extension WindDirection: JSONValueDecodable {

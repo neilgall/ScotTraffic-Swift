@@ -7,6 +7,7 @@
 //
 
 import CoreLocation
+import MapKit
 
 public enum SpeedLimit {
     case Unknown
@@ -19,12 +20,22 @@ public enum SpeedLimit {
     case National
 }
 
-public struct SafetyCamera {
-    let speedLimit: SpeedLimit
-    let latitude: CLLocationDegrees
-    let longitude: CLLocationDegrees
-    let weatherLocation: WeatherLocationCode
-    let images: [String]
+public final class SafetyCamera : MapItem {
+    public let name: String
+    public let road: String
+    public let mapPoint: MKMapPoint
+    public let speedLimit: SpeedLimit
+    public let weatherLocation: WeatherLocationCode
+    public let images: [String]
+    
+    public init(name: String, road: String, speedLimit: SpeedLimit, mapPoint: MKMapPoint, weatherLocation: WeatherLocationCode, images: [String]) {
+        self.name = name
+        self.road = road
+        self.speedLimit = speedLimit
+        self.mapPoint = mapPoint
+        self.weatherLocation = weatherLocation
+        self.images = images
+    }
 }
 
 extension SpeedLimit: JSONValueDecodable {
@@ -48,9 +59,10 @@ extension SpeedLimit: JSONValueDecodable {
 extension SafetyCamera: JSONObjectDecodable {
     public static func decodeJSON(json: JSONObject, forKey key: JSONKey) throws -> SafetyCamera {
         return try SafetyCamera(
+            name: json <~ "name",
+            road: json <~ "road",
             speedLimit: json <~ "speedLimit",
-            latitude: json <~ "latitude",
-            longitude: json <~ "longitude",
+            mapPoint: MKMapPointForCoordinate(CLLocationCoordinate2DMake(json <~ "latitude", json <~ "longitude")),
             weatherLocation: json <~ "weather",
             images: json <~ "images")
     }

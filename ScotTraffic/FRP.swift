@@ -95,7 +95,7 @@ class Union<T> : Observable<T> {
     }
 }
 
-class Latest<T> : Observable<T> {
+public class Latest<T> : Observable<T> {
     var sink: Sink<T>?
     var value: T?
     
@@ -240,7 +240,7 @@ public extension Observable {
         return Sink(self, sink)
     }
     
-    public func latest() -> Observable<T> {
+    public func latest() -> Latest<T> {
         return Latest(self)
     }
     

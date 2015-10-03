@@ -8,8 +8,14 @@
 
 /* Begin PBXBuildFile section */
 		2804864F1BC074E4003BA360 /* AppErrors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2804864E1BC074E4003BA360 /* AppErrors.swift */; };
+		280486511BC08216003BA360 /* PeriodicStarter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 280486501BC08216003BA360 /* PeriodicStarter.swift */; };
+		280486531BC08711003BA360 /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 280486521BC08711003BA360 /* SearchViewController.swift */; };
+		280486551BC087B6003BA360 /* SearchViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 280486541BC087B6003BA360 /* SearchViewModel.swift */; };
+		280486571BC087F4003BA360 /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 280486561BC087F4003BA360 /* Settings.swift */; };
+		280486591BC0917B003BA360 /* MapItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 280486581BC0917B003BA360 /* MapItem.swift */; };
+		2804865B1BC091C5003BA360 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2804865A1BC091C5003BA360 /* CoreLocation.framework */; };
+		2804865E1BC092F2003BA360 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2804865D1BC092F2003BA360 /* MapKit.framework */; };
 		280493591BA8BB4800990BD1 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 280493581BA8BB4800990BD1 /* AppDelegate.swift */; };
-		2804935B1BA8BB4800990BD1 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2804935A1BA8BB4800990BD1 /* ViewController.swift */; };
 		2804935E1BA8BB4800990BD1 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2804935C1BA8BB4800990BD1 /* Main.storyboard */; };
 		280493601BA8BB4800990BD1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2804935F1BA8BB4800990BD1 /* Assets.xcassets */; };
 		280493631BA8BB4800990BD1 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 280493611BA8BB4800990BD1 /* LaunchScreen.storyboard */; };
@@ -47,9 +53,15 @@
 
 /* Begin PBXFileReference section */
 		2804864E1BC074E4003BA360 /* AppErrors.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppErrors.swift; sourceTree = "<group>"; };
+		280486501BC08216003BA360 /* PeriodicStarter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PeriodicStarter.swift; sourceTree = "<group>"; };
+		280486521BC08711003BA360 /* SearchViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchViewController.swift; sourceTree = "<group>"; };
+		280486541BC087B6003BA360 /* SearchViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchViewModel.swift; sourceTree = "<group>"; };
+		280486561BC087F4003BA360 /* Settings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
+		280486581BC0917B003BA360 /* MapItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapItem.swift; sourceTree = "<group>"; };
+		2804865A1BC091C5003BA360 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
+		2804865D1BC092F2003BA360 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		280493551BA8BB4800990BD1 /* ScotTraffic.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ScotTraffic.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		280493581BA8BB4800990BD1 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		2804935A1BA8BB4800990BD1 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		2804935D1BA8BB4800990BD1 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		2804935F1BA8BB4800990BD1 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		280493621BA8BB4800990BD1 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -78,6 +90,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2804865E1BC092F2003BA360 /* MapKit.framework in Frameworks */,
+				2804865B1BC091C5003BA360 /* CoreLocation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -98,12 +112,22 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		2804865C1BC091CA003BA360 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				2804865D1BC092F2003BA360 /* MapKit.framework */,
+				2804865A1BC091C5003BA360 /* CoreLocation.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		2804934C1BA8BB4800990BD1 = {
 			isa = PBXGroup;
 			children = (
 				280493571BA8BB4800990BD1 /* ScotTraffic */,
 				2804936C1BA8BB4800990BD1 /* ScotTrafficTests */,
 				280493771BA8BB4800990BD1 /* ScotTrafficUITests */,
+				2804865C1BC091CA003BA360 /* Frameworks */,
 				280493561BA8BB4800990BD1 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -159,6 +183,7 @@
 				28875EA61BBC739100E67A16 /* JSON.swift */,
 				28DB3BF21BC025D0001AAC2A /* Functions.swift */,
 				28875EA31BBC72FB00E67A16 /* Network.swift */,
+				280486501BC08216003BA360 /* PeriodicStarter.swift */,
 			);
 			name = Core;
 			sourceTree = "<group>";
@@ -167,8 +192,8 @@
 			isa = PBXGroup;
 			children = (
 				280493581BA8BB4800990BD1 /* AppDelegate.swift */,
-				284DE0971BBDD0D800E6A678 /* AppModel.swift */,
 				2804864E1BC074E4003BA360 /* AppErrors.swift */,
+				284DE0971BBDD0D800E6A678 /* AppModel.swift */,
 			);
 			name = App;
 			sourceTree = "<group>";
@@ -176,7 +201,8 @@
 		289201CF1BBC570800DA4A9A /* UI */ = {
 			isa = PBXGroup;
 			children = (
-				2804935A1BA8BB4800990BD1 /* ViewController.swift */,
+				280486521BC08711003BA360 /* SearchViewController.swift */,
+				280486541BC087B6003BA360 /* SearchViewModel.swift */,
 			);
 			name = UI;
 			sourceTree = "<group>";
@@ -185,10 +211,12 @@
 			isa = PBXGroup;
 			children = (
 				284DE0991BBDDEB800E6A678 /* Core */,
+				280486581BC0917B003BA360 /* MapItem.swift */,
 				289201D11BBC580300DA4A9A /* TrafficCameras.swift */,
 				28DB3BF41BC02892001AAC2A /* SafetyCameras.swift */,
 				28DB3BF91BC02C88001AAC2A /* Incidents.swift */,
 				28DB3BF71BC02968001AAC2A /* Weather.swift */,
+				280486561BC087F4003BA360 /* Settings.swift */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -327,14 +355,18 @@
 				2804864F1BC074E4003BA360 /* AppErrors.swift in Sources */,
 				28875EA41BBC72FB00E67A16 /* Network.swift in Sources */,
 				28DB3BF51BC02892001AAC2A /* SafetyCameras.swift in Sources */,
+				280486511BC08216003BA360 /* PeriodicStarter.swift in Sources */,
 				28DB3BFA1BC02C88001AAC2A /* Incidents.swift in Sources */,
+				280486551BC087B6003BA360 /* SearchViewModel.swift in Sources */,
 				28DB3BF81BC02968001AAC2A /* Weather.swift in Sources */,
 				28DB3BF31BC025D0001AAC2A /* Functions.swift in Sources */,
+				280486531BC08711003BA360 /* SearchViewController.swift in Sources */,
+				280486571BC087F4003BA360 /* Settings.swift in Sources */,
 				289201D41BBC5AEB00DA4A9A /* FRP.swift in Sources */,
 				284DE0981BBDD0D800E6A678 /* AppModel.swift in Sources */,
+				280486591BC0917B003BA360 /* MapItem.swift in Sources */,
 				289201D21BBC580300DA4A9A /* TrafficCameras.swift in Sources */,
 				28875EA71BBC739100E67A16 /* JSON.swift in Sources */,
-				2804935B1BA8BB4800990BD1 /* ViewController.swift in Sources */,
 				280493591BA8BB4800990BD1 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

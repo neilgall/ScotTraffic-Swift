@@ -17,6 +17,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         
+        let searchViewController = (((window?.rootViewController as? UISplitViewController)?.viewControllers[0] as? UINavigationController)?.topViewController) as? SearchViewController
+        searchViewController?.viewModel = SearchViewModel(appModel: appModel)
+        
         return true
     }
 

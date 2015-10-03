@@ -7,6 +7,7 @@
 //
 
 import CoreLocation
+import MapKit
 
 public enum TrafficCameraDirection {
     case North
@@ -15,17 +16,28 @@ public enum TrafficCameraDirection {
     case West
 }
 
-public struct TrafficCameraLocation {
-    let name: String
-    let road: String
-    let latitude: CLLocationDegrees
-    let longitude: CLLocationDegrees
-    let cameras: [TrafficCamera]
+public final class TrafficCameraLocation : MapItem {
+    public let name: String
+    public let road: String
+    public let mapPoint: MKMapPoint
+    public let cameras: [TrafficCamera]
+    
+    public init(name: String, road: String, mapPoint: MKMapPoint, cameras: [TrafficCamera]) {
+        self.name = name
+        self.road = road
+        self.mapPoint = mapPoint
+        self.cameras = cameras
+    }
 }
 
-public struct TrafficCamera {
-    let direction: TrafficCameraDirection?
-    let identifier: String
+public final class TrafficCamera {
+    public let identifier: String
+    public let direction: TrafficCameraDirection?
+    
+    public init(identifier: String, direction: TrafficCameraDirection?) {
+        self.identifier = identifier
+        self.direction = direction
+    }
 }
 
 extension TrafficCameraDirection: JSONValueDecodable {
@@ -49,16 +61,17 @@ extension TrafficCameraLocation: JSONObjectDecodable {
         return try TrafficCameraLocation(
             name: json <~ "name",
             road: json <~ "road",
-            latitude: json <~ "latitude",
-            longitude: json <~ "longitude",
-            cameras: json <~ "cameras")
+            mapPoint: MKMapPointForCoordinate(CLLocationCoordinate2DMake(json <~ "latitude", json <~ "longitude")),
+            cameras: json <~ "cameras"
+        )
     }
 }
 
 extension TrafficCamera: JSONObjectDecodable {
     public static func decodeJSON(json: JSONObject, forKey key: JSONKey) throws -> TrafficCamera {
         return try TrafficCamera(
-            direction: json <~ "direction",
-            identifier: json <~ "image")
+            identifier: json <~ "image",
+            direction: json <~ "direction"
+        )
     }
 }

@@ -56,7 +56,7 @@ public class HTTPFetcher: NSObject, NSURLSessionDelegate {
     }
 }
 
-class HTTPDataSource: Source<Either<NSData,NetworkError>> {
+class HTTPDataSource: Source<Either<NSData,NetworkError>>, Startable {
     let fetcher: HTTPFetcher
     let path: String
     
