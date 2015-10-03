@@ -24,28 +24,33 @@ public struct Incident {
 }
 
 extension IncidentType: JSONValueDecodable {
-    public static func decodeJSON(json: JSONValue) throws -> IncidentType {
+    public static func decodeJSON(json: JSONValue, forKey key: JSONKey) throws -> IncidentType {
         guard let str = json as? String else {
-            throw JSONError.ExpectedValue
+            throw JSONError.ExpectedValue(key: key, type: String.self)
         }
         switch str {
         case "incidents": return .Alert
         case "roadworks": return .Roadworks
-        default: throw JSONError.ParseError
+        default: throw JSONError.ParseError(key: key, value: str, message: "should be 'incidents' or 'roadworks'")
         }
     }
 }
 
 extension Incident: JSONObjectDecodable {
-    public static func decodeJSON(json: JSONObject) throws -> Incident {
+    public static func decodeJSON(json: JSONObject, forKey key: JSONKey) throws -> Incident {
         let dateFormatter = NSDateFormatter()
         dateFormatter.dateFormat = "EEE, dd MMM yyyy HH:mm:ss z"
-        guard let date = dateFormatter.dateFromString(try json <~ "date") else {
-            throw JSONError.ParseError
+
+        let dateStr: String = try json <~ "date"
+        guard let date = dateFormatter.dateFromString(dateStr) else {
+            throw JSONError.ParseError(key: key, value: dateStr, message: "cannot parse date")
         }
-        guard let url = NSURL(string:try json <~ "orig_link") else {
-            throw JSONError.ParseError
+
+        let urlStr: String = try json <~ "orig_link"
+        guard let url = NSURL(string:urlStr) else {
+            throw JSONError.ParseError(key: key, value: urlStr, message: "cannot parse URL")
         }
+        
         return try Incident(
             type: json <~ "type",
             title: json <~ "title",

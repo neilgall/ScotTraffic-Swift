@@ -15,7 +15,7 @@ struct TestType {
 }
 
 extension TestType: JSONObjectDecodable {
-    static func decodeJSON(json: JSONObject) throws -> TestType {
+    static func decodeJSON(json: JSONObject, forKey key: JSONKey) throws -> TestType {
         return try TestType(
             a: json <~ "a",
             b: json <~ "b")

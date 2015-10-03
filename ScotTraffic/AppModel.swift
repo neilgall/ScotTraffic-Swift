@@ -13,7 +13,7 @@ public class AppModel {
     let trafficCameraLocations: Observable<[TrafficCameraLocation]>
     let safetyCameras: Observable<[SafetyCamera]>
     let incidents: Observable<[Incident]>
-    let errorSources: Observable<NSError>
+    let errorSources: Observable<AppError>
     var observations = Observations()
     
     public init() {
@@ -72,5 +72,4 @@ public class AppModel {
         safetyCamerasSource.start()
         incidentsSource.start()
     }
-    
 }

@@ -11,7 +11,17 @@ import UIKit
 let HTTPFetcherErrorDomain = "HTTPFetcherErrorDomain"
 
 public enum NetworkError : ErrorType {
+    case MalformedURL
+    case FetchError(NSError)
     case CannotParseImage
+    
+    public var description: String {
+        switch self {
+        case .MalformedURL: return "malformed URL"
+        case .FetchError(let error): return "URL fetch error: \(error)"
+        case .CannotParseImage: return "failed to parse image data"
+        }
+    }
 }
 
 public class HTTPFetcher: NSObject, NSURLSessionDelegate {
@@ -28,15 +38,15 @@ public class HTTPFetcher: NSObject, NSURLSessionDelegate {
     public func URLSession(session: NSURLSession, didBecomeInvalidWithError error: NSError?) {
     }
     
-    public func fetchDataAtPath(path: String, completion: Either<NSData,NSError> -> Void) {
+    public func fetchDataAtPath(path: String, completion: Either<NSData,NetworkError> -> Void) {
         guard let url = NSURL(string: path, relativeToURL: baseURL) else {
-            completion(Either.Error(HTTPFetcher.errorWithCode(1)))
+            completion(Either.Error(NetworkError.MalformedURL))
             return
         }
         
         let task = session.dataTaskWithURL(url) { data, _, error in
             if let error = error {
-                completion(Either.Error(error))
+                completion(Either.Error(NetworkError.FetchError(error)))
                 
             } else if let data = data {
                 completion(Either.Value(data))
@@ -44,13 +54,9 @@ public class HTTPFetcher: NSObject, NSURLSessionDelegate {
         }
         task.resume()
     }
-    
-    private static func errorWithCode(code: Int) -> NSError {
-        return NSError(domain: HTTPFetcherErrorDomain, code: code, userInfo: nil)
-    }
 }
 
-class HTTPDataSource: Source<Either<NSData,NSError>> {
+class HTTPDataSource: Source<Either<NSData,NetworkError>> {
     let fetcher: HTTPFetcher
     let path: String
     
@@ -68,7 +74,7 @@ class HTTPDataSource: Source<Either<NSData,NSError>> {
 public func JSONArrayFromData(data: NSData) throws -> JSONArray {
     let json = try NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions())
     guard let array = json as? JSONArray else {
-        throw JSONError.ExpectedArray
+        throw JSONError.ExpectedArray(key: "")
     }
     return array
 }

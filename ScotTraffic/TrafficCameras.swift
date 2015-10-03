@@ -29,9 +29,9 @@ public struct TrafficCamera {
 }
 
 extension TrafficCameraDirection: JSONValueDecodable {
-    public static func decodeJSON(json: JSONValue) throws -> TrafficCameraDirection {
+    public static func decodeJSON(json: JSONValue, forKey key: JSONKey) throws -> TrafficCameraDirection {
         guard let dir = json as? String else {
-            throw JSONError.ExpectedValue
+            throw JSONError.ExpectedValue(key: key, type: String.self)
         }
         switch dir.lowercaseString {
         case "n": return .North
@@ -39,13 +39,13 @@ extension TrafficCameraDirection: JSONValueDecodable {
         case "e":  return .East
         case "w":  return .West
         default:
-            throw JSONError.ExpectedValue
+            throw JSONError.ParseError(key: key, value: dir, message: "should be one of N,S,E,W")
         }
     }
 }
 
 extension TrafficCameraLocation: JSONObjectDecodable {
-    public static func decodeJSON(json: JSONObject) throws -> TrafficCameraLocation {
+    public static func decodeJSON(json: JSONObject, forKey key: JSONKey) throws -> TrafficCameraLocation {
         return try TrafficCameraLocation(
             name: json <~ "name",
             road: json <~ "road",
@@ -56,7 +56,7 @@ extension TrafficCameraLocation: JSONObjectDecodable {
 }
 
 extension TrafficCamera: JSONObjectDecodable {
-    public static func decodeJSON(json: JSONObject) throws -> TrafficCamera {
+    public static func decodeJSON(json: JSONObject, forKey key: JSONKey) throws -> TrafficCamera {
         return try TrafficCamera(
             direction: json <~ "direction",
             identifier: json <~ "image")

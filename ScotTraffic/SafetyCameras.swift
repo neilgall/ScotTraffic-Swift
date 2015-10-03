@@ -28,9 +28,9 @@ public struct SafetyCamera {
 }
 
 extension SpeedLimit: JSONValueDecodable {
-    public static func decodeJSON(json: JSONValue) throws -> SpeedLimit {
+    public static func decodeJSON(json: JSONValue, forKey key: JSONKey) throws -> SpeedLimit {
         guard let str = json as? String else {
-            throw JSONError.ExpectedValue
+            throw JSONError.ExpectedValue(key: key, type: String.self)
         }
         switch str {
         case "20": return .MPH20
@@ -46,7 +46,7 @@ extension SpeedLimit: JSONValueDecodable {
 }
 
 extension SafetyCamera: JSONObjectDecodable {
-    public static func decodeJSON(json: JSONObject) throws -> SafetyCamera {
+    public static func decodeJSON(json: JSONObject, forKey key: JSONKey) throws -> SafetyCamera {
         return try SafetyCamera(
             speedLimit: json <~ "speedLimit",
             latitude: json <~ "latitude",

@@ -8,108 +8,130 @@
 
 import Foundation
 
-public enum JSONError : ErrorType {
-    case ExpectedDictionary
-    case ExpectedArray
-    case ExpectedValue
-    case ParseError
-}
-
+public typealias JSONKey = String
 public typealias JSONValue = AnyObject
 public typealias JSONArray = [JSONValue]
-public typealias JSONObject = [String : AnyObject]
-public let emptyJSON: JSONArray = []
+public typealias JSONObject = [JSONKey : JSONValue]
 
-public protocol JSONObjectDecodable {
-    static func decodeJSON(json: JSONObject) throws -> Self
+public enum JSONError : ErrorType, CustomStringConvertible {
+    case ExpectedDictionary(key: JSONKey)
+    case ExpectedArray(key: JSONKey)
+    case ExpectedValue(key: JSONKey, type: Any.Type)
+    case ParseError(key: JSONKey, value: JSONValue, message: String)
+    
+    public var description: String {
+        switch self {
+        case .ExpectedDictionary(let key): return "expected a dictionary for key '\(key)'"
+        case .ExpectedArray(let key): return "expected an array for key '\(key)'"
+        case .ExpectedValue(let key, let type): return "expected \(type) for key '\(key)'"
+        case .ParseError(let key, let value, let msg): return "cannot parse '\(value)' for key '\(key)': \(msg)"
+        }
+    }
 }
 
-public protocol JSONArrayDecodable {
-    static func decodeJSON(json: JSONArray) throws -> [Self]
+public protocol JSONObjectDecodable {
+    static func decodeJSON(json: JSONObject, forKey key: JSONKey) throws -> Self
 }
 
 public protocol JSONValueDecodable {
-    static func decodeJSON(json: JSONValue) throws -> Self
+    static func decodeJSON(json: JSONValue, forKey key: JSONKey) throws -> Self
 }
 
-func genericDecodeJSON<T: JSONValueDecodable> (json: JSONValue?) throws -> T {
+func genericDecodeJSON<T: JSONValueDecodable> (json: JSONValue?, forKey key: JSONKey, type: Any.Type) throws -> T {
     guard let value = json as? T else {
-        throw JSONError.ExpectedValue
+        throw JSONError.ExpectedValue(key: key, type: type)
     }
     return value
 }
 
 extension String: JSONValueDecodable {
-    public static func decodeJSON(json: JSONValue) throws -> String {
-        return try genericDecodeJSON(json)
+    public static func decodeJSON(json: JSONValue, forKey key: JSONKey) throws -> String {
+        return try genericDecodeJSON(json, forKey: key, type: String.self)
     }
 }
 
 extension Int: JSONValueDecodable {
-    public static func decodeJSON(json: JSONValue) throws -> Int {
-        return try genericDecodeJSON(json)
+    public static func decodeJSON(json: JSONValue, forKey key: JSONKey) throws -> Int {
+        return try genericDecodeJSON(json, forKey: key, type: Int.self)
     }
 }
 
 extension Float: JSONValueDecodable {
-    public static func decodeJSON(json: JSONValue) throws -> Float {
-        return try genericDecodeJSON(json)
+    public static func decodeJSON(json: JSONValue, forKey key: JSONKey) throws -> Float {
+        do {
+            return try genericDecodeJSON(json, forKey: key, type: Float.self)
+        } catch {
+            // special handling of string -> float
+            let str: String = try genericDecodeJSON(json, forKey: key, type: String.self)
+            guard let f = Float(str) else {
+                throw JSONError.ExpectedValue(key: key, type: Float.self)
+            }
+            return f
+        }
     }
 }
 
 extension Double: JSONValueDecodable {
-    public static func decodeJSON(json: JSONValue) throws -> Double {
-        return try genericDecodeJSON(json)
-    }
-}
-
-extension Array where Element: JSONValueDecodable {
-    public static func decodeJSON(json: JSONArray) throws -> [Element] {
-        return try json.map(Element.decodeJSON)
-    }
-}
-
-extension Array where Element: JSONObjectDecodable {
-    public static func decodeJSON(json: JSONArray) throws -> [Element] {
-        return try json.map { item in
-            guard let object = item as? JSONObject else {
-                throw JSONError.ExpectedDictionary
+    public static func decodeJSON(json: JSONValue, forKey key: JSONKey) throws -> Double {
+        do {
+            return try genericDecodeJSON(json, forKey: key, type: Double.self)
+        } catch {
+            // special handling of string -> double
+            let str: String = try genericDecodeJSON(json, forKey: key, type: String.self)
+            guard let d = Double(str) else {
+                throw JSONError.ExpectedValue(key: key, type: Double.self)
             }
-            return try Element.decodeJSON(object)
+            return d
         }
     }
 }
 
 extension Bool: JSONValueDecodable {
-    public static func decodeJSON(json: JSONValue) throws -> Bool {
-        return try genericDecodeJSON(json)
+    public static func decodeJSON(json: JSONValue, forKey key: JSONKey) throws -> Bool {
+        return try genericDecodeJSON(json, forKey: key, type: Bool.self)
+    }
+}
+
+extension Array where Element: JSONValueDecodable {
+    public static func decodeJSON(json: JSONArray, forKey key: JSONKey) throws -> [Element] {
+        return try json.map { return try Element.decodeJSON($0, forKey: key) }
+    }
+    
+    public static func decodeJSON(json: JSONArray) throws -> [Element] {
+        return try decodeJSON(json, forKey: "")
+    }
+}
+
+extension Array where Element: JSONObjectDecodable {
+    public static func decodeJSON(json: JSONArray, forKey key: JSONKey) throws -> [Element] {
+        return try json.map { item in
+            guard let object = item as? JSONObject else {
+                throw JSONError.ExpectedDictionary(key: key)
+            }
+            return try Element.decodeJSON(object, forKey: key)
+        }
+    }
+
+    public static func decodeJSON(json: JSONArray) throws -> [Element] {
+        return try decodeJSON(json, forKey: "")
     }
 }
 
 extension JSONValueDecodable {
-    public static func decodeJSON(json: JSONValue?) throws -> Self? {
+    public static func decodeJSON(json: JSONValue?, forKey key: JSONKey) throws -> Self? {
         guard let value = json else {
             return nil
         }
-        return try decodeJSON(value)
-    }
-}
-
-extension JSONArrayDecodable {
-    public static func decodeJSON(json: JSONArray?) throws -> [Self]? {
-        guard let value = json else {
-            return nil
-        }
-        return try decodeJSON(value)
+        return try decodeJSON(value, forKey: key)
     }
 }
 
 extension JSONObjectDecodable {
-    public static func decodeJSON(json: JSONObject?) throws -> Self? {
+    public static func decodeJSON(json: JSONObject?, forKey key: JSONKey) throws -> Self? {
         guard let value = json else {
             return nil
         }
-        return try decodeJSON(value)
+        return try decodeJSON(value, forKey: key)
     }
 }
 
@@ -117,37 +139,37 @@ infix operator <~ { associativity left precedence 150 }
 
 public func <~ <T: JSONValueDecodable> (json: JSONObject, key: String) throws -> T {
     guard let value = json[key] else {
-        throw JSONError.ExpectedValue
+        throw JSONError.ExpectedValue(key: key, type: Any.self)
     }
-    return try T.decodeJSON(value)
+    return try T.decodeJSON(value, forKey: key)
 }
 
 public func <~ <T: JSONValueDecodable>(json: JSONObject, key: String) throws -> [T] {
     guard let array = json[key] as? JSONArray else {
-        throw JSONError.ExpectedArray
+        throw JSONError.ExpectedArray(key: key)
     }
-    return try [T].decodeJSON(array)
+    return try [T].decodeJSON(array, forKey: key)
 }
 
 public func <~ <T: JSONValueDecodable>(json: JSONObject, key: String) throws -> T? {
     guard let value = json[key] else {
         return nil
     }
-    return try T.decodeJSON(value)
+    return try T.decodeJSON(value, forKey: key)
 }
 
 public func <~ <T: JSONObjectDecodable>(json: JSONObject, key: String) throws -> T {
     guard let dict = json[key] as? JSONObject else {
-        throw JSONError.ExpectedDictionary
+        throw JSONError.ExpectedDictionary(key: key)
     }
-    return try T.decodeJSON(dict)
+    return try T.decodeJSON(dict, forKey: key)
 }
 
 public func <~ <T: JSONObjectDecodable>(json: JSONObject, key: String) throws -> [T] {
     guard let array = json[key] as? JSONArray else {
-        throw JSONError.ExpectedArray
+        throw JSONError.ExpectedArray(key: key)
     }
-    return try [T].decodeJSON(array)
+    return try [T].decodeJSON(array, forKey: key)
 }
 
 public func <~ <T: JSONObjectDecodable>(json: JSONObject, key: String) throws -> T? {
@@ -155,8 +177,7 @@ public func <~ <T: JSONObjectDecodable>(json: JSONObject, key: String) throws ->
         return nil
     }
     guard let dict = value as? JSONObject else {
-        throw JSONError.ExpectedDictionary
+        throw JSONError.ExpectedDictionary(key: key)
     }
-    return try T.decodeJSON(dict)
+    return try T.decodeJSON(dict, forKey: key)
 }
-
