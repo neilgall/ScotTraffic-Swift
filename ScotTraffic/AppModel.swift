@@ -13,6 +13,7 @@ public class AppModel {
     let trafficCameraLocations: Observable<[TrafficCameraLocation]>
     let safetyCameras: Observable<[SafetyCamera]>
     let incidents: Observable<[Incident]>
+    let weather: Observable<[Weather]>
     let errorSources: Observable<AppError>
     var observations = Observations()
     
@@ -46,12 +47,22 @@ public class AppModel {
         self.incidents = valueFromEither(incidents)
         
         
+        // -- Weather --
+        
+        let weatherSource = HTTPDataSource(fetcher: self.fetcher, path: "weather.json")
+        let weather = weatherSource.map {
+            $0.map(Array<Weather>.decodeJSON <== JSONArrayFromData)
+        }
+        self.weather = valueFromEither(weather)
+        
+        
         // -- Merge errors from all sources
         
         self.errorSources = union(
             errorFromEither(trafficCameraLocations),
             errorFromEither(safetyCameras),
-            errorFromEither(incidents)
+            errorFromEither(incidents),
+            errorFromEither(weather)
         )
         
         
@@ -61,7 +72,9 @@ public class AppModel {
         }
         observations.add(self.safetyCameras) { _ in
         }
-        observations.add(self.incidents) {
+        observations.add(self.incidents) { _ in
+        }
+        observations.add(self.weather) {
             print($0)
         }
         observations.add(self.errorSources) {
@@ -71,5 +84,6 @@ public class AppModel {
         trafficCamerasSource.start()
         safetyCamerasSource.start()
         incidentsSource.start()
+        weatherSource.start()
     }
 }
