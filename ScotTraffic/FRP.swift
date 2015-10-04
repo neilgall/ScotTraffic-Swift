@@ -55,6 +55,11 @@ public class Source<T> : Observable<T> {
     public init(initial: T) {
         value = initial
     }
+
+    override func addObserver(observer: T->Void) -> Int {
+        observer(value)
+        return super.addObserver(observer)
+    }
 }
 
 class Filter<T> : Observable<T> {
@@ -105,6 +110,13 @@ public class Latest<T> : Observable<T> {
             self.value = value
             self.notify(value)
         }
+    }
+
+    override func addObserver(observer: T->Void) -> Int {
+        if let value = self.value {
+            observer(value)
+        }
+        return super.addObserver(observer)
     }
 }
 

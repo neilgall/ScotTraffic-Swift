@@ -17,14 +17,13 @@ enum TableSections : Int {
 
 class SearchViewController: UITableViewController, UISearchBarDelegate {
 
+    var searchBar: UISearchBar?
     var viewModel: SearchViewModel?
     var tableData: Latest<[MapItem]>?
-    var searchBar: UISearchBar?
+    var tableDataObserver: Observation?
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        tableData = viewModel?.searchResults.latest()
         
         let searchBar = UISearchBar(frame: CGRectMake(0, 0, 0, 44))
         searchBar.translatesAutoresizingMaskIntoConstraints = true
@@ -34,6 +33,11 @@ class SearchViewController: UITableViewController, UISearchBarDelegate {
         searchBar.placeholder = "Place name or road"
         searchBar.showsCancelButton = false
         self.searchBar = searchBar
+
+        tableData = viewModel?.searchResults.latest()
+        tableDataObserver = tableData?.sink { _ in
+            self.tableView.reloadData()
+        }
     }
 
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {

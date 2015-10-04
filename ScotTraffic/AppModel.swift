@@ -20,6 +20,7 @@ public class AppModel {
     
     let errorSources: Observable<AppError>
     let fetchStarters: [PeriodicStarter]
+    var internalObservers = Observations()
     
     public init() {
         self.fetcher = HTTPFetcher(baseURL: NSURL(string: "http://dev.scottraffic.co.uk")!)
@@ -31,7 +32,7 @@ public class AppModel {
         let trafficCameraLocations = trafficCamerasSource.map {
             $0.map(Array<TrafficCameraLocation>.decodeJSON <== JSONArrayFromData)
         }
-        self.trafficCameraLocations = valueFromEither(trafficCameraLocations)
+        self.trafficCameraLocations = valueFromEither(trafficCameraLocations).latest()
         
         
         // -- Safety Cameras --
@@ -40,7 +41,7 @@ public class AppModel {
         let safetyCameras = safetyCamerasSource.map {
             $0.map(Array<SafetyCamera>.decodeJSON <== JSONArrayFromData)
         }
-        self.safetyCameras = valueFromEither(safetyCameras)
+        self.safetyCameras = valueFromEither(safetyCameras).latest()
  
         
         // -- Incidents / Roadworks --
@@ -50,8 +51,8 @@ public class AppModel {
             $0.map(Array<Incident>.decodeJSON <== JSONArrayFromData)
         }
         let allIncidents = valueFromEither(incidents)
-        self.alerts = allIncidents.map { $0.filter { $0.type == IncidentType.Alert } }
-        self.roadworks = allIncidents.map { $0.filter { $0.type == IncidentType.Roadworks } }
+        self.alerts = allIncidents.map { $0.filter { $0.type == IncidentType.Alert } }.latest()
+        self.roadworks = allIncidents.map { $0.filter { $0.type == IncidentType.Roadworks } }.latest()
         
         
         // -- Weather --
@@ -60,7 +61,7 @@ public class AppModel {
         let weather = weatherSource.map {
             $0.map(Array<Weather>.decodeJSON <== JSONArrayFromData)
         }
-        self.weather = valueFromEither(weather)
+        self.weather = valueFromEither(weather).latest()
         
         
         // -- Merge errors from all sources
@@ -71,6 +72,10 @@ public class AppModel {
             errorFromEither(incidents),
             errorFromEither(weather)
         )
+        
+        internalObservers.add(self.errorSources) {
+            print($0)
+        }
         
         // -- Auto refresh --
         
