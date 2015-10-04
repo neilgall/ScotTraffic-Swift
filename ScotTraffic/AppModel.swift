@@ -17,6 +17,7 @@ public class AppModel {
     let roadworks: Observable<[Incident]>
     let weather: Observable<[Weather]>
     let settings: Settings
+    let favourites: Favourites
     
     let errorSources: Observable<AppError>
     let fetchStarters: [PeriodicStarter]
@@ -24,8 +25,11 @@ public class AppModel {
     
     public init() {
         self.fetcher = HTTPFetcher(baseURL: NSURL(string: "http://dev.scottraffic.co.uk")!)
-        self.settings = Settings(userDefaults: NSUserDefaults.standardUserDefaults())
+        
+        let userDefaults = NSUserDefaults.standardUserDefaults()
+        self.settings = Settings(userDefaults: userDefaults)
 
+        
         // -- Traffic Cameras --
         
         let trafficCamerasSource = HTTPDataSource(fetcher: self.fetcher, path: "trafficcameras.json")
@@ -33,7 +37,8 @@ public class AppModel {
             $0.map(Array<TrafficCameraLocation>.decodeJSON <== JSONArrayFromData)
         }
         self.trafficCameraLocations = valueFromEither(trafficCameraLocations).latest()
-        
+        self.favourites = Favourites(userDefaults: userDefaults, trafficCameraLocations: self.trafficCameraLocations)
+
         
         // -- Safety Cameras --
         

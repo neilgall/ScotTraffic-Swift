@@ -9,7 +9,13 @@
 import MapKit
 
 public protocol MapItem {
-    var mapPoint: MKMapPoint { get }
     var name: String { get }
     var road: String { get }
+    var mapPoint: MKMapPoint { get }
+}
+
+public func == (a: MapItem, b: MapItem) -> Bool {
+    return (a.name == b.name
+        && a.road == b.road
+        && MKMapPointEqualToPoint(a.mapPoint, b.mapPoint))
 }

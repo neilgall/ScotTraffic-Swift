@@ -15,12 +15,24 @@ enum TableSections : Int {
     case NumberOfSections
 }
 
+protocol SearchViewDataSource: class {
+    var count: Int { get }
+    func configureCell(cell: UITableViewCell, forItemAtIndex index: Int)
+    func onChange(fn: Void->Void) -> Observation
+}
+
 class SearchViewController: UITableViewController, UISearchBarDelegate {
 
     var searchBar: UISearchBar?
-    var viewModel: SearchViewModel?
-    var tableData: Latest<[MapItem]>?
-    var tableDataObserver: Observation?
+    var favouritesViewModel: FavouritesViewModel?
+    var searchViewModel: SearchViewModel?
+
+    var dataSourceObserver: Observation?
+    var dataSource: SearchViewDataSource? {
+        didSet {
+            dataSourceObserver = dataSource?.onChange { self.tableView.reloadData() }
+        }
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -33,11 +45,8 @@ class SearchViewController: UITableViewController, UISearchBarDelegate {
         searchBar.placeholder = "Place name or road"
         searchBar.showsCancelButton = false
         self.searchBar = searchBar
-
-        tableData = viewModel?.searchResults.latest()
-        tableDataObserver = tableData?.output { _ in
-            self.tableView.reloadData()
-        }
+        
+        self.dataSource = self.favouritesViewModel
     }
 
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
@@ -46,7 +55,7 @@ class SearchViewController: UITableViewController, UISearchBarDelegate {
 
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if section == TableSections.ContentSection.rawValue {
-            return tableData?.value?.count ?? 0
+            return dataSource?.count ?? 0
         } else {
             return 0
         }
@@ -54,11 +63,7 @@ class SearchViewController: UITableViewController, UISearchBarDelegate {
 
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("searchCell", forIndexPath: indexPath)
-
-        let mapItem = tableData?.value?[indexPath.row]
-        cell.textLabel?.text = mapItem?.name
-        cell.detailTextLabel?.text = mapItem?.road
-
+        dataSource?.configureCell(cell, forItemAtIndex: indexPath.row)
         return cell
     }
     
@@ -91,6 +96,17 @@ class SearchViewController: UITableViewController, UISearchBarDelegate {
     // MARK - UISearchBarDelegate
     
     func searchBar(searchBar: UISearchBar, textDidChange searchText: String) {
-        viewModel?.searchTerm.value = searchText
+        let newDataSource: SearchViewDataSource?
+        if searchText.isEmpty {
+            newDataSource = favouritesViewModel
+        } else  {
+            searchViewModel?.searchTerm.value = searchText
+            newDataSource = searchViewModel
+        }
+        
+        if newDataSource !== dataSource {
+            dataSource = newDataSource
+            tableView.reloadData()
+        }
     }
 }

@@ -6,12 +6,12 @@
 //  Copyright © 2015 Neil Gall. All rights reserved.
 //
 
-import Foundation
+import UIKit
 
-public class SearchViewModel {
+public class SearchViewModel: SearchViewDataSource {
     let appModel: AppModel
     let searchTerm: Input<String>
-    let searchResults: Observable<[MapItem]>
+    let searchResults: Latest<[MapItem]>
     
     public init(appModel: AppModel) {
         self.appModel = appModel
@@ -37,9 +37,23 @@ public class SearchViewModel {
             enabled:    appModel.settings.showRoadworksOnMap,
             searchTerm: self.searchTerm)
         
-        self.searchResults = combine(trafficCameras, safetyCameras, alerts, roadworks) {
+        self.searchResults = combine(trafficCameras, safetyCameras, alerts, roadworks, combine:{
             return $0 + $1 + $2 + $3
-        }
+        }).latest()
+    }
+    
+    public var count: Int {
+        return searchResults.value?.count ?? 0
+    }
+    
+    public func configureCell(cell: UITableViewCell, forItemAtIndex index: Int) {
+        let mapItem = searchResults.value?[index]
+        cell.textLabel?.text = mapItem?.name
+        cell.detailTextLabel?.text = mapItem?.road
+    }
+    
+    public func onChange(fn: Void -> Void) -> Observation {
+        return searchResults.output { _ in fn() }
     }
 }
 

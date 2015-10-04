@@ -8,7 +8,7 @@
 
 import Foundation
 
-protocol Observation {}
+public protocol Observation {}
 
 public class Observable<T> {
     private var observers: [Int:T->Void] = [:]
