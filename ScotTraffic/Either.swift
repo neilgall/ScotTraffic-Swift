@@ -51,13 +51,13 @@ public enum Either<V, E: ErrorType> {
 // FRP operations on Either
 
 class SplitEitherValue<V, E:ErrorType> : Observable<V> {
-    var sink: Sink<Either<V,E>>?
+    var output: Output<Either<V,E>>?
     
     init(_ source: Observable<Either<V,E>>) {
         super.init()
-        self.sink = Sink<Either<V,E>>(source) {
+        self.output = Output<Either<V,E>>(source) {
             switch $0 {
-            case .Value(let v): self.notify(v)
+            case .Value(let v): self.pushValue(v)
             case .Error: break
             }
         }
@@ -65,14 +65,14 @@ class SplitEitherValue<V, E:ErrorType> : Observable<V> {
 }
 
 class SplitEitherError<V, E:ErrorType> : Observable<E> {
-    var sink: Sink<Either<V,E>>?
+    var output: Output<Either<V,E>>?
     
     init(_ source: Observable<Either<V,E>>) {
         super.init()
-        self.sink = Sink<Either<V,E>>(source) {
+        self.output = Output<Either<V,E>>(source) {
             switch $0 {
             case .Value: break
-            case .Error(let e): self.notify(e)
+            case .Error(let e): self.pushValue(e)
             }
         }
     }

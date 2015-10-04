@@ -23,38 +23,47 @@ class Capture<T> {
 
 class FRPTests: XCTestCase {
 
-    func testSourceCanSink() {
-        let s = Source<Int>(initial: 0)
+    func testInputCanOutput() {
+        let s = Input<Int>(initial: 0)
         let c = Capture(s)
         
         s.value = 123
         s.value = 234
-        XCTAssertEqual(c.vals, [123, 234])
+        XCTAssertEqual(c.vals, [0, 123, 234])
     }
     
-    func testDiscardingObservationCancelsSink() {
-        let s = Source<Int>(initial: 0)
+    func testDiscardingObservationCancelsOutput() {
+        let s = Input<Int>(initial: 66)
         let c = Capture(s)
         
         s.value = 123
-        XCTAssertEqual(c.vals, [123])
+        XCTAssertEqual(c.vals, [66, 123])
         
         c.obs.clear()
         s.value = 234
-        XCTAssertEqual(c.vals, [123])
+        XCTAssertEqual(c.vals, [66, 123])
     }
     
-    func testMap() {
-        let s = Source<Int>(initial: 0)
+    func testMap_pushable() {
+        let s = Input<Int>(initial: 7)
         let m = s.map { $0 + 1 }
         let c = Capture(m)
         
         s.value = 123
-        XCTAssertEqual(c.vals, [124])
+        XCTAssertEqual(c.vals, [8, 124])
     }
     
-    func testFilter() {
-        let s = Source<Int>(initial: 0)
+    func testMap_notPushable() {
+        let s = Observable<Int>()
+        let m = s.map { $0 * 2 }
+        let c = Capture(m)
+        
+        s.pushValue(18)
+        XCTAssertEqual(c.vals, [36])
+    }
+    
+    func testFilter_pushable() {
+        let s = Input<Int>(initial: 0)
         let f = s.filter { $0 > 5 }
         let c = Capture(f)
         
@@ -65,9 +74,19 @@ class FRPTests: XCTestCase {
         XCTAssertEqual(c.vals, [9, 6])
     }
     
-    func testUnion() {
-        let s1 = Source<Int>(initial: 0)
-        let s2 = Source<Int>(initial: 0)
+    func testFilter_notPushable() {
+        let s = Observable<Int>()
+        let f = s.filter { $0 < 5 }
+        let c = Capture(f)
+        
+        s.pushValue(7)
+        s.pushValue(2)
+        XCTAssertEqual(c.vals, [2])
+    }
+    
+    func testUnion_pushable() {
+        let s1 = Input<Int>(initial: 0)
+        let s2 = Input<Int>(initial: 0)
         let u = union(s1, s2)
         let c = Capture(u)
         
@@ -79,9 +98,23 @@ class FRPTests: XCTestCase {
         XCTAssertEqual(c.vals, [6,3,10,7,14])
     }
     
-    func testCombine2() {
-        let s1 = Source<Int>(initial: 0)
-        let s2 = Source<String>(initial: "")
+    func tetsUnion_notPushable() {
+        let s1 = Observable<Int>()
+        let s2 = Observable<Int>()
+        let u = union(s1, s2)
+        let c = Capture(u)
+        
+        s1.pushValue(6)
+        s2.pushValue(3)
+        s1.pushValue(10)
+        s1.pushValue(7)
+        s2.pushValue(14)
+        XCTAssertEqual(c.vals, [6,3,10,7,14])
+    }
+    
+    func testCombine2_pushable() {
+        let s1 = Input<Int>(initial: 0)
+        let s2 = Input<String>(initial: "")
         let m = combine(s1, s2) { i,s in "\(i):\(s)" }
         let c = Capture(m)
         
@@ -89,6 +122,53 @@ class FRPTests: XCTestCase {
         s2.value = "foo"
         s1.value = 234
         s2.value = "bar"
-        XCTAssertEqual(c.vals, ["123:foo", "234:foo", "234:bar"])
+        XCTAssertEqual(c.vals, ["0:", "123:", "123:foo", "234:foo", "234:bar"])
+    }
+
+    func testCombine3() {
+        let s1 = Input<Int>(initial: 0)
+        let s2 = Input<String>(initial: "")
+        let s3 = Input<Bool>(initial: false)
+        let m = combine(s1, s2, s3) { i,s,b in "\(i):\(s):\(b)" }
+        let c = Capture(m)
+        
+        s1.value = 123
+        s2.value = "foo"
+        s3.value = true
+        s1.value = 234
+        s2.value = "bar"
+        XCTAssertEqual(c.vals, ["0::false", "123::false", "123:foo:false", "123:foo:true", "234:foo:true", "234:bar:true"])
+    }
+
+    func testCombine4() {
+        let s1 = Input<Int>(initial: 0)
+        let s2 = Input<Int>(initial: 0)
+        let s3 = Input<Int>(initial: 0)
+        let s4 = Input<Int>(initial: 0)
+        let m = combine(s1, s2, s3, s4) { $0 + $1 + $2 + $3 }
+        let c = Capture(m)
+        
+        s1.value = 1
+        s2.value = 4
+        s3.value = 7
+        s4.value = 9
+        XCTAssertEqual(c.vals, [0, 1, 5, 12, 21])
+    }
+    
+    func testCombine5() {
+        let s1 = Input<Int>(initial: 1)
+        let s2 = Input<Int>(initial: 3)
+        let s3 = Input<Int>(initial: 5)
+        let s4 = Input<Int>(initial: 7)
+        let s5 = Input<Int>(initial: 9)
+        let m = combine(s1, s2, s3, s4, s5) { ($0 * $1) + ($2 * $3) + $4 }
+        let c = Capture(m)
+        
+        s1.value = 2
+        s2.value = 4
+        s3.value = 6
+        s4.value = 8
+        s5.value = 10
+        XCTAssertEqual(c.vals, [47, 50, 52, 59, 65, 66])
     }
 }

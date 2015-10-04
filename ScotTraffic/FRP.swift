@@ -8,34 +8,69 @@
 
 import Foundation
 
+protocol Observation {}
+
 public class Observable<T> {
     private var observers: [Int:T->Void] = [:]
     private var nextObserverId: Int = 0
     
-    func addObserver(observer: T->Void) -> Int {
+    public init() {
+    }
+    
+    public func addObserver(observer: T->Void) -> Int {
+        if canPullValue, let value = pullValue {
+            observer(value)
+        }
         let id = nextObserverId++
         observers[id] = observer
         return id
     }
     
-    func removeObserver(id: Int) {
+    public func removeObserver(id: Int) {
         observers.removeValueForKey(id)
     }
     
-    func notify(value: T) {
+    // Push
+    public func pushValue(value: T) {
         for observer in observers.values {
             observer(value)
         }
     }
+    
+    // Pull - by default pull is not enabled
+    public var canPullValue: Bool {
+        return false
+    }
+    public var pullValue: T? {
+        return nil
+    }
 }
 
-public protocol Observation {}
+public class Input<T> : Observable<T> {
+    public var value: T {
+        didSet {
+            pushValue(value)
+        }
+    }
+    
+    public init(initial: T) {
+        value = initial
+    }
+    
+    override public var canPullValue: Bool {
+        return true
+    }
+    
+    override public var pullValue: T? {
+        return value
+    }
+}
 
-public class Sink<T>: Observation {
+public class Output<T>: Observation {
     private var source: Observable<T>
     private var id: Int
     
-    init(_ source: Observable<T>, _ closure: T->Void) {
+    public init(_ source: Observable<T>, _ closure: T->Void) {
         self.source = source
         self.id = source.addObserver(closure)
     }
@@ -45,82 +80,93 @@ public class Sink<T>: Observation {
     }
 }
 
-public class Source<T> : Observable<T> {
-    public var value: T {
-        didSet {
-            notify(value)
-        }
-    }
-    
-    public init(initial: T) {
-        value = initial
-    }
-
-    override func addObserver(observer: T->Void) -> Int {
-        observer(value)
-        return super.addObserver(observer)
-    }
-}
-
 class Filter<T> : Observable<T> {
-    var sink: Sink<T>?
+    var sink: Output<T>?
     
     init(_ source: Observable<T>, _ predicate: T->Bool) {
         super.init()
-        self.sink = Sink<T>(source) { t in
+        self.sink = Output<T>(source) { t in
             if predicate(t) {
-                self.notify(t)
+                self.pushValue(t)
             }
         }
     }
 }
 
 class Mapped<T,U> : Observable<U> {
-    var sink: Sink<T>?
+    let transform: T->U
+    let source: Observable<T>
+    var sink: Output<T>!
     
     init(_ source: Observable<T>, _ transform: T->U) {
+        self.transform = transform
+        self.source = source
         super.init()
-        self.sink = Sink<T>(source) { t in
+        self.sink = Output<T>(source) { t in
             let u = transform(t)
-            self.notify(u)
+            self.pushValue(u)
+        }
+    }
+    
+    override var canPullValue: Bool {
+        return source.canPullValue
+    }
+    
+    override var pullValue: U? {
+        if canPullValue, let sourceValue = source.pullValue {
+            return transform(sourceValue)
+        } else {
+            return nil
         }
     }
 }
 
 class Union<T> : Observable<T> {
-    var sinks: [Sink<T>]?
+    var sinks: [Output<T>]?
     
     init(_ sources: [Observable<T>]) {
         super.init()
         self.sinks = sources.map {
-            Sink<T>($0) { t in
-                self.notify(t)
+            Output<T>($0) { t in
+                self.pushValue(t)
             }
         }
     }
 }
 
 public class Latest<T> : Observable<T> {
-    var sink: Sink<T>?
+    var source: Observable<T>
+    var sink: Output<T>?
     var value: T?
     
     init(_ source: Observable<T>) {
+        self.source = source
         super.init()
-        self.sink = Sink<T>(source) { value in
+        self.sink = Output<T>(source) { value in
             self.value = value
-            self.notify(value)
+            self.pushValue(value)
         }
+        self.value = source.pullValue
     }
-
-    override func addObserver(observer: T->Void) -> Int {
-        if let value = self.value {
-            observer(value)
-        }
-        return super.addObserver(observer)
+    
+    override public var canPullValue: Bool {
+        return value != nil
+    }
+    
+    override public var pullValue: T? {
+        return value
     }
 }
 
-class Combine2<T1,T2,U> : Observable<U> {
+class Combiner<U>: Observable<U> {
+    func update() {
+        if let u = pullValue {
+            pushValue(u)
+        }
+    }
+}
+
+class Combine2<T1,T2,U> : Combiner<U> {
     let combine: (T1,T2)->U
     let latest1: Latest<T1>
     let latest2: Latest<T2>
@@ -131,19 +177,23 @@ class Combine2<T1,T2,U> : Observable<U> {
         latest1 = Latest(s1)
         latest2 = Latest(s2)
         super.init()
-        sinks.append(latest1.sink { _ in self.update() })
-        sinks.append(latest2.sink { _ in self.update() })
+        sinks.append(latest1.output { _ in self.update() })
+        sinks.append(latest2.output { _ in self.update() })
     }
     
-    func update() {
+    override var canPullValue: Bool {
+        return latest1.source.canPullValue && latest2.source.canPullValue
+    }
+    
+    override var pullValue: U? {
         guard let t1 = latest1.value, t2 = latest2.value else {
-            return
+            return nil
         }
-        notify(combine(t1, t2))
+        return combine(t1, t2)
     }
 }
 
-class Combine3<T1,T2,T3,U> : Observable<U> {
+class Combine3<T1,T2,T3,U> : Combiner<U> {
     let combine: (T1,T2,T3)->U
     let latest1: Latest<T1>
     let latest2: Latest<T2>
@@ -156,20 +206,24 @@ class Combine3<T1,T2,T3,U> : Observable<U> {
         latest2 = Latest(s2)
         latest3 = Latest(s3)
         super.init()
-        sinks.append(latest1.sink { _ in self.update() })
-        sinks.append(latest2.sink { _ in self.update() })
-        sinks.append(latest3.sink { _ in self.update() })
+        sinks.append(latest1.output { _ in self.update() })
+        sinks.append(latest2.output { _ in self.update() })
+        sinks.append(latest3.output { _ in self.update() })
     }
     
-    func update() {
+    override var canPullValue: Bool {
+        return latest1.source.canPullValue && latest2.source.canPullValue && latest3.source.canPullValue
+    }
+    
+    override var pullValue: U? {
         guard let t1 = latest1.value, t2 = latest2.value, t3 = latest3.value else {
-            return
+            return nil
         }
-        notify(combine(t1, t2, t3))
+        return combine(t1, t2, t3)
     }
 }
 
-class Combine4<T1,T2,T3,T4,U> : Observable<U> {
+class Combine4<T1,T2,T3,T4,U> : Combiner<U> {
     let combine: (T1,T2,T3,T4)->U
     let latest1: Latest<T1>
     let latest2: Latest<T2>
@@ -184,21 +238,25 @@ class Combine4<T1,T2,T3,T4,U> : Observable<U> {
         latest3 = Latest(s3)
         latest4 = Latest(s4)
         super.init()
-        sinks.append(latest1.sink { _ in self.update() })
-        sinks.append(latest2.sink { _ in self.update() })
-        sinks.append(latest3.sink { _ in self.update() })
-        sinks.append(latest4.sink { _ in self.update() })
+        sinks.append(latest1.output { _ in self.update() })
+        sinks.append(latest2.output { _ in self.update() })
+        sinks.append(latest3.output { _ in self.update() })
+        sinks.append(latest4.output { _ in self.update() })
     }
     
-    func update() {
+    override var canPullValue: Bool {
+        return latest1.source.canPullValue && latest2.source.canPullValue && latest3.source.canPullValue && latest4.source.canPullValue
+    }
+    
+    override var pullValue: U? {
         guard let t1 = latest1.value, t2 = latest2.value, t3 = latest3.value, t4 = latest4.value else {
-            return
+            return nil
         }
-        notify(combine(t1, t2, t3, t4))
+        return combine(t1, t2, t3, t4)
     }
 }
 
-class Combine5<T1,T2,T3,T4,T5,U> : Observable<U> {
+class Combine5<T1,T2,T3,T4,T5,U> : Combiner<U> {
     let combine: (T1,T2,T3,T4,T5)->U
     let latest1: Latest<T1>
     let latest2: Latest<T2>
@@ -215,18 +273,22 @@ class Combine5<T1,T2,T3,T4,T5,U> : Observable<U> {
         latest4 = Latest(s4)
         latest5 = Latest(s5)
         super.init()
-        sinks.append(latest1.sink { _ in self.update() })
-        sinks.append(latest2.sink { _ in self.update() })
-        sinks.append(latest3.sink { _ in self.update() })
-        sinks.append(latest4.sink { _ in self.update() })
-        sinks.append(latest5.sink { _ in self.update() })
+        sinks.append(latest1.output { _ in self.update() })
+        sinks.append(latest2.output { _ in self.update() })
+        sinks.append(latest3.output { _ in self.update() })
+        sinks.append(latest4.output { _ in self.update() })
+        sinks.append(latest5.output { _ in self.update() })
     }
     
-    func update() {
+    override var canPullValue: Bool {
+        return latest1.source.canPullValue && latest2.source.canPullValue && latest3.source.canPullValue && latest4.source.canPullValue && latest5.source.canPullValue
+    }
+    
+    override var pullValue: U? {
         guard let t1 = latest1.value, t2 = latest2.value, t3 = latest3.value, t4 = latest4.value, t5 = latest5.value else {
-            return
+            return nil
         }
-        notify(combine(t1, t2, t3, t4, t5))
+        return combine(t1, t2, t3, t4, t5)
     }
 }
 
@@ -239,7 +301,7 @@ public struct Observations {
     }
     
     public mutating func add<T>(source: Observable<T>, closure: T->Void) {
-        observations.append(source.sink(closure))
+        observations.append(source.output(closure))
     }
     
     public mutating func clear() {
@@ -247,9 +309,9 @@ public struct Observations {
     }
 }
 
-public extension Observable {
-    public func sink(sink: T->Void) -> Sink<T> {
-        return Sink(self, sink)
+extension Observable {
+    public func output(closure: T->Void) -> Output<T> {
+        return Output(self, closure)
     }
     
     public func latest() -> Latest<T> {

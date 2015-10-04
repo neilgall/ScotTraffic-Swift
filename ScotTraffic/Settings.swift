@@ -14,12 +14,12 @@ public enum TemperatureUnit: String {
 }
 
 public class Settings {
-    public let showTrafficCamerasOnMap: Source<Bool>
-    public let showSafetyCamerasOnMap: Source<Bool>
-    public let showAlertsOnMap: Source<Bool>
-    public let showRoadworksOnMap: Source<Bool>
-    public let showBridgesOnMap: Source<Bool>
-    public let temperatureUnit: Source<TemperatureUnit>
+    public let showTrafficCamerasOnMap: Input<Bool>
+    public let showSafetyCamerasOnMap: Input<Bool>
+    public let showAlertsOnMap: Input<Bool>
+    public let showRoadworksOnMap: Input<Bool>
+    public let showBridgesOnMap: Input<Bool>
+    public let temperatureUnit: Input<TemperatureUnit>
     
     public init(userDefaults: NSUserDefaults) {
         showTrafficCamerasOnMap = PersistentSetting(userDefaults, key: "showTrafficCamerasOnMap", defaultValue: true)
@@ -32,7 +32,7 @@ public class Settings {
 }
 
 
-class PersistentSetting<T>: Source<T>, Startable {
+class PersistentSetting<T>: Input<T>, Startable {
     let userDefaults: NSUserDefaults
     let key: String
     let defaultValue: T

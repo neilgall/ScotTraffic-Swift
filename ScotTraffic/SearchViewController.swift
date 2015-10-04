@@ -35,7 +35,7 @@ class SearchViewController: UITableViewController, UISearchBarDelegate {
         self.searchBar = searchBar
 
         tableData = viewModel?.searchResults.latest()
-        tableDataObserver = tableData?.sink { _ in
+        tableDataObserver = tableData?.output { _ in
             self.tableView.reloadData()
         }
     }

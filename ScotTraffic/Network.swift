@@ -56,18 +56,19 @@ public class HTTPFetcher: NSObject, NSURLSessionDelegate {
     }
 }
 
-class HTTPDataSource: Source<Either<NSData,NetworkError>>, Startable {
+class HTTPDataSource: Observable<Either<NSData,NetworkError>>, Startable {
     let fetcher: HTTPFetcher
     let path: String
     
     init(fetcher: HTTPFetcher, path: String) {
         self.fetcher = fetcher
         self.path = path
-        super.init(initial: Either.Value(NSData()))
     }
     
     func start() {
-        self.fetcher.fetchDataAtPath(path) { self.value = $0 }
+        self.fetcher.fetchDataAtPath(path) {
+            self.pushValue($0)
+        }
     }
 }
 

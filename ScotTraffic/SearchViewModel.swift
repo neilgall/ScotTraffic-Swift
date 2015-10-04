@@ -10,12 +10,12 @@ import Foundation
 
 public class SearchViewModel {
     let appModel: AppModel
-    let searchTerm: Source<String>
+    let searchTerm: Input<String>
     let searchResults: Observable<[MapItem]>
     
     public init(appModel: AppModel) {
         self.appModel = appModel
-        self.searchTerm = Source(initial: "")
+        self.searchTerm = Input(initial: "")
         
         let trafficCameras = filteredMapItems(
             sourceList: appModel.trafficCameraLocations,
