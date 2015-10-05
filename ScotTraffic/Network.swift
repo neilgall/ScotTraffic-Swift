@@ -66,8 +66,10 @@ class HTTPDataSource: Observable<Either<NSData,NetworkError>>, Startable {
     }
     
     func start() {
-        self.fetcher.fetchDataAtPath(path) {
-            self.pushValue($0)
+        self.fetcher.fetchDataAtPath(path) { data in
+            dispatch_async(dispatch_get_main_queue()) {
+                self.pushValue(data)
+            }
         }
     }
 }

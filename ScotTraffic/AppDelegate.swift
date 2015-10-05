@@ -12,14 +12,15 @@ import UIKit
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     let appModel = AppModel()
+    var appCoordinator: AppCoordinator?
     var window: UIWindow?
-
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         
-        let searchViewController = (((window?.rootViewController as? UISplitViewController)?.viewControllers[0] as? UINavigationController)?.topViewController) as? SearchViewController
-        searchViewController?.searchViewModel = SearchViewModel(appModel: appModel)
-        searchViewController?.favouritesViewModel = FavouritesViewModel(favourites: appModel.favourites)
+        if let window = window {
+            appCoordinator = AppCoordinator(appModel: appModel, rootWindow: window)
+            appCoordinator!.start()
+        }
         
         return true
     }

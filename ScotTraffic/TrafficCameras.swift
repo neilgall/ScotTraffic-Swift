@@ -33,10 +33,12 @@ public final class TrafficCameraLocation : MapItem {
 public final class TrafficCamera {
     public let identifier: String
     public let direction: TrafficCameraDirection?
+    public let isAvailable: Bool
     
-    public init(identifier: String, direction: TrafficCameraDirection?) {
+    public init(identifier: String, direction: TrafficCameraDirection?, isAvailable: Bool) {
         self.identifier = identifier
         self.direction = direction
+        self.isAvailable = isAvailable
     }
 }
 
@@ -71,7 +73,8 @@ extension TrafficCamera: JSONObjectDecodable {
     public static func decodeJSON(json: JSONObject, forKey key: JSONKey) throws -> TrafficCamera {
         return try TrafficCamera(
             identifier: json <~ "image",
-            direction: json <~ "direction"
+            direction: json <~ "direction",
+            isAvailable: json <~ "available"
         )
     }
 }

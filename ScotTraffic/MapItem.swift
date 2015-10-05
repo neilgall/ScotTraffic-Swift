@@ -48,6 +48,10 @@ extension MKMapRect {
         
         return rect
     }
+    
+    public var centrePoint: MKMapPoint {
+        return MKMapPointMake(MKMapRectGetMidX(self), MKMapRectGetMidY(self))
+    }
 }
 
 public enum GeographicAxis {
@@ -56,9 +60,13 @@ public enum GeographicAxis {
 }
 
 extension SequenceType where Generator.Element == MapItem {
+    public var boundingRect: MKMapRect {
+        return reduce(MKMapRectNull) { rect, mapItem in rect.addPoint(mapItem.mapPoint) }
+    }
+    
     public var majorAxis: GeographicAxis {
-        let boundingRect = reduce(MKMapRectNull) { rect, mapItem in rect.addPoint(mapItem.mapPoint) }
-        if boundingRect.size.width > boundingRect.size.height {
+        let rect = boundingRect
+        if rect.size.width > rect.size.height {
             return GeographicAxis.EastWest
         } else {
             return GeographicAxis.NorthSouth

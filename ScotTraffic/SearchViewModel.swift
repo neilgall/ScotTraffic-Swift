@@ -9,13 +9,11 @@
 import UIKit
 
 public class SearchViewModel {
-    let appModel: AppModel
     let searchTerm: Input<String>
     let searchResults: Latest<[MapItem]>
     let searchResultsMajorAxis: Observable<GeographicAxis>
     
     public init(appModel: AppModel) {
-        self.appModel = appModel
         self.searchTerm = Input(initial: "")
         
         let trafficCameras = combine(
