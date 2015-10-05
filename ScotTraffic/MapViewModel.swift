@@ -10,7 +10,7 @@ import Foundation
 
 public class MapViewModel {
     
-    let mapItems : Observable<[MapItem]>
+    let mapItemGroups : Observable<[[MapItem]]>
     let annotations: Latest<[MapAnnotation]>
  
     public init(appModel: AppModel) {
@@ -29,12 +29,12 @@ public class MapViewModel {
         let alerts = combine(appModel.alerts, appModel.settings.showAlertsOnMap, combine: includeMapItemsIfEnabled)
         let roadworks = combine(appModel.roadworks, appModel.settings.showRoadworksOnMap, combine: includeMapItemsIfEnabled)
         
-        mapItems = combine(trafficCameras, safetyCameras, alerts, roadworks) {
-            $0 + $1 + $2 + $3
+        mapItemGroups = combine(trafficCameras, safetyCameras, alerts, roadworks) {
+            groupMapItems($0 + $1 + $2 + $3)
         }
         
-        let annotations = mapItems.map { items in
-            items.map { item in MapAnnotation(mapItems: [item]) }
+        let annotations = mapItemGroups.map {
+            $0.map { group in MapAnnotation(mapItems: group) }
         }
         
         self.annotations = annotations.latest()
@@ -47,4 +47,8 @@ func includeMapItemsIfEnabled<T: MapItem>(mapItems: [T], enabled: Bool) -> [MapI
     } else {
         return []
     }
+}
+
+func groupMapItems(mapItems: [MapItem]) -> [[MapItem]] {
+    return mapItems.map { [$0] }
 }

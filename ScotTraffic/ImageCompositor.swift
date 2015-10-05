@@ -8,11 +8,18 @@
 
 import UIKit
 
+private var cache = [String : UIImage]()
+
 public func compositeImagesNamed(imageComponents: [String]) -> UIImage? {
     if imageComponents.isEmpty {
         return nil
     } else if imageComponents.count == 1 {
         return UIImage(named: imageComponents[0])
+    }
+    
+    let cacheKey = imageComponents.joinWithSeparator("/")
+    if let image = cache[cacheKey] {
+        return image
     }
     
     let draw = compositedSize(imageComponents)
@@ -39,7 +46,11 @@ public func compositeImagesNamed(imageComponents: [String]) -> UIImage? {
         return nil
     }
     
-    return UIImage(CGImage: composited, scale: draw.scale, orientation: UIImageOrientation.Up)
+    let image = UIImage(CGImage: composited, scale: draw.scale, orientation: UIImageOrientation.Up)
+    cache[cacheKey] = image
+
+    return image
+    
 }
 
 private func compositedSize(imageComponents: [String]) -> (size: CGSize, scale: CGFloat) {
