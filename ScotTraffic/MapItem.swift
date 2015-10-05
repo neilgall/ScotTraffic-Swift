@@ -19,3 +19,57 @@ public func == (a: MapItem, b: MapItem) -> Bool {
         && a.road == b.road
         && MKMapPointEqualToPoint(a.mapPoint, b.mapPoint))
 }
+
+extension MKMapRect {
+    public func addPoint(point: MKMapPoint) -> MKMapRect {
+        if MKMapRectIsNull(self) {
+            return MKMapRectMake(point.x, point.y, 0, 0)
+        }
+        
+        if MKMapRectContainsPoint(self, point) {
+            return self
+        }
+        
+        var rect = self
+        if point.x < MKMapRectGetMinX(rect) {
+            rect.size.width = MKMapRectGetMaxX(rect) - point.x
+            rect.origin.x = point.x
+        }
+        if point.y < MKMapRectGetMinY(rect) {
+            rect.size.height = MKMapRectGetMaxY(rect) - point.y
+            rect.origin.y = point.y
+        }
+        if MKMapRectGetMaxX(rect) < point.x {
+            rect.size.width = point.x - MKMapRectGetMinX(rect)
+        }
+        if MKMapRectGetMaxY(rect) < point.y {
+            rect.size.height = point.y - MKMapRectGetMinY(rect)
+        }
+        
+        return rect
+    }
+}
+
+public enum GeographicAxis {
+    case NorthSouth
+    case EastWest
+}
+
+extension SequenceType where Generator.Element == MapItem {
+    public var majorAxis: GeographicAxis {
+        let boundingRect = reduce(MKMapRectNull) { rect, mapItem in rect.addPoint(mapItem.mapPoint) }
+        if boundingRect.size.width > boundingRect.size.height {
+            return GeographicAxis.EastWest
+        } else {
+            return GeographicAxis.NorthSouth
+        }
+    }
+    
+    public func sortGeographically() -> [Generator.Element] {
+        if majorAxis == GeographicAxis.EastWest {
+            return sort { item1, item2 in item1.mapPoint.x < item2.mapPoint.x }
+        } else {
+            return sort { item1, item2 in item1.mapPoint.y < item2.mapPoint.y }
+        }
+    }
+}

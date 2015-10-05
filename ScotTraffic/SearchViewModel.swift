@@ -8,67 +8,47 @@
 
 import UIKit
 
-public class SearchViewModel: SearchViewDataSource {
+public class SearchViewModel {
     let appModel: AppModel
     let searchTerm: Input<String>
     let searchResults: Latest<[MapItem]>
+    let searchResultsMajorAxis: Observable<GeographicAxis>
     
     public init(appModel: AppModel) {
         self.appModel = appModel
         self.searchTerm = Input(initial: "")
         
-        let trafficCameras = filteredMapItems(
-            sourceList: appModel.trafficCameraLocations,
-            enabled:    appModel.settings.showTrafficCamerasOnMap,
-            searchTerm: self.searchTerm)
+        let trafficCameras = combine(
+            appModel.trafficCameraLocations, appModel.settings.showTrafficCamerasOnMap, self.searchTerm,
+            combine: applyFilterToMapItems)
         
-        let safetyCameras = filteredMapItems(
-            sourceList: appModel.safetyCameras,
-            enabled:    appModel.settings.showSafetyCamerasOnMap,
-            searchTerm: self.searchTerm)
+        let safetyCameras = combine(
+            appModel.safetyCameras, appModel.settings.showSafetyCamerasOnMap, self.searchTerm,
+            combine: applyFilterToMapItems)
         
-        let alerts = filteredMapItems(
-            sourceList: appModel.alerts,
-            enabled:    appModel.settings.showAlertsOnMap,
-            searchTerm: self.searchTerm)
+        let alerts = combine(
+            appModel.alerts, appModel.settings.showAlertsOnMap, self.searchTerm,
+            combine: applyFilterToMapItems)
         
-        let roadworks = filteredMapItems(
-            sourceList: appModel.roadworks,
-            enabled:    appModel.settings.showRoadworksOnMap,
-            searchTerm: self.searchTerm)
+        let roadworks = combine(
+            appModel.roadworks, appModel.settings.showRoadworksOnMap, self.searchTerm,
+            combine: applyFilterToMapItems)
         
-        self.searchResults = combine(trafficCameras, safetyCameras, alerts, roadworks, combine:{
+        let combinedResults: Observable<[MapItem]> = combine(trafficCameras, safetyCameras, alerts, roadworks) {
             return $0 + $1 + $2 + $3
-        }).latest()
-    }
-    
-    public var count: Int {
-        return searchResults.value?.count ?? 0
-    }
-    
-    public func configureCell(cell: UITableViewCell, forItemAtIndex index: Int) {
-        let mapItem = searchResults.value?[index]
-        cell.textLabel?.text = mapItem?.name
-        cell.detailTextLabel?.text = mapItem?.road
-    }
-    
-    public func onChange(fn: Void -> Void) -> Observation {
-        return searchResults.output { _ in fn() }
+        }
+            
+        self.searchResults = combinedResults.map({ $0.sortGeographically() }).latest()
+        self.searchResultsMajorAxis = combinedResults.map { $0.majorAxis }
     }
 }
 
-func filteredMapItems<T: MapItem>(
-    sourceList sourceList: Observable<[T]>,
-    enabled: Observable<Bool>,
-    searchTerm: Observable<String>) -> Observable<[MapItem]>
-{
-    return combine(sourceList, enabled, searchTerm) { sourceList, enabled, searchTerm in
-        if !enabled {
-            return []
-        } else {
-            return sourceList
-                .filter { $0.name.containsString(searchTerm) || $0.road.containsString(searchTerm) }
-                .map { $0 as MapItem }
-        }
+func applyFilterToMapItems<T: MapItem> (sourceList: [T], enabled: Bool, searchTerm: String) -> [MapItem] {
+    if !enabled {
+        return []
+    } else {
+        return sourceList
+            .filter { $0.name.containsString(searchTerm) || $0.road.containsString(searchTerm) }
+            .map { $0 as MapItem }
     }
 }

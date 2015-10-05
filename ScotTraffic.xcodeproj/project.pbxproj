@@ -24,6 +24,7 @@
 		284DE0981BBDD0D800E6A678 /* AppModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 284DE0971BBDD0D800E6A678 /* AppModel.swift */; };
 		286559151BC1DCB70058A35A /* Favourites.swift in Sources */ = {isa = PBXBuildFile; fileRef = 286559141BC1DCB70058A35A /* Favourites.swift */; settings = {ASSET_TAGS = (); }; };
 		286559181BC1EBDC0058A35A /* FavouritesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 286559171BC1EBDC0058A35A /* FavouritesViewModel.swift */; settings = {ASSET_TAGS = (); }; };
+		2865591A1BC2A7200058A35A /* FRP-UI-Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 286559191BC2A7200058A35A /* FRP-UI-Extensions.swift */; settings = {ASSET_TAGS = (); }; };
 		28875EA41BBC72FB00E67A16 /* Network.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28875EA31BBC72FB00E67A16 /* Network.swift */; };
 		28875EA71BBC739100E67A16 /* JSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28875EA61BBC739100E67A16 /* JSON.swift */; };
 		28875EA91BBC7A2F00E67A16 /* JSONTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28875EA81BBC7A2F00E67A16 /* JSONTests.swift */; };
@@ -77,6 +78,7 @@
 		284DE0971BBDD0D800E6A678 /* AppModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppModel.swift; sourceTree = "<group>"; };
 		286559141BC1DCB70058A35A /* Favourites.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Favourites.swift; sourceTree = "<group>"; };
 		286559171BC1EBDC0058A35A /* FavouritesViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FavouritesViewModel.swift; sourceTree = "<group>"; };
+		286559191BC2A7200058A35A /* FRP-UI-Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "FRP-UI-Extensions.swift"; sourceTree = "<group>"; };
 		28875EA31BBC72FB00E67A16 /* Network.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Network.swift; sourceTree = "<group>"; };
 		28875EA61BBC739100E67A16 /* JSON.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JSON.swift; sourceTree = "<group>"; };
 		28875EA81BBC7A2F00E67A16 /* JSONTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JSONTests.swift; sourceTree = "<group>"; };
@@ -205,6 +207,7 @@
 		289201CF1BBC570800DA4A9A /* UI */ = {
 			isa = PBXGroup;
 			children = (
+				286559191BC2A7200058A35A /* FRP-UI-Extensions.swift */,
 				280486521BC08711003BA360 /* SearchViewController.swift */,
 				280486541BC087B6003BA360 /* SearchViewModel.swift */,
 				286559171BC1EBDC0058A35A /* FavouritesViewModel.swift */,
@@ -359,6 +362,7 @@
 			files = (
 				284DE0961BBDCD4200E6A678 /* Either.swift in Sources */,
 				2804864F1BC074E4003BA360 /* AppErrors.swift in Sources */,
+				2865591A1BC2A7200058A35A /* FRP-UI-Extensions.swift in Sources */,
 				28875EA41BBC72FB00E67A16 /* Network.swift in Sources */,
 				28DB3BF51BC02892001AAC2A /* SafetyCameras.swift in Sources */,
 				280486511BC08216003BA360 /* PeriodicStarter.swift in Sources */,

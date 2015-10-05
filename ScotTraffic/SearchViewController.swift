@@ -15,10 +15,9 @@ enum TableSections : Int {
     case NumberOfSections
 }
 
-protocol SearchViewDataSource: class {
-    var count: Int { get }
-    func configureCell(cell: UITableViewCell, forItemAtIndex index: Int)
-    func onChange(fn: Void->Void) -> Observation
+enum DisplayContent {
+    case Favourites
+    case SearchResults
 }
 
 class SearchViewController: UITableViewController, UISearchBarDelegate {
@@ -26,13 +25,10 @@ class SearchViewController: UITableViewController, UISearchBarDelegate {
     var searchBar: UISearchBar?
     var favouritesViewModel: FavouritesViewModel?
     var searchViewModel: SearchViewModel?
-
-    var dataSourceObserver: Observation?
-    var dataSource: SearchViewDataSource? {
-        didSet {
-            dataSourceObserver = dataSource?.onChange { self.tableView.reloadData() }
-        }
-    }
+    var displayContent: Observable<DisplayContent>?
+    var dataSource: Latest<UITableViewDataSource>?
+    var resultsMajorAxis: Latest<String>?
+    var reloadObserver: Observation?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -46,30 +42,65 @@ class SearchViewController: UITableViewController, UISearchBarDelegate {
         searchBar.showsCancelButton = false
         self.searchBar = searchBar
         
-        self.dataSource = self.favouritesViewModel
-    }
+        displayContent = searchViewModel?.searchTerm.map { text in
+            text.isEmpty ? .Favourites : .SearchResults
+        }
+        
+        dataSource = displayContent!.onChange().map({
+            switch $0 {
+            case .Favourites:
+                return self.favouritesViewModel!.favourites
+                    .map(toSearchResultItems)
+                    .tableViewDataSource(self.tableView, cellIdentifier: "searchCell")
+            case .SearchResults:
+                return self.searchViewModel!.searchResults
+                    .map(toSearchResultItem)
+                    .tableViewDataSource(self.tableView, cellIdentifier: "searchCell")
+            }
+        }).latest()
 
+        resultsMajorAxis = combine(displayContent!, searchViewModel!.searchResultsMajorAxis, combine: {
+            if $0 == DisplayContent.Favourites {
+                return ""
+            } else {
+                switch $1 {
+                case .NorthSouth: return "North to South"
+                case .EastWest: return "West to East"
+                }
+            }
+        }).latest()
+        
+
+        // Must set this last as it will trigger a table reload
+        reloadObserver = dataSource!.output { _ in
+            self.tableView.reloadData()
+        }
+    }
+    
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         return TableSections.NumberOfSections.rawValue
     }
 
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if section == TableSections.ContentSection.rawValue {
-            return dataSource?.count ?? 0
+            return dataSource?.value?.tableView(tableView, numberOfRowsInSection: 0) ?? 0
         } else {
             return 0
         }
     }
 
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("searchCell", forIndexPath: indexPath)
-        dataSource?.configureCell(cell, forItemAtIndex: indexPath.row)
-        return cell
+        if indexPath.section == TableSections.ContentSection.rawValue {
+            if let cell = dataSource?.value?.tableView(tableView, cellForRowAtIndexPath: indexPath) {
+                return cell
+            }
+        }
+        return tableView.dequeueReusableCellWithIdentifier("dummy", forIndexPath: indexPath)
     }
     
     override func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         if section == TableSections.TableTitleSection.rawValue {
-            return "Title"
+            return resultsMajorAxis?.value
         } else {
             return nil
         }
@@ -80,6 +111,23 @@ class SearchViewController: UITableViewController, UISearchBarDelegate {
             return searchBar
         } else {
             return nil
+        }
+    }
+    
+    override func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        switch TableSections(rawValue: section)! {
+            
+        case .SearchBarSection:
+            return 44
+
+        case .TableTitleSection:
+            guard let title = resultsMajorAxis?.value where !title.isEmpty else {
+                return 0
+            }
+            return 20
+
+        default:
+            return 0
         }
     }
 
@@ -96,17 +144,25 @@ class SearchViewController: UITableViewController, UISearchBarDelegate {
     // MARK - UISearchBarDelegate
     
     func searchBar(searchBar: UISearchBar, textDidChange searchText: String) {
-        let newDataSource: SearchViewDataSource?
-        if searchText.isEmpty {
-            newDataSource = favouritesViewModel
-        } else  {
-            searchViewModel?.searchTerm.value = searchText
-            newDataSource = searchViewModel
-        }
-        
-        if newDataSource !== dataSource {
-            dataSource = newDataSource
-            tableView.reloadData()
-        }
+        searchViewModel?.searchTerm.value = searchText
     }
 }
+
+struct SearchResultItem: TableViewCellConfigurator {
+    let name: String
+    let road: String
+    
+    func configureCell(cell: UITableViewCell) {
+        cell.textLabel?.text = name
+        cell.detailTextLabel?.text = road
+    }
+}
+
+func toSearchResultItems(items: [FavouriteTrafficCamera]) -> [SearchResultItem] {
+    return items.map { item in SearchResultItem(name: item.location.name, road: item.location.road) }
+}
+
+func toSearchResultItem(items: [MapItem]) -> [SearchResultItem] {
+    return items.map { item in SearchResultItem(name: item.name, road: item.road) }
+}
+
