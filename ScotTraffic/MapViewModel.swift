@@ -24,31 +24,29 @@ public class MapViewModel {
         visibleMapRect = Input(initial: MKMapRectWorld)
         delegate = Input(initial: nil)
         
-        let slowVisibleMapRect = visibleMapRect //.throttle(0.5, queue: dispatch_get_main_queue())
-        
         let trafficCameras = combine(
             appModel.trafficCameraLocations,
             appModel.favourites.trafficCameras,
             appModel.settings.showTrafficCamerasOnMap,
-            slowVisibleMapRect,
+            visibleMapRect,
             combine: trafficCamerasFromRectAndFavourites)
 
         let safetyCameras = combine(
             appModel.safetyCameras,
             appModel.settings.showSafetyCamerasOnMap,
-            slowVisibleMapRect,
+            visibleMapRect,
             combine: mapItemsFromRect)
         
         let alerts = combine(
             appModel.alerts,
             appModel.settings.showAlertsOnMap,
-            slowVisibleMapRect,
+            visibleMapRect,
             combine: mapItemsFromRect)
         
         let roadworks = combine(
             appModel.roadworks,
             appModel.settings.showRoadworksOnMap,
-            slowVisibleMapRect,
+            visibleMapRect,
             combine: mapItemsFromRect)
         
         mapItemGroups = combine(trafficCameras, safetyCameras, alerts, roadworks, delegate) {

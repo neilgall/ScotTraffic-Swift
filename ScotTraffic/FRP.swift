@@ -244,10 +244,21 @@ class Throttle<ValueType> : Observable<ValueType> {
 }
 
 class Combiner<T>: Observable<T> {
+    private var needsUpdate: Bool = false
+
     func update() {
+        needsUpdate = true
+        dispatch_async(dispatch_get_main_queue(), self.runUpdate)
+    }
+
+    func runUpdate() {
+        guard needsUpdate else {
+            return
+        }
         if let u = pullValue {
             pushValue(u)
         }
+        needsUpdate = false
     }
 }
 
