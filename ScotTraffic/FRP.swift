@@ -196,6 +196,53 @@ class OnChange<ValueType: Equatable> : Observable<ValueType> {
     }
 }
 
+class Throttle<ValueType> : Observable<ValueType> {
+    let timer: dispatch_source_t
+    let minimumInterval: NSTimeInterval
+    var lastPushTimestamp: CFAbsoluteTime = 0
+    var sink: Output<ValueType>?
+    
+    init(_ source: Observable<ValueType>, minimumInterval: NSTimeInterval, queue: dispatch_queue_t) {
+        self.timer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, queue)
+        self.minimumInterval = minimumInterval
+
+        super.init()
+        
+        self.sink = Output(source) { t in
+            dispatch_async(queue) {
+                dispatch_suspend(self.timer)
+                
+                let now = CFAbsoluteTimeGetCurrent()
+                if now - self.lastPushTimestamp > self.minimumInterval {
+                    self.pushValue(t)
+                    self.lastPushTimestamp = now
+                    
+                } else {
+                    self.deferPushValue(t)
+                }
+            }
+        }
+    }
+    
+    deinit {
+        dispatch_source_cancel(timer)
+    }
+    
+    private func deferPushValue(t: ValueType) {
+        dispatch_source_set_event_handler(timer) {
+            self.pushValue(t)
+            self.lastPushTimestamp = CFAbsoluteTimeGetCurrent()
+        }
+        
+        dispatch_source_set_timer(timer,
+            DISPATCH_TIME_NOW,
+            nanosecondsFromSeconds(minimumInterval),
+            nanosecondsFromSeconds(minimumInterval * 0.2))
+        
+        dispatch_resume(timer)
+    }
+}
+
 class Combiner<T>: Observable<T> {
     func update() {
         if let u = pullValue {
@@ -374,6 +421,10 @@ extension Observable {
     
     public func filter(predicate: ValueType -> Bool) -> Observable<ValueType> {
         return Filter(self, predicate)
+    }
+    
+    public func throttle(minimumInterval: NSTimeInterval, queue: dispatch_queue_t) -> Observable<ValueType> {
+        return Throttle(self, minimumInterval: minimumInterval, queue: queue)
     }
 }
 
