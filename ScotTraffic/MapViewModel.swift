@@ -6,49 +6,95 @@
 //  Copyright © 2015 Neil Gall. All rights reserved.
 //
 
-import Foundation
+import MapKit
+
+public protocol MapViewModelDelegate {
+    func annotationsWouldOverlap(mapPoint1: MKMapPoint, mapPoint2: MKMapPoint) -> Bool
+}
 
 public class MapViewModel {
     
     let mapItemGroups : Observable<[[MapItem]]>
     let annotations: Latest<[MapAnnotation]>
+    let visibleMapRect: Input<MKMapRect>
+    let delegate: Input<MapViewModelDelegate?>
  
     public init(appModel: AppModel) {
         
-        let trafficCameras = combine(appModel.trafficCameraLocations, appModel.settings.showTrafficCamerasOnMap, appModel.favourites.trafficCameras) {
-            (locations, enabled, favourites) -> [MapItem] in
-            
-            if !enabled {
-                return favourites.map { $0.location as MapItem }
-            } else {
-                return locations.map { $0 as MapItem }
+        visibleMapRect = Input(initial: MKMapRectWorld)
+        delegate = Input(initial: nil)
+        
+        let trafficCameras = combine(
+            appModel.trafficCameraLocations,
+            appModel.favourites.trafficCameras,
+            appModel.settings.showTrafficCamerasOnMap,
+            visibleMapRect,
+            combine: trafficCamerasFromRectAndFavourites)
+
+        let safetyCameras = combine(
+            appModel.safetyCameras,
+            appModel.settings.showSafetyCamerasOnMap,
+            visibleMapRect,
+            combine: mapItemsFromRect)
+        
+        let alerts = combine(
+            appModel.alerts,
+            appModel.settings.showAlertsOnMap,
+            visibleMapRect,
+            combine: mapItemsFromRect)
+        
+        let roadworks = combine(
+            appModel.roadworks,
+            appModel.settings.showRoadworksOnMap,
+            visibleMapRect,
+            combine: mapItemsFromRect)
+        
+        mapItemGroups = combine(trafficCameras, safetyCameras, alerts, roadworks, delegate) {
+            guard let delegate = $4 else {
+                return []
             }
+            return groupMapItems($0 + $1 + $2 + $3, delegate: delegate)
         }
-        
-        let safetyCameras = combine(appModel.safetyCameras, appModel.settings.showSafetyCamerasOnMap, combine: includeMapItemsIfEnabled)
-        let alerts = combine(appModel.alerts, appModel.settings.showAlertsOnMap, combine: includeMapItemsIfEnabled)
-        let roadworks = combine(appModel.roadworks, appModel.settings.showRoadworksOnMap, combine: includeMapItemsIfEnabled)
-        
-        mapItemGroups = combine(trafficCameras, safetyCameras, alerts, roadworks) {
-            groupMapItems($0 + $1 + $2 + $3)
-        }
-        
+
         let annotations = mapItemGroups.map {
             $0.map { group in MapAnnotation(mapItems: group) }
         }
         
         self.annotations = annotations.latest()
+        
     }
 }
 
-func includeMapItemsIfEnabled<T: MapItem>(mapItems: [T], enabled: Bool) -> [MapItem] {
-    if enabled {
-        return mapItems.map { $0 as MapItem }
+func trafficCamerasFromRectAndFavourites(mapItems: [TrafficCameraLocation], favourites: [FavouriteTrafficCamera], isEnabled: Bool, mapRect: MKMapRect) -> [MapItem] {
+    if isEnabled {
+        return mapItemsFromRect(mapItems, isEnabled: true, mapRect: mapRect)
     } else {
+        return mapItemsFromRect(favourites.map { $0.location }, isEnabled: true, mapRect: mapRect)
+    }
+}
+
+func mapItemsFromRect<T: MapItem>(mapItems: [T], isEnabled: Bool, mapRect: MKMapRect) -> [MapItem] {
+    guard isEnabled else {
         return []
     }
+    return mapItems.flatMap { item in
+        MKMapRectContainsPoint(mapRect, item.mapPoint) ? (item as MapItem) : nil
+    }
 }
 
-func groupMapItems(mapItems: [MapItem]) -> [[MapItem]] {
-    return mapItems.map { [$0] }
+func groupMapItems(mapItems: [MapItem], delegate: MapViewModelDelegate) -> [[MapItem]] {
+    var groups = [ (centrePoint: MKMapPoint, items: [MapItem]) ]()
+    
+    mapItems.forEach { item in
+        for i in 0..<groups.count {
+            if delegate.annotationsWouldOverlap(groups[i].centrePoint, mapPoint2: item.mapPoint) {
+                groups[i].items.append(item)
+                groups[i].centrePoint = groups[i].items.boundingRect.centrePoint
+                return
+            }
+        }
+        groups.append( (centrePoint: item.mapPoint, items: [item]) )
+    }
+
+    return groups.map { $0.items }
 }

@@ -54,11 +54,19 @@ public func compositeImagesNamed(imageComponents: [String]) -> UIImage? {
 }
 
 private func compositedSize(imageComponents: [String]) -> (size: CGSize, scale: CGFloat) {
-    let result = imageComponents.reduce((CGFloat(0), CGFloat(0), CGFloat(0))) { accumulator, imageName in
+    let zero: CGFloat = 0
+    let result = imageComponents.reduce( (width:zero, height:zero, scale:zero) ) { accumulator, imageName in
         guard let image = UIImage(named: imageName) else {
             return accumulator
         }
-        return (max(accumulator.0, image.size.width), max(accumulator.1, image.size.height), max(accumulator.2, image.scale))
+        return (
+            width:  max(accumulator.width,  image.size.width),
+            height: max(accumulator.height, image.size.height),
+            scale:  max(accumulator.scale,  image.scale)
+        )
     }
-    return (size: CGSizeMake(result.0 * result.2, result.1 * result.2), scale: result.2)
+    return (
+        size: CGSizeMake(result.width * result.scale, result.height * result.scale),
+        scale: result.scale
+    )
 }

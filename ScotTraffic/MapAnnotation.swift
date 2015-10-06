@@ -9,6 +9,8 @@
 import CoreLocation
 import MapKit
 
+private let coordinateEqualityAccuracy = 1e-6
+
 public class MapAnnotation: NSObject, MKAnnotation {
 
     public let mapItems: [MapItem]
@@ -42,7 +44,7 @@ public class MapAnnotation: NSObject, MKAnnotation {
         var imageComponents = [String]()
  
         if trafficCameraCount > 0 && availableTrafficCameraCount >= safetyCameraCount {
-            imageComponents.append(availableTrafficCameraCount > 0 ? "camera" : "camera-unavilable")
+            imageComponents.append(availableTrafficCameraCount > 0 ? "camera" : "camera-unavailable")
 
         } else if safetyCameraCount > 0 && safetyCameraCount > availableTrafficCameraCount {
             imageComponents.append("safetycamera")
@@ -57,8 +59,17 @@ public class MapAnnotation: NSObject, MKAnnotation {
         
         image = compositeImagesNamed(imageComponents)
     }
+    
+    override public var hashValue: Int {
+        return Int(coordinate.latitude / coordinateEqualityAccuracy)
+            ^ Int(coordinate.longitude / coordinateEqualityAccuracy)
+    }
 }
 
+public func == (a: MapAnnotation, b: MapAnnotation) -> Bool {
+    return fabs(a.coordinate.latitude - b.coordinate.latitude) < coordinateEqualityAccuracy
+        && fabs(a.coordinate.longitude - b.coordinate.longitude) < coordinateEqualityAccuracy
+}
 
 private func isTrafficCamera(mapItem: MapItem) -> Bool {
     return mapItem as? TrafficCameraLocation != nil
