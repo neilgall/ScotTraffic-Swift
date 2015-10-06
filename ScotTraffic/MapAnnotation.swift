@@ -39,7 +39,7 @@ public class MapAnnotation: NSObject, MKAnnotation {
         let alertCount = mapItems.filter(isAlert).count
         let roadworksCount = mapItems.filter(isRoadworks).count
 
-        reuseIdentifier = "\(trafficCameraCount).\(availableTrafficCameraCount).\(safetyCameraCount).\(alertCount).\(roadworksCount)"
+        reuseIdentifier = "\(trafficCameraCount > 0).\(availableTrafficCameraCount > 0).\(safetyCameraCount > 0).\(alertCount > 0).\(roadworksCount > 0)"
         
         var imageComponents = [String]()
  
@@ -59,16 +59,23 @@ public class MapAnnotation: NSObject, MKAnnotation {
         
         image = compositeImagesNamed(imageComponents)
     }
-    
+
     override public var hashValue: Int {
-        return Int(coordinate.latitude / coordinateEqualityAccuracy)
+        return (Int(coordinate.latitude / coordinateEqualityAccuracy) * 31)
             ^ Int(coordinate.longitude / coordinateEqualityAccuracy)
+    }
+    
+    override public func isEqual(object: AnyObject?) -> Bool {
+        guard let annotation = object as? MapAnnotation else {
+            return false
+        }
+        return fabs(coordinate.latitude - annotation.coordinate.latitude) < coordinateEqualityAccuracy
+            && fabs(coordinate.longitude - annotation.coordinate.longitude) < coordinateEqualityAccuracy
     }
 }
 
 public func == (a: MapAnnotation, b: MapAnnotation) -> Bool {
-    return fabs(a.coordinate.latitude - b.coordinate.latitude) < coordinateEqualityAccuracy
-        && fabs(a.coordinate.longitude - b.coordinate.longitude) < coordinateEqualityAccuracy
+    return a.isEqual(b)
 }
 
 private func isTrafficCamera(mapItem: MapItem) -> Bool {

@@ -38,17 +38,20 @@ class MapViewController: UIViewController, MKMapViewDelegate, MapViewModelDelega
         let annotationsToRemove = oldAnnotations.subtract(newAnnotations)
         let annotationsToAdd = Set(newAnnotations).subtract(oldAnnotations)
         
-        for annotation in annotationsToRemove {
-            mapView?.removeAnnotation(annotation)
-        }
-        for annotation in annotationsToAdd {
-            mapView?.addAnnotation(annotation)
-        }
+        mapView?.removeAnnotations(Array(annotationsToRemove))
+        mapView?.addAnnotations(Array(annotationsToAdd))
     }
 
-    /*
     // MARK: - Navigation
 
+    func annotationZoomButtonTapped(sender: AnyObject?) {
+        guard let annotation = mapView?.selectedAnnotations.first as? MapAnnotation else {
+            return
+        }
+        mapView?.setVisibleMapRect(annotation.mapItems.boundingRect, animated: true)
+    }
+    
+    /*
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         // Get the new view controller using segue.destinationViewController.
@@ -89,7 +92,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, MapViewModelDelega
 
     // -- MARK: MapViewModelDelegate --
     
-    func annotationsWouldOverlap(mapPoint1: MKMapPoint, mapPoint2: MKMapPoint) -> Bool {
+    func annotationAtMapPoint(mapPoint1: MKMapPoint, wouldOverlapWithAnnotationAtMapPoint mapPoint2: MKMapPoint) -> Bool {
         let screenPoint1 = mapView.convertCoordinate(MKCoordinateForMapPoint(mapPoint1), toPointToView: mapView)
         let screenPoint2 = mapView.convertCoordinate(MKCoordinateForMapPoint(mapPoint2), toPointToView: mapView)
         let dx = fabs(screenPoint1.x - screenPoint2.x)

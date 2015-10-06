@@ -9,7 +9,7 @@
 import MapKit
 
 public protocol MapViewModelDelegate {
-    func annotationsWouldOverlap(mapPoint1: MKMapPoint, mapPoint2: MKMapPoint) -> Bool
+    func annotationAtMapPoint(mapPoint1: MKMapPoint, wouldOverlapWithAnnotationAtMapPoint mapPoint2: MKMapPoint) -> Bool
 }
 
 public class MapViewModel {
@@ -24,36 +24,38 @@ public class MapViewModel {
         visibleMapRect = Input(initial: MKMapRectWorld)
         delegate = Input(initial: nil)
         
+        let slowVisibleMapRect = visibleMapRect //.throttle(0.5, queue: dispatch_get_main_queue())
+        
         let trafficCameras = combine(
             appModel.trafficCameraLocations,
             appModel.favourites.trafficCameras,
             appModel.settings.showTrafficCamerasOnMap,
-            visibleMapRect,
+            slowVisibleMapRect,
             combine: trafficCamerasFromRectAndFavourites)
 
         let safetyCameras = combine(
             appModel.safetyCameras,
             appModel.settings.showSafetyCamerasOnMap,
-            visibleMapRect,
+            slowVisibleMapRect,
             combine: mapItemsFromRect)
         
         let alerts = combine(
             appModel.alerts,
             appModel.settings.showAlertsOnMap,
-            visibleMapRect,
+            slowVisibleMapRect,
             combine: mapItemsFromRect)
         
         let roadworks = combine(
             appModel.roadworks,
             appModel.settings.showRoadworksOnMap,
-            visibleMapRect,
+            slowVisibleMapRect,
             combine: mapItemsFromRect)
         
         mapItemGroups = combine(trafficCameras, safetyCameras, alerts, roadworks, delegate) {
             guard let delegate = $4 else {
                 return []
             }
-            return groupMapItems($0 + $1 + $2 + $3, delegate: delegate)
+            return groupMapItems([$0, $1, $2, $3].flatten(), delegate: delegate)
         }
 
         let annotations = mapItemGroups.map {
@@ -82,19 +84,23 @@ func mapItemsFromRect<T: MapItem>(mapItems: [T], isEnabled: Bool, mapRect: MKMap
     }
 }
 
-func groupMapItems(mapItems: [MapItem], delegate: MapViewModelDelegate) -> [[MapItem]] {
-    var groups = [ (centrePoint: MKMapPoint, items: [MapItem]) ]()
+func groupMapItems<MapItems: CollectionType where MapItems.Generator.Element == MapItem>
+    (mapItems: MapItems, delegate: MapViewModelDelegate) -> [[MapItem]]
+{
+    var groups = [ (rect: MKMapRect, items: [MapItem]) ]()
     
     mapItems.forEach { item in
         for i in 0..<groups.count {
-            if delegate.annotationsWouldOverlap(groups[i].centrePoint, mapPoint2: item.mapPoint) {
+            if delegate.annotationAtMapPoint(groups[i].rect.centrePoint, wouldOverlapWithAnnotationAtMapPoint: item.mapPoint) {
                 groups[i].items.append(item)
-                groups[i].centrePoint = groups[i].items.boundingRect.centrePoint
+                groups[i].rect = groups[i].rect.addPoint(item.mapPoint)
                 return
             }
         }
-        groups.append( (centrePoint: item.mapPoint, items: [item]) )
-    }
 
+        groups.append( (rect: MKMapRectNull.addPoint(item.mapPoint), items: [item]) )
+    }
+    
     return groups.map { $0.items }
 }
+
