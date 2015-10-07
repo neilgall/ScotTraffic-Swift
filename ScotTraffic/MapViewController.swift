@@ -58,6 +58,12 @@ class MapViewController: UIViewController, MKMapViewDelegate, MapViewModelDelega
             }
         }
     }
+    
+    func deselectAnnotations() {
+        for selected in mapView.selectedAnnotations {
+            mapView.deselectAnnotation(selected, animated: true)
+        }
+    }
 
     // MARK: - Navigation
 

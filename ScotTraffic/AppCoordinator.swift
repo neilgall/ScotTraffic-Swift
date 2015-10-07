@@ -34,6 +34,11 @@ public class AppCoordinator: UISplitViewControllerDelegate {
         splitViewController.delegate = self
     }
     
+    public func cancelSearch() {
+        splitViewController.showDetailViewController(mapViewController, sender: self)
+        mapViewController.deselectAnnotations()
+    }
+    
     public func zoomToMapItem(item: MapItem) {
         splitViewController.showDetailViewController(mapViewController, sender: self)
         mapViewController.zoomToMapItem(item, animated: true)
