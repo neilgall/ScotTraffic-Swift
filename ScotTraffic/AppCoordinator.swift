@@ -25,12 +25,18 @@ public class AppCoordinator: UISplitViewControllerDelegate {
         
         searchViewController.searchViewModel = SearchViewModel(appModel: appModel)
         searchViewController.favouritesViewModel = FavouritesViewModel(favourites: appModel.favourites)
+        searchViewController.coordinator = self
         
         mapViewController.viewModel = MapViewModel(appModel: appModel)
     }
     
     public func start() {
         splitViewController.delegate = self
+    }
+    
+    public func zoomToMapItem(item: MapItem) {
+        splitViewController.showDetailViewController(mapViewController, sender: self)
+        mapViewController.zoomToMapItem(item, animated: true)
     }
     
     // -- MARK: UISplitViewControllerDelegate --

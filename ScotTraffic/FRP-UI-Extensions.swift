@@ -13,7 +13,7 @@ public protocol TableViewCellConfigurator {
 }
 
 public class TableViewDataSourceAdapter
-    <ValueType: CollectionType where ValueType.Generator.Element: TableViewCellConfigurator>
+    <ValueType: CollectionType where ValueType.Generator.Element: TableViewCellConfigurator, ValueType.Index: IntegerType>
     : NSObject, UITableViewDataSource
 {
     let cellIdentifier: String
@@ -33,22 +33,17 @@ public class TableViewDataSourceAdapter
     }
     
     public func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        guard let count = source.value?.count as? Int else {
-            return 0
-        }
-        return count
+        return (source.value?.count as? Int) ?? 0
     }
     
     public func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier(cellIdentifier, forIndexPath: indexPath)
-        if let data = source.value {
-            data[indexPath.row as! ValueType.Index].configureCell(cell)
-        }
+        source.value?[indexPath.row as! ValueType.Index].configureCell(cell)
         return cell
     }
 }
 
-extension Observable where T: CollectionType, T.Generator.Element: TableViewCellConfigurator {
+extension Observable where T: CollectionType, T.Generator.Element: TableViewCellConfigurator, T.Index: IntegerType {
     
     // Where an Observable's value is a collection of TableViewCellConfigurators, we can automatically
     // create a table view data source drawing from this observable, and refreshing the table when the

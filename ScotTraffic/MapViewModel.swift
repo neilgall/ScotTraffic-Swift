@@ -13,15 +13,19 @@ public protocol MapViewModelDelegate {
 }
 
 public class MapViewModel {
-    
-    let mapItemGroups : Observable<[[MapItem]]>
-    let annotations: Latest<[MapAnnotation]>
+
     let visibleMapRect: Input<MKMapRect>
+    let selectedMapItem: Input<MapItem?>
     let delegate: Input<MapViewModelDelegate?>
+
+    let mapItemGroups : Observable<[[MapItem]]>
+    let annotations: Observable<[MapAnnotation]>
+    let selectedAnnotation: Observable<MapAnnotation?>
  
     public init(appModel: AppModel) {
         
         visibleMapRect = Input(initial: MKMapRectWorld)
+        selectedMapItem = Input(initial: nil)
         delegate = Input(initial: nil)
         
         let trafficCameras = combine(
@@ -55,13 +59,24 @@ public class MapViewModel {
             }
             return groupMapItems([$0, $1, $2, $3].flatten(), delegate: delegate)
         }
+        
+        let selectedMapItemGroup: Observable<[MapItem]?> = combine(mapItemGroups, selectedMapItem) { groups, item in
+            guard let item = item else {
+                return nil
+            }
+            guard let index = groups.indexOf({ $0.contains({ $0 == item }) }) else {
+                return nil
+            }
+            return groups[index]
+        }
 
-        let annotations = mapItemGroups.map {
+        annotations = mapItemGroups.map {
             $0.map { group in MapAnnotation(mapItems: group) }
         }
         
-        self.annotations = annotations.latest()
-        
+        selectedAnnotation = selectedMapItemGroup.map { optionalGroup in
+            optionalGroup.map { items in MapAnnotation(mapItems: items) }
+        }
     }
 }
 

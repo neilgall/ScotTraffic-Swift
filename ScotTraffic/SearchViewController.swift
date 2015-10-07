@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import MapKit
 
 enum TableSections : Int {
     case SearchBarSection = 0
@@ -22,13 +23,15 @@ enum DisplayContent {
 
 class SearchViewController: UITableViewController, UISearchBarDelegate {
 
-    var searchBar: UISearchBar?
     var favouritesViewModel: FavouritesViewModel?
+    var coordinator: AppCoordinator?
+
+    var searchBar: UISearchBar?
     var searchViewModel: SearchViewModel?
-    var displayContent: Observable<DisplayContent>?
-    var dataSource: Latest<UITableViewDataSource>?
-    var resultsMajorAxis: Latest<String>?
-    var reloadObserver: Observation?
+    var displayContent: Observable<DisplayContent>!
+    var dataSource: Latest<TableViewDataSourceAdapter<[SearchResultItem]>>!
+    var resultsMajorAxis: Latest<String>!
+    var reloadObserver: Observation!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -46,8 +49,8 @@ class SearchViewController: UITableViewController, UISearchBarDelegate {
             text.isEmpty ? .Favourites : .SearchResults
         }
         
-        dataSource = displayContent!.onChange().map({
-            switch $0 {
+        dataSource = displayContent.onChange().map({ contentType in
+            switch contentType {
             case .Favourites:
                 return self.favouritesViewModel!.favourites
                     .map(toSearchResultItems)
@@ -59,7 +62,7 @@ class SearchViewController: UITableViewController, UISearchBarDelegate {
             }
         }).latest()
 
-        resultsMajorAxis = combine(displayContent!, searchViewModel!.searchResultsMajorAxis, combine: {
+        resultsMajorAxis = combine(displayContent, searchViewModel!.searchResultsMajorAxis, combine: {
             if $0 == DisplayContent.Favourites {
                 return ""
             } else {
@@ -72,7 +75,7 @@ class SearchViewController: UITableViewController, UISearchBarDelegate {
         
 
         // Must set this last as it will trigger a table reload
-        reloadObserver = dataSource!.output { _ in
+        reloadObserver = dataSource.output { _ in
             self.tableView.reloadData()
         }
     }
@@ -83,7 +86,7 @@ class SearchViewController: UITableViewController, UISearchBarDelegate {
 
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if section == TableSections.ContentSection.rawValue {
-            return dataSource?.value?.tableView(tableView, numberOfRowsInSection: 0) ?? 0
+            return dataSource.value?.tableView(tableView, numberOfRowsInSection: 0) ?? 0
         } else {
             return 0
         }
@@ -91,7 +94,7 @@ class SearchViewController: UITableViewController, UISearchBarDelegate {
 
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         if indexPath.section == TableSections.ContentSection.rawValue {
-            if let cell = dataSource?.value?.tableView(tableView, cellForRowAtIndexPath: indexPath) {
+            if let cell = dataSource.value?.tableView(tableView, cellForRowAtIndexPath: indexPath) {
                 return cell
             }
         }
@@ -100,7 +103,7 @@ class SearchViewController: UITableViewController, UISearchBarDelegate {
     
     override func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         if section == TableSections.TableTitleSection.rawValue {
-            return resultsMajorAxis?.value
+            return resultsMajorAxis.value
         } else {
             return nil
         }
@@ -121,7 +124,7 @@ class SearchViewController: UITableViewController, UISearchBarDelegate {
             return 44
 
         case .TableTitleSection:
-            guard let title = resultsMajorAxis?.value where !title.isEmpty else {
+            guard let title = resultsMajorAxis.value where !title.isEmpty else {
                 return 0
             }
             return 20
@@ -131,15 +134,11 @@ class SearchViewController: UITableViewController, UISearchBarDelegate {
         }
     }
 
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
+    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        if let mapItem = dataSource.value?.source.value?[indexPath.row] {
+            coordinator?.zoomToMapItem(mapItem)
+        }
     }
-    */
 
     // MARK - UISearchBarDelegate
     
@@ -148,9 +147,16 @@ class SearchViewController: UITableViewController, UISearchBarDelegate {
     }
 }
 
-struct SearchResultItem: TableViewCellConfigurator {
+struct SearchResultItem: MapItem, TableViewCellConfigurator {
     let name: String
     let road: String
+    let mapPoint: MKMapPoint
+    
+    init(item: MapItem) {
+        self.name = item.name
+        self.road = item.road
+        self.mapPoint = item.mapPoint
+    }
     
     func configureCell(cell: UITableViewCell) {
         cell.textLabel?.text = name
@@ -159,10 +165,10 @@ struct SearchResultItem: TableViewCellConfigurator {
 }
 
 func toSearchResultItems(items: [FavouriteTrafficCamera]) -> [SearchResultItem] {
-    return items.map { item in SearchResultItem(name: item.location.name, road: item.location.road) }
+    return items.map { SearchResultItem(item: $0.location) }
 }
 
 func toSearchResultItem(items: [MapItem]) -> [SearchResultItem] {
-    return items.map { item in SearchResultItem(name: item.name, road: item.road) }
+    return items.map { SearchResultItem(item: $0) }
 }
 

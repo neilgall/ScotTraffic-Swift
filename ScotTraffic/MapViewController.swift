@@ -11,6 +11,9 @@ import UIKit
 
 let minimumAnnotationSpacingX: CGFloat = 35
 let minimumAnnotationSpacingY: CGFloat = 32
+let zoomEdgePadding = UIEdgeInsetsMake(60, 40, 60, 40)
+let zoomToMapItemInsetX: Double = -40000
+let zoomToMapItemInsetY: Double = -40000
 
 class MapViewController: UIViewController, MKMapViewDelegate, MapViewModelDelegate {
 
@@ -18,14 +21,15 @@ class MapViewController: UIViewController, MKMapViewDelegate, MapViewModelDelega
 
     var viewModel: MapViewModel?
     var observations = Observations()
+    var updatingAnnotations: Bool = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        viewModel?.delegate.value = self
-        
-        if let annotations = viewModel?.annotations {
-            observations.add(annotations, closure: self.updateAnnotations)
+        if let viewModel = viewModel {
+            viewModel.delegate.value = self
+            observations.add(viewModel.annotations, closure: self.updateAnnotations)
+            observations.add(viewModel.selectedAnnotation, closure: self.autoSelectAnnotation)
         }
     }
     
@@ -34,12 +38,25 @@ class MapViewController: UIViewController, MKMapViewDelegate, MapViewModelDelega
     }
     
     func updateAnnotations(newAnnotations: [MapAnnotation]) {
-        let oldAnnotations = currentAnnotations
-        let annotationsToRemove = oldAnnotations.subtract(newAnnotations)
-        let annotationsToAdd = Set(newAnnotations).subtract(oldAnnotations)
-        
-        mapView?.removeAnnotations(Array(annotationsToRemove))
-        mapView?.addAnnotations(Array(annotationsToAdd))
+        with(&updatingAnnotations) {
+            let oldAnnotations = self.currentAnnotations
+            let annotationsToRemove = oldAnnotations.subtract(newAnnotations)
+            let annotationsToAdd = Set(newAnnotations).subtract(oldAnnotations)
+            
+            self.mapView.removeAnnotations(Array(annotationsToRemove))
+            self.mapView.addAnnotations(Array(annotationsToAdd))
+        }
+    }
+    
+    func autoSelectAnnotation(annotation: MapAnnotation?) {
+        guard let annotation = annotation else {
+            return
+        }
+        for unselected in currentAnnotations {
+            if unselected == annotation {
+                mapView.selectAnnotation(unselected, animated: true)
+            }
+        }
     }
 
     // MARK: - Navigation
@@ -48,7 +65,19 @@ class MapViewController: UIViewController, MKMapViewDelegate, MapViewModelDelega
         guard let annotation = mapView?.selectedAnnotations.first as? MapAnnotation else {
             return
         }
-        mapView?.setVisibleMapRect(annotation.mapItems.boundingRect, animated: true)
+        zoomToMapRectWithPadding(annotation.mapItems.boundingRect, animated: true)
+    }
+    
+    func zoomToMapItem(item: MapItem, animated: Bool) {
+        viewModel?.selectedMapItem.value = item
+
+        let targetRect = MKMapRectInset(MKMapRectNull.addPoint(item.mapPoint), zoomToMapItemInsetX, zoomToMapItemInsetY)
+        zoomToMapRectWithPadding(targetRect, animated: animated)
+    }
+    
+    func zoomToMapRectWithPadding(targetRect: MKMapRect, animated: Bool) {
+        let mapRect = mapView.mapRectThatFits(targetRect, edgePadding: zoomEdgePadding)
+        mapView.setVisibleMapRect(mapRect, animated: animated)
     }
     
     /*
@@ -88,6 +117,16 @@ class MapViewController: UIViewController, MKMapViewDelegate, MapViewModelDelega
         }
         
         return annotationView
+    }
+    
+    func mapView(mapView: MKMapView, didSelectAnnotationView view: MKAnnotationView) {
+        
+    }
+    
+    func mapView(mapView: MKMapView, didDeselectAnnotationView view: MKAnnotationView) {
+        if !updatingAnnotations {
+            viewModel?.selectedMapItem.value = nil
+        }
     }
 
     // -- MARK: MapViewModelDelegate --
