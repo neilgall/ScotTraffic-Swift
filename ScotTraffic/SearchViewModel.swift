@@ -45,8 +45,9 @@ func applyFilterToMapItems<T: MapItem> (sourceList: [T], enabled: Bool, searchTe
     if !enabled {
         return []
     } else {
+        let term = searchTerm.lowercaseString
         return sourceList
-            .filter { $0.name.containsString(searchTerm) || $0.road.containsString(searchTerm) }
+            .filter { $0.name.lowercaseString.containsString(term) || $0.road.lowercaseString == term }
             .map { $0 as MapItem }
     }
 }
