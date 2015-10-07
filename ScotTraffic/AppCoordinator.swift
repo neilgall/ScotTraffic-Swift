@@ -20,6 +20,8 @@ public class AppCoordinator: UISplitViewControllerDelegate {
         self.rootWindow = rootWindow
         
         splitViewController = rootWindow.rootViewController as! UISplitViewController
+        splitViewController.presentsWithGesture = false
+        
         searchViewController = (splitViewController.viewControllers[0] as! UINavigationController).topViewController as! SearchViewController
         mapViewController = (splitViewController.viewControllers[1] as! UINavigationController).topViewController as! MapViewController
         

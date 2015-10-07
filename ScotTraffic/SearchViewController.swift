@@ -81,6 +81,7 @@ class SearchViewController: UITableViewController, UISearchBarDelegate {
     }
     
     @IBAction func cancelSearch() {
+        searchBar?.text = ""
         searchViewModel?.searchTerm.value = ""
         coordinator?.cancelSearch()
     }
@@ -149,6 +150,10 @@ class SearchViewController: UITableViewController, UISearchBarDelegate {
     
     func searchBar(searchBar: UISearchBar, textDidChange searchText: String) {
         searchViewModel?.searchTerm.value = searchText
+    }
+    
+    func searchBarSearchButtonClicked(searchBar: UISearchBar) {
+        searchBar.resignFirstResponder()
     }
 }
 
