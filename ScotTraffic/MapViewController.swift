@@ -14,6 +14,7 @@ let minimumAnnotationSpacingY: CGFloat = 32
 let zoomEdgePadding = UIEdgeInsetsMake(60, 40, 60, 40)
 let zoomToMapItemInsetX: Double = -40000
 let zoomToMapItemInsetY: Double = -40000
+let visibleMapRectInsetRatio: Double = -0.2
 
 class MapViewController: UIViewController, MKMapViewDelegate, MapViewModelDelegate {
 
@@ -97,7 +98,11 @@ class MapViewController: UIViewController, MKMapViewDelegate, MapViewModelDelega
     // -- MARK: MKMapViewDelegete --
     
     func mapView(mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
-        viewModel?.visibleMapRect.value = mapView.visibleMapRect
+        let visibleMapRect = mapView.visibleMapRect
+        let mapRect = MKMapRectInset(mapView.visibleMapRect,
+            visibleMapRectInsetRatio * visibleMapRect.size.width,
+            visibleMapRectInsetRatio * visibleMapRect.size.height)
+        viewModel?.visibleMapRect.value = mapRect
     }
     
     func mapView(mapView: MKMapView, viewForAnnotation annotation: MKAnnotation) -> MKAnnotationView? {
