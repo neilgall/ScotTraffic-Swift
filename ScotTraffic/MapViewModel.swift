@@ -8,6 +8,8 @@
 
 import MapKit
 
+typealias MapItemGroup = [MapItem]
+
 public protocol MapViewModelDelegate {
     func annotationAtMapPoint(mapPoint1: MKMapPoint, wouldOverlapWithAnnotationAtMapPoint mapPoint2: MKMapPoint) -> Bool
 }
@@ -18,7 +20,7 @@ public class MapViewModel {
     let selectedMapItem: Input<MapItem?>
     let delegate: Input<MapViewModelDelegate?>
 
-    let mapItemGroups : Observable<[[MapItem]]>
+    let mapItemGroups : Observable<[MapItemGroup]>
     let annotations: Observable<[MapAnnotation]>
     let selectedAnnotation: Observable<MapAnnotation?>
  
@@ -60,20 +62,12 @@ public class MapViewModel {
             return groupMapItems([$0, $1, $2, $3].flatten(), delegate: delegate)
         }
         
-        let selectedMapItemGroup: Observable<[MapItem]?> = combine(mapItemGroups, selectedMapItem) { groups, item in
-            guard let item = item else {
-                return nil
-            }
-            guard let index = groups.indexOf({ $0.contains({ $0 == item }) }) else {
-                return nil
-            }
-            return groups[index]
-        }
-
         annotations = mapItemGroups.map {
             $0.map { group in MapAnnotation(mapItems: group) }
         }
         
+        let selectedMapItemGroup = combine(mapItemGroups, selectedMapItem, combine:mapItemGroupContainingItem)
+
         selectedAnnotation = selectedMapItemGroup.map { optionalGroup in
             optionalGroup.map { items in MapAnnotation(mapItems: items) }
         }
@@ -98,9 +92,9 @@ func mapItemsFromRect<T: MapItem>(mapItems: [T], isEnabled: Bool, mapRect: MKMap
 }
 
 func groupMapItems<MapItems: CollectionType where MapItems.Generator.Element == MapItem>
-    (mapItems: MapItems, delegate: MapViewModelDelegate) -> [[MapItem]]
+    (mapItems: MapItems, delegate: MapViewModelDelegate) -> [MapItemGroup]
 {
-    var groups = [ (rect: MKMapRect, items: [MapItem]) ]()
+    var groups = [ (rect: MKMapRect, items: MapItemGroup) ]()
     
     mapItems.forEach { item in
         for i in 0..<groups.count {
@@ -111,9 +105,22 @@ func groupMapItems<MapItems: CollectionType where MapItems.Generator.Element == 
             }
         }
 
-        groups.append( (rect: MKMapRectNull.addPoint(item.mapPoint), items: [item]) )
+        let group = (rect: MKMapRectMake(item.mapPoint.x, item.mapPoint.y, 0, 0), items: [item])
+        groups.append(group)
     }
     
     return groups.map { $0.items }
 }
 
+func mapItemGroupContainingItem(groups: [MapItemGroup], item: MapItem?) -> [MapItem]? {
+    guard let item = item else {
+        return nil
+    }
+    let possibleIndex = groups.indexOf { groupItems in
+        groupItems.contains({ $0 == item })
+    }
+    guard let index = possibleIndex else {
+        return nil
+    }
+    return groups[index]
+}
