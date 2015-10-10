@@ -257,8 +257,8 @@ class Combiner<T>: Observable<T> {
         }
         if let u = pullValue {
             pushValue(u)
+            needsUpdate = false
         }
-        needsUpdate = false
     }
 }
 

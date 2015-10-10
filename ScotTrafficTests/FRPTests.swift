@@ -119,6 +119,11 @@ class FRPTests: XCTestCase {
         let c = Capture(m)
 
         let expectation = expectationWithDescription("wait")
+        c.obs.add(m) { _ in
+            if c.vals.count == 5 {
+                expectation.fulfill()
+            }
+        }
         
         s1.value = 123
         dispatch_async(dispatch_get_main_queue()) {
@@ -127,9 +132,6 @@ class FRPTests: XCTestCase {
                 s1.value = 234
                 dispatch_async(dispatch_get_main_queue()) {
                     s2.value = "bar"
-                    dispatch_async(dispatch_get_main_queue()) {
-                        expectation.fulfill()
-                    }
                 }
             }
         }
@@ -151,6 +153,11 @@ class FRPTests: XCTestCase {
         let c = Capture(m)
         
         let expectation = expectationWithDescription("wait")
+        c.obs.add(m) { _ in
+            if c.vals.count == 6 {
+                expectation.fulfill()
+            }
+        }
 
         s1.value = 123
         dispatch_async(dispatch_get_main_queue()) {
@@ -161,9 +168,6 @@ class FRPTests: XCTestCase {
                     s1.value = 234
                     dispatch_async(dispatch_get_main_queue()) {
                         s2.value = "bar"
-                        dispatch_async(dispatch_get_main_queue()) {
-                            expectation.fulfill()
-                        }
                     }
                 }
             }
@@ -187,6 +191,11 @@ class FRPTests: XCTestCase {
         let c = Capture(m)
         
         let expectation = expectationWithDescription("wait")
+        c.obs.add(m) { _ in
+            if c.vals.count == 5 {
+                expectation.fulfill()
+            }
+        }
 
         s1.value = 1
         dispatch_async(dispatch_get_main_queue()) {
@@ -195,9 +204,6 @@ class FRPTests: XCTestCase {
                 s3.value = 7
                 dispatch_async(dispatch_get_main_queue()) {
                     s4.value = 9
-                    dispatch_async(dispatch_get_main_queue()) {
-                        expectation.fulfill()
-                    }
                 }
             }
         }
@@ -220,6 +226,11 @@ class FRPTests: XCTestCase {
         let c = Capture(m)
         
         let expectation = expectationWithDescription("wait")
+        c.obs.add(m) { _ in
+            if c.vals.count == 6 {
+                expectation.fulfill()
+            }
+        }
 
         s1.value = 2
         dispatch_async(dispatch_get_main_queue()) {
@@ -230,15 +241,12 @@ class FRPTests: XCTestCase {
                     s4.value = 8
                     dispatch_async(dispatch_get_main_queue()) {
                         s5.value = 10
-                        dispatch_async(dispatch_get_main_queue()) {
-                            expectation.fulfill()
-                        }
                     }
                 }
             }
         }
         
-        waitForExpectationsWithTimeout(1.0, handler: nil)
+        waitForExpectationsWithTimeout(3.0, handler: nil)
 
         XCTAssertEqual(c.vals, [47, 50, 52, 59, 65, 66])
     }
