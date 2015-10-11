@@ -37,13 +37,19 @@ public class AppCoordinator: UISplitViewControllerDelegate {
     }
     
     public func cancelSearch() {
-        splitViewController.showDetailViewController(mapViewController, sender: self)
+        showMap()
         mapViewController.deselectAnnotations()
     }
     
     public func zoomToMapItem(item: MapItem) {
-        splitViewController.showDetailViewController(mapViewController, sender: self)
+        showMap()
         mapViewController.zoomToMapItem(item, animated: true)
+    }
+    
+    private func showMap() {
+        if let nav = mapViewController.navigationController {
+            splitViewController.showDetailViewController(nav, sender: self)
+        }
     }
     
     // -- MARK: UISplitViewControllerDelegate --
