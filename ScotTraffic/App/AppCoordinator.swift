@@ -69,6 +69,7 @@ public class AppCoordinator: NSObject, UISplitViewControllerDelegate, UIPopoverC
                 let splitViewRect = splitViewController.view.convertRect(rect, fromView: mapViewController.view)
                 collectionController.viewModel = model
                 popoverController = UIPopoverController(contentViewController: collectionController)
+                popoverController?.popoverContentSize = CGSizeMake(480, 380)
                 popoverController?.delegate = self
                 popoverController?.presentPopoverFromRect(splitViewRect, inView: self.splitViewController.view, permittedArrowDirections: .Any, animated: true)
             }

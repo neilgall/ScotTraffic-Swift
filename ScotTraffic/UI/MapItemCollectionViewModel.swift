@@ -10,7 +10,9 @@ import Foundation
 
 public class MapItemCollectionViewModel {
     
+    let mapItems: [MapItem]
+    
     public init(mapItems: [MapItem]) {
-        
+        self.mapItems = mapItems
     }
 }

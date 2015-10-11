@@ -78,9 +78,6 @@ class MapViewController: UIViewController, MKMapViewDelegate, MapViewModelDelega
     }
     
     func zoomToSelectedMapItem(item: MapItem?) {
-//    func zoomToMapItem(item: MapItem, animated: Bool) {
-//        viewModel?.selectedMapItem.value = item
-
         if let item = item {
             let targetRect = MKMapRectInset(MKMapRectNull.addPoint(item.mapPoint), zoomToMapItemInsetX, zoomToMapItemInsetY)
             zoomToMapRectWithPadding(targetRect, animated: true)
