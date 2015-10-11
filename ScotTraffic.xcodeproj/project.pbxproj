@@ -244,7 +244,7 @@
 				284DE0971BBDD0D800E6A678 /* AppModel.swift */,
 				2865591D1BC316590058A35A /* AppCoordinator.swift */,
 			);
-			name = App;
+			path = App;
 			sourceTree = "<group>";
 		};
 		289201CF1BBC570800DA4A9A /* UI */ = {
@@ -253,8 +253,9 @@
 				2865591C1BC3125E0058A35A /* Core */,
 				2865591B1BC312580058A35A /* Search */,
 				2865591F1BC3180E0058A35A /* Map */,
+				716D9E911BCA5B9F005A6B49 /* CollectionView */,
 			);
-			name = UI;
+			path = UI;
 			sourceTree = "<group>";
 		};
 		289201D01BBC570C00DA4A9A /* Model */ = {
@@ -269,7 +270,14 @@
 				280486561BC087F4003BA360 /* Settings.swift */,
 				286559141BC1DCB70058A35A /* Favourites.swift */,
 			);
-			name = Model;
+			path = Model;
+			sourceTree = "<group>";
+		};
+		716D9E911BCA5B9F005A6B49 /* CollectionView */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = CollectionView;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
