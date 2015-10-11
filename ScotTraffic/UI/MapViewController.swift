@@ -20,6 +20,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, MapViewModelDelega
 
     @IBOutlet var mapView: MKMapView!
 
+    weak var coordinator: AppCoordinator?
     var viewModel: MapViewModel?
     var observations = Observations()
     var updatingAnnotations: Bool = false
@@ -31,6 +32,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, MapViewModelDelega
             viewModel.delegate.value = self
             observations.add(viewModel.annotations, closure: self.updateAnnotations)
             observations.add(viewModel.selectedAnnotation, closure: self.autoSelectAnnotation)
+            observations.add(viewModel.selectedMapItem, closure: self.zoomToSelectedMapItem)
         }
     }
     
@@ -75,11 +77,14 @@ class MapViewController: UIViewController, MKMapViewDelegate, MapViewModelDelega
         zoomToMapRectWithPadding(annotation.mapItems.boundingRect, animated: true)
     }
     
-    func zoomToMapItem(item: MapItem, animated: Bool) {
-        viewModel?.selectedMapItem.value = item
+    func zoomToSelectedMapItem(item: MapItem?) {
+//    func zoomToMapItem(item: MapItem, animated: Bool) {
+//        viewModel?.selectedMapItem.value = item
 
-        let targetRect = MKMapRectInset(MKMapRectNull.addPoint(item.mapPoint), zoomToMapItemInsetX, zoomToMapItemInsetY)
-        zoomToMapRectWithPadding(targetRect, animated: animated)
+        if let item = item {
+            let targetRect = MKMapRectInset(MKMapRectNull.addPoint(item.mapPoint), zoomToMapItemInsetX, zoomToMapItemInsetY)
+            zoomToMapRectWithPadding(targetRect, animated: true)
+        }
     }
     
     func zoomToMapRectWithPadding(targetRect: MKMapRect, animated: Bool) {
@@ -131,12 +136,16 @@ class MapViewController: UIViewController, MKMapViewDelegate, MapViewModelDelega
     }
     
     func mapView(mapView: MKMapView, didSelectAnnotationView view: MKAnnotationView) {
-        
+        if let annotation = view.annotation as? MapAnnotation {
+            let rect = view.convertRect(view.frame, toView: self.view)
+            coordinator?.showDetailForMapItems(annotation.mapItems, fromRectInMapView: rect)
+        }
     }
     
     func mapView(mapView: MKMapView, didDeselectAnnotationView view: MKAnnotationView) {
         if !updatingAnnotations {
             viewModel?.selectedMapItem.value = nil
+            coordinator?.hideMapItemDetail()
         }
     }
 

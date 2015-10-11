@@ -8,16 +8,23 @@
 
 import UIKit
 
-public class AppCoordinator: UISplitViewControllerDelegate {
+public class AppCoordinator: NSObject, UISplitViewControllerDelegate, UIPopoverControllerDelegate {
     let appModel: AppModel
+    let storyboard: UIStoryboard
     let rootWindow: UIWindow
+    
     let splitViewController: UISplitViewController
     let searchViewController: SearchViewController
     let mapViewController: MapViewController
+    var popoverController: UIPopoverController?
+    var collectionController: MapItemCollectionViewController?
+    
+    let mapViewModel: MapViewModel
     
     public init(appModel: AppModel, rootWindow: UIWindow) {
         self.appModel = appModel
         self.rootWindow = rootWindow
+        self.storyboard = UIStoryboard(name: "Main", bundle: nil)
         
         splitViewController = rootWindow.rootViewController as! UISplitViewController
         splitViewController.presentsWithGesture = false
@@ -27,9 +34,13 @@ public class AppCoordinator: UISplitViewControllerDelegate {
         
         searchViewController.searchViewModel = SearchViewModel(appModel: appModel)
         searchViewController.favouritesViewModel = FavouritesViewModel(favourites: appModel.favourites)
-        searchViewController.coordinator = self
         
-        mapViewController.viewModel = MapViewModel(appModel: appModel)
+        mapViewModel = MapViewModel(appModel: appModel)
+        mapViewController.viewModel = mapViewModel
+
+        super.init()
+        searchViewController.coordinator = self
+        mapViewController.coordinator = self
     }
     
     public func start() {
@@ -43,7 +54,31 @@ public class AppCoordinator: UISplitViewControllerDelegate {
     
     public func zoomToMapItem(item: MapItem) {
         showMap()
-        mapViewController.zoomToMapItem(item, animated: true)
+        mapViewModel.selectedMapItem.value = item
+    }
+    
+    public func showDetailForMapItems(mapItems: [MapItem], fromRectInMapView rect: CGRect) {
+        let model = MapItemCollectionViewModel(mapItems: mapItems)
+        
+        if let collectionController = self.collectionController {
+            collectionController.viewModel = model
+            
+        } else {
+            self.collectionController = storyboard.instantiateViewControllerWithIdentifier("mapItemCollectionViewController") as? MapItemCollectionViewController
+            if let collectionController = self.collectionController {
+                let splitViewRect = splitViewController.view.convertRect(rect, fromView: mapViewController.view)
+                collectionController.viewModel = model
+                popoverController = UIPopoverController(contentViewController: collectionController)
+                popoverController?.delegate = self
+                popoverController?.presentPopoverFromRect(splitViewRect, inView: self.splitViewController.view, permittedArrowDirections: .Any, animated: true)
+            }
+        }
+    }
+    
+    public func hideMapItemDetail() {
+        popoverController?.dismissPopoverAnimated(true)
+        popoverController = nil
+        collectionController = nil
     }
     
     private func showMap() {
@@ -54,6 +89,14 @@ public class AppCoordinator: UISplitViewControllerDelegate {
     
     // -- MARK: UISplitViewControllerDelegate --
     
-    @objc public func splitViewController(svc: UISplitViewController, willChangeToDisplayMode displayMode: UISplitViewControllerDisplayMode) {
+    public func splitViewController(svc: UISplitViewController, willChangeToDisplayMode displayMode: UISplitViewControllerDisplayMode) {
+    }
+    
+    // -- MARK: UIPopoverControllerDelegate --
+    
+    public func popoverControllerDidDismissPopover(popoverController: UIPopoverController) {
+        self.popoverController = nil
+        self.collectionController = nil
+        self.mapViewModel.selectedMapItem.value = nil
     }
 }

@@ -23,8 +23,8 @@ enum DisplayContent {
 
 class SearchViewController: UITableViewController, UISearchBarDelegate {
 
+    weak var coordinator: AppCoordinator?
     var favouritesViewModel: FavouritesViewModel?
-    var coordinator: AppCoordinator?
 
     var searchBar: UISearchBar?
     var searchViewModel: SearchViewModel?
