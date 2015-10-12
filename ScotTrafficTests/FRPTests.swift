@@ -11,13 +11,13 @@ import ScotTraffic
 
 // Must be a class so it can be mutated inside the observer closure
 class Capture<T> {
-    var obs = Observations()
+    var obs = [Observation]()
     var vals: [T] = []
     
     init(_ o: Observable<T>) {
-        self.obs.add(o) {
+        self.obs.append(o.output {
             self.vals.append($0)
-        }
+        })
     }
 }
 
@@ -39,7 +39,7 @@ class FRPTests: XCTestCase {
         s.value = 123
         XCTAssertEqual(c.vals, [66, 123])
         
-        c.obs.clear()
+        c.obs.removeAll()
         s.value = 234
         XCTAssertEqual(c.vals, [66, 123])
     }
@@ -119,11 +119,11 @@ class FRPTests: XCTestCase {
         let c = Capture(m)
 
         let expectation = expectationWithDescription("wait")
-        c.obs.add(m) { _ in
+        c.obs.append(m.output { _ in
             if c.vals.count == 5 {
                 expectation.fulfill()
             }
-        }
+        })
         
         s1.value = 123
         dispatch_async(dispatch_get_main_queue()) {
@@ -153,11 +153,11 @@ class FRPTests: XCTestCase {
         let c = Capture(m)
         
         let expectation = expectationWithDescription("wait")
-        c.obs.add(m) { _ in
+        c.obs.append(m.output { _ in
             if c.vals.count == 6 {
                 expectation.fulfill()
             }
-        }
+        })
 
         s1.value = 123
         dispatch_async(dispatch_get_main_queue()) {
@@ -191,11 +191,11 @@ class FRPTests: XCTestCase {
         let c = Capture(m)
         
         let expectation = expectationWithDescription("wait")
-        c.obs.add(m) { _ in
+        c.obs.append(m.output { _ in
             if c.vals.count == 5 {
                 expectation.fulfill()
             }
-        }
+        })
 
         s1.value = 1
         dispatch_async(dispatch_get_main_queue()) {
@@ -226,11 +226,11 @@ class FRPTests: XCTestCase {
         let c = Capture(m)
         
         let expectation = expectationWithDescription("wait")
-        c.obs.add(m) { _ in
+        c.obs.append(m.output { _ in
             if c.vals.count == 6 {
                 expectation.fulfill()
             }
-        }
+        })
 
         s1.value = 2
         dispatch_async(dispatch_get_main_queue()) {
