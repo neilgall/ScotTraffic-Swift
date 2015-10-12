@@ -21,7 +21,7 @@ public class AppModel {
     
     let errorSources: Observable<AppError>
     let fetchStarters: [PeriodicStarter]
-    var internalObservers = Observations()
+    var internalObservers = [Observation]()
     
     public init() {
         self.fetcher = HTTPFetcher(baseURL: NSURL(string: "http://dev.scottraffic.co.uk")!)
@@ -78,9 +78,9 @@ public class AppModel {
             errorFromEither(weather)
         )
         
-        internalObservers.add(self.errorSources) {
+        internalObservers.append(self.errorSources.output({
             print($0)
-        }
+        }))
         
         // -- Auto refresh --
         

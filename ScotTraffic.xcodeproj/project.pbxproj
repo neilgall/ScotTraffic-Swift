@@ -24,7 +24,6 @@
 		284DE0961BBDCD4200E6A678 /* Either.swift in Sources */ = {isa = PBXBuildFile; fileRef = 284DE0951BBDCD4200E6A678 /* Either.swift */; };
 		284DE0981BBDD0D800E6A678 /* AppModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 284DE0971BBDD0D800E6A678 /* AppModel.swift */; };
 		286559151BC1DCB70058A35A /* Favourites.swift in Sources */ = {isa = PBXBuildFile; fileRef = 286559141BC1DCB70058A35A /* Favourites.swift */; settings = {ASSET_TAGS = (); }; };
-		286559181BC1EBDC0058A35A /* FavouritesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 286559171BC1EBDC0058A35A /* FavouritesViewModel.swift */; settings = {ASSET_TAGS = (); }; };
 		2865591A1BC2A7200058A35A /* FRP-UI-Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 286559191BC2A7200058A35A /* FRP-UI-Extensions.swift */; settings = {ASSET_TAGS = (); }; };
 		2865591E1BC316590058A35A /* AppCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2865591D1BC316590058A35A /* AppCoordinator.swift */; settings = {ASSET_TAGS = (); }; };
 		286559211BC3182C0058A35A /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 286559201BC3182C0058A35A /* MapViewController.swift */; settings = {ASSET_TAGS = (); }; };
@@ -86,7 +85,6 @@
 		284DE0951BBDCD4200E6A678 /* Either.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Either.swift; sourceTree = "<group>"; };
 		284DE0971BBDD0D800E6A678 /* AppModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppModel.swift; sourceTree = "<group>"; };
 		286559141BC1DCB70058A35A /* Favourites.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Favourites.swift; sourceTree = "<group>"; };
-		286559171BC1EBDC0058A35A /* FavouritesViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FavouritesViewModel.swift; sourceTree = "<group>"; };
 		286559191BC2A7200058A35A /* FRP-UI-Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "FRP-UI-Extensions.swift"; sourceTree = "<group>"; };
 		2865591D1BC316590058A35A /* AppCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppCoordinator.swift; sourceTree = "<group>"; };
 		286559201BC3182C0058A35A /* MapViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
@@ -216,7 +214,6 @@
 			children = (
 				280486521BC08711003BA360 /* SearchViewController.swift */,
 				280486541BC087B6003BA360 /* SearchViewModel.swift */,
-				286559171BC1EBDC0058A35A /* FavouritesViewModel.swift */,
 			);
 			name = Search;
 			sourceTree = "<group>";
@@ -437,7 +434,6 @@
 				289201D41BBC5AEB00DA4A9A /* FRP.swift in Sources */,
 				2817D92D1BC5D2B70082F4A7 /* WithFlag.swift in Sources */,
 				716D9E971BCA614D005A6B49 /* MapItemCollectionViewModel.swift in Sources */,
-				286559181BC1EBDC0058A35A /* FavouritesViewModel.swift in Sources */,
 				284DE0981BBDD0D800E6A678 /* AppModel.swift in Sources */,
 				280486591BC0917B003BA360 /* MapItem.swift in Sources */,
 				289201D21BBC580300DA4A9A /* TrafficCameras.swift in Sources */,

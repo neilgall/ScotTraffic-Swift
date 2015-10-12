@@ -9,13 +9,27 @@
 import UIKit
 
 public class SearchViewModel {
+    enum DisplayContent {
+        case Favourites
+        case SearchResults
+    }
+
+    // Inputs
     let searchTerm: Input<String>
-    let searchResults: Latest<[MapItem]>
-    let searchResultsMajorAxis: Observable<GeographicAxis>
+    let searchSelectionIndex: Input<Int?>
     
+    // Outputs
+    var dataSource: Latest<TableViewDataSourceAdapter<[SearchResultItem]>>
+    var resultsMajorAxisLabel: Latest<String>
+    var searchSelection: Observable<MapItem?>
+    
+
     public init(appModel: AppModel) {
-        self.searchTerm = Input(initial: "")
+        searchTerm = Input(initial: "")
+        searchSelectionIndex = Input(initial: nil)
         
+        let favourites = appModel.favourites.trafficCameras.latest()
+
         let trafficCameras = combine(
             appModel.trafficCameraLocations, appModel.settings.showTrafficCamerasOnMap, self.searchTerm,
             combine: applyFilterToMapItems)
@@ -36,8 +50,49 @@ public class SearchViewModel {
             return $0 + $1 + $2 + $3
         }
             
-        self.searchResults = combinedResults.map({ $0.sortGeographically() }).latest()
-        self.searchResultsMajorAxis = combinedResults.map { $0.majorAxis }
+        let searchResults = combinedResults.map({ $0.sortGeographically() }).latest()
+        let searchResultsMajorAxis = combinedResults.map { $0.majorAxis }
+
+        let displayContent: Observable<DisplayContent> = searchTerm.map { text in
+            text.isEmpty ? .Favourites : .SearchResults
+        }
+        
+        dataSource = displayContent.onChange().map({ contentType in
+            switch contentType {
+            case .Favourites:
+                return favourites
+                    .map(toSearchResultItems)
+                    .tableViewDataSource("searchCell")
+            case .SearchResults:
+                return searchResults
+                    .map(toSearchResultItem)
+                    .tableViewDataSource("searchCell")
+            }
+        }).latest()
+        
+        resultsMajorAxisLabel = combine(displayContent, searchResultsMajorAxis, combine: {
+            if $0 == DisplayContent.Favourites {
+                return ""
+            } else {
+                switch $1 {
+                case .NorthSouth: return "North to South"
+                case .EastWest: return "West to East"
+                }
+            }
+        }).latest()
+        
+        searchSelection = combine(searchSelectionIndex, dataSource) { index, dataSource in
+            if let index = index {
+                return dataSource.source.value?[index]
+            } else {
+                return nil
+            }
+        }
+    }
+    
+    func clearSearch() {
+        searchTerm.value = ""
+        searchSelectionIndex.value = nil
     }
 }
 

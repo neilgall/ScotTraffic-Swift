@@ -395,23 +395,6 @@ class Combine5<SourceType1, SourceType2, SourceType3, SourceType4, SourceType5, 
     }
 }
 
-// Convenience wrapper for an array of Observation
-public struct Observations {
-    private var observations: [Observation]
-    
-    public init() {
-        self.observations = []
-    }
-    
-    public mutating func add<ValueType>(source: Observable<ValueType>, closure: ValueType -> Void) {
-        observations.append(source.output(closure))
-    }
-    
-    public mutating func clear() {
-        observations.removeAll()
-    }
-}
-
 extension Observable {
     public func output(closure: ValueType -> Void) -> Output<ValueType> {
         return Output(self, closure)

@@ -20,6 +20,8 @@ public class AppCoordinator: NSObject, UISplitViewControllerDelegate, UIPopoverC
     var collectionController: MapItemCollectionViewController?
     
     let mapViewModel: MapViewModel
+    let searchViewModel: SearchViewModel
+    var observations = [Observation]()
     
     public init(appModel: AppModel, rootWindow: UIWindow) {
         self.appModel = appModel
@@ -32,54 +34,49 @@ public class AppCoordinator: NSObject, UISplitViewControllerDelegate, UIPopoverC
         searchViewController = (splitViewController.viewControllers[0] as! UINavigationController).topViewController as! SearchViewController
         mapViewController = (splitViewController.viewControllers[1] as! UINavigationController).topViewController as! MapViewController
         
-        searchViewController.searchViewModel = SearchViewModel(appModel: appModel)
-        searchViewController.favouritesViewModel = FavouritesViewModel(favourites: appModel.favourites)
+        searchViewModel = SearchViewModel(appModel: appModel)        
+        searchViewController.searchViewModel = searchViewModel
         
         mapViewModel = MapViewModel(appModel: appModel)
         mapViewController.viewModel = mapViewModel
-
-        super.init()
-        searchViewController.coordinator = self
-        mapViewController.coordinator = self
     }
     
     public func start() {
         splitViewController.delegate = self
-    }
-    
-    public func cancelSearch() {
-        showMap()
-        mapViewController.deselectAnnotations()
-    }
-    
-    public func zoomToMapItem(item: MapItem) {
-        showMap()
-        mapViewModel.selectedMapItem.value = item
-    }
-    
-    public func showDetailForMapItems(mapItems: [MapItem], fromRectInMapView rect: CGRect) {
-        let model = MapItemCollectionViewModel(mapItems: mapItems)
-        
-        if let collectionController = self.collectionController {
-            collectionController.viewModel = model
-            
-        } else {
-            self.collectionController = storyboard.instantiateViewControllerWithIdentifier("mapItemCollectionViewController") as? MapItemCollectionViewController
-            if let collectionController = self.collectionController {
-                let splitViewRect = splitViewController.view.convertRect(rect, fromView: mapViewController.view)
-                collectionController.viewModel = model
-                popoverController = UIPopoverController(contentViewController: collectionController)
-                popoverController?.popoverContentSize = CGSizeMake(480, 380)
-                popoverController?.delegate = self
-                popoverController?.presentPopoverFromRect(splitViewRect, inView: self.splitViewController.view, permittedArrowDirections: .Any, animated: true)
+
+        observations.append(searchViewModel.searchSelection.output({ item in
+            if item != nil {
+                self.showMap()
             }
-        }
+            self.mapViewModel.selectedMapItem.value = item
+        }))
+    
+        observations.append(mapViewController.detailMapItems.output(self.showDetailForMapItems))
     }
     
-    public func hideMapItemDetail() {
-        popoverController?.dismissPopoverAnimated(true)
-        popoverController = nil
-        collectionController = nil
+    private func showDetailForMapItems(detail: DetailMapItems?) {
+        if let detail = detail {
+            let model = MapItemCollectionViewModel(mapItems: detail.mapItems)
+        
+            if let collectionController = self.collectionController {
+                collectionController.viewModel = model
+            
+            } else {
+                self.collectionController = storyboard.instantiateViewControllerWithIdentifier("mapItemCollectionViewController") as? MapItemCollectionViewController
+                if let collectionController = self.collectionController {
+                    let splitViewRect = splitViewController.view.convertRect(detail.mapViewRect, fromView: mapViewController.view)
+                    collectionController.viewModel = model
+                    popoverController = UIPopoverController(contentViewController: collectionController)
+                    popoverController?.popoverContentSize = CGSizeMake(480, 380)
+                    popoverController?.delegate = self
+                    popoverController?.presentPopoverFromRect(splitViewRect, inView: self.splitViewController.view, permittedArrowDirections: .Any, animated: true)
+                }
+            }
+        } else {
+            popoverController?.dismissPopoverAnimated(true)
+            popoverController = nil
+            collectionController = nil
+        }
     }
     
     private func showMap() {

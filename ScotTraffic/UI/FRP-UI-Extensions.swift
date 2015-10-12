@@ -18,11 +18,14 @@ public class TableViewDataSourceAdapter
 {
     let cellIdentifier: String
     let source: Latest<ValueType>
-    var output: Output<ValueType>
+    var output: Output<ValueType>?
     
-    init(source: Observable<ValueType>, tableView: UITableView, cellIdentifier: String) {
+    init(source: Observable<ValueType>, cellIdentifier: String) {
         self.cellIdentifier = cellIdentifier
         self.source = source.latest()
+    }
+    
+    public func reloadTableViewOnChange(tableView: UITableView) {
         self.output = source.output { [weak tableView] _ in
             tableView?.reloadData()
         }
@@ -49,7 +52,7 @@ extension Observable where T: CollectionType, T.Generator.Element: TableViewCell
     // create a table view data source drawing from this observable, and refreshing the table when the
     // contents update
     
-    public func tableViewDataSource(tableView: UITableView, cellIdentifier: String) -> TableViewDataSourceAdapter<ValueType> {
-        return TableViewDataSourceAdapter(source: self, tableView: tableView, cellIdentifier: cellIdentifier)
+    public func tableViewDataSource(cellIdentifier: String) -> TableViewDataSourceAdapter<ValueType> {
+        return TableViewDataSourceAdapter(source: self, cellIdentifier: cellIdentifier)
     }
 }

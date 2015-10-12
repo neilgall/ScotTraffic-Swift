@@ -16,13 +16,16 @@ let zoomToMapItemInsetX: Double = -40000
 let zoomToMapItemInsetY: Double = -40000
 let visibleMapRectInsetRatio: Double = -0.2
 
+public typealias DetailMapItems = (mapItems: [MapItem], mapViewRect: CGRect)
+
 class MapViewController: UIViewController, MKMapViewDelegate, MapViewModelDelegate {
 
     @IBOutlet var mapView: MKMapView!
 
-    weak var coordinator: AppCoordinator?
+    let detailMapItems = Input<DetailMapItems?>(initial: nil)
+    
     var viewModel: MapViewModel?
-    var observations = Observations()
+    var observations = [Observation]()
     var updatingAnnotations: Bool = false
     
     override func viewDidLoad() {
@@ -30,9 +33,9 @@ class MapViewController: UIViewController, MKMapViewDelegate, MapViewModelDelega
         
         if let viewModel = viewModel {
             viewModel.delegate.value = self
-            observations.add(viewModel.annotations, closure: self.updateAnnotations)
-            observations.add(viewModel.selectedAnnotation, closure: self.autoSelectAnnotation)
-            observations.add(viewModel.selectedMapItem, closure: self.zoomToSelectedMapItem)
+            observations.append(viewModel.annotations.output(self.updateAnnotations))
+            observations.append(viewModel.selectedAnnotation.output(self.autoSelectAnnotation))
+            observations.append(viewModel.selectedMapItem.output(self.zoomToSelectedMapItem))
         }
     }
     
@@ -135,14 +138,14 @@ class MapViewController: UIViewController, MKMapViewDelegate, MapViewModelDelega
     func mapView(mapView: MKMapView, didSelectAnnotationView view: MKAnnotationView) {
         if let annotation = view.annotation as? MapAnnotation {
             let rect = view.convertRect(view.frame, toView: self.view)
-            coordinator?.showDetailForMapItems(annotation.mapItems, fromRectInMapView: rect)
+            detailMapItems.value = (mapItems: annotation.mapItems, mapViewRect: rect)
         }
     }
     
     func mapView(mapView: MKMapView, didDeselectAnnotationView view: MKAnnotationView) {
         if !updatingAnnotations {
             viewModel?.selectedMapItem.value = nil
-            coordinator?.hideMapItemDetail()
+            detailMapItems.value = nil
         }
     }
 
