@@ -8,17 +8,18 @@
 
 import Foundation
 
-public class AppModel {
+public class AppModel: ScotTraffic {
+    
+    // ScotTraffic interface
+    public let trafficCameraLocations: Observable<[TrafficCameraLocation]>
+    public let safetyCameras: Observable<[SafetyCamera]>
+    public let alerts: Observable<[Incident]>
+    public let roadworks: Observable<[Incident]>
+    public let weather: Observable<[Weather]>
+    public let settings: Settings
+    public let favourites: Favourites
+    
     let fetcher: HTTPFetcher
-    
-    let trafficCameraLocations: Observable<[TrafficCameraLocation]>
-    let safetyCameras: Observable<[SafetyCamera]>
-    let alerts: Observable<[Incident]>
-    let roadworks: Observable<[Incident]>
-    let weather: Observable<[Weather]>
-    let settings: Settings
-    let favourites: Favourites
-    
     let errorSources: Observable<AppError>
     let fetchStarters: [PeriodicStarter]
     var internalObservers = [Observation]()

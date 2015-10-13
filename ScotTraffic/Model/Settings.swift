@@ -21,7 +21,7 @@ public class Settings {
     public let showBridgesOnMap: Input<Bool>
     public let temperatureUnit: Input<TemperatureUnit>
     
-    public init(userDefaults: NSUserDefaults) {
+    public init(userDefaults: UserDefaultsProtocol) {
         showTrafficCamerasOnMap = PersistentSetting(userDefaults, key: "showTrafficCamerasOnMap", defaultValue: true)
         showSafetyCamerasOnMap = PersistentSetting(userDefaults, key: "showSafetyCamerasOnMap", defaultValue: true)
         showAlertsOnMap = PersistentSetting(userDefaults, key: "showAlertsOnMap", defaultValue: true)
@@ -33,11 +33,11 @@ public class Settings {
 
 
 class PersistentSetting<T>: Input<T>, Startable {
-    let userDefaults: NSUserDefaults
+    let userDefaults: UserDefaultsProtocol
     let key: String
     let defaultValue: T
     
-    init(_ userDefaults: NSUserDefaults, key: String, defaultValue: T) {
+    init(_ userDefaults: UserDefaultsProtocol, key: String, defaultValue: T) {
         self.userDefaults = userDefaults
         self.key = key
         self.defaultValue = defaultValue

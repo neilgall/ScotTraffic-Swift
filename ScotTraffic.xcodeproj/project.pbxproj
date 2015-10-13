@@ -41,8 +41,13 @@
 		28DB3BF51BC02892001AAC2A /* SafetyCameras.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28DB3BF41BC02892001AAC2A /* SafetyCameras.swift */; };
 		28DB3BF81BC02968001AAC2A /* Weather.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28DB3BF71BC02968001AAC2A /* Weather.swift */; };
 		28DB3BFA1BC02C88001AAC2A /* Incidents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28DB3BF91BC02C88001AAC2A /* Incidents.swift */; };
+		710535651BCC141C00FDB70C /* UserDefaultsProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 710535641BCC141C00FDB70C /* UserDefaultsProtocol.swift */; settings = {ASSET_TAGS = (); }; };
+		7105356C1BCDA83A00FDB70C /* SearchViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7105356A1BCDA83A00FDB70C /* SearchViewModelTests.swift */; settings = {ASSET_TAGS = (); }; };
+		7105356D1BCDA83A00FDB70C /* TestAppModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7105356B1BCDA83A00FDB70C /* TestAppModel.swift */; settings = {ASSET_TAGS = (); }; };
 		716D9E951BCA5EA1005A6B49 /* MapItemCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 716D9E941BCA5EA1005A6B49 /* MapItemCollectionViewController.swift */; settings = {ASSET_TAGS = (); }; };
 		716D9E971BCA614D005A6B49 /* MapItemCollectionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 716D9E961BCA614D005A6B49 /* MapItemCollectionViewModel.swift */; settings = {ASSET_TAGS = (); }; };
+		716D9E991BCBC2F1005A6B49 /* ScotTraffic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 716D9E981BCBC2F1005A6B49 /* ScotTraffic.swift */; settings = {ASSET_TAGS = (); }; };
+		718F00BD1BCDA8D600D51B43 /* Data in Resources */ = {isa = PBXBuildFile; fileRef = 710535661BCDA81E00FDB70C /* Data */; settings = {ASSET_TAGS = (); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -103,8 +108,13 @@
 		28DB3BF41BC02892001AAC2A /* SafetyCameras.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SafetyCameras.swift; sourceTree = "<group>"; };
 		28DB3BF71BC02968001AAC2A /* Weather.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Weather.swift; sourceTree = "<group>"; };
 		28DB3BF91BC02C88001AAC2A /* Incidents.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Incidents.swift; sourceTree = "<group>"; };
+		710535641BCC141C00FDB70C /* UserDefaultsProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserDefaultsProtocol.swift; sourceTree = "<group>"; };
+		710535661BCDA81E00FDB70C /* Data */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Data; sourceTree = "<group>"; };
+		7105356A1BCDA83A00FDB70C /* SearchViewModelTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchViewModelTests.swift; sourceTree = "<group>"; };
+		7105356B1BCDA83A00FDB70C /* TestAppModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestAppModel.swift; sourceTree = "<group>"; };
 		716D9E941BCA5EA1005A6B49 /* MapItemCollectionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapItemCollectionViewController.swift; sourceTree = "<group>"; };
 		716D9E961BCA614D005A6B49 /* MapItemCollectionViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapItemCollectionViewModel.swift; sourceTree = "<group>"; };
+		716D9E981BCBC2F1005A6B49 /* ScotTraffic.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScotTraffic.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -181,9 +191,9 @@
 		2804936C1BA8BB4800990BD1 /* ScotTrafficTests */ = {
 			isa = PBXGroup;
 			children = (
-				28875EA81BBC7A2F00E67A16 /* JSONTests.swift */,
-				28BFBC5A1BBC91AA00827069 /* FRPTests.swift */,
-				2841A0EF1BCD9B3900D22A8E /* EitherTests.swift */,
+				710535661BCDA81E00FDB70C /* Data */,
+				710535681BCDA82300FDB70C /* Core */,
+				710535691BCDA82800FDB70C /* Model */,
 				2804936F1BA8BB4800990BD1 /* Info.plist */,
 			);
 			path = ScotTrafficTests;
@@ -201,6 +211,7 @@
 		284DE0991BBDDEB800E6A678 /* Core */ = {
 			isa = PBXGroup;
 			children = (
+				710535641BCC141C00FDB70C /* UserDefaultsProtocol.swift */,
 				284DE0951BBDCD4200E6A678 /* Either.swift */,
 				289201D31BBC5AEB00DA4A9A /* FRP.swift */,
 				28875EA61BBC739100E67A16 /* JSON.swift */,
@@ -243,6 +254,7 @@
 		289201CE1BBC570300DA4A9A /* App */ = {
 			isa = PBXGroup;
 			children = (
+				716D9E981BCBC2F1005A6B49 /* ScotTraffic.swift */,
 				280493581BA8BB4800990BD1 /* AppDelegate.swift */,
 				2804864E1BC074E4003BA360 /* AppErrors.swift */,
 				284DE0971BBDD0D800E6A678 /* AppModel.swift */,
@@ -275,6 +287,25 @@
 				286559141BC1DCB70058A35A /* Favourites.swift */,
 			);
 			path = Model;
+			sourceTree = "<group>";
+		};
+		710535681BCDA82300FDB70C /* Core */ = {
+			isa = PBXGroup;
+			children = (
+				28875EA81BBC7A2F00E67A16 /* JSONTests.swift */,
+				28BFBC5A1BBC91AA00827069 /* FRPTests.swift */,
+				2841A0EF1BCD9B3900D22A8E /* EitherTests.swift */,
+			);
+			name = Core;
+			sourceTree = "<group>";
+		};
+		710535691BCDA82800FDB70C /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				7105356B1BCDA83A00FDB70C /* TestAppModel.swift */,
+				7105356A1BCDA83A00FDB70C /* SearchViewModelTests.swift */,
+			);
+			name = Model;
 			sourceTree = "<group>";
 		};
 		716D9E911BCA5B9F005A6B49 /* CollectionView */ = {
@@ -399,6 +430,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				718F00BD1BCDA8D600D51B43 /* Data in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -431,11 +463,13 @@
 				28DB3BF81BC02968001AAC2A /* Weather.swift in Sources */,
 				286559231BC3198D0058A35A /* MapViewModel.swift in Sources */,
 				286559211BC3182C0058A35A /* MapViewController.swift in Sources */,
+				710535651BCC141C00FDB70C /* UserDefaultsProtocol.swift in Sources */,
 				28DB3BF31BC025D0001AAC2A /* Functions.swift in Sources */,
 				280486531BC08711003BA360 /* SearchViewController.swift in Sources */,
 				280486571BC087F4003BA360 /* Settings.swift in Sources */,
 				289201D41BBC5AEB00DA4A9A /* FRP.swift in Sources */,
 				2817D92D1BC5D2B70082F4A7 /* WithFlag.swift in Sources */,
+				716D9E991BCBC2F1005A6B49 /* ScotTraffic.swift in Sources */,
 				716D9E971BCA614D005A6B49 /* MapItemCollectionViewModel.swift in Sources */,
 				284DE0981BBDD0D800E6A678 /* AppModel.swift in Sources */,
 				280486591BC0917B003BA360 /* MapItem.swift in Sources */,
@@ -452,7 +486,9 @@
 			files = (
 				2841A0F01BCD9B3900D22A8E /* EitherTests.swift in Sources */,
 				28BFBC5B1BBC91AA00827069 /* FRPTests.swift in Sources */,
+				7105356C1BCDA83A00FDB70C /* SearchViewModelTests.swift in Sources */,
 				28875EA91BBC7A2F00E67A16 /* JSONTests.swift in Sources */,
+				7105356D1BCDA83A00FDB70C /* TestAppModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

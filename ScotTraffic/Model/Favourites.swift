@@ -20,12 +20,12 @@ public struct FavouriteTrafficCamera {
 
 
 public class Favourites {
-    private let userDefaults: NSUserDefaults
+    private let userDefaults: UserDefaultsProtocol
     private var userDefaultsNotification: AnyObject?
     private let items : Input<[FavouriteIdentifier]>
     public let trafficCameras: Observable<[FavouriteTrafficCamera]>
     
-    public init(userDefaults: NSUserDefaults, trafficCameraLocations: Observable<[TrafficCameraLocation]>) {
+    public init(userDefaults: UserDefaultsProtocol, trafficCameraLocations: Observable<[TrafficCameraLocation]>) {
         self.userDefaults = userDefaults
         self.items = Input(initial: [])
         self.trafficCameras = combine(trafficCameraLocations, self.items, combine: favouriteTrafficCamerasFromLocations)

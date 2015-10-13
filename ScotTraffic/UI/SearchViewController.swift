@@ -122,28 +122,4 @@ class SearchViewController: UITableViewController, UISearchBarDelegate {
     }
 }
 
-struct SearchResultItem: MapItem, TableViewCellConfigurator {
-    let name: String
-    let road: String
-    let mapPoint: MKMapPoint
-    
-    init(item: MapItem) {
-        self.name = item.name
-        self.road = item.road
-        self.mapPoint = item.mapPoint
-    }
-    
-    func configureCell(cell: UITableViewCell) {
-        cell.textLabel?.text = name
-        cell.detailTextLabel?.text = road
-    }
-}
-
-func toSearchResultItems(items: [FavouriteTrafficCamera]) -> [SearchResultItem] {
-    return items.map { SearchResultItem(item: $0.location) }
-}
-
-func toSearchResultItem(items: [MapItem]) -> [SearchResultItem] {
-    return items.map { SearchResultItem(item: $0) }
-}
 

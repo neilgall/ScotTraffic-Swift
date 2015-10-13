@@ -24,34 +24,34 @@ public class MapViewModel {
     let annotations: Observable<[MapAnnotation]>
     let selectedAnnotation: Observable<MapAnnotation?>
  
-    public init(appModel: AppModel) {
+    public init(scotTraffic: ScotTraffic) {
         
         visibleMapRect = Input(initial: MKMapRectWorld)
         selectedMapItem = Input(initial: nil)
         delegate = Input(initial: nil)
         
         let trafficCameras = combine(
-            appModel.trafficCameraLocations,
-            appModel.favourites.trafficCameras,
-            appModel.settings.showTrafficCamerasOnMap,
+            scotTraffic.trafficCameraLocations,
+            scotTraffic.favourites.trafficCameras,
+            scotTraffic.settings.showTrafficCamerasOnMap,
             visibleMapRect,
             combine: trafficCamerasFromRectAndFavourites)
 
         let safetyCameras = combine(
-            appModel.safetyCameras,
-            appModel.settings.showSafetyCamerasOnMap,
+            scotTraffic.safetyCameras,
+            scotTraffic.settings.showSafetyCamerasOnMap,
             visibleMapRect,
             combine: mapItemsFromRect)
         
         let alerts = combine(
-            appModel.alerts,
-            appModel.settings.showAlertsOnMap,
+            scotTraffic.alerts,
+            scotTraffic.settings.showAlertsOnMap,
             visibleMapRect,
             combine: mapItemsFromRect)
         
         let roadworks = combine(
-            appModel.roadworks,
-            appModel.settings.showRoadworksOnMap,
+            scotTraffic.roadworks,
+            scotTraffic.settings.showRoadworksOnMap,
             visibleMapRect,
             combine: mapItemsFromRect)
         

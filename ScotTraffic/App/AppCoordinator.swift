@@ -34,10 +34,10 @@ public class AppCoordinator: NSObject, UISplitViewControllerDelegate, UIPopoverC
         searchViewController = (splitViewController.viewControllers[0] as! UINavigationController).topViewController as! SearchViewController
         mapViewController = (splitViewController.viewControllers[1] as! UINavigationController).topViewController as! MapViewController
         
-        searchViewModel = SearchViewModel(appModel: appModel)        
+        searchViewModel = SearchViewModel(scotTraffic: appModel)
         searchViewController.searchViewModel = searchViewModel
         
-        mapViewModel = MapViewModel(appModel: appModel)
+        mapViewModel = MapViewModel(scotTraffic: appModel)
         mapViewController.viewModel = mapViewModel
     }
     

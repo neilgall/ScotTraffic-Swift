@@ -16,8 +16,8 @@ public class TableViewDataSourceAdapter
     <ValueType: CollectionType where ValueType.Generator.Element: TableViewCellConfigurator, ValueType.Index: IntegerType>
     : NSObject, UITableViewDataSource
 {
-    let cellIdentifier: String
-    let source: Latest<ValueType>
+    public let cellIdentifier: String
+    public let source: Latest<ValueType>
     var output: Output<ValueType>?
     
     init(source: Observable<ValueType>, cellIdentifier: String) {

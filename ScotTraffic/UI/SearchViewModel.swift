@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import MapKit
 
 public class SearchViewModel {
     enum DisplayContent {
@@ -15,35 +16,35 @@ public class SearchViewModel {
     }
 
     // Inputs
-    let searchTerm: Input<String>
-    let searchSelectionIndex: Input<Int?>
+    public let searchTerm: Input<String>
+    public let searchSelectionIndex: Input<Int?>
     
     // Outputs
-    var dataSource: Latest<TableViewDataSourceAdapter<[SearchResultItem]>>
-    var resultsMajorAxisLabel: Latest<String>
-    var searchSelection: Observable<MapItem?>
+    public var dataSource: Latest<TableViewDataSourceAdapter<[SearchResultItem]>>
+    public var resultsMajorAxisLabel: Latest<String>
+    public var searchSelection: Observable<MapItem?>
     
 
-    public init(appModel: AppModel) {
+    public init(scotTraffic: ScotTraffic) {
         searchTerm = Input(initial: "")
         searchSelectionIndex = Input(initial: nil)
         
-        let favourites = appModel.favourites.trafficCameras.latest()
+        let favourites = scotTraffic.favourites.trafficCameras.latest()
 
         let trafficCameras = combine(
-            appModel.trafficCameraLocations, appModel.settings.showTrafficCamerasOnMap, self.searchTerm,
+            scotTraffic.trafficCameraLocations, scotTraffic.settings.showTrafficCamerasOnMap, self.searchTerm,
             combine: applyFilterToMapItems)
         
         let safetyCameras = combine(
-            appModel.safetyCameras, appModel.settings.showSafetyCamerasOnMap, self.searchTerm,
+            scotTraffic.safetyCameras, scotTraffic.settings.showSafetyCamerasOnMap, self.searchTerm,
             combine: applyFilterToMapItems)
         
         let alerts = combine(
-            appModel.alerts, appModel.settings.showAlertsOnMap, self.searchTerm,
+            scotTraffic.alerts, scotTraffic.settings.showAlertsOnMap, self.searchTerm,
             combine: applyFilterToMapItems)
         
         let roadworks = combine(
-            appModel.roadworks, appModel.settings.showRoadworksOnMap, self.searchTerm,
+            scotTraffic.roadworks, scotTraffic.settings.showRoadworksOnMap, self.searchTerm,
             combine: applyFilterToMapItems)
         
         let combinedResults: Observable<[MapItem]> = combine(trafficCameras, safetyCameras, alerts, roadworks) {
@@ -105,4 +106,29 @@ func applyFilterToMapItems<T: MapItem> (sourceList: [T], enabled: Bool, searchTe
             .filter { $0.name.lowercaseString.containsString(term) || $0.road.lowercaseString == term }
             .map { $0 as MapItem }
     }
+}
+
+public struct SearchResultItem: MapItem, TableViewCellConfigurator {
+    public let name: String
+    public let road: String
+    public let mapPoint: MKMapPoint
+    
+    public init(item: MapItem) {
+        self.name = item.name
+        self.road = item.road
+        self.mapPoint = item.mapPoint
+    
+    }
+    public func configureCell(cell: UITableViewCell) {
+        cell.textLabel?.text = name
+        cell.detailTextLabel?.text = road
+    }
+}
+
+public func toSearchResultItems(items: [FavouriteTrafficCamera]) -> [SearchResultItem] {
+    return items.map { SearchResultItem(item: $0.location) }
+}
+
+public func toSearchResultItem(items: [MapItem]) -> [SearchResultItem] {
+    return items.map { SearchResultItem(item: $0) }
 }
