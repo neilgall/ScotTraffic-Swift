@@ -15,7 +15,7 @@ public enum Either<V, E: ErrorType> {
     // If .Value, transform to a new value.
     // If .Error, ignore the transform and lift the error to AppError if necessary
     //
-    func map<U> (transform: V->U) -> Either<U,AppError> {
+    public func map<U> (transform: V -> U) -> Either<U,AppError> {
         switch self {
             
         case .Value(let v):
@@ -31,7 +31,7 @@ public enum Either<V, E: ErrorType> {
     // like the simple map(); else the resulting Either becomes an .Error
     // lifted to AppError
     //
-    func map<U> (transform: V throws -> U) -> Either<U,AppError> {
+    public func map<U> (transform: V throws -> U) -> Either<U,AppError> {
         switch self {
             
         case .Value(let v):
@@ -50,30 +50,80 @@ public enum Either<V, E: ErrorType> {
 
 // FRP operations on Either
 
-class SplitEitherValue<V, E:ErrorType> : Observable<V> {
-    var output: Output<Either<V,E>>?
+public class SplitEitherValue<V, E:ErrorType> : Observable<V> {
+    private let source: Observable<Either<V,E>>
+    private var observer: Observer<Either<V,E>>?
     
     init(_ source: Observable<Either<V,E>>) {
+        self.source = source
         super.init()
-        self.output = Output<Either<V,E>>(source) {
-            switch $0 {
-            case .Value(let v): self.pushValue(v)
-            case .Error: break
+        self.observer = Observer(source) { transaction in
+            switch transaction {
+            case .Begin:
+                break
+            case .End(let value):
+                switch value {
+                case .Value(let v):
+                    self.pushValue(v)
+                case .Error:
+                    break
+                }
             }
+        }
+    }
+    
+    override public var canPullValue: Bool {
+        return pullValue != nil
+    }
+    
+    override public var pullValue: V? {
+        guard let either = source.pullValue else {
+            return nil
+        }
+        switch either {
+        case .Value(let v):
+            return v
+            case .Error:
+                return nil
         }
     }
 }
 
-class SplitEitherError<V, E:ErrorType> : Observable<E> {
-    var output: Output<Either<V,E>>?
+public class SplitEitherError<V, E:ErrorType> : Observable<E> {
+    private let source: Observable<Either<V,E>>
+    private var observer: Observer<Either<V,E>>?
     
     init(_ source: Observable<Either<V,E>>) {
+        self.source = source
         super.init()
-        self.output = Output<Either<V,E>>(source) {
-            switch $0 {
-            case .Value: break
-            case .Error(let e): self.pushValue(e)
+        self.observer = Observer(source) { transaction in
+            switch transaction {
+            case .Begin:
+                break
+            case .End(let value):
+                switch value {
+                case .Value:
+                    break
+                case .Error(let e):
+                    self.pushValue(e)
+                }
             }
+        }
+    }
+
+    override public var canPullValue: Bool {
+        return pullValue != nil
+    }
+    
+    override public var pullValue: E? {
+        guard let either = source.pullValue else {
+            return nil
+        }
+        switch either {
+        case .Error(let e):
+            return e
+        case .Value:
+            return nil
         }
     }
 }

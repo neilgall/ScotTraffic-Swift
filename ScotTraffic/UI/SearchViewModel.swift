@@ -91,8 +91,8 @@ public class SearchViewModel {
     }
     
     func clearSearch() {
-        searchTerm.value = ""
         searchSelectionIndex.value = nil
+        searchTerm.value = ""
     }
 }
 

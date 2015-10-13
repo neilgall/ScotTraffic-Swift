@@ -112,77 +112,60 @@ class FRPTests: XCTestCase {
         XCTAssertEqual(c.vals, [6,3,10,7,14])
     }
     
-    func testCombine2_async() {
+    func testCombine2_independentInputs() {
         let s1 = Input<Int>(initial: 0)
         let s2 = Input<String>(initial: "")
         let m = combine(s1, s2) { i,s in "\(i):\(s)" }
         let c = Capture(m)
 
-        let expectation = expectationWithDescription("wait")
-        c.obs.append(m.output { _ in
-            if c.vals.count == 5 {
-                expectation.fulfill()
-            }
-        })
-        
         s1.value = 123
-        dispatch_async(dispatch_get_main_queue()) {
-            s2.value = "foo"
-            dispatch_async(dispatch_get_main_queue()) {
-                s1.value = 234
-                dispatch_async(dispatch_get_main_queue()) {
-                    s2.value = "bar"
-                }
-            }
-        }
-        
-        waitForExpectationsWithTimeout(1.0, handler: nil)
-        
-        XCTAssertEqual(c.vals, ["0:", "123:", "123:foo", "234:foo", "234:bar"])
+        s2.value = "foo"
+
+        XCTAssertEqual(c.vals, ["0:", "123:", "123:foo"])
     }
     
-    func testCombine2_sync() {
+    func testCombine2_dependentInputs() {
+        let s = Input<Int>(initial: 0)
+        let t = s.map { $0 + 5 }
+        let u = s.map { $0 + 3 }
+        let m = combine(t, u) { $0 * $1 }
+        let c = Capture(m)
         
+        s.value = 6
+
+        XCTAssertEqual(c.vals, [15, 99])
     }
 
-    func testCombine3_async() {
+    func testCombine3_independentInputs() {
         let s1 = Input<Int>(initial: 0)
         let s2 = Input<String>(initial: "")
         let s3 = Input<Bool>(initial: false)
         let m = combine(s1, s2, s3) { i,s,b in "\(i):\(s):\(b)" }
         let c = Capture(m)
-        
-        let expectation = expectationWithDescription("wait")
-        c.obs.append(m.output { _ in
-            if c.vals.count == 6 {
-                expectation.fulfill()
-            }
-        })
 
         s1.value = 123
-        dispatch_async(dispatch_get_main_queue()) {
-            s2.value = "foo"
-            dispatch_async(dispatch_get_main_queue()) {
-                s3.value = true
-                dispatch_async(dispatch_get_main_queue()) {
-                    s1.value = 234
-                    dispatch_async(dispatch_get_main_queue()) {
-                        s2.value = "bar"
-                    }
-                }
-            }
-        }
+        s2.value = "foo"
+        s3.value = true
+        s1.value = 234
+        s2.value = "bar"
         
-        waitForExpectationsWithTimeout(1.0, handler: nil)
-
         XCTAssertEqual(c.vals, ["0::false", "123::false", "123:foo:false", "123:foo:true", "234:foo:true", "234:bar:true"])
     }
-
-    func testCombine3_sync() {
+    
+    func testCombine3_dependentInputs() {
+        let s = Input<Int>(initial: 0)
+        let t = s.map { $0 + 5 }
+        let u = s.map { $0 * -1 }
+        let m = combine(s, t, u) { $0 * $1 + $2 }
+        let c = Capture(m)
         
+        s.value = 7
+        s.value = 9
+        
+        XCTAssertEqual(c.vals, [0, 77, 117])
     }
     
-    func testCombine4_async() {
+    func testCombine4_independentInputs() {
         let s1 = Input<Int>(initial: 0)
         let s2 = Input<Int>(initial: 0)
         let s3 = Input<Int>(initial: 0)
@@ -190,33 +173,15 @@ class FRPTests: XCTestCase {
         let m = combine(s1, s2, s3, s4) { $0 + $1 + $2 + $3 }
         let c = Capture(m)
         
-        let expectation = expectationWithDescription("wait")
-        c.obs.append(m.output { _ in
-            if c.vals.count == 5 {
-                expectation.fulfill()
-            }
-        })
-
         s1.value = 1
-        dispatch_async(dispatch_get_main_queue()) {
-            s2.value = 4
-            dispatch_async(dispatch_get_main_queue()) {
-                s3.value = 7
-                dispatch_async(dispatch_get_main_queue()) {
-                    s4.value = 9
-                }
-            }
-        }
-        
-        waitForExpectationsWithTimeout(1.0, handler: nil)
+        s2.value = 4
+        s3.value = 7
+        s4.value = 9
 
         XCTAssertEqual(c.vals, [0, 1, 5, 12, 21])
     }
     
-    func testCombine4_sync() {
-    }
-    
-    func testCombine5() {
+    func testCombine5_independentInputs() {
         let s1 = Input<Int>(initial: 1)
         let s2 = Input<Int>(initial: 3)
         let s3 = Input<Int>(initial: 5)
@@ -225,33 +190,62 @@ class FRPTests: XCTestCase {
         let m = combine(s1, s2, s3, s4, s5) { ($0 * $1) + ($2 * $3) + $4 }
         let c = Capture(m)
         
-        let expectation = expectationWithDescription("wait")
-        c.obs.append(m.output { _ in
-            if c.vals.count == 6 {
-                expectation.fulfill()
-            }
-        })
-
         s1.value = 2
-        dispatch_async(dispatch_get_main_queue()) {
-            s2.value = 4
-            dispatch_async(dispatch_get_main_queue()) {
-                s3.value = 6
-                dispatch_async(dispatch_get_main_queue()) {
-                    s4.value = 8
-                    dispatch_async(dispatch_get_main_queue()) {
-                        s5.value = 10
-                    }
-                }
-            }
-        }
+        s2.value = 4
+        s3.value = 6
+        s4.value = 8
+        s5.value = 10
         
-        waitForExpectationsWithTimeout(3.0, handler: nil)
-
         XCTAssertEqual(c.vals, [47, 50, 52, 59, 65, 66])
     }
     
-    func testCombine5_sync() {
+    func testLatest_mapped() {
+        let s = Input<Int>(initial: 0)
+        let t = s.map { $0 + 1 }
+        let u = t.latest()
+
+        XCTAssertTrue(t.canPullValue)
+        XCTAssertTrue(u.canPullValue)
+        XCTAssertEqual(u.pullValue, 1)
+
+        s.value = 6
         
+        XCTAssertEqual(u.pullValue, 7)
+    }
+    
+    func testLatest_filtered() {
+        let s = Input<Int>(initial: 0)
+        let t = s.filter { $0 > 5 }
+        let u = t.latest()
+
+        XCTAssertFalse(t.canPullValue)
+        XCTAssertFalse(u.canPullValue)
+        XCTAssertNil(u.pullValue)
+        
+        s.value = 9
+        
+        XCTAssertFalse(t.canPullValue)
+        XCTAssertTrue(u.canPullValue)
+        XCTAssertEqual(u.pullValue, 9)
+    }
+    
+    func testLatest_doesNotWrapLatest() {
+        let s = Input<Int>(initial: 0)
+        let l1 = s.latest()
+        let l2 = l1.latest()
+        XCTAssert(l1 === l2)
+    }
+    
+    func testOnChange() {
+        let s = Input<Int>(initial: 0)
+        let t = Capture(s.latest())
+        let u = Capture(s.onChange())
+
+        s.value = 6
+        s.value = 6
+        s.value = 7
+
+        XCTAssertEqual(t.vals, [0, 6, 6, 7])
+        XCTAssertEqual(u.vals, [0, 6, 7])
     }
 }
