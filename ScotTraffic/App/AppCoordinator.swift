@@ -62,15 +62,20 @@ public class AppCoordinator: NSObject, UISplitViewControllerDelegate, UIPopoverC
                 collectionController.viewModel = model
             
             } else {
-                self.collectionController = storyboard.instantiateViewControllerWithIdentifier("mapItemCollectionViewController") as? MapItemCollectionViewController
-                if let collectionController = self.collectionController {
-                    let splitViewRect = splitViewController.view.convertRect(detail.mapViewRect, fromView: mapViewController.view)
-                    collectionController.viewModel = model
-                    popoverController = UIPopoverController(contentViewController: collectionController)
-                    popoverController?.popoverContentSize = CGSizeMake(480, 380)
-                    popoverController?.delegate = self
-                    popoverController?.presentPopoverFromRect(splitViewRect, inView: self.splitViewController.view, permittedArrowDirections: .Any, animated: true)
+                guard let collectionController = storyboard.instantiateViewControllerWithIdentifier("mapItemCollectionViewController") as? MapItemCollectionViewController else {
+                    abort()
                 }
+                collectionController.viewModel = model
+
+                let popoverController = UIPopoverController(contentViewController: collectionController)
+                popoverController.popoverContentSize = CGSizeMake(480, 380)
+                popoverController.delegate = self
+
+                let splitViewRect = splitViewController.view.convertRect(detail.mapViewRect, fromView: mapViewController.mapView)
+                popoverController.presentPopoverFromRect(splitViewRect, inView: self.splitViewController.view, permittedArrowDirections: UIPopoverArrowDirection.Any, animated: true)
+                
+                self.collectionController = collectionController
+                self.popoverController = popoverController
             }
         } else {
             popoverController?.dismissPopoverAnimated(true)

@@ -137,7 +137,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, MapViewModelDelega
     
     func mapView(mapView: MKMapView, didSelectAnnotationView view: MKAnnotationView) {
         if let annotation = view.annotation as? MapAnnotation {
-            let rect = view.convertRect(view.frame, toView: self.view)
+            let rect = view.convertRect(view.bounds, toView: mapView)
             detailMapItems.value = (mapItems: annotation.mapItems, mapViewRect: rect)
         }
     }
