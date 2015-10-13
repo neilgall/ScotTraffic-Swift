@@ -24,7 +24,9 @@ public class SearchViewModel {
     public var resultsMajorAxisLabel: Latest<String>
     public var searchSelection: Observable<MapItem?>
     
+    private var observations = [Observation]()
 
+    
     public init(scotTraffic: ScotTraffic) {
         searchTerm = Input(initial: "")
         searchSelectionIndex = Input(initial: nil)
@@ -89,11 +91,11 @@ public class SearchViewModel {
                 return nil
             }
         }
-    }
-    
-    func clearSearch() {
-        searchSelectionIndex.value = nil
-        searchTerm.value = ""
+        
+        // cancel selection before search term changes
+        observations.append(searchTerm.willOutput({
+            self.searchSelectionIndex.value = nil
+        }))
     }
 }
 

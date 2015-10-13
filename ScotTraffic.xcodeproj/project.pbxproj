@@ -193,7 +193,7 @@
 			children = (
 				710535661BCDA81E00FDB70C /* Data */,
 				710535681BCDA82300FDB70C /* Core */,
-				710535691BCDA82800FDB70C /* Model */,
+				710535691BCDA82800FDB70C /* ViewModels */,
 				2804936F1BA8BB4800990BD1 /* Info.plist */,
 			);
 			path = ScotTrafficTests;
@@ -299,13 +299,13 @@
 			name = Core;
 			sourceTree = "<group>";
 		};
-		710535691BCDA82800FDB70C /* Model */ = {
+		710535691BCDA82800FDB70C /* ViewModels */ = {
 			isa = PBXGroup;
 			children = (
 				7105356B1BCDA83A00FDB70C /* TestAppModel.swift */,
 				7105356A1BCDA83A00FDB70C /* SearchViewModelTests.swift */,
 			);
-			name = Model;
+			name = ViewModels;
 			sourceTree = "<group>";
 		};
 		716D9E911BCA5B9F005A6B49 /* CollectionView */ = {

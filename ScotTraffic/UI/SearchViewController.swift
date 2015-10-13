@@ -46,7 +46,7 @@ class SearchViewController: UITableViewController, UISearchBarDelegate {
     
     @IBAction func cancelSearch() {
         searchBar?.text = ""
-        searchViewModel?.clearSearch()
+        searchViewModel?.searchTerm.value = ""
     }
     
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {

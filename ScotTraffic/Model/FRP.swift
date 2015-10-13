@@ -119,6 +119,19 @@ public class Output<ValueType>: Observer<ValueType> {
     }
 }
 
+public class WillOutput<ValueType>: Observer<ValueType> {
+    public init(_ source: Observable<ValueType>, _ closure: Void -> Void) {
+        super.init(source) { transaction in
+            switch transaction {
+            case .Begin:
+                closure()
+            case .End:
+                break
+            }
+        }
+    }
+}
+
 class Filter<ValueType> : Observable<ValueType> {
     private var observer: Observer<ValueType>!
     
@@ -451,6 +464,10 @@ class Combine5<SourceType1, SourceType2, SourceType3, SourceType4, SourceType5, 
 extension Observable {
     public func output(closure: ValueType -> Void) -> Output<ValueType> {
         return Output(self, closure)
+    }
+    
+    public func willOutput(closure: Void -> Void) -> WillOutput<ValueType> {
+        return WillOutput(self, closure)
     }
     
     public func latest() -> Latest<ValueType> {
