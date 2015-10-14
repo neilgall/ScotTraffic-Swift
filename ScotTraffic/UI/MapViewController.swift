@@ -16,7 +16,14 @@ let zoomToMapItemInsetX: Double = -40000
 let zoomToMapItemInsetY: Double = -40000
 let visibleMapRectInsetRatio: Double = -0.2
 
-public typealias DetailMapItems = (mapItems: [MapItem], mapViewRect: CGRect)
+public struct DetailMapItems {
+    let mapItems: [MapItem]
+    let mapViewRect: CGRect
+    
+    var flatCount: Int {
+        return mapItems.reduce(0) { $0 + $1.count }
+    }
+}
 
 class MapViewController: UIViewController, MKMapViewDelegate, MapViewModelDelegate {
 
@@ -33,9 +40,15 @@ class MapViewController: UIViewController, MKMapViewDelegate, MapViewModelDelega
         
         if let viewModel = viewModel {
             viewModel.delegate.value = self
+            
             observations.append(viewModel.annotations.output(self.updateAnnotations))
             observations.append(viewModel.selectedAnnotation.output(self.autoSelectAnnotation))
             observations.append(viewModel.selectedMapItem.output(self.zoomToSelectedMapItem))
+            
+            observations.append(detailMapItems
+                .filter({ $0 == nil })
+                .output({ _ in self.deselectAnnotations() })
+            )
         }
     }
     
@@ -138,7 +151,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, MapViewModelDelega
     func mapView(mapView: MKMapView, didSelectAnnotationView view: MKAnnotationView) {
         if let annotation = view.annotation as? MapAnnotation {
             let rect = view.convertRect(view.bounds, toView: mapView)
-            detailMapItems.value = (mapItems: annotation.mapItems, mapViewRect: rect)
+            detailMapItems.value = DetailMapItems(mapItems: annotation.mapItems, mapViewRect: rect)
         }
     }
     

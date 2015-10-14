@@ -27,6 +27,7 @@ public final class SafetyCamera : MapItem {
     public let speedLimit: SpeedLimit
     public let weatherLocation: WeatherLocationCode
     public let images: [String]
+    public let count: Int = 1
     
     public init(name: String, road: String, speedLimit: SpeedLimit, mapPoint: MKMapPoint, weatherLocation: WeatherLocationCode, images: [String]) {
         self.name = name

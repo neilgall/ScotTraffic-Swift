@@ -114,13 +114,15 @@ public struct SearchResultItem: MapItem, TableViewCellConfigurator {
     public let name: String
     public let road: String
     public let mapPoint: MKMapPoint
-    
+    public let count: Int = 1
+
     public init(item: MapItem) {
         self.name = item.name
         self.road = item.road
         self.mapPoint = item.mapPoint
     
     }
+    
     public func configureCell(cell: UITableViewCell) {
         cell.textLabel?.text = name
         cell.detailTextLabel?.text = road

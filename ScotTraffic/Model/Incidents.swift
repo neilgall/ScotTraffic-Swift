@@ -22,6 +22,7 @@ public final class Incident : MapItem {
     public let mapPoint: MKMapPoint
     public let date: NSDate
     public let url: NSURL
+    public let count: Int = 1
     
     public init(type: IncidentType, name: String, text: String, mapPoint: MKMapPoint, date: NSDate, url: NSURL) {
         self.type = type

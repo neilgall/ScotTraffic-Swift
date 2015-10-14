@@ -28,6 +28,10 @@ public final class TrafficCameraLocation : MapItem {
         self.mapPoint = mapPoint
         self.cameras = cameras
     }
+    
+    public var count: Int {
+        return cameras.count
+    }
 }
 
 public final class TrafficCamera: ImageSupplier {

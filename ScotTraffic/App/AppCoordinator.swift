@@ -51,37 +51,43 @@ public class AppCoordinator: NSObject, UISplitViewControllerDelegate, UIPopoverC
             self.mapViewModel.selectedMapItem.value = item
         }))
     
-        observations.append(mapViewController.detailMapItems.output(self.showDetailForMapItems))
+        observations.append(mapViewController.detailMapItems.output({ detail in
+            if let detail = detail where detail.flatCount < 20 {
+                self.showDetailForMapItems(detail)
+            } else {
+                self.hideDetail()
+            }
+        }))
     }
     
-    private func showDetailForMapItems(detail: DetailMapItems?) {
-        if let detail = detail {
-            let model = MapItemCollectionViewModel(mapItems: detail.mapItems, fetcher: appModel.fetcher)
+    private func showDetailForMapItems(detail: DetailMapItems) {
+        let model = MapItemCollectionViewModel(mapItems: detail.mapItems, fetcher: appModel.fetcher)
         
-            if let collectionController = self.collectionController {
-                collectionController.viewModel = model
+        if let collectionController = self.collectionController {
+            collectionController.viewModel = model
             
-            } else {
-                guard let collectionController = storyboard.instantiateViewControllerWithIdentifier("mapItemCollectionViewController") as? MapItemCollectionViewController else {
-                    abort()
-                }
-                collectionController.viewModel = model
-
-                let popoverController = UIPopoverController(contentViewController: collectionController)
-                popoverController.popoverContentSize = CGSizeMake(480, 380)
-                popoverController.delegate = self
-
-                let splitViewRect = splitViewController.view.convertRect(detail.mapViewRect, fromView: mapViewController.mapView)
-                popoverController.presentPopoverFromRect(splitViewRect, inView: self.splitViewController.view, permittedArrowDirections: UIPopoverArrowDirection.Any, animated: true)
-                
-                self.collectionController = collectionController
-                self.popoverController = popoverController
-            }
         } else {
-            popoverController?.dismissPopoverAnimated(true)
-            popoverController = nil
-            collectionController = nil
+            guard let collectionController = storyboard.instantiateViewControllerWithIdentifier("mapItemCollectionViewController") as? MapItemCollectionViewController else {
+                abort()
+            }
+            collectionController.viewModel = model
+            
+            let popoverController = UIPopoverController(contentViewController: collectionController)
+            popoverController.popoverContentSize = CGSizeMake(480, 380)
+            popoverController.delegate = self
+            
+            let splitViewRect = splitViewController.view.convertRect(detail.mapViewRect, fromView: mapViewController.mapView)
+            popoverController.presentPopoverFromRect(splitViewRect, inView: self.splitViewController.view, permittedArrowDirections: UIPopoverArrowDirection.Any, animated: true)
+            
+            self.collectionController = collectionController
+            self.popoverController = popoverController
         }
+    }
+    
+    private func hideDetail() {
+        popoverController?.dismissPopoverAnimated(true)
+        popoverController = nil
+        collectionController = nil
     }
     
     private func showMap() {
@@ -100,6 +106,7 @@ public class AppCoordinator: NSObject, UISplitViewControllerDelegate, UIPopoverC
     public func popoverControllerDidDismissPopover(popoverController: UIPopoverController) {
         self.popoverController = nil
         self.collectionController = nil
+        self.mapViewController.detailMapItems.value = nil
         self.mapViewModel.selectedMapItem.value = nil
     }
 }
