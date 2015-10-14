@@ -48,6 +48,12 @@
 		716D9E971BCA614D005A6B49 /* MapItemCollectionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 716D9E961BCA614D005A6B49 /* MapItemCollectionViewModel.swift */; settings = {ASSET_TAGS = (); }; };
 		716D9E991BCBC2F1005A6B49 /* ScotTraffic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 716D9E981BCBC2F1005A6B49 /* ScotTraffic.swift */; settings = {ASSET_TAGS = (); }; };
 		718F00BD1BCDA8D600D51B43 /* Data in Resources */ = {isa = PBXBuildFile; fileRef = 710535661BCDA81E00FDB70C /* Data */; settings = {ASSET_TAGS = (); }; };
+		718F00C21BCEFC8000D51B43 /* BridgeStatusCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 718F00BE1BCEFC8000D51B43 /* BridgeStatusCell.xib */; settings = {ASSET_TAGS = (); }; };
+		718F00C31BCEFC8000D51B43 /* TrafficCameraCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 718F00BF1BCEFC8000D51B43 /* TrafficCameraCell.xib */; settings = {ASSET_TAGS = (); }; };
+		718F00C41BCEFC8000D51B43 /* IncidentCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 718F00C01BCEFC8000D51B43 /* IncidentCell.xib */; settings = {ASSET_TAGS = (); }; };
+		718F00C51BCEFC8000D51B43 /* SafetyCameraCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 718F00C11BCEFC8000D51B43 /* SafetyCameraCell.xib */; settings = {ASSET_TAGS = (); }; };
+		718F00C91BCEFF8800D51B43 /* TrafficCameraCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 718F00C81BCEFF8800D51B43 /* TrafficCameraCell.swift */; settings = {ASSET_TAGS = (); }; };
+		718F00CB1BCF070500D51B43 /* ImageSupplier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 718F00CA1BCF070500D51B43 /* ImageSupplier.swift */; settings = {ASSET_TAGS = (); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -115,6 +121,12 @@
 		716D9E941BCA5EA1005A6B49 /* MapItemCollectionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapItemCollectionViewController.swift; sourceTree = "<group>"; };
 		716D9E961BCA614D005A6B49 /* MapItemCollectionViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapItemCollectionViewModel.swift; sourceTree = "<group>"; };
 		716D9E981BCBC2F1005A6B49 /* ScotTraffic.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScotTraffic.swift; sourceTree = "<group>"; };
+		718F00BE1BCEFC8000D51B43 /* BridgeStatusCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = BridgeStatusCell.xib; sourceTree = "<group>"; };
+		718F00BF1BCEFC8000D51B43 /* TrafficCameraCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TrafficCameraCell.xib; sourceTree = "<group>"; };
+		718F00C01BCEFC8000D51B43 /* IncidentCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = IncidentCell.xib; sourceTree = "<group>"; };
+		718F00C11BCEFC8000D51B43 /* SafetyCameraCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SafetyCameraCell.xib; sourceTree = "<group>"; };
+		718F00C81BCEFF8800D51B43 /* TrafficCameraCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TrafficCameraCell.swift; sourceTree = "<group>"; };
+		718F00CA1BCF070500D51B43 /* ImageSupplier.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageSupplier.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -285,6 +297,7 @@
 				28DB3BF71BC02968001AAC2A /* Weather.swift */,
 				280486561BC087F4003BA360 /* Settings.swift */,
 				286559141BC1DCB70058A35A /* Favourites.swift */,
+				718F00CA1BCF070500D51B43 /* ImageSupplier.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -313,6 +326,11 @@
 			children = (
 				716D9E941BCA5EA1005A6B49 /* MapItemCollectionViewController.swift */,
 				716D9E961BCA614D005A6B49 /* MapItemCollectionViewModel.swift */,
+				718F00BF1BCEFC8000D51B43 /* TrafficCameraCell.xib */,
+				718F00C81BCEFF8800D51B43 /* TrafficCameraCell.swift */,
+				718F00C11BCEFC8000D51B43 /* SafetyCameraCell.xib */,
+				718F00C01BCEFC8000D51B43 /* IncidentCell.xib */,
+				718F00BE1BCEFC8000D51B43 /* BridgeStatusCell.xib */,
 			);
 			name = CollectionView;
 			sourceTree = "<group>";
@@ -384,6 +402,7 @@
 				TargetAttributes = {
 					280493541BA8BB4800990BD1 = {
 						CreatedOnToolsVersion = 7.0;
+						DevelopmentTeam = MJGXDGE4Y8;
 					};
 					280493681BA8BB4800990BD1 = {
 						CreatedOnToolsVersion = 7.0;
@@ -420,9 +439,13 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				718F00C51BCEFC8000D51B43 /* SafetyCameraCell.xib in Resources */,
+				718F00C21BCEFC8000D51B43 /* BridgeStatusCell.xib in Resources */,
 				280493631BA8BB4800990BD1 /* LaunchScreen.storyboard in Resources */,
 				280493601BA8BB4800990BD1 /* Assets.xcassets in Resources */,
+				718F00C41BCEFC8000D51B43 /* IncidentCell.xib in Resources */,
 				2804935E1BA8BB4800990BD1 /* Main.storyboard in Resources */,
+				718F00C31BCEFC8000D51B43 /* TrafficCameraCell.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -452,12 +475,14 @@
 				2804864F1BC074E4003BA360 /* AppErrors.swift in Sources */,
 				2865591A1BC2A7200058A35A /* FRP-UI-Extensions.swift in Sources */,
 				28875EA41BBC72FB00E67A16 /* Network.swift in Sources */,
+				718F00C91BCEFF8800D51B43 /* TrafficCameraCell.swift in Sources */,
 				28DB3BF51BC02892001AAC2A /* SafetyCameras.swift in Sources */,
 				280486511BC08216003BA360 /* PeriodicStarter.swift in Sources */,
 				2865591E1BC316590058A35A /* AppCoordinator.swift in Sources */,
 				286559271BC32D880058A35A /* ImageCompositor.swift in Sources */,
 				28DB3BFA1BC02C88001AAC2A /* Incidents.swift in Sources */,
 				280486551BC087B6003BA360 /* SearchViewModel.swift in Sources */,
+				718F00CB1BCF070500D51B43 /* ImageSupplier.swift in Sources */,
 				286559151BC1DCB70058A35A /* Favourites.swift in Sources */,
 				716D9E951BCA5EA1005A6B49 /* MapItemCollectionViewController.swift in Sources */,
 				28DB3BF81BC02968001AAC2A /* Weather.swift in Sources */,
@@ -620,11 +645,14 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = ScotTraffic/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.4;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = uk.co.ScotTraffic;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -633,11 +661,14 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = ScotTraffic/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.4;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = uk.co.ScotTraffic;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;

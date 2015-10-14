@@ -145,22 +145,28 @@
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Midnight-640x44" translatesAutoresizingMaskIntoConstraints="NO" id="XYx-Ml-sth" userLabel="Background">
                                 <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                             </imageView>
-                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="7rc-dl-emz">
+                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" directionalLockEnabled="YES" pagingEnabled="YES" showsVerticalScrollIndicator="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="7rc-dl-emz">
                                 <rect key="frame" x="0.0" y="0.0" width="600" height="580"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="SaW-tb-lHn">
+                                <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="10" minimumInteritemSpacing="10" id="SaW-tb-lHn">
                                     <size key="itemSize" width="50" height="50"/>
                                     <size key="headerReferenceSize" width="0.0" height="0.0"/>
                                     <size key="footerReferenceSize" width="0.0" height="0.0"/>
                                     <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 </collectionViewFlowLayout>
                                 <cells/>
+                                <connections>
+                                    <outlet property="delegate" destination="WAd-4R-ZgQ" id="ibw-TQ-x1L"/>
+                                </connections>
                             </collectionView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hLZ-bs-o9D" userLabel="Bottom bar">
                                 <rect key="frame" x="0.0" y="580" width="600" height="20"/>
                                 <subviews>
                                     <pageControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" numberOfPages="3" translatesAutoresizingMaskIntoConstraints="NO" id="2lL-3a-oJt">
                                         <rect key="frame" x="281" y="-9" width="39" height="37"/>
+                                        <connections>
+                                            <action selector="pageControlChanged" destination="WAd-4R-ZgQ" eventType="valueChanged" id="WAD-CT-7vn"/>
+                                        </connections>
                                     </pageControl>
                                 </subviews>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
@@ -197,6 +203,7 @@
                     <nil key="simulatedBottomBarMetrics"/>
                     <connections>
                         <outlet property="collectionView" destination="7rc-dl-emz" id="d84-vW-SNh"/>
+                        <outlet property="collectionViewLayout" destination="SaW-tb-lHn" id="aBT-UE-yoj"/>
                         <outlet property="pageControl" destination="2lL-3a-oJt" id="TAn-y2-q6c"/>
                     </connections>
                 </viewController>

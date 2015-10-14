@@ -9,7 +9,7 @@
 import CoreLocation
 import MapKit
 
-public enum TrafficCameraDirection {
+public enum TrafficCameraDirection: String {
     case North
     case South
     case East
@@ -30,7 +30,7 @@ public final class TrafficCameraLocation : MapItem {
     }
 }
 
-public final class TrafficCamera {
+public final class TrafficCamera: ImageSupplier {
     public let identifier: String
     public let direction: TrafficCameraDirection?
     public let isAvailable: Bool
@@ -39,6 +39,22 @@ public final class TrafficCamera {
         self.identifier = identifier
         self.direction = direction
         self.isAvailable = isAvailable
+    }
+    
+    var imageName: String {
+        return identifier
+    }
+}
+
+func trafficCameraName(camera: TrafficCamera, atLocation location: TrafficCameraLocation) -> String {
+    if let direction = camera.direction {
+        return "\(location.name) \(direction.rawValue)"
+    
+    } else if let index = location.cameras.indexOf({ $0 === camera }) where location.cameras.count > 1 {
+        return "\(location.name) Camera \(index)"
+
+    } else {
+        return location.name
     }
 }
 

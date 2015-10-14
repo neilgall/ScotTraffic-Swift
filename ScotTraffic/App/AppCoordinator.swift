@@ -56,7 +56,7 @@ public class AppCoordinator: NSObject, UISplitViewControllerDelegate, UIPopoverC
     
     private func showDetailForMapItems(detail: DetailMapItems?) {
         if let detail = detail {
-            let model = MapItemCollectionViewModel(mapItems: detail.mapItems)
+            let model = MapItemCollectionViewModel(mapItems: detail.mapItems, fetcher: appModel.fetcher)
         
             if let collectionController = self.collectionController {
                 collectionController.viewModel = model

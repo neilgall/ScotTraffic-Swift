@@ -8,33 +8,82 @@
 
 import UIKit
 
-class MapItemCollectionViewController: UIViewController {
+class MapItemCollectionViewController: UIViewController, UICollectionViewDelegate {
 
     @IBOutlet var collectionView: UICollectionView?
+    @IBOutlet var collectionViewLayout: UICollectionViewFlowLayout?
     @IBOutlet var pageControl: UIPageControl?
-    var viewModel = MapItemCollectionViewModel(mapItems: []) {
+    
+    var viewModel: MapItemCollectionViewModel? {
         didSet {
             reload()
         }
     }
     
-    override func viewWillAppear(animated: Bool) {
-        super.viewWillAppear(animated)
+    override func viewDidLoad() {
+        super.viewDidLoad()
         
-        pageControl?.numberOfPages = viewModel.mapItems.count
+        if let collectionView = collectionView {
+            for cellType in MapItemCollectionViewModel.CellType.allValues {
+                cellType.register(collectionView)
+            }
+        }
+        
+        reload()
     }
     
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        collectionViewLayout?.itemSize = collectionView?.bounds.size ?? CGSizeZero
     }
-    */
-
+    
     private func reload() {
+        collectionView?.dataSource = viewModel
+        pageControl?.numberOfPages = viewModel?.cellItems.count ?? 0
+    }
+    
+    private func mostVisiblePageIndex() -> Int {
+        guard let collectionView = self.collectionView else {
+            return 0
+        }
         
+        let scrollOffset = collectionView.contentOffset.x
+        var closestCell: UICollectionViewCell? = nil
+        var closestSq = CGFloat.max
+        
+        for cell in collectionView.visibleCells() {
+            let distance = CGRectGetMinX(cell.frame) - scrollOffset
+            let distanceSq = distance * distance
+            if distanceSq < closestSq {
+                closestCell = cell
+                closestSq = distanceSq
+            }
+        }
+        
+        guard let cell = closestCell else {
+            return 0
+        }
+        return collectionView.indexPathForCell(cell)?.item ?? 0
+    }
+    
+    
+    // -- MARK: Actions --
+    
+    @IBAction func pageControlChanged() {
+        guard let currentPage = pageControl?.currentPage else {
+            return
+        }
+        let indexPath = NSIndexPath(forItem: currentPage, inSection: 0)
+        collectionView?.scrollToItemAtIndexPath(indexPath, atScrollPosition: .CenteredHorizontally, animated: true)
+    }
+    
+    // -- MARK: UIScrollViewDelegate --
+    
+    func scrollViewDidEndDragging(scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+        pageControl?.currentPage = mostVisiblePageIndex()
+    }
+    
+    func scrollViewDidEndDecelerating(scrollView: UIScrollView) {
+        pageControl?.currentPage = mostVisiblePageIndex()
     }
 }
