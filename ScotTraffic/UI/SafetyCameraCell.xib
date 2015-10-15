@@ -28,7 +28,7 @@
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="iYR-BE-oXa" userLabel="Details">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="284"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="260" verticalHuggingPriority="260" placeholderIntrinsicWidth="80" placeholderIntrinsicHeight="80" image="20" translatesAutoresizingMaskIntoConstraints="NO" id="Uiw-IN-UHk" userLabel="Icon">
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="260" verticalHuggingPriority="260" horizontalCompressionResistancePriority="999" verticalCompressionResistancePriority="999" placeholderIntrinsicWidth="80" placeholderIntrinsicHeight="80" image="20" translatesAutoresizingMaskIntoConstraints="NO" id="Uiw-IN-UHk" userLabel="Icon">
                                 <rect key="frame" x="20" y="20" width="80" height="80"/>
                                 <animations/>
                                 <constraints>
