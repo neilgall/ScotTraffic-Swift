@@ -30,6 +30,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, MapViewModelDelega
     @IBOutlet var mapView: MKMapView!
 
     let detailMapItems = Input<DetailMapItems?>(initial: nil)
+    var minimumDetailItemsForAnnotationCallout: Int = 1
     
     var viewModel: MapViewModel?
     var observations = [Observation]()
@@ -121,11 +122,14 @@ class MapViewController: UIViewController, MKMapViewDelegate, MapViewModelDelega
             return nil
         }
         
+        let detailMapItems = DetailMapItems(mapItems: mapAnnotation.mapItems, mapViewRect: CGRectNull)
+        let canShowCallout = detailMapItems.flatCount >= minimumDetailItemsForAnnotationCallout
+        
         let annotationView = mapView.dequeueReusableAnnotationViewWithIdentifier(mapAnnotation.reuseIdentifier)
             ?? MKAnnotationView(annotation: annotation, reuseIdentifier: mapAnnotation.reuseIdentifier)
 
         annotationView.image = mapAnnotation.image
-        annotationView.canShowCallout = true
+        annotationView.canShowCallout = canShowCallout
         annotationView.rightCalloutAccessoryView = nil
 
         if mapAnnotation.mapItems.count > 1 {

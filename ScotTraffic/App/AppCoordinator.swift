@@ -8,7 +8,9 @@
 
 import UIKit
 
-public class AppCoordinator: NSObject, UISplitViewControllerDelegate, UIPopoverControllerDelegate {
+let maximumItemsInDetailView = 10
+
+public class AppCoordinator: NSObject, UISplitViewControllerDelegate, UIPopoverPresentationControllerDelegate {
     let appModel: AppModel
     let storyboard: UIStoryboard
     let rootWindow: UIWindow
@@ -16,7 +18,6 @@ public class AppCoordinator: NSObject, UISplitViewControllerDelegate, UIPopoverC
     let splitViewController: UISplitViewController
     let searchViewController: SearchViewController
     let mapViewController: MapViewController
-    var popoverController: UIPopoverController?
     var collectionController: MapItemCollectionViewController?
     
     let mapViewModel: MapViewModel
@@ -39,6 +40,7 @@ public class AppCoordinator: NSObject, UISplitViewControllerDelegate, UIPopoverC
         
         mapViewModel = MapViewModel(scotTraffic: appModel)
         mapViewController.viewModel = mapViewModel
+        mapViewController.minimumDetailItemsForAnnotationCallout = maximumItemsInDetailView+1
     }
     
     public func start() {
@@ -52,7 +54,7 @@ public class AppCoordinator: NSObject, UISplitViewControllerDelegate, UIPopoverC
         }))
     
         observations.append(mapViewController.detailMapItems.output({ detail in
-            if let detail = detail where detail.flatCount < 20 {
+            if let detail = detail where detail.flatCount <= maximumItemsInDetailView {
                 self.showDetailForMapItems(detail)
             } else {
                 self.hideDetail()
@@ -71,22 +73,24 @@ public class AppCoordinator: NSObject, UISplitViewControllerDelegate, UIPopoverC
                 abort()
             }
             collectionController.viewModel = model
+            collectionController.modalPresentationStyle = .Popover
+            collectionController.preferredContentSize = CGSizeMake(480, 384)
             
-            let popoverController = UIPopoverController(contentViewController: collectionController)
-            popoverController.popoverContentSize = CGSizeMake(480, 380)
-            popoverController.delegate = self
+            if let popover = collectionController.popoverPresentationController {
+                popover.permittedArrowDirections = .Any
+                popover.sourceRect = detail.mapViewRect
+                popover.sourceView = mapViewController.mapView
+                popover.delegate = self
+            }
             
-            let splitViewRect = splitViewController.view.convertRect(detail.mapViewRect, fromView: mapViewController.mapView)
-            popoverController.presentPopoverFromRect(splitViewRect, inView: self.splitViewController.view, permittedArrowDirections: UIPopoverArrowDirection.Any, animated: true)
-            
+            splitViewController.presentViewController(collectionController, animated: true, completion: nil)
+
             self.collectionController = collectionController
-            self.popoverController = popoverController
         }
     }
     
     private func hideDetail() {
-        popoverController?.dismissPopoverAnimated(true)
-        popoverController = nil
+        splitViewController.dismissViewControllerAnimated(true, completion: nil)
         collectionController = nil
     }
     
@@ -101,10 +105,13 @@ public class AppCoordinator: NSObject, UISplitViewControllerDelegate, UIPopoverC
     public func splitViewController(svc: UISplitViewController, willChangeToDisplayMode displayMode: UISplitViewControllerDisplayMode) {
     }
     
-    // -- MARK: UIPopoverControllerDelegate --
+    // -- MARK: UIPopoverPresentationControllerDelegate --
     
-    public func popoverControllerDidDismissPopover(popoverController: UIPopoverController) {
-        self.popoverController = nil
+    public func adaptivePresentationStyleForPresentationController(controller: UIPresentationController) -> UIModalPresentationStyle {
+        return UIModalPresentationStyle.None
+    }
+    
+    public func popoverPresentationControllerDidDismissPopover(popoverController: UIPopoverPresentationController) {
         self.collectionController = nil
         self.mapViewController.detailMapItems.value = nil
         self.mapViewModel.selectedMapItem.value = nil
