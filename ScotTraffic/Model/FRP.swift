@@ -13,6 +13,7 @@ public protocol Observation {}
 public enum Transaction<ValueType> {
     case Begin
     case End(ValueType)
+    case Cancel
 }
 
 public protocol ObservableType {
@@ -39,8 +40,8 @@ public class Observable<T> : ObservableType {
     
     public func addObserver(observer: Transaction<ValueType> -> Void) -> Int {
         if canPullValue, let value = pullValue {
-            observer(Transaction.Begin)
-            observer(Transaction.End(value))
+            observer(.Begin)
+            observer(.End(value))
         }
         let id = nextObserverId++
         observers[id] = observer
@@ -53,8 +54,8 @@ public class Observable<T> : ObservableType {
     
     // Push
     public func pushValue(value: ValueType) {
-        pushTransaction(Transaction.Begin)
-        pushTransaction(Transaction.End(value))
+        pushTransaction(.Begin)
+        pushTransaction(.End(value))
     }
     
     public func pushTransaction(transaction: Transaction<ValueType>) {
@@ -109,10 +110,7 @@ class Observer<ValueType>: Observation {
 public class Output<ValueType>: Observer<ValueType> {
     public init(_ source: Observable<ValueType>, _ closure: ValueType -> Void) {
         super.init(source) { transaction in
-            switch transaction {
-            case .Begin:
-                break
-            case .End(let value):
+            if case .End(let value) = transaction {
                 closure(value)
             }
         }
@@ -122,11 +120,8 @@ public class Output<ValueType>: Observer<ValueType> {
 public class WillOutput<ValueType>: Observer<ValueType> {
     public init(_ source: Observable<ValueType>, _ closure: Void -> Void) {
         super.init(source) { transaction in
-            switch transaction {
-            case .Begin:
+            if case .Begin = transaction {
                 closure()
-            case .End:
-                break
             }
         }
     }
@@ -141,13 +136,10 @@ class Filter<ValueType> : Observable<ValueType> {
     init(_ source: Observable<ValueType>, _ predicate: ValueType -> Bool) {
         super.init()
         observer = Observer(source) { transaction in
-            switch transaction {
-            case .Begin:
-                break
-            case .End(let value):
-                if predicate(value) {
-                    self.pushValue(value)
-                }
+            if case .End(let value) = transaction where !predicate(value) {
+                self.pushTransaction(.Cancel)
+            } else {
+                self.pushTransaction(transaction)
             }
         }
     }
@@ -163,9 +155,11 @@ class Mapped<SourceType, MappedType> : Observable<MappedType> {
         self.observer = Observer(source) { transaction in
             switch transaction {
             case .Begin:
-                self.pushTransaction(Transaction.Begin)
+                self.pushTransaction(.Begin)
             case .End(let sourceValue):
-                self.pushTransaction(Transaction.End(transform(sourceValue)))
+                self.pushTransaction(.End(transform(sourceValue)))
+            case .Cancel:
+                self.pushTransaction(.Cancel)
             }
         }
     }
@@ -204,13 +198,10 @@ public class Latest<ValueType> : Observable<ValueType> {
         super.init()
         self.value = source.pullValue
         self.observer = Observer(source) { transaction in
-            switch transaction {
-            case .Begin:
-                self.pushTransaction(transaction)
-            case .End(let value):
+            if case .End(let value) = transaction {
                 self.value = value
-                self.pushTransaction(transaction)
             }
+            self.pushTransaction(transaction)
         }
     }
     
@@ -235,14 +226,15 @@ class OnChange<ValueType: Equatable> : Observable<ValueType> {
         super.init()
         self.value = source.pullValue
         self.observer = Observer(source) { transaction in
-            switch transaction {
-            case .Begin:
-                break
-            case .End(let newValue):
-                if newValue != self.value {
+            if case .End(let newValue) = transaction {
+                if newValue == self.value {
+                    self.pushTransaction(.Cancel)
+                } else {
                     self.value = newValue
-                    self.pushValue(newValue)
+                    self.pushTransaction(transaction)
                 }
+            } else {
+                self.pushTransaction(transaction)
             }
         }
     }
@@ -304,28 +296,31 @@ class OnChange<ValueType: Equatable> : Observable<ValueType> {
 //}
 
 class Combiner<T>: Observable<T> {
-    private let maxTransactionCount: Int
     private var transactionCount: Int = 0
-
-    init(maxTransactionCount: Int) {
-        self.maxTransactionCount = maxTransactionCount
-    }
+    private var needsUpdate: Bool = false
 
     func update<S>(transaction: Transaction<S>) {
         switch transaction {
         case .Begin:
-            transactionCount += 1
-            if transactionCount > maxTransactionCount {
-                print("BUG! transactionCount=\(transactionCount) too high in \(self)")
+            if transactionCount == 0 {
+                self.pushTransaction(.Begin)
+                needsUpdate = false
             }
+            transactionCount += 1
             
         case .End:
-            if transactionCount == 0 {
-                print("BUG! transactionCount=0 too low in \(self)")
-            }
+            needsUpdate = true
+            fallthrough
+            
+        case .Cancel:
             transactionCount -= 1
-            if transactionCount == 0, let value = pullValue {
-                pushValue(value)
+            if transactionCount == 0 {
+                if needsUpdate, let value = pullValue {
+                    pushTransaction(.End(value))
+                    needsUpdate = false
+                } else {
+                    pushTransaction(.Cancel)
+                }
             }
         }
     }
@@ -341,7 +336,7 @@ class Combine2<SourceType1, SourceType2, CombinedType> : Combiner<CombinedType> 
         self.combine = combine
         latest1 = s1.latest()
         latest2 = s2.latest()
-        super.init(maxTransactionCount: 2)
+        super.init()
         sourceObservers.append(Observer(latest1) { t in self.update(t) })
         sourceObservers.append(Observer(latest2) { t in self.update(t) })
     }
@@ -372,7 +367,7 @@ class Combine3<SourceType1, SourceType2, SourceType3, CombinedType> : Combiner<C
         latest1 = s1.latest()
         latest2 = s2.latest()
         latest3 = s3.latest()
-        super.init(maxTransactionCount: 3)
+        super.init()
         sourceObservers.append(Observer(latest1) { t in self.update(t) })
         sourceObservers.append(Observer(latest2) { t in self.update(t) })
         sourceObservers.append(Observer(latest3) { t in self.update(t) })
@@ -406,7 +401,7 @@ class Combine4<SourceType1, SourceType2, SourceType3, SourceType4, CombinedType>
         latest2 = s2.latest()
         latest3 = s3.latest()
         latest4 = s4.latest()
-        super.init(maxTransactionCount: 4)
+        super.init()
         sourceObservers.append(Observer(latest1) { t in self.update(t) })
         sourceObservers.append(Observer(latest2) { t in self.update(t) })
         sourceObservers.append(Observer(latest3) { t in self.update(t) })
@@ -444,7 +439,7 @@ class Combine5<SourceType1, SourceType2, SourceType3, SourceType4, SourceType5, 
         latest3 = s3.latest()
         latest4 = s4.latest()
         latest5 = s5.latest()
-        super.init(maxTransactionCount: 5)
+        super.init()
         sourceObservers.append(Observer(latest1) { t in self.update(t) })
         sourceObservers.append(Observer(latest2) { t in self.update(t) })
         sourceObservers.append(Observer(latest3) { t in self.update(t) })

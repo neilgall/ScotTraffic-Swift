@@ -60,14 +60,16 @@ public class SplitEitherValue<V, E:ErrorType> : Observable<V> {
         self.observer = Observer(source) { transaction in
             switch transaction {
             case .Begin:
-                break
-            case .End(let value):
-                switch value {
+                self.pushTransaction(.Begin)
+            case .End(let either):
+                switch either {
                 case .Value(let v):
-                    self.pushValue(v)
+                    self.pushTransaction(.End(v))
                 case .Error:
-                    break
+                    self.pushTransaction(.Cancel)
                 }
+            case .Cancel:
+                self.pushTransaction(.Cancel)
             }
         }
     }
@@ -99,14 +101,16 @@ public class SplitEitherError<V, E:ErrorType> : Observable<E> {
         self.observer = Observer(source) { transaction in
             switch transaction {
             case .Begin:
-                break
+                self.pushTransaction(.Begin)
             case .End(let value):
                 switch value {
                 case .Value:
-                    break
+                    self.pushTransaction(.Cancel)
                 case .Error(let e):
-                    self.pushValue(e)
+                    self.pushTransaction(.End(e))
                 }
+            case .Cancel:
+                self.pushTransaction(.Cancel)
             }
         }
     }
