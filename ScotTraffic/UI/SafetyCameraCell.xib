@@ -22,7 +22,7 @@
                         <rect key="frame" x="0.0" y="44" width="320" height="240"/>
                         <animations/>
                         <constraints>
-                            <constraint firstAttribute="width" secondItem="RLV-et-j90" secondAttribute="height" multiplier="4:3" id="cmh-wO-WEB"/>
+                            <constraint firstAttribute="width" secondItem="RLV-et-j90" secondAttribute="height" multiplier="4:3" priority="999" id="cmh-wO-WEB"/>
                         </constraints>
                     </imageView>
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="iYR-BE-oXa" userLabel="Details">

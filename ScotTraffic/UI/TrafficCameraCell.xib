@@ -20,7 +20,7 @@
                         <animations/>
                         <constraints>
                             <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="240" id="5TC-J0-tB7"/>
-                            <constraint firstAttribute="width" secondItem="1G4-kk-7uC" secondAttribute="height" multiplier="4:3" id="O04-VM-GeR"/>
+                            <constraint firstAttribute="width" secondItem="1G4-kk-7uC" secondAttribute="height" multiplier="4:3" priority="999" id="O04-VM-GeR"/>
                             <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="320" id="Xmy-mF-NoN"/>
                             <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="240" id="tht-Y8-lV3"/>
                         </constraints>
