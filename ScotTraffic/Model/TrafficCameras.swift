@@ -55,7 +55,7 @@ func trafficCameraName(camera: TrafficCamera, atLocation location: TrafficCamera
         return "\(location.name) \(direction.rawValue)"
     
     } else if let index = location.cameras.indexOf({ $0 === camera }) where location.cameras.count > 1 {
-        return "\(location.name) Camera \(index)"
+        return "\(location.name) Camera \(index+1)"
 
     } else {
         return location.name

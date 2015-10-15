@@ -67,7 +67,26 @@ public class MapItemCollectionViewCell: UICollectionViewCell {
             collectionView.registerNib(cellNib, forCellWithReuseIdentifier: type.reuseIdentifier)
         }
     }
-
+    
+    override public func awakeFromNib() {
+        super.awakeFromNib()
+        
+        // first subview should fill the cell
+        if let subview = self.subviews.first {
+            subview.translatesAutoresizingMaskIntoConstraints = false
+            for attribute: NSLayoutAttribute in [.Left, .Right, .Top, .Bottom] {
+                addConstraint(NSLayoutConstraint(
+                    item: subview,
+                    attribute: attribute,
+                    relatedBy: .Equal,
+                    toItem: self,
+                    attribute: attribute,
+                    multiplier: 1.0,
+                    constant: 0.0))
+            }
+        }
+    }
+    
     func configure(item: Item, usingHTTPFetcher fetcher: HTTPFetcher) {
         abort()
     }

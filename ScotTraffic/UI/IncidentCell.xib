@@ -17,7 +17,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="284"/>
                         <animations/>
                     </imageView>
-                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" placeholderIntrinsicWidth="80" placeholderIntrinsicHeight="80" image="incident-large" translatesAutoresizingMaskIntoConstraints="NO" id="PMc-qd-2TC">
+                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="incident-large" translatesAutoresizingMaskIntoConstraints="NO" id="PMc-qd-2TC">
                         <rect key="frame" x="10" y="10" width="80" height="80"/>
                         <animations/>
                         <constraints>

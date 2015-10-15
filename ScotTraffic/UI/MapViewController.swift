@@ -35,6 +35,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, MapViewModelDelega
     var viewModel: MapViewModel?
     var observations = [Observation]()
     var updatingAnnotations: Bool = false
+    var callbackOnMapScroll: (CGRect, CGRect->Void)?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -84,6 +85,43 @@ class MapViewController: UIViewController, MKMapViewDelegate, MapViewModelDelega
             mapView.deselectAnnotation(selected, animated: true)
         }
     }
+    
+    func scrollUntilRect(presentRect: CGRect, makesWayForPopoverWithContentSize contentSize: CGSize, completion: CGRect->Void) {
+        let contentTopIfAbove = CGRectGetMinY(presentRect) - contentSize.height - 23
+        let contentBottomIfBelow = CGRectGetMaxY(presentRect) + contentSize.height + 23
+        let screenBottom = CGRectGetHeight(mapView.frame)
+        
+        if contentTopIfAbove < 10 && contentBottomIfBelow > screenBottom - 10 {
+            let scrollDown = 10 - contentTopIfAbove
+            let scrollUp = contentBottomIfBelow - (screenBottom - 10)
+            let scroll: CGFloat
+            if scrollDown < scrollUp {
+                scroll = scrollDown
+            } else {
+                scroll = -scrollUp
+            }
+            
+            let newRect = CGRectMake(
+                presentRect.origin.x,
+                presentRect.origin.y + scroll,
+                presentRect.size.width,
+                presentRect.size.height)
+            callbackOnMapScroll = (newRect, completion)
+            scrollMapVerticallyBy(scroll)
+
+        } else {
+            // no scroll required
+            completion(presentRect)
+        }
+    }
+
+    
+    private func scrollMapVerticallyBy(scroll: CGFloat) {
+        var rect = mapView.bounds
+        rect.origin.y -= scroll
+        let region = mapView.convertRect(rect, toRegionFromView: mapView)
+        mapView.setRegion(region, animated: false)
+    }
 
     // MARK: - Navigation
 
@@ -115,6 +153,11 @@ class MapViewController: UIViewController, MKMapViewDelegate, MapViewModelDelega
             visibleMapRectInsetRatio * visibleMapRect.size.width,
             visibleMapRectInsetRatio * visibleMapRect.size.height)
         viewModel?.visibleMapRect.value = mapRect
+        
+        if let (rect, callback) = callbackOnMapScroll {
+            callback(rect)
+            callbackOnMapScroll = nil
+        }
     }
     
     func mapView(mapView: MKMapView, viewForAnnotation annotation: MKAnnotation) -> MKAnnotationView? {

@@ -3,6 +3,7 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="8154"/>
+        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
@@ -117,10 +118,10 @@
             </objects>
             <point key="canvasLocation" x="1405" y="307"/>
         </scene>
-        <!--Split View Controller-->
+        <!--App Split View Controller-->
         <scene sceneID="Gu0-MN-VMa">
             <objects>
-                <splitViewController storyboardIdentifier="splitViewController" id="8Fs-Zw-cRw" sceneMemberID="viewController">
+                <splitViewController storyboardIdentifier="splitViewController" id="8Fs-Zw-cRw" customClass="AppSplitViewController" customModule="ScotTraffic" customModuleProvider="target" sceneMemberID="viewController">
                     <connections>
                         <segue destination="nNB-eZ-i34" kind="relationship" relationship="masterViewController" id="UiL-hI-ma2"/>
                         <segue destination="e1n-h2-oc7" kind="relationship" relationship="detailViewController" id="3pP-nS-c6W"/>
@@ -150,6 +151,12 @@
                                 <rect key="frame" x="0.0" y="0.0" width="600" height="580"/>
                                 <animations/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" secondItem="7rc-dl-emz" secondAttribute="height" multiplier="30:29" id="Coq-gq-Jq2"/>
+                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="320" id="cYr-4B-m3b"/>
+                                    <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="284" id="lXk-Is-rcl"/>
+                                    <constraint firstAttribute="width" secondItem="7rc-dl-emz" secondAttribute="height" multiplier="30:29" id="pfl-6D-YRM"/>
+                                </constraints>
                                 <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="0.0" minimumInteritemSpacing="0.0" id="SaW-tb-lHn">
                                     <size key="itemSize" width="50" height="50"/>
                                     <size key="headerReferenceSize" width="0.0" height="0.0"/>
@@ -157,6 +164,14 @@
                                     <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 </collectionViewFlowLayout>
                                 <cells/>
+                                <variation key="default">
+                                    <mask key="constraints">
+                                        <exclude reference="Coq-gq-Jq2"/>
+                                        <exclude reference="cYr-4B-m3b"/>
+                                        <exclude reference="lXk-Is-rcl"/>
+                                        <exclude reference="pfl-6D-YRM"/>
+                                    </mask>
+                                </variation>
                                 <connections>
                                     <outlet property="delegate" destination="WAd-4R-ZgQ" id="ibw-TQ-x1L"/>
                                 </connections>

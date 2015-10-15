@@ -29,8 +29,8 @@ public protocol ObservableType {
     var pullValue: ValueType? { get }
 }
 
-public class Observable<T> : ObservableType {
-    public typealias ValueType = T
+public class Observable<Value> : ObservableType {
+    public typealias ValueType = Value
     
     private var observers: [Int : Transaction<ValueType> -> Void] = [:]
     private var nextObserverId: Int = 0
@@ -68,19 +68,25 @@ public class Observable<T> : ObservableType {
     public var canPullValue: Bool {
         return false
     }
-    public var pullValue: T? {
+    public var pullValue: ValueType? {
         return nil
     }
 }
 
-public class Input<T> : Observable<T> {
-    public var value: T {
+public class Event<Value> : Observable<Value> {
+    public func send(value: Value) {
+        pushValue(value)
+    }
+}
+
+public class Input<Value> : Observable<Value> {
+    public var value: Value {
         didSet {
             pushValue(value)
         }
     }
     
-    public init(initial: T) {
+    public init(initial: Value) {
         value = initial
     }
     
@@ -88,7 +94,7 @@ public class Input<T> : Observable<T> {
         return true
     }
     
-    override public var pullValue: T? {
+    override public var pullValue: Value? {
         return value
     }
 }
@@ -295,7 +301,7 @@ class OnChange<ValueType: Equatable> : Observable<ValueType> {
 //    }
 //}
 
-class Combiner<T>: Observable<T> {
+class Combiner<Value>: Observable<Value> {
     private var transactionCount: Int = 0
     private var needsUpdate: Bool = false
 
@@ -490,7 +496,7 @@ extension Observable {
 //    }
 }
 
-extension Observable where T: Equatable {
+extension Observable where Value: Equatable {
     public func onChange() -> Observable<ValueType> {
         return OnChange(self)
     }
@@ -536,11 +542,4 @@ public func combine<SourceType1, SourceType2, SourceType3, SourceType4, SourceTy
     combine: (SourceType1, SourceType2, SourceType3, SourceType4, SourceType5) -> CombinedType) -> Observable<CombinedType>
 {
     return Combine5(s1, s2, s3, s4, s5, combine: combine)
-}
-
-public func sort
-    <ValueType: SequenceType where ValueType.Generator.Element: Comparable>
-    (obs: Observable<ValueType>) -> Observable<[ValueType.Generator.Element]>
-{
-    return obs.map { $0.sort() }
 }

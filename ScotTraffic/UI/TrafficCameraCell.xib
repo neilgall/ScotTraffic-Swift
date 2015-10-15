@@ -3,6 +3,7 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="8154"/>
+        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="ZBSCameraImageCell"/>
@@ -14,9 +15,22 @@
                 <rect key="frame" x="0.0" y="0.0" width="320" height="284"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" placeholderIntrinsicWidth="320" placeholderIntrinsicHeight="240" translatesAutoresizingMaskIntoConstraints="NO" id="1G4-kk-7uC">
+                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="1G4-kk-7uC" userLabel="CameraImage">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="240"/>
                         <animations/>
+                        <constraints>
+                            <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="240" id="5TC-J0-tB7"/>
+                            <constraint firstAttribute="width" secondItem="1G4-kk-7uC" secondAttribute="height" multiplier="4:3" id="O04-VM-GeR"/>
+                            <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="320" id="Xmy-mF-NoN"/>
+                            <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="240" id="tht-Y8-lV3"/>
+                        </constraints>
+                        <variation key="default">
+                            <mask key="constraints">
+                                <exclude reference="5TC-J0-tB7"/>
+                                <exclude reference="Xmy-mF-NoN"/>
+                                <exclude reference="tht-Y8-lV3"/>
+                            </mask>
+                        </variation>
                     </imageView>
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="d0z-U4-tlr" userLabel="Controls">
                         <rect key="frame" x="0.0" y="240" width="320" height="44"/>
@@ -28,7 +42,7 @@
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZBn-su-oAy">
                                 <rect key="frame" x="20" y="0.0" width="202" height="44"/>
                                 <animations/>
-                                <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
                             </label>
@@ -81,8 +95,8 @@
                             <constraint firstItem="ONW-It-gt2" firstAttribute="leading" secondItem="ZBn-su-oAy" secondAttribute="trailing" constant="2" id="zjc-bF-hPR"/>
                         </constraints>
                     </view>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Unable to load image" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7We-GT-JEA">
-                        <rect key="frame" x="80" y="106" width="162" height="20"/>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Unable to load image" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7We-GT-JEA">
+                        <rect key="frame" x="79" y="110" width="162" height="21"/>
                         <animations/>
                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                         <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
@@ -95,11 +109,11 @@
             <animations/>
             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
             <constraints>
-                <constraint firstItem="7We-GT-JEA" firstAttribute="centerY" secondItem="1G4-kk-7uC" secondAttribute="centerY" constant="-4.5" id="0yg-59-6bX"/>
+                <constraint firstItem="7We-GT-JEA" firstAttribute="centerY" secondItem="1G4-kk-7uC" secondAttribute="centerY" id="0yg-59-6bX"/>
                 <constraint firstItem="1G4-kk-7uC" firstAttribute="trailing" secondItem="d0z-U4-tlr" secondAttribute="trailing" id="318-P2-AbH"/>
                 <constraint firstAttribute="trailing" secondItem="1G4-kk-7uC" secondAttribute="trailing" id="Kky-Mf-TUJ"/>
                 <constraint firstAttribute="bottom" secondItem="d0z-U4-tlr" secondAttribute="bottom" id="U5E-fL-Oy1"/>
-                <constraint firstItem="7We-GT-JEA" firstAttribute="centerX" secondItem="1G4-kk-7uC" secondAttribute="centerX" constant="0.5" id="bvb-jU-Ewr"/>
+                <constraint firstItem="7We-GT-JEA" firstAttribute="centerX" secondItem="1G4-kk-7uC" secondAttribute="centerX" id="bvb-jU-Ewr"/>
                 <constraint firstItem="d0z-U4-tlr" firstAttribute="top" secondItem="1G4-kk-7uC" secondAttribute="bottom" id="d8M-Em-WMv"/>
                 <constraint firstItem="1G4-kk-7uC" firstAttribute="top" secondItem="5Fw-qe-gmJ" secondAttribute="top" id="ghu-eK-i21"/>
                 <constraint firstItem="1G4-kk-7uC" firstAttribute="leading" secondItem="5Fw-qe-gmJ" secondAttribute="leading" id="j6t-tJ-tEG"/>

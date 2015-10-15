@@ -62,6 +62,9 @@ public class AppCoordinator: NSObject, UISplitViewControllerDelegate, UIPopoverP
         }))
     }
     
+    func traitCollectionDidChange(previousTraitCollection: UITraitCollection?) {
+    }
+    
     private func showDetailForMapItems(detail: DetailMapItems) {
         let model = MapItemCollectionViewModel(mapItems: detail.mapItems, fetcher: appModel.fetcher)
         
@@ -74,18 +77,41 @@ public class AppCoordinator: NSObject, UISplitViewControllerDelegate, UIPopoverP
             }
             collectionController.viewModel = model
             collectionController.modalPresentationStyle = .Popover
-            collectionController.preferredContentSize = CGSizeMake(480, 384)
-            
-            if let popover = collectionController.popoverPresentationController {
-                popover.permittedArrowDirections = .Any
-                popover.sourceRect = detail.mapViewRect
-                popover.sourceView = mapViewController.mapView
-                popover.delegate = self
-            }
-            
-            splitViewController.presentViewController(collectionController, animated: true, completion: nil)
+            collectionController.preferredContentSize = preferredCollectionContentSize()
 
-            self.collectionController = collectionController
+            mapViewController.scrollUntilRect(detail.mapViewRect, makesWayForPopoverWithContentSize: collectionController.preferredContentSize) { rect in
+                if let popover = collectionController.popoverPresentationController {
+                    popover.permittedArrowDirections = self.permittedArrowDirectionsForCurrentSizeClass()
+                    popover.sourceRect = rect
+                    popover.sourceView = self.mapViewController.mapView
+                    popover.delegate = self
+                }
+                
+                self.splitViewController.presentViewController(collectionController, animated: true, completion: nil)
+                self.collectionController = collectionController
+            }
+        }
+    }
+    
+    private func preferredCollectionContentSize() -> CGSize {
+        if splitViewController.traitCollection.horizontalSizeClass == .Compact {
+            // inset from the screen edges
+            return preferredCollectionContentSizeForWidth(CGRectGetWidth(splitViewController.view.frame)-20)
+        } else {
+            // maximum size
+            return preferredCollectionContentSizeForWidth(480)
+        }
+    }
+    
+    private func preferredCollectionContentSizeForWidth(width: CGFloat) -> CGSize {
+        return CGSizeMake(width, width*0.75+64)
+    }
+    
+    private func permittedArrowDirectionsForCurrentSizeClass() -> UIPopoverArrowDirection {
+        if splitViewController.traitCollection.horizontalSizeClass == .Compact {
+            return [.Up, .Down]
+        } else {
+            return .Any
         }
     }
     

@@ -38,6 +38,7 @@
 		288AC88F1BCFA43B004EA6A0 /* SharableItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 288AC88E1BCFA43B004EA6A0 /* SharableItem.swift */; settings = {ASSET_TAGS = (); }; };
 		288AC8911BCFABE2004EA6A0 /* SafetyCameraCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 288AC8901BCFABE2004EA6A0 /* SafetyCameraCell.swift */; settings = {ASSET_TAGS = (); }; };
 		288AC8931BCFB954004EA6A0 /* IncidentCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 288AC8921BCFB954004EA6A0 /* IncidentCell.swift */; settings = {ASSET_TAGS = (); }; };
+		288AC8971BD02D63004EA6A0 /* AppSplitViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 288AC8961BD02D63004EA6A0 /* AppSplitViewController.swift */; settings = {ASSET_TAGS = (); }; };
 		289201D21BBC580300DA4A9A /* TrafficCameras.swift in Sources */ = {isa = PBXBuildFile; fileRef = 289201D11BBC580300DA4A9A /* TrafficCameras.swift */; };
 		289201D41BBC5AEB00DA4A9A /* FRP.swift in Sources */ = {isa = PBXBuildFile; fileRef = 289201D31BBC5AEB00DA4A9A /* FRP.swift */; };
 		28BFBC5B1BBC91AA00827069 /* FRPTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28BFBC5A1BBC91AA00827069 /* FRPTests.swift */; };
@@ -115,6 +116,7 @@
 		288AC88E1BCFA43B004EA6A0 /* SharableItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SharableItem.swift; sourceTree = "<group>"; };
 		288AC8901BCFABE2004EA6A0 /* SafetyCameraCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SafetyCameraCell.swift; sourceTree = "<group>"; };
 		288AC8921BCFB954004EA6A0 /* IncidentCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IncidentCell.swift; sourceTree = "<group>"; };
+		288AC8961BD02D63004EA6A0 /* AppSplitViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppSplitViewController.swift; sourceTree = "<group>"; };
 		289201D11BBC580300DA4A9A /* TrafficCameras.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TrafficCameras.swift; sourceTree = "<group>"; };
 		289201D31BBC5AEB00DA4A9A /* FRP.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FRP.swift; sourceTree = "<group>"; };
 		28BFBC5A1BBC91AA00827069 /* FRPTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FRPTests.swift; sourceTree = "<group>"; };
@@ -279,6 +281,7 @@
 				2804864E1BC074E4003BA360 /* AppErrors.swift */,
 				284DE0971BBDD0D800E6A678 /* AppModel.swift */,
 				2865591D1BC316590058A35A /* AppCoordinator.swift */,
+				288AC8961BD02D63004EA6A0 /* AppSplitViewController.swift */,
 			);
 			path = App;
 			sourceTree = "<group>";
@@ -486,6 +489,7 @@
 				288AC8911BCFABE2004EA6A0 /* SafetyCameraCell.swift in Sources */,
 				284DE0961BBDCD4200E6A678 /* Either.swift in Sources */,
 				2804864F1BC074E4003BA360 /* AppErrors.swift in Sources */,
+				288AC8971BD02D63004EA6A0 /* AppSplitViewController.swift in Sources */,
 				2865591A1BC2A7200058A35A /* FRP-UI-Extensions.swift in Sources */,
 				28875EA41BBC72FB00E67A16 /* Network.swift in Sources */,
 				718F00C91BCEFF8800D51B43 /* TrafficCameraCell.swift in Sources */,

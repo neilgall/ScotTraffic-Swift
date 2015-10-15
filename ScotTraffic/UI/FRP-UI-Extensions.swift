@@ -46,7 +46,7 @@ public class TableViewDataSourceAdapter
     }
 }
 
-extension Observable where T: CollectionType, T.Generator.Element: TableViewCellConfigurator, T.Index: IntegerType {
+extension Observable where Value: CollectionType, Value.Generator.Element: TableViewCellConfigurator, Value.Index: IntegerType {
     
     // Where an Observable's value is a collection of TableViewCellConfigurators, we can automatically
     // create a table view data source drawing from this observable, and refreshing the table when the

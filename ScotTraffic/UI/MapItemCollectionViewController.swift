@@ -29,6 +29,8 @@ public class MapItemCollectionViewController: UIViewController, UICollectionView
     override public func viewDidLoad() {
         super.viewDidLoad()
         
+//        self.view.translatesAutoresizingMaskIntoConstraints = false
+        
         if let collectionView = collectionView {
             MapItemCollectionViewCell.registerTypesWith(collectionView)
         }
@@ -38,12 +40,16 @@ public class MapItemCollectionViewController: UIViewController, UICollectionView
     
     override public func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        collectionViewLayout?.itemSize = collectionView?.bounds.size ?? CGSizeZero
+        
+        if let size = collectionView?.bounds.size {
+            collectionViewLayout?.itemSize = size
+        }
     }
     
     private func reload() {
-        collectionView?.dataSource = viewModel
         pageControl?.numberOfPages = viewModel?.cellItems.count ?? 0
+        collectionView?.dataSource = viewModel
+        collectionView?.reloadData()
     }
     
     private func mostVisiblePageIndex() -> Int {
