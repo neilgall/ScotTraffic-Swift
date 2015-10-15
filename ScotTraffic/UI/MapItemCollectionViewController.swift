@@ -39,8 +39,6 @@ public class MapItemCollectionViewController: UIViewController, UICollectionView
     override public func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         collectionViewLayout?.itemSize = collectionView?.bounds.size ?? CGSizeZero
-        
-        print("collectionView \(collectionView?.bounds) itemSize \(collectionViewLayout?.itemSize)")
     }
     
     private func reload() {
