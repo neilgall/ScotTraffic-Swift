@@ -8,33 +8,56 @@
 
 import UIKit
 
-public class TrafficCameraCell: UICollectionViewCell {
+class TrafficCameraCell: MapItemCollectionViewCell {
     
     @IBOutlet var imageView: UIImageView?
     @IBOutlet var errorLabel: UILabel?
     @IBOutlet var titleLabel: UILabel?
     @IBOutlet var favouriteButton: UIButton?
     @IBOutlet var shareButton: UIButton?
-    var imageObservation: Observation?
+    
+    private var image: Observable<UIImage?>?
+    private var observations = [Observation]()
     
     func obtainImage(supplier: ImageSupplier, usingHTTPFetcher fetcher: HTTPFetcher) {
         self.errorLabel?.hidden = true
+        self.shareButton?.enabled = false
+        self.favouriteButton?.enabled = false
         
-        imageObservation = supplier.image(fetcher).output { [weak self] image in
+        let image = supplier.image(fetcher)
+        
+        observations.append(image.output { [weak self] image in
             self?.errorLabel?.hidden = (image != nil)
             self?.imageView?.image = image
-        }
+        })
+        
+        observations.append(image.map({ $0 != nil }).output { [weak self] enabled in
+            self?.shareButton?.enabled = enabled
+            self?.favouriteButton?.enabled = enabled
+        })
+        
+        self.image = image
     }
 
     @IBAction func share() {
-        
+        if let item = item, let image = image?.pullValue, case .TrafficCameraItem(let location, _) = item {
+            delegate?.collectionViewCellDidRequestShare(SharableTrafficCamera(name: location.name, image: image))
+        }
     }
     
     @IBAction func toggleFavourite() {
-        
+        if let item = item {
+            delegate?.collectionViewCellDidToggleFavourite(item)
+        }
     }
     
-    override public func prepareForReuse() {
-        imageObservation = nil
+    override func prepareForReuse() {
+        observations.removeAll()
     }
+}
+
+struct SharableTrafficCamera: SharableItem {
+    let name: String
+    let image: UIImage?
+    let link: NSURL? = nil
 }

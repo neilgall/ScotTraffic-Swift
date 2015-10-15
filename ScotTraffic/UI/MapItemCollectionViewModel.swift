@@ -8,68 +8,18 @@
 
 import UIKit
 
-public class MapItemCollectionViewModel: NSObject, UICollectionViewDataSource {
-    
-    enum CellType: String {
-        case TrafficCameraCell
-        case SafetyCameraCell
-        case IncidentCell
-        case BridgeStatusCell
-        
-        static let allValues = [TrafficCameraCell, SafetyCameraCell, IncidentCell, BridgeStatusCell]
-        
-        var reuseIdentifier: String {
-            return rawValue
-        }
-        
-        var cellClass: AnyClass? {
-            return NSClassFromString(rawValue)
-        }
-        
-        var cellNib: UINib? {
-            return UINib(nibName: rawValue, bundle: nil)
-        }
-        
-        func register(collectionView: UICollectionView) {
-            collectionView.registerClass(cellClass, forCellWithReuseIdentifier: reuseIdentifier)
-            collectionView.registerNib(cellNib, forCellWithReuseIdentifier: reuseIdentifier)
-        }
-    }
-    
-    enum CellItem {
-        case TrafficCameraItem(TrafficCameraLocation, TrafficCamera)
-        case SafetyCameraItem(SafetyCamera)
-        case IncidentItem(Incident)
-        
-        var type: CellType {
-            switch self {
-            case .TrafficCameraItem: return .TrafficCameraCell
-            case .SafetyCameraItem: return .SafetyCameraCell
-            case .IncidentItem: return .IncidentCell
-            }
-        }
-        
-        static func forMapItem(mapItem: MapItem) -> [CellItem] {
-            if let trafficCameraLocation = mapItem as? TrafficCameraLocation {
-                return trafficCameraLocation.cameras.map { TrafficCameraItem(trafficCameraLocation, $0) }
+protocol MapItemCollectionViewModelDelegate: class {
+    func mapItemCollectionViewModel(model: MapItemCollectionViewModel, didRequestShareItem item: SharableItem)
+}
 
-            } else if let safetyCamera = mapItem as? SafetyCamera {
-                return [ SafetyCameraItem(safetyCamera) ]
-            
-            } else if let incident = mapItem as? Incident {
-                return [ IncidentItem(incident) ]
-
-            } else {
-                abort()
-            }
-        }
-    }
+public class MapItemCollectionViewModel: NSObject, UICollectionViewDataSource, MapItemCollectionViewCellDelegate {
     
-    let cellItems: [CellItem]
+    let cellItems: [MapItemCollectionViewCell.Item]
     let fetcher: HTTPFetcher
+    weak var delegate: MapItemCollectionViewModelDelegate?
     
     public init(mapItems: [MapItem], fetcher: HTTPFetcher) {
-        self.cellItems = mapItems.flatMap({ CellItem.forMapItem($0) })
+        self.cellItems = mapItems.flatMap({ MapItemCollectionViewCell.Item.forMapItem($0) })
         self.fetcher = fetcher
     }
 
@@ -87,11 +37,17 @@ public class MapItemCollectionViewModel: NSObject, UICollectionViewDataSource {
         let cellItem = cellItems[indexPath.item]
         let cell = collectionView.dequeueReusableCellWithReuseIdentifier(cellItem.type.reuseIdentifier, forIndexPath: indexPath)
         
+        if let cell = cell as? MapItemCollectionViewCell {
+            cell.item = cellItem
+            cell.delegate = self
+        }
+        
         switch cellItem {
         case .TrafficCameraItem(let location, let camera):
             if let cell = cell as? TrafficCameraCell {
                 cell.titleLabel?.text = trafficCameraName(camera, atLocation: location)
                 cell.obtainImage(camera, usingHTTPFetcher: fetcher)
+                cell.delegate = self
             }
             
         case .SafetyCameraItem(let safetyCamera):
@@ -104,4 +60,12 @@ public class MapItemCollectionViewModel: NSObject, UICollectionViewDataSource {
         return cell
     }
     
+    // -- MARK: MapItemCollectionViewCellDelegate --
+    
+    public func collectionViewCellDidRequestShare(item: SharableItem) {
+        delegate?.mapItemCollectionViewModel(self, didRequestShareItem: item)
+    }
+    
+    public func collectionViewCellDidToggleFavourite(item: MapItemCollectionViewCell.Item) {
+    }
 }

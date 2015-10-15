@@ -8,33 +8,39 @@
 
 import UIKit
 
-class MapItemCollectionViewController: UIViewController, UICollectionViewDelegate {
+public class MapItemCollectionViewController: UIViewController, UICollectionViewDelegate, MapItemCollectionViewModelDelegate {
 
     @IBOutlet var collectionView: UICollectionView?
     @IBOutlet var collectionViewLayout: UICollectionViewFlowLayout?
     @IBOutlet var pageControl: UIPageControl?
     
     var viewModel: MapItemCollectionViewModel? {
+        willSet {
+            if let oldModel = viewModel {
+                oldModel.delegate = nil
+            }
+        }
         didSet {
+            viewModel?.delegate = self
             reload()
         }
     }
     
-    override func viewDidLoad() {
+    override public func viewDidLoad() {
         super.viewDidLoad()
         
         if let collectionView = collectionView {
-            for cellType in MapItemCollectionViewModel.CellType.allValues {
-                cellType.register(collectionView)
-            }
+            MapItemCollectionViewCell.registerTypesWith(collectionView)
         }
         
         reload()
     }
     
-    override func viewDidLayoutSubviews() {
+    override public func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         collectionViewLayout?.itemSize = collectionView?.bounds.size ?? CGSizeZero
+        
+        print("collectionView \(collectionView?.bounds) itemSize \(collectionViewLayout?.itemSize)")
     }
     
     private func reload() {
@@ -79,11 +85,17 @@ class MapItemCollectionViewController: UIViewController, UICollectionViewDelegat
     
     // -- MARK: UIScrollViewDelegate --
     
-    func scrollViewDidEndDragging(scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+    public func scrollViewDidEndDragging(scrollView: UIScrollView, willDecelerate decelerate: Bool) {
         pageControl?.currentPage = mostVisiblePageIndex()
     }
     
-    func scrollViewDidEndDecelerating(scrollView: UIScrollView) {
+    public func scrollViewDidEndDecelerating(scrollView: UIScrollView) {
         pageControl?.currentPage = mostVisiblePageIndex()
+    }
+    
+    // -- MARK: MapItemCollectionViewModelDelegate --
+    
+    public func mapItemCollectionViewModel(model: MapItemCollectionViewModel, didRequestShareItem item: SharableItem) {
+        
     }
 }

@@ -34,6 +34,8 @@
 		28875EA41BBC72FB00E67A16 /* Network.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28875EA31BBC72FB00E67A16 /* Network.swift */; };
 		28875EA71BBC739100E67A16 /* JSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28875EA61BBC739100E67A16 /* JSON.swift */; };
 		28875EA91BBC7A2F00E67A16 /* JSONTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28875EA81BBC7A2F00E67A16 /* JSONTests.swift */; };
+		288AC88D1BCFA062004EA6A0 /* MapItemCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 288AC88C1BCFA062004EA6A0 /* MapItemCollectionViewCell.swift */; settings = {ASSET_TAGS = (); }; };
+		288AC88F1BCFA43B004EA6A0 /* SharableItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 288AC88E1BCFA43B004EA6A0 /* SharableItem.swift */; settings = {ASSET_TAGS = (); }; };
 		289201D21BBC580300DA4A9A /* TrafficCameras.swift in Sources */ = {isa = PBXBuildFile; fileRef = 289201D11BBC580300DA4A9A /* TrafficCameras.swift */; };
 		289201D41BBC5AEB00DA4A9A /* FRP.swift in Sources */ = {isa = PBXBuildFile; fileRef = 289201D31BBC5AEB00DA4A9A /* FRP.swift */; };
 		28BFBC5B1BBC91AA00827069 /* FRPTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28BFBC5A1BBC91AA00827069 /* FRPTests.swift */; };
@@ -107,6 +109,8 @@
 		28875EA31BBC72FB00E67A16 /* Network.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Network.swift; sourceTree = "<group>"; };
 		28875EA61BBC739100E67A16 /* JSON.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JSON.swift; sourceTree = "<group>"; };
 		28875EA81BBC7A2F00E67A16 /* JSONTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JSONTests.swift; sourceTree = "<group>"; };
+		288AC88C1BCFA062004EA6A0 /* MapItemCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapItemCollectionViewCell.swift; sourceTree = "<group>"; };
+		288AC88E1BCFA43B004EA6A0 /* SharableItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SharableItem.swift; sourceTree = "<group>"; };
 		289201D11BBC580300DA4A9A /* TrafficCameras.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TrafficCameras.swift; sourceTree = "<group>"; };
 		289201D31BBC5AEB00DA4A9A /* FRP.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FRP.swift; sourceTree = "<group>"; };
 		28BFBC5A1BBC91AA00827069 /* FRPTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FRPTests.swift; sourceTree = "<group>"; };
@@ -298,6 +302,7 @@
 				28DB3BF71BC02968001AAC2A /* Weather.swift */,
 				280486561BC087F4003BA360 /* Settings.swift */,
 				286559141BC1DCB70058A35A /* Favourites.swift */,
+				288AC88E1BCFA43B004EA6A0 /* SharableItem.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -326,6 +331,7 @@
 			children = (
 				716D9E941BCA5EA1005A6B49 /* MapItemCollectionViewController.swift */,
 				716D9E961BCA614D005A6B49 /* MapItemCollectionViewModel.swift */,
+				288AC88C1BCFA062004EA6A0 /* MapItemCollectionViewCell.swift */,
 				718F00BF1BCEFC8000D51B43 /* TrafficCameraCell.xib */,
 				718F00C81BCEFF8800D51B43 /* TrafficCameraCell.swift */,
 				718F00C11BCEFC8000D51B43 /* SafetyCameraCell.xib */,
@@ -481,6 +487,7 @@
 				2865591E1BC316590058A35A /* AppCoordinator.swift in Sources */,
 				286559271BC32D880058A35A /* ImageCompositor.swift in Sources */,
 				28DB3BFA1BC02C88001AAC2A /* Incidents.swift in Sources */,
+				288AC88F1BCFA43B004EA6A0 /* SharableItem.swift in Sources */,
 				280486551BC087B6003BA360 /* SearchViewModel.swift in Sources */,
 				718F00CB1BCF070500D51B43 /* ImageSupplier.swift in Sources */,
 				286559151BC1DCB70058A35A /* Favourites.swift in Sources */,
@@ -488,6 +495,7 @@
 				28DB3BF81BC02968001AAC2A /* Weather.swift in Sources */,
 				286559231BC3198D0058A35A /* MapViewModel.swift in Sources */,
 				286559211BC3182C0058A35A /* MapViewController.swift in Sources */,
+				288AC88D1BCFA062004EA6A0 /* MapItemCollectionViewCell.swift in Sources */,
 				710535651BCC141C00FDB70C /* UserDefaultsProtocol.swift in Sources */,
 				28DB3BF31BC025D0001AAC2A /* Functions.swift in Sources */,
 				280486531BC08711003BA360 /* SearchViewController.swift in Sources */,
