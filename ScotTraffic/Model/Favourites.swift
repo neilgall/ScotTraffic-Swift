@@ -16,6 +16,18 @@ public typealias FavouriteIdentifier = String
 public struct FavouriteTrafficCamera {
     let location: TrafficCameraLocation
     let cameraIndex: Int
+    
+    public init?(location: TrafficCameraLocation, camera: TrafficCamera) {
+        guard let cameraIndex = location.cameras.indexOf({ $0.identifier == camera.identifier }) else {
+            return nil
+        }
+        self.init(location: location, cameraIndex: cameraIndex)
+    }
+    
+    public init(location: TrafficCameraLocation, cameraIndex: Int) {
+        self.location = location
+        self.cameraIndex = cameraIndex
+    }
 }
 
 

@@ -15,11 +15,13 @@ class SafetyCameraCell: MapItemCollectionViewCell {
     @IBOutlet var imageView: UIImageView?
     @IBOutlet var shareButton: UIButton?
 
+    private var item: Item?
     private var image: Observable<UIImage?>?
     private var observations = [Observation]()
     
     override func configure(item: Item, usingHTTPFetcher fetcher: HTTPFetcher) {
         if case .SafetyCameraItem(let safetyCamera) = item {
+            self.item = item
             iconImageView?.image = iconForSpeedLimit(safetyCamera.speedLimit)
             roadLabel?.text = safetyCamera.road
             descriptionLabel?.text = safetyCamera.name
@@ -99,7 +101,6 @@ private func imageWithGradientMask(image: UIImage?) -> UIImage? {
     let maskedImage = CGImageCreateWithMask(image.CGImage, mask)
     return maskedImage.map { UIImage(CGImage: $0) }
 }
-
 
 struct SharableSafetyCamera: SharableItem {
     let name: String

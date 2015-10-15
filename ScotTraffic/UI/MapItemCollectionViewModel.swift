@@ -10,6 +10,7 @@ import UIKit
 
 protocol MapItemCollectionViewModelDelegate: class {
     func mapItemCollectionViewModel(model: MapItemCollectionViewModel, didRequestShareItem item: SharableItem)
+    func mapItemCollectionViewModel(model: MapItemCollectionViewModel, didToggleFavouriteItem item: FavouriteTrafficCamera)
 }
 
 public class MapItemCollectionViewModel: NSObject, UICollectionViewDataSource, MapItemCollectionViewCellDelegate {
@@ -38,7 +39,6 @@ public class MapItemCollectionViewModel: NSObject, UICollectionViewDataSource, M
         let cell = collectionView.dequeueReusableCellWithReuseIdentifier(cellItem.type.reuseIdentifier, forIndexPath: indexPath)
         
         if let cell = cell as? MapItemCollectionViewCell {
-            cell.item = cellItem
             cell.delegate = self
             cell.configure(cellItem, usingHTTPFetcher: fetcher)
         }
@@ -52,6 +52,7 @@ public class MapItemCollectionViewModel: NSObject, UICollectionViewDataSource, M
         delegate?.mapItemCollectionViewModel(self, didRequestShareItem: item)
     }
     
-    public func collectionViewCellDidToggleFavourite(item: MapItemCollectionViewCell.Item) {
+    public func collectionViewCellDidToggleFavourite(item: FavouriteTrafficCamera) {
+        delegate?.mapItemCollectionViewModel(self, didToggleFavouriteItem: item)
     }
 }

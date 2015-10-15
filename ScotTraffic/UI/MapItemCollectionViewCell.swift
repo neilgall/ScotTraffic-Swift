@@ -10,12 +10,11 @@ import UIKit
 
 public protocol MapItemCollectionViewCellDelegate: class {
     func collectionViewCellDidRequestShare(item: SharableItem)
-    func collectionViewCellDidToggleFavourite(item: MapItemCollectionViewCell.Item)
+    func collectionViewCellDidToggleFavourite(item: FavouriteTrafficCamera)
 }
 
 public class MapItemCollectionViewCell: UICollectionViewCell {
     weak var delegate: MapItemCollectionViewCellDelegate?
-    var item: Item?
 
     public enum Type: String {
         case TrafficCameraCell

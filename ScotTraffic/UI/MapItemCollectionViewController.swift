@@ -98,4 +98,8 @@ public class MapItemCollectionViewController: UIViewController, UICollectionView
     public func mapItemCollectionViewModel(model: MapItemCollectionViewModel, didRequestShareItem item: SharableItem) {
         
     }
+    
+    public func mapItemCollectionViewModel(model: MapItemCollectionViewModel, didToggleFavouriteItem item: FavouriteTrafficCamera) {
+        
+    }
 }

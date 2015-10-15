@@ -16,12 +16,16 @@ class TrafficCameraCell: MapItemCollectionViewCell {
     @IBOutlet var favouriteButton: UIButton?
     @IBOutlet var shareButton: UIButton?
     
+    private var locationName: String?
+    private var favouriteItem: FavouriteTrafficCamera?
     private var image: Observable<UIImage?>?
     private var observations = [Observation]()
     
     override func configure(item: Item, usingHTTPFetcher fetcher: HTTPFetcher) {
         if case .TrafficCameraItem(let location, let camera) = item {
-            titleLabel?.text = trafficCameraName(camera, atLocation: location)
+            locationName = trafficCameraName(camera, atLocation: location)
+            favouriteItem = FavouriteTrafficCamera(location: location, camera: camera)
+            titleLabel?.text = locationName
             obtainImage(camera, usingHTTPFetcher: fetcher)
         }
     }
@@ -43,15 +47,15 @@ class TrafficCameraCell: MapItemCollectionViewCell {
         
         self.image = image
     }
-
+    
     @IBAction func share() {
-        if let item = item, let image = image?.pullValue, case .TrafficCameraItem(let location, _) = item {
-            delegate?.collectionViewCellDidRequestShare(SharableTrafficCamera(name: location.name, image: image))
+        if let name = locationName, let image = image?.pullValue {
+            delegate?.collectionViewCellDidRequestShare(SharableTrafficCamera(name: name, image: image))
         }
     }
     
     @IBAction func toggleFavourite() {
-        if let item = item {
+        if let item = favouriteItem {
             delegate?.collectionViewCellDidToggleFavourite(item)
         }
     }
@@ -59,6 +63,8 @@ class TrafficCameraCell: MapItemCollectionViewCell {
     override func prepareForReuse() {
         observations.removeAll()
         image = nil
+        locationName = nil
+        favouriteItem = nil
     }
 }
 
