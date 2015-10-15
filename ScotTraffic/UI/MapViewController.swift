@@ -104,14 +104,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, MapViewModelDelega
         let mapRect = mapView.mapRectThatFits(targetRect, edgePadding: zoomEdgePadding)
         mapView.setVisibleMapRect(mapRect, animated: animated)
     }
-    
-    /*
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
+
     
     // -- MARK: MKMapViewDelegete --
     

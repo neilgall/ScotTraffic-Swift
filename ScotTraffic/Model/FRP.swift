@@ -132,6 +132,9 @@ public class WillOutput<ValueType>: Observer<ValueType> {
     }
 }
 
+public class Never<ValueType> : Observable<ValueType> {
+}
+
 class Filter<ValueType> : Observable<ValueType> {
     private var observer: Observer<ValueType>!
     

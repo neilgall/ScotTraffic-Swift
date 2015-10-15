@@ -291,13 +291,13 @@
 			children = (
 				284DE0991BBDDEB800E6A678 /* Core */,
 				280486581BC0917B003BA360 /* MapItem.swift */,
+				718F00CA1BCF070500D51B43 /* ImageSupplier.swift */,
 				289201D11BBC580300DA4A9A /* TrafficCameras.swift */,
 				28DB3BF41BC02892001AAC2A /* SafetyCameras.swift */,
 				28DB3BF91BC02C88001AAC2A /* Incidents.swift */,
 				28DB3BF71BC02968001AAC2A /* Weather.swift */,
 				280486561BC087F4003BA360 /* Settings.swift */,
 				286559141BC1DCB70058A35A /* Favourites.swift */,
-				718F00CA1BCF070500D51B43 /* ImageSupplier.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";

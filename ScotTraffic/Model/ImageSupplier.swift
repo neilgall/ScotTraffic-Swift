@@ -9,12 +9,16 @@
 import UIKit
 
 protocol ImageSupplier {
-    var imageName: String { get }
+    var imageName: String? { get }
 }
 
 extension ImageSupplier {
 
     func image(fetcher: HTTPFetcher) -> Observable<UIImage?> {
+        guard let imageName = imageName else {
+            return Never()
+        }
+        
         let dataSource = HTTPDataSource(fetcher: fetcher, path: imageName)
         let imageOrError = dataSource.map { (dataOrError: Either<NSData,NetworkError>) -> UIImage? in
             switch dataOrError {

@@ -45,7 +45,7 @@ public final class TrafficCamera: ImageSupplier {
         self.isAvailable = isAvailable
     }
     
-    var imageName: String {
+    var imageName: String? {
         return identifier
     }
 }

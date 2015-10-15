@@ -20,7 +20,7 @@ public enum SpeedLimit {
     case National
 }
 
-public final class SafetyCamera : MapItem {
+public final class SafetyCamera : MapItem, ImageSupplier {
     public let name: String
     public let road: String
     public let mapPoint: MKMapPoint
@@ -36,6 +36,10 @@ public final class SafetyCamera : MapItem {
         self.mapPoint = mapPoint
         self.weatherLocation = weatherLocation
         self.images = images
+    }
+    
+    public var imageName: String? {
+        return images.first
     }
 }
 
