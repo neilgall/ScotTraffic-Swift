@@ -40,23 +40,9 @@ public class MapItemCollectionViewModel: NSObject, UICollectionViewDataSource, M
         if let cell = cell as? MapItemCollectionViewCell {
             cell.item = cellItem
             cell.delegate = self
+            cell.configure(cellItem, usingHTTPFetcher: fetcher)
         }
         
-        switch cellItem {
-        case .TrafficCameraItem(let location, let camera):
-            if let cell = cell as? TrafficCameraCell {
-                cell.titleLabel?.text = trafficCameraName(camera, atLocation: location)
-                cell.obtainImage(camera, usingHTTPFetcher: fetcher)
-                cell.delegate = self
-            }
-            
-        case .SafetyCameraItem(let safetyCamera):
-            break
-            
-        case .IncidentItem(let incident):
-            break
-        }
-
         return cell
     }
     

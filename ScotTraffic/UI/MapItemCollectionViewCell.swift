@@ -68,5 +68,9 @@ public class MapItemCollectionViewCell: UICollectionViewCell {
             collectionView.registerNib(cellNib, forCellWithReuseIdentifier: type.reuseIdentifier)
         }
     }
+
+    func configure(item: Item, usingHTTPFetcher fetcher: HTTPFetcher) {
+        abort()
+    }
 }
 

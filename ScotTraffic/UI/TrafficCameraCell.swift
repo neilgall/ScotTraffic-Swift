@@ -19,10 +19,15 @@ class TrafficCameraCell: MapItemCollectionViewCell {
     private var image: Observable<UIImage?>?
     private var observations = [Observation]()
     
+    override func configure(item: Item, usingHTTPFetcher fetcher: HTTPFetcher) {
+        if case .TrafficCameraItem(let location, let camera) = item {
+            titleLabel?.text = trafficCameraName(camera, atLocation: location)
+            obtainImage(camera, usingHTTPFetcher: fetcher)
+        }
+    }
+    
     func obtainImage(supplier: ImageSupplier, usingHTTPFetcher fetcher: HTTPFetcher) {
         self.errorLabel?.hidden = true
-        self.shareButton?.enabled = false
-        self.favouriteButton?.enabled = false
         
         let image = supplier.image(fetcher)
         
@@ -53,6 +58,7 @@ class TrafficCameraCell: MapItemCollectionViewCell {
     
     override func prepareForReuse() {
         observations.removeAll()
+        image = nil
     }
 }
 
