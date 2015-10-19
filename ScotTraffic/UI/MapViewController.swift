@@ -14,7 +14,6 @@ let minimumAnnotationSpacingY: CGFloat = 32
 let zoomEdgePadding = UIEdgeInsetsMake(60, 40, 60, 40)
 let zoomToMapItemInsetX: Double = -40000
 let zoomToMapItemInsetY: Double = -40000
-let visibleMapRectInsetRatio: Double = -0.2
 
 public struct DetailMapItems {
     let mapItems: [MapItem]
@@ -51,6 +50,8 @@ class MapViewController: UIViewController, MKMapViewDelegate, MapViewModelDelega
                 .filter({ $0 == nil })
                 .output({ _ in self.deselectAnnotations() })
             )
+            
+            mapView.setVisibleMapRect(viewModel.visibleMapRect.value, animated: false)
         }
     }
     
@@ -120,7 +121,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, MapViewModelDelega
         var rect = mapView.bounds
         rect.origin.y -= scroll
         let region = mapView.convertRect(rect, toRegionFromView: mapView)
-        mapView.setRegion(region, animated: false)
+        mapView.setRegion(region, animated: true)
     }
 
     // MARK: - Navigation
@@ -148,11 +149,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, MapViewModelDelega
     // -- MARK: MKMapViewDelegete --
     
     func mapView(mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
-        let visibleMapRect = mapView.visibleMapRect
-        let mapRect = MKMapRectInset(mapView.visibleMapRect,
-            visibleMapRectInsetRatio * visibleMapRect.size.width,
-            visibleMapRectInsetRatio * visibleMapRect.size.height)
-        viewModel?.visibleMapRect.value = mapRect
+        viewModel?.visibleMapRect.value = mapView.visibleMapRect
         
         if let (rect, callback) = callbackOnMapScroll {
             callback(rect)

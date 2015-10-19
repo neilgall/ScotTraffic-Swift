@@ -31,9 +31,8 @@ class SafetyCameraCell: MapItemCollectionViewCell {
     
     func obtainImage(supplier: ImageSupplier, usingHTTPFetcher fetcher: HTTPFetcher) {
         let image = supplier.image(fetcher)
-        let maskedImage = image.map(imageWithGradientMask)
         
-        observations.append(maskedImage.output { [weak self] image in
+        observations.append(image.map(applyGradientMask).output { [weak self] image in
             self?.imageView?.image = image
         })
         
@@ -70,7 +69,7 @@ private func iconForSpeedLimit(speedLimit: SpeedLimit) -> UIImage? {
     }
 }
 
-private func imageWithGradientMask(image: UIImage?) -> UIImage? {
+private func applyGradientMask(image: UIImage?) -> UIImage? {
     guard let image = image else {
         return nil
     }

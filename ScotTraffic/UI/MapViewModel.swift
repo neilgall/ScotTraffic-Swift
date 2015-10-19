@@ -8,6 +8,8 @@
 
 import MapKit
 
+private let visibleMapRectInsetRatio: Double = -0.2
+
 typealias MapItemGroup = [MapItem]
 
 public protocol MapViewModelDelegate {
@@ -26,33 +28,39 @@ public class MapViewModel {
  
     public init(scotTraffic: ScotTraffic) {
         
-        visibleMapRect = Input(initial: MKMapRectWorld)
+        visibleMapRect = scotTraffic.settings.visibleMapRect
         selectedMapItem = Input(initial: nil)
         delegate = Input(initial: nil)
+        
+        let expandedVisibleMapRect = visibleMapRect.map { rect in
+            return MKMapRectInset(rect,
+                visibleMapRectInsetRatio * rect.size.width,
+                visibleMapRectInsetRatio * rect.size.height)
+        }
         
         let trafficCameras = combine(
             scotTraffic.trafficCameraLocations,
             scotTraffic.favourites.trafficCameras,
             scotTraffic.settings.showTrafficCamerasOnMap,
-            visibleMapRect,
+            expandedVisibleMapRect,
             combine: trafficCamerasFromRectAndFavourites)
 
         let safetyCameras = combine(
             scotTraffic.safetyCameras,
             scotTraffic.settings.showSafetyCamerasOnMap,
-            visibleMapRect,
+            expandedVisibleMapRect,
             combine: mapItemsFromRect)
         
         let alerts = combine(
             scotTraffic.alerts,
             scotTraffic.settings.showAlertsOnMap,
-            visibleMapRect,
+            expandedVisibleMapRect,
             combine: mapItemsFromRect)
         
         let roadworks = combine(
             scotTraffic.roadworks,
             scotTraffic.settings.showRoadworksOnMap,
-            visibleMapRect,
+            expandedVisibleMapRect,
             combine: mapItemsFromRect)
         
         mapItemGroups = combine(trafficCameras, safetyCameras, alerts, roadworks, delegate) {
