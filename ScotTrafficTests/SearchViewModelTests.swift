@@ -26,8 +26,8 @@ class SearchViewModelTests: XCTestCase {
         }
         
         XCTAssertEqual(searchResults.count, 2)
-        XCTAssertEqual(searchResults[0].name, "Aldclune")
-        XCTAssertEqual(searchResults[1].name, "Auchengeich")
+        XCTAssertEqual(searchResults[0].mapItem.name, "Aldclune")
+        XCTAssertEqual(searchResults[1].mapItem.name, "Auchengeich")
     }
     
     func testHeadingLabelIsEmptyWhenSearchTermIsEmpty() {
