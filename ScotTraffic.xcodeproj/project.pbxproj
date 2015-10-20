@@ -41,6 +41,7 @@
 		288AC8971BD02D63004EA6A0 /* AppSplitViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 288AC8961BD02D63004EA6A0 /* AppSplitViewController.swift */; settings = {ASSET_TAGS = (); }; };
 		289201D21BBC580300DA4A9A /* TrafficCameras.swift in Sources */ = {isa = PBXBuildFile; fileRef = 289201D11BBC580300DA4A9A /* TrafficCameras.swift */; };
 		289201D41BBC5AEB00DA4A9A /* FRP.swift in Sources */ = {isa = PBXBuildFile; fileRef = 289201D31BBC5AEB00DA4A9A /* FRP.swift */; };
+		28AF4A051BD6ECD9009B0AE8 /* SearchResultCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28AF4A041BD6ECD9009B0AE8 /* SearchResultCell.swift */; settings = {ASSET_TAGS = (); }; };
 		28BFBC5B1BBC91AA00827069 /* FRPTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28BFBC5A1BBC91AA00827069 /* FRPTests.swift */; };
 		28DB3BF31BC025D0001AAC2A /* Functions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28DB3BF21BC025D0001AAC2A /* Functions.swift */; };
 		28DB3BF51BC02892001AAC2A /* SafetyCameras.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28DB3BF41BC02892001AAC2A /* SafetyCameras.swift */; };
@@ -119,6 +120,7 @@
 		288AC8961BD02D63004EA6A0 /* AppSplitViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppSplitViewController.swift; sourceTree = "<group>"; };
 		289201D11BBC580300DA4A9A /* TrafficCameras.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TrafficCameras.swift; sourceTree = "<group>"; };
 		289201D31BBC5AEB00DA4A9A /* FRP.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FRP.swift; sourceTree = "<group>"; };
+		28AF4A041BD6ECD9009B0AE8 /* SearchResultCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchResultCell.swift; sourceTree = "<group>"; };
 		28BFBC5A1BBC91AA00827069 /* FRPTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FRPTests.swift; sourceTree = "<group>"; };
 		28DB3BF21BC025D0001AAC2A /* Functions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Functions.swift; sourceTree = "<group>"; };
 		28DB3BF41BC02892001AAC2A /* SafetyCameras.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SafetyCameras.swift; sourceTree = "<group>"; };
@@ -250,6 +252,7 @@
 			children = (
 				280486521BC08711003BA360 /* SearchViewController.swift */,
 				280486541BC087B6003BA360 /* SearchViewModel.swift */,
+				28AF4A041BD6ECD9009B0AE8 /* SearchResultCell.swift */,
 			);
 			name = Search;
 			sourceTree = "<group>";
@@ -492,6 +495,7 @@
 				288AC8971BD02D63004EA6A0 /* AppSplitViewController.swift in Sources */,
 				2865591A1BC2A7200058A35A /* FRP-UI-Extensions.swift in Sources */,
 				28875EA41BBC72FB00E67A16 /* Network.swift in Sources */,
+				28AF4A051BD6ECD9009B0AE8 /* SearchResultCell.swift in Sources */,
 				718F00C91BCEFF8800D51B43 /* TrafficCameraCell.swift in Sources */,
 				28DB3BF51BC02892001AAC2A /* SafetyCameras.swift in Sources */,
 				280486511BC08216003BA360 /* PeriodicStarter.swift in Sources */,

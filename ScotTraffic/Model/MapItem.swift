@@ -13,6 +13,7 @@ public protocol MapItem {
     var road: String { get }
     var mapPoint: MKMapPoint { get }
     var count: Int { get }
+    var iconName: String { get }
 }
 
 public func == (a: MapItem, b: MapItem) -> Bool {

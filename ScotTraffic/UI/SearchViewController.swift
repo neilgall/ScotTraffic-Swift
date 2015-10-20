@@ -9,7 +9,7 @@
 import UIKit
 import MapKit
 
-enum TableSections : Int {
+private enum TableSections : Int {
     case SearchBarSection = 0
     case TableTitleSection
     case ContentSection
@@ -25,6 +25,8 @@ class SearchViewController: UITableViewController, UISearchBarDelegate {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+//        tableView.registerClass(SearchResultCell.self, forCellReuseIdentifier: SearchResultCell.cellIdentifier)
         
         let searchBar = UISearchBar(frame: CGRectMake(0, 0, 0, 44))
         searchBar.translatesAutoresizingMaskIntoConstraints = true
@@ -67,7 +69,7 @@ class SearchViewController: UITableViewController, UISearchBarDelegate {
                 return cell
             }
         }
-        return tableView.dequeueReusableCellWithIdentifier("dummy", forIndexPath: indexPath)
+        return tableView.dequeueReusableCellWithIdentifier(SearchResultCell.cellIdentifier, forIndexPath: indexPath)
     }
     
     override func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {

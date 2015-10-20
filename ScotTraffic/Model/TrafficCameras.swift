@@ -21,6 +21,7 @@ public final class TrafficCameraLocation : MapItem {
     public let road: String
     public let mapPoint: MKMapPoint
     public let cameras: [TrafficCamera]
+    public let iconName = "camera"
     
     public init(name: String, road: String, mapPoint: MKMapPoint, cameras: [TrafficCamera]) {
         self.name = name

@@ -32,6 +32,13 @@ public final class Incident : MapItem {
         self.date = date
         self.url = url
     }
+    
+    public var iconName: String {
+        switch type {
+        case .Alert: return "incident"
+        case .Roadworks: return "roadworks"
+        }
+    }
 }
 
 extension IncidentType: JSONValueDecodable {

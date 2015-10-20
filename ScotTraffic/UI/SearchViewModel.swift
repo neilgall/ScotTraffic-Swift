@@ -10,11 +10,11 @@ import UIKit
 import MapKit
 
 public class SearchViewModel {
-    enum DisplayContent {
+    private enum DisplayContent {
         case Favourites
         case SearchResults
     }
-
+    
     // Inputs
     public let searchTerm: Input<String>
     public let searchSelectionIndex: Input<Int?>
@@ -65,11 +65,11 @@ public class SearchViewModel {
             case .Favourites:
                 return favourites
                     .map(toSearchResultItems)
-                    .tableViewDataSource("searchCell")
+                    .tableViewDataSource(SearchResultCell.cellIdentifier)
             case .SearchResults:
                 return searchResults
                     .map(toSearchResultItem)
-                    .tableViewDataSource("searchCell")
+                    .tableViewDataSource(SearchResultCell.cellIdentifier)
             }
         }).latest()
         
@@ -86,7 +86,7 @@ public class SearchViewModel {
         
         searchSelection = combine(searchSelectionIndex, dataSource) { index, dataSource in
             if let index = index {
-                return dataSource.source.value?[index]
+                return dataSource.source.value?[index].mapItem
             } else {
                 return nil
             }
@@ -110,22 +110,19 @@ func applyFilterToMapItems<T: MapItem> (sourceList: [T], enabled: Bool, searchTe
     }
 }
 
-public struct SearchResultItem: MapItem, TableViewCellConfigurator {
-    public let name: String
-    public let road: String
-    public let mapPoint: MKMapPoint
-    public let count: Int = 1
+public struct SearchResultItem: TableViewCellConfigurator {
+    public let mapItem: MapItem
 
     public init(item: MapItem) {
-        self.name = item.name
-        self.road = item.road
-        self.mapPoint = item.mapPoint
-    
+        self.mapItem = item
     }
     
     public func configureCell(cell: UITableViewCell) {
-        cell.textLabel?.text = name
-        cell.detailTextLabel?.text = road
+        if let resultCell = cell as? SearchResultCell {
+            resultCell.nameLabel?.text = mapItem.name
+            resultCell.roadLabel?.text = mapItem.road
+            resultCell.iconImageView?.image = UIImage(named: mapItem.iconName)
+        }
     }
 }
 
