@@ -34,7 +34,8 @@ class MapViewController: UIViewController, MKMapViewDelegate, MapViewModelDelega
     var viewModel: MapViewModel?
     var observations = [Observation]()
     var updatingAnnotations: Bool = false
-    var callbackOnMapScroll: (CGRect, CGRect->Void)?
+    var scrollingMap: Bool = false
+    var callbackOnMapScroll: (Void->Void)?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -51,6 +52,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, MapViewModelDelega
                 .output({ _ in self.deselectAnnotations() })
             )
             
+            scrollingMap = true
             mapView.setVisibleMapRect(viewModel.visibleMapRect.value, animated: false)
         }
     }
@@ -87,40 +89,17 @@ class MapViewController: UIViewController, MKMapViewDelegate, MapViewModelDelega
         }
     }
     
-    func scrollUntilRect(presentRect: CGRect, makesWayForPopoverWithContentSize contentSize: CGSize, completion: CGRect->Void) {
-        let contentTopIfAbove = CGRectGetMinY(presentRect) - contentSize.height - 23
-        let contentBottomIfBelow = CGRectGetMaxY(presentRect) + contentSize.height + 23
-        let screenBottom = CGRectGetHeight(mapView.frame)
-        
-        if contentTopIfAbove < 10 && contentBottomIfBelow > screenBottom - 10 {
-            let scrollDown = 10 - contentTopIfAbove
-            let scrollUp = contentBottomIfBelow - (screenBottom - 10)
-            let scroll: CGFloat
-            if scrollDown < scrollUp {
-                scroll = scrollDown
-            } else {
-                scroll = -scrollUp
-            }
-            
-            let newRect = CGRectMake(
-                presentRect.origin.x,
-                presentRect.origin.y + scroll,
-                presentRect.size.width,
-                presentRect.size.height)
-            callbackOnMapScroll = (newRect, completion)
-            scrollMapVerticallyBy(scroll)
-
-        } else {
-            // no scroll required
-            completion(presentRect)
+    func scrollBy(x x: CGFloat, y: CGFloat, completion: Void->Void) {
+        if x == 0 && y == 0 {
+            completion()
+            return
         }
-    }
+        
+        callbackOnMapScroll = completion
+        scrollingMap = true
 
-    
-    private func scrollMapVerticallyBy(scroll: CGFloat) {
-        var rect = mapView.bounds
-        rect.origin.y -= scroll
-        let region = mapView.convertRect(rect, toRegionFromView: mapView)
+        let targetRect = CGRectOffset(mapView.bounds, -x, -y)
+        let region = mapView.convertRect(targetRect, toRegionFromView: mapView)
         mapView.setRegion(region, animated: true)
     }
 
@@ -134,7 +113,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, MapViewModelDelega
     }
     
     func zoomToSelectedMapItem(item: MapItem?) {
-        if let item = item {
+        if let item = item where !mapView.visibleMapRect.contains(item.mapPoint) {
             let targetRect = MKMapRectInset(MKMapRectNull.addPoint(item.mapPoint), zoomToMapItemInsetX, zoomToMapItemInsetY)
             zoomToMapRectWithPadding(targetRect, animated: true)
         }
@@ -142,6 +121,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, MapViewModelDelega
     
     func zoomToMapRectWithPadding(targetRect: MKMapRect, animated: Bool) {
         let mapRect = mapView.mapRectThatFits(targetRect, edgePadding: zoomEdgePadding)
+        scrollingMap = true
         mapView.setVisibleMapRect(mapRect, animated: animated)
     }
 
@@ -149,10 +129,11 @@ class MapViewController: UIViewController, MKMapViewDelegate, MapViewModelDelega
     // -- MARK: MKMapViewDelegete --
     
     func mapView(mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
+        scrollingMap = false
         viewModel?.visibleMapRect.value = mapView.visibleMapRect
         
-        if let (rect, callback) = callbackOnMapScroll {
-            callback(rect)
+        if let callback = callbackOnMapScroll {
+            callback()
             callbackOnMapScroll = nil
         }
     }

@@ -16,6 +16,7 @@ public class SearchViewModel {
     }
     
     // Inputs
+    public let searchActive: Input<Bool>
     public let searchTerm: Input<String>
     public let searchSelectionIndex: Input<Int?>
     
@@ -28,6 +29,7 @@ public class SearchViewModel {
 
     
     public init(scotTraffic: ScotTraffic) {
+        searchActive = Input(initial: false)
         searchTerm = Input(initial: "")
         searchSelectionIndex = Input(initial: nil)
         

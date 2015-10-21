@@ -26,8 +26,6 @@ class SearchViewController: UITableViewController, UISearchBarDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-//        tableView.registerClass(SearchResultCell.self, forCellReuseIdentifier: SearchResultCell.cellIdentifier)
-        
         let searchBar = UISearchBar(frame: CGRectMake(0, 0, 0, 44))
         searchBar.translatesAutoresizingMaskIntoConstraints = true
         searchBar.autoresizingMask = .FlexibleWidth
@@ -46,9 +44,15 @@ class SearchViewController: UITableViewController, UISearchBarDelegate {
         }
     }
     
+    override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(animated)
+        searchViewModel?.searchActive.value = true
+    }
+    
     @IBAction func cancelSearch() {
         searchBar?.text = ""
         searchViewModel?.searchTerm.value = ""
+        searchViewModel?.searchActive.value = false
     }
     
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {

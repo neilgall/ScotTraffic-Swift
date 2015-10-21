@@ -54,6 +54,10 @@ extension MKMapRect {
     public var centrePoint: MKMapPoint {
         return MKMapPointMake(MKMapRectGetMidX(self), MKMapRectGetMidY(self))
     }
+    
+    public func contains(point: MKMapPoint) -> Bool {
+        return MKMapRectContainsPoint(self, point)
+    }
 }
 
 public enum GeographicAxis {

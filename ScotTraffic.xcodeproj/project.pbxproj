@@ -42,6 +42,7 @@
 		289201D21BBC580300DA4A9A /* TrafficCameras.swift in Sources */ = {isa = PBXBuildFile; fileRef = 289201D11BBC580300DA4A9A /* TrafficCameras.swift */; };
 		289201D41BBC5AEB00DA4A9A /* FRP.swift in Sources */ = {isa = PBXBuildFile; fileRef = 289201D31BBC5AEB00DA4A9A /* FRP.swift */; };
 		28AF4A051BD6ECD9009B0AE8 /* SearchResultCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28AF4A041BD6ECD9009B0AE8 /* SearchResultCell.swift */; settings = {ASSET_TAGS = (); }; };
+		28AF4A071BD82342009B0AE8 /* FadeTransition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28AF4A061BD82342009B0AE8 /* FadeTransition.swift */; settings = {ASSET_TAGS = (); }; };
 		28BFBC5B1BBC91AA00827069 /* FRPTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28BFBC5A1BBC91AA00827069 /* FRPTests.swift */; };
 		28DB3BF31BC025D0001AAC2A /* Functions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28DB3BF21BC025D0001AAC2A /* Functions.swift */; };
 		28DB3BF51BC02892001AAC2A /* SafetyCameras.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28DB3BF41BC02892001AAC2A /* SafetyCameras.swift */; };
@@ -121,6 +122,7 @@
 		289201D11BBC580300DA4A9A /* TrafficCameras.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TrafficCameras.swift; sourceTree = "<group>"; };
 		289201D31BBC5AEB00DA4A9A /* FRP.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FRP.swift; sourceTree = "<group>"; };
 		28AF4A041BD6ECD9009B0AE8 /* SearchResultCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchResultCell.swift; sourceTree = "<group>"; };
+		28AF4A061BD82342009B0AE8 /* FadeTransition.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FadeTransition.swift; sourceTree = "<group>"; };
 		28BFBC5A1BBC91AA00827069 /* FRPTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FRPTests.swift; sourceTree = "<group>"; };
 		28DB3BF21BC025D0001AAC2A /* Functions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Functions.swift; sourceTree = "<group>"; };
 		28DB3BF41BC02892001AAC2A /* SafetyCameras.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SafetyCameras.swift; sourceTree = "<group>"; };
@@ -261,6 +263,7 @@
 			isa = PBXGroup;
 			children = (
 				286559191BC2A7200058A35A /* FRP-UI-Extensions.swift */,
+				28AF4A061BD82342009B0AE8 /* FadeTransition.swift */,
 			);
 			name = Core;
 			sourceTree = "<group>";
@@ -519,6 +522,7 @@
 				289201D41BBC5AEB00DA4A9A /* FRP.swift in Sources */,
 				2817D92D1BC5D2B70082F4A7 /* WithFlag.swift in Sources */,
 				716D9E991BCBC2F1005A6B49 /* ScotTraffic.swift in Sources */,
+				28AF4A071BD82342009B0AE8 /* FadeTransition.swift in Sources */,
 				716D9E971BCA614D005A6B49 /* MapItemCollectionViewModel.swift in Sources */,
 				284DE0981BBDD0D800E6A678 /* AppModel.swift in Sources */,
 				280486591BC0917B003BA360 /* MapItem.swift in Sources */,
