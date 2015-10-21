@@ -15,13 +15,27 @@ protocol MapItemCollectionViewModelDelegate: class {
 
 public class MapItemCollectionViewModel: NSObject, UICollectionViewDataSource, MapItemCollectionViewCellDelegate {
     
-    let cellItems: [MapItemCollectionViewCell.Item]
-    let fetcher: HTTPFetcher
     weak var delegate: MapItemCollectionViewModelDelegate?
+    let cellItems: Latest<[MapItemCollectionViewCell.Item]>
+    let selectedItemIndex: Observable<Int?>
+    let fetcher: HTTPFetcher
     
-    public init(mapItems: [MapItem], fetcher: HTTPFetcher) {
-        self.cellItems = mapItems.flatMap({ MapItemCollectionViewCell.Item.forMapItem($0) })
+    public init(mapItems: Observable<[MapItem]>, selection: Observable<MapItem?>, fetcher: HTTPFetcher) {
         self.fetcher = fetcher
+
+        self.cellItems = mapItems.map({
+            $0.flatMap({
+                MapItemCollectionViewCell.Item.forMapItem($0)
+            })
+        }).latest()
+        
+        self.selectedItemIndex = combine(mapItems, selection) { items, selection in
+            selection.flatMap {
+                selection in items.indexOf {
+                    $0 == selection
+                }
+            }
+        }
     }
 
     // -- MARK: UICollectionViewDataSource --
@@ -31,11 +45,11 @@ public class MapItemCollectionViewModel: NSObject, UICollectionViewDataSource, M
     }
     
     public func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return cellItems.count
+        return cellItems.value?.count ?? 0
     }
     
     public func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
-        let cellItem = cellItems[indexPath.item]
+        let cellItem = cellItems.value![indexPath.item]
         let cell = collectionView.dequeueReusableCellWithReuseIdentifier(cellItem.type.reuseIdentifier, forIndexPath: indexPath)
         
         if let cell = cell as? MapItemCollectionViewCell {

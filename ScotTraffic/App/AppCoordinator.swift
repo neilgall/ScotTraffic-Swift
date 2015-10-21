@@ -19,9 +19,11 @@ public class AppCoordinator: NSObject, UISplitViewControllerDelegate, UINavigati
     let searchViewController: SearchViewController
     let mapViewController: MapViewController
     var collectionController: MapItemCollectionViewController?
+    var popoverPresentation: PopoverPresentation
     
     let mapViewModel: MapViewModel
     let searchViewModel: SearchViewModel
+    let collectionViewModel: MapItemCollectionViewModel
     var observations = [Observation]()
     
     public init(appModel: AppModel, rootWindow: UIWindow) {
@@ -49,6 +51,12 @@ public class AppCoordinator: NSObject, UISplitViewControllerDelegate, UINavigati
         mapViewModel = MapViewModel(scotTraffic: appModel)
         mapViewController.viewModel = mapViewModel
         mapViewController.minimumDetailItemsForAnnotationCallout = maximumItemsInDetailView+1
+        
+        collectionViewModel = MapItemCollectionViewModel(mapItems: mapViewController.detailMapItems.map({ $0?.mapItems ?? [] }),
+            selection: searchViewModel.searchSelection, fetcher: appModel.fetcher)
+        
+        popoverPresentation = PopoverPresentation(traitCollection: splitViewController.traitCollection,
+            viewBounds: splitViewController.view.bounds)
     }
     
     public func start() {
@@ -80,116 +88,46 @@ public class AppCoordinator: NSObject, UISplitViewControllerDelegate, UINavigati
     }
     
     func traitCollectionDidChange(previousTraitCollection: UITraitCollection?) {
+        popoverPresentation = PopoverPresentation(traitCollection: splitViewController.traitCollection,
+            viewBounds: splitViewController.view.bounds)
     }
     
     private func showDetailForMapItems(detail: DetailMapItems) {
-        let model = MapItemCollectionViewModel(mapItems: detail.mapItems, fetcher: appModel.fetcher)
-        
         if let collectionController = self.collectionController {
-            collectionController.viewModel = model
+            collectionController.viewModel = collectionViewModel
             
         } else {
-            let contentSize = preferredCollectionContentSize()
-            let scroll = mapScrollDistanceToPresentContentSize(contentSize, anchoredToRect: detail.mapViewRect, inView: mapViewController.mapView)
-            let anchorRect = CGRectOffset(detail.mapViewRect, scroll.x, scroll.y)
+            let anchorRect = splitViewController.view.convertRect(detail.mapViewRect, fromView: mapViewController.mapView)
+            let contentSize = popoverPresentation.preferredCollectionContentSize
+            let scroll = popoverPresentation.mapScrollDistanceToPresentContentSize(contentSize, anchoredToRect: anchorRect)
+            let offsetAnchorRect = CGRectOffset(detail.mapViewRect, scroll.x, scroll.y)
             
             mapViewController.scrollBy(x: scroll.x, y: scroll.y) {
-                let collectionController = self.instantiateCollectionViewController(model, contentSize: contentSize, anchorRect: anchorRect)
+                let collectionController = self.instantiateCollectionViewController(contentSize, anchorRect: offsetAnchorRect)
                 self.splitViewController.presentViewController(collectionController, animated: true, completion: nil)
                 self.collectionController = collectionController
             }
         }
     }
     
-    private func instantiateCollectionViewController(model: MapItemCollectionViewModel, contentSize: CGSize, anchorRect: CGRect) -> MapItemCollectionViewController {
+    private func instantiateCollectionViewController(contentSize: CGSize, anchorRect: CGRect) -> MapItemCollectionViewController {
         guard let collectionController = self.storyboard.instantiateViewControllerWithIdentifier("mapItemCollectionViewController") as? MapItemCollectionViewController else {
             abort()
         }
         
-        collectionController.viewModel = model
+        collectionController.viewModel = collectionViewModel
         collectionController.modalPresentationStyle = .Popover
         collectionController.preferredContentSize = contentSize
 
         if let popover = collectionController.popoverPresentationController {
             popover.backgroundColor = UIColor.blackColor()
-            popover.permittedArrowDirections = self.permittedArrowDirectionsForCurrentSizeClass()
+            popover.permittedArrowDirections = popoverPresentation.permittedArrowDirections
             popover.sourceRect = anchorRect
             popover.sourceView = self.mapViewController.mapView
             popover.delegate = self
         }
     
         return collectionController
-    }
-    
-    private func preferredCollectionContentSize() -> CGSize {
-        if splitViewController.traitCollection.horizontalSizeClass == .Compact {
-            // inset from the screen edges
-            if aspectIsPortrait() {
-                return preferredCollectionContentSizeForWidth(CGRectGetWidth(splitViewController.view.frame)-20)
-            } else {
-                return preferredCollectionContentSizeForHeight(CGRectGetHeight(splitViewController.view.frame)-20)
-            }
-        } else {
-            // maximum size
-            return preferredCollectionContentSizeForWidth(480)
-        }
-    }
-    
-    private func preferredCollectionContentSizeForWidth(width: CGFloat) -> CGSize {
-        return CGSizeMake(width, width*0.75+64)
-    }
-    
-    private func preferredCollectionContentSizeForHeight(height: CGFloat) -> CGSize {
-        return CGSizeMake((height-64)/0.75, height)
-    }
-    
-    private func permittedArrowDirectionsForCurrentSizeClass() -> UIPopoverArrowDirection {
-        if splitViewController.traitCollection.horizontalSizeClass == .Compact {
-            if aspectIsPortrait() {
-                return [.Up, .Down]
-            } else {
-                return [.Left, .Right]
-            }
-        } else {
-            return .Any
-        }
-    }
-    
-    private func aspectIsPortrait() -> Bool {
-        return CGRectGetWidth(splitViewController.view.bounds) < CGRectGetHeight(splitViewController.view.bounds)
-    }
-    
-    private func mapScrollDistanceToPresentContentSize(contentSize: CGSize, anchoredToRect anchorRect: CGRect, inView view: UIView) -> (x: CGFloat, y: CGFloat) {
-        let splitViewAnchor = splitViewController.view.convertRect(anchorRect, fromView: view)
-        
-        let contentTopIfAbove = CGRectGetMinY(splitViewAnchor) - contentSize.height - 23
-        let contentBottomIfBelow = CGRectGetMaxY(splitViewAnchor) + contentSize.height + 23
-        let contentLeftIfToLeft = CGRectGetMinX(splitViewAnchor) - contentSize.width - 23
-        let contentRightIfToRight = CGRectGetMaxX(splitViewAnchor) + contentSize.width + 23
-        var presentContainer = CGRectInset(splitViewController.view.frame, 10, 10)
-        
-        // account for status bar
-        presentContainer.origin.y += 20
-        presentContainer.size.height -= 20
-
-        let scrollUp = contentBottomIfBelow - CGRectGetMaxY(presentContainer)
-        let scrollDown = CGRectGetMinY(presentContainer) - contentTopIfAbove
-        let scrollLeft = contentRightIfToRight - CGRectGetMaxX(presentContainer)
-        let scrollRight = CGRectGetMinX(presentContainer) - contentLeftIfToLeft
-
-        if scrollUp > 0 && scrollDown > 0 && scrollLeft > 0 && scrollRight > 0 {
-            if scrollUp < scrollDown && scrollUp < scrollLeft && scrollUp < scrollRight {
-                return (x: 0, y: -scrollUp)
-            } else if scrollDown < scrollLeft && scrollDown < scrollRight {
-                return (x: 0, y: scrollDown)
-            } else if scrollLeft < scrollRight {
-                return (x: -scrollLeft, y: 0)
-            } else {
-                return (x: scrollRight, y: 0)
-            }
-        }
-        
-        return (x: 0, y: 0)
     }
     
     private func hideDetail() {

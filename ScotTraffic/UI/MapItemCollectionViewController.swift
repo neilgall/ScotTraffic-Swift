@@ -13,29 +13,37 @@ public class MapItemCollectionViewController: UIViewController, UICollectionView
     @IBOutlet var collectionView: UICollectionView?
     @IBOutlet var collectionViewLayout: UICollectionViewFlowLayout?
     @IBOutlet var pageControl: UIPageControl?
+    var observations = [Observation]()
     
     var viewModel: MapItemCollectionViewModel? {
         willSet {
-            if let oldModel = viewModel {
-                oldModel.delegate = nil
-            }
+            disconnectFromModel()
         }
         didSet {
-            viewModel?.delegate = self
-            reload()
+            connectToModel()
         }
     }
     
     override public func viewDidLoad() {
         super.viewDidLoad()
         
-//        self.view.translatesAutoresizingMaskIntoConstraints = false
-        
         if let collectionView = collectionView {
             MapItemCollectionViewCell.registerTypesWith(collectionView)
         }
         
         reload()
+    }
+    
+    override public func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        dispatch_async(dispatch_get_main_queue()) {
+            self.connectToModel()
+        }
+    }
+    
+    override public func viewWillDisappear(animated: Bool) {
+        super.viewWillDisappear(animated)
+        disconnectFromModel()
     }
     
     override public func viewDidLayoutSubviews() {
@@ -46,10 +54,39 @@ public class MapItemCollectionViewController: UIViewController, UICollectionView
         }
     }
     
+    private func connectToModel() {
+        if let viewModel = viewModel where isViewLoaded() {
+            viewModel.delegate = self
+            
+            observations.append(viewModel.cellItems.output({ _ in
+                self.reload()
+            }))
+            
+            observations.append(viewModel.selectedItemIndex.output({ index in
+                if let index = index {
+                    self.selectItemIndex(index)
+                }
+            }))
+        }
+    }
+    
+    private func disconnectFromModel() {
+        observations.removeAll()
+        if let oldModel = viewModel {
+            oldModel.delegate = nil
+        }
+    }
+    
     private func reload() {
-        pageControl?.numberOfPages = viewModel?.cellItems.count ?? 0
+        pageControl?.numberOfPages = viewModel?.cellItems.value?.count ?? 0
         collectionView?.dataSource = viewModel
         collectionView?.reloadData()
+    }
+    
+    private func selectItemIndex(index: Int) {
+        let indexPath = NSIndexPath(forItem: index, inSection: 0)
+        collectionView?.scrollToItemAtIndexPath(indexPath, atScrollPosition: .CenteredHorizontally, animated: false)
+        pageControl?.currentPage = index
     }
     
     private func mostVisiblePageIndex() -> Int {

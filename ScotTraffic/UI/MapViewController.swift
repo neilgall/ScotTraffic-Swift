@@ -90,17 +90,17 @@ class MapViewController: UIViewController, MKMapViewDelegate, MapViewModelDelega
     }
     
     func scrollBy(x x: CGFloat, y: CGFloat, completion: Void->Void) {
-        if x == 0 && y == 0 {
-            completion()
-            return
-        }
-        
-        callbackOnMapScroll = completion
-        scrollingMap = true
-
         let targetRect = CGRectOffset(mapView.bounds, -x, -y)
         let region = mapView.convertRect(targetRect, toRegionFromView: mapView)
-        mapView.setRegion(region, animated: true)
+        
+        if (fabs(x) > 10 || fabs(y) > 10) {
+            callbackOnMapScroll = completion
+            scrollingMap = true
+            mapView.setRegion(region, animated: true)
+        } else {
+            mapView.setRegion(region, animated: false)
+            completion()
+        }
     }
 
     // MARK: - Navigation
