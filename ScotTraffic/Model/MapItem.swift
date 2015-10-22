@@ -95,4 +95,8 @@ extension SequenceType where Generator.Element == MapItem {
             return sort { item1, item2 in item1.mapPoint.y < item2.mapPoint.y }
         }
     }
+    
+    public var flatCount: Int {
+        return reduce(0) { $0 + $1.count }
+    }
 }

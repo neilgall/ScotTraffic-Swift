@@ -33,6 +33,10 @@ public final class TrafficCameraLocation : MapItem {
     public var count: Int {
         return cameras.count
     }
+    
+    public func indexOfCameraWithIdentifier(identifier: String) -> Int? {
+        return cameras.indexOf { $0.identifier == identifier }
+    }
 }
 
 public final class TrafficCamera: ImageSupplier {
@@ -49,6 +53,10 @@ public final class TrafficCamera: ImageSupplier {
     var imageName: String? {
         return identifier
     }
+}
+
+public func == (a: TrafficCamera, b: TrafficCamera) -> Bool {
+    return a.identifier == b.identifier
 }
 
 func trafficCameraName(camera: TrafficCamera, atLocation location: TrafficCameraLocation) -> String {

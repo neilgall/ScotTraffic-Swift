@@ -43,6 +43,19 @@ public class MapItemCollectionViewCell: UICollectionViewCell {
             }
         }
         
+        func matchesSelection(selection: SearchViewModel.Selection) -> Bool {
+            switch self {
+            case .TrafficCameraItem(let location, let camera):
+                return location == selection.mapItem && camera == location.cameras[selection.index]
+
+            case .SafetyCameraItem(let safetyCamera):
+                return safetyCamera == selection.mapItem
+                
+            case .IncidentItem(let incident):
+                return incident == selection.mapItem
+            }
+        }
+        
         static func forMapItem(mapItem: MapItem) -> [Item] {
             if let trafficCameraLocation = mapItem as? TrafficCameraLocation {
                 return trafficCameraLocation.cameras.map { TrafficCameraItem(trafficCameraLocation, $0) }

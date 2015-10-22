@@ -30,7 +30,7 @@ public class MapAnnotation: NSObject, MKAnnotation {
             title = mapItems[0].name
 
         } else {
-            title = "\(mapItems.count) items"
+            title = "\(mapItems.flatCount) items"
         }
         
         let trafficCameraCount = mapItems.filter(isTrafficCamera).count

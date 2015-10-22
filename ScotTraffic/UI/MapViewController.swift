@@ -15,20 +15,16 @@ let zoomEdgePadding = UIEdgeInsetsMake(60, 40, 60, 40)
 let zoomToMapItemInsetX: Double = -40000
 let zoomToMapItemInsetY: Double = -40000
 
-public struct DetailMapItems {
+public struct MapSelection {
     let mapItems: [MapItem]
     let mapViewRect: CGRect
-    
-    var flatCount: Int {
-        return mapItems.reduce(0) { $0 + $1.count }
-    }
 }
 
 class MapViewController: UIViewController, MKMapViewDelegate, MapViewModelDelegate {
 
     @IBOutlet var mapView: MKMapView!
 
-    let detailMapItems = Input<DetailMapItems?>(initial: nil)
+    let mapSelection = Input<MapSelection?>(initial: nil)
     var minimumDetailItemsForAnnotationCallout: Int = 1
     
     var viewModel: MapViewModel?
@@ -47,7 +43,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, MapViewModelDelega
             observations.append(viewModel.selectedAnnotation.output(self.autoSelectAnnotation))
             observations.append(viewModel.selectedMapItem.output(self.zoomToSelectedMapItem))
             
-            observations.append(detailMapItems
+            observations.append(mapSelection
                 .filter({ $0 == nil })
                 .output({ _ in self.deselectAnnotations() })
             )
@@ -55,6 +51,8 @@ class MapViewController: UIViewController, MKMapViewDelegate, MapViewModelDelega
             scrollingMap = true
             mapView.setVisibleMapRect(viewModel.visibleMapRect.value, animated: false)
         }
+        
+        navigationItem.leftBarButtonItem = splitViewController?.displayModeButtonItem()
     }
     
     var currentAnnotations: Set<MapAnnotation> {
@@ -143,8 +141,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, MapViewModelDelega
             return nil
         }
         
-        let detailMapItems = DetailMapItems(mapItems: mapAnnotation.mapItems, mapViewRect: CGRectNull)
-        let canShowCallout = detailMapItems.flatCount >= minimumDetailItemsForAnnotationCallout
+        let canShowCallout = mapAnnotation.mapItems.flatCount >= minimumDetailItemsForAnnotationCallout
         
         let annotationView = mapView.dequeueReusableAnnotationViewWithIdentifier(mapAnnotation.reuseIdentifier)
             ?? MKAnnotationView(annotation: annotation, reuseIdentifier: mapAnnotation.reuseIdentifier)
@@ -169,14 +166,14 @@ class MapViewController: UIViewController, MKMapViewDelegate, MapViewModelDelega
     func mapView(mapView: MKMapView, didSelectAnnotationView view: MKAnnotationView) {
         if let annotation = view.annotation as? MapAnnotation {
             let rect = view.convertRect(view.bounds, toView: mapView)
-            detailMapItems.value = DetailMapItems(mapItems: annotation.mapItems, mapViewRect: rect)
+            mapSelection.value = MapSelection(mapItems: annotation.mapItems, mapViewRect: rect)
         }
     }
     
     func mapView(mapView: MKMapView, didDeselectAnnotationView view: MKAnnotationView) {
         if !updatingAnnotations {
             viewModel?.selectedMapItem.value = nil
-            detailMapItems.value = nil
+            mapSelection.value = nil
         }
     }
 

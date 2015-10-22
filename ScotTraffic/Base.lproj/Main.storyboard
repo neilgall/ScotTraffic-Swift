@@ -117,13 +117,7 @@
                             <outlet property="delegate" destination="09H-HC-ig7" id="Xj1-vh-Bg3"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="Search" id="9iq-Bd-1dr">
-                        <barButtonItem key="rightBarButtonItem" systemItem="cancel" id="gmq-f0-lsS">
-                            <connections>
-                                <action selector="cancelSearch" destination="09H-HC-ig7" id="wid-K8-ai6"/>
-                            </connections>
-                        </barButtonItem>
-                    </navigationItem>
+                    <navigationItem key="navigationItem" title="Search" id="9iq-Bd-1dr"/>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="cYO-kQ-gGD" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>

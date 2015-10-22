@@ -32,6 +32,10 @@ public struct FavouriteTrafficCamera {
     public var identifier: String {
         return location.cameras[cameraIndex].identifier
     }
+    
+    public var name: String {
+        return trafficCameraName(location.cameras[cameraIndex], atLocation: location)
+    }
 }
 
 
@@ -74,10 +78,13 @@ public class Favourites {
 }
 
 private func favouriteTrafficCamerasFromLocations(locations: [TrafficCameraLocation], favourites: [FavouriteIdentifier]) -> [FavouriteTrafficCamera] {
-    return locations.flatMap { location in
-        guard let cameraIndex = location.cameras.indexOf({ favourites.contains($0.identifier) }) else {
-            return nil
+    return favourites.flatMap { identifier in
+        let locations = locations.flatMap { (location: TrafficCameraLocation) -> FavouriteTrafficCamera? in
+            guard let cameraIndex = location.indexOfCameraWithIdentifier(identifier) else {
+                return nil
+            }
+            return FavouriteTrafficCamera(location: location, cameraIndex: cameraIndex)
         }
-        return FavouriteTrafficCamera(location: location, cameraIndex: cameraIndex)
+        return locations.first
     }
 }

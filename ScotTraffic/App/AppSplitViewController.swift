@@ -10,9 +10,14 @@ import UIKit
 
 class AppSplitViewController: UISplitViewController {
 
-    weak var coordinator: AppCoordinator?
+    let popoverPresentation: Input<PopoverPresentation>
+    
+    required init?(coder aDecoder: NSCoder) {
+        popoverPresentation = Input(initial: PopoverPresentation(traitCollection: UITraitCollection(), viewBounds: CGRectZero))
+        super.init(coder: aDecoder)
+    }
     
     override func traitCollectionDidChange(previousTraitCollection: UITraitCollection?) {
-        coordinator?.traitCollectionDidChange(previousTraitCollection)
+        popoverPresentation.value = PopoverPresentation(traitCollection: traitCollection, viewBounds: view.bounds)
     }
 }

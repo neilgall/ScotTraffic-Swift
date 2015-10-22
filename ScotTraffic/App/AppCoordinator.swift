@@ -15,11 +15,10 @@ public class AppCoordinator: NSObject, UISplitViewControllerDelegate, UINavigati
     let storyboard: UIStoryboard
     let rootWindow: UIWindow
     
-    let splitViewController: UISplitViewController
+    let splitViewController: AppSplitViewController
     let searchViewController: SearchViewController
     let mapViewController: MapViewController
     var collectionController: MapItemCollectionViewController?
-    var popoverPresentation: PopoverPresentation
     
     let mapViewModel: MapViewModel
     let searchViewModel: SearchViewModel
@@ -31,7 +30,7 @@ public class AppCoordinator: NSObject, UISplitViewControllerDelegate, UINavigati
         self.rootWindow = rootWindow
         self.storyboard = UIStoryboard(name: "Main", bundle: nil)
         
-        splitViewController = rootWindow.rootViewController as! UISplitViewController
+        splitViewController = rootWindow.rootViewController as! AppSplitViewController
         splitViewController.presentsWithGesture = false
         
         // verify the Storyboard is structured as we expect
@@ -52,16 +51,15 @@ public class AppCoordinator: NSObject, UISplitViewControllerDelegate, UINavigati
         mapViewController.viewModel = mapViewModel
         mapViewController.minimumDetailItemsForAnnotationCallout = maximumItemsInDetailView+1
         
-        let collectionMapItems = mapViewController.detailMapItems.map({ $0?.mapItems ?? [] })
+        let selectionMapItems = mapViewController.mapSelection.map({ selection in
+            selection?.mapItems ?? []
+        })
+        
         collectionViewModel = MapItemCollectionViewModel(
-            mapItems: collectionMapItems,
-            
+            mapItems: selectionMapItems,
             selection: searchViewModel.searchSelection,
             fetcher: appModel.fetcher,
             favourites: appModel.favourites)
-        
-        popoverPresentation = PopoverPresentation(traitCollection: splitViewController.traitCollection,
-            viewBounds: splitViewController.view.bounds)
     }
     
     public func start() {
@@ -75,47 +73,44 @@ public class AppCoordinator: NSObject, UISplitViewControllerDelegate, UINavigati
         }))
         
         // show map when search selection changes
-        observations.append(searchViewModel.searchSelection.output({ item in
-            if item != nil {
+        observations.append(searchViewModel.searchSelection.output({ selection in
+            if selection != nil {
                 self.showMap()
             }
-            self.mapViewModel.selectedMapItem.value = item
+            self.mapViewModel.selectedMapItem.value = selection?.mapItem
         }))
     
-        // show/hide popover as map selection changes
-        observations.append(mapViewController.detailMapItems.output({ detail in
-            if let detail = detail where detail.flatCount <= maximumItemsInDetailView {
-                self.showDetailForMapItems(detail)
+        // show/hide popover as map selection and popover presentation change
+        let popover = combine(mapViewController.mapSelection, splitViewController.popoverPresentation) { ($0,$1) }
+        
+        observations.append(popover.output({ (selection, presentation)->Void in
+            if let selection = selection where selection.mapItems.flatCount <= maximumItemsInDetailView {
+                self.showDetailForMapSelection(selection, presentation: presentation)
             } else {
                 self.hideDetail()
             }
         }))
     }
     
-    func traitCollectionDidChange(previousTraitCollection: UITraitCollection?) {
-        popoverPresentation = PopoverPresentation(traitCollection: splitViewController.traitCollection,
-            viewBounds: splitViewController.view.bounds)
-    }
-    
-    private func showDetailForMapItems(detail: DetailMapItems) {
+    private func showDetailForMapSelection(selection: MapSelection, presentation: PopoverPresentation) {
         if let collectionController = self.collectionController {
             collectionController.viewModel = collectionViewModel
             
         } else {
-            let anchorRect = splitViewController.view.convertRect(detail.mapViewRect, fromView: mapViewController.mapView)
-            let contentSize = popoverPresentation.preferredCollectionContentSize
-            let scroll = popoverPresentation.mapScrollDistanceToPresentContentSize(contentSize, anchoredToRect: anchorRect)
-            let offsetAnchorRect = CGRectOffset(detail.mapViewRect, scroll.x, scroll.y)
+            let anchorRect = splitViewController.view.convertRect(selection.mapViewRect, fromView: mapViewController.mapView)
+            let contentSize = presentation.preferredCollectionContentSize
+            let scroll = presentation.mapScrollDistanceToPresentContentSize(contentSize, anchoredToRect: anchorRect)
+            let offsetAnchorRect = CGRectOffset(selection.mapViewRect, scroll.x, scroll.y)
             
             mapViewController.scrollBy(x: scroll.x, y: scroll.y) {
-                let collectionController = self.instantiateCollectionViewController(contentSize, anchorRect: offsetAnchorRect)
+                let collectionController = self.instantiateCollectionViewController(contentSize, anchorRect: offsetAnchorRect, presentation: presentation)
                 self.splitViewController.presentViewController(collectionController, animated: true, completion: nil)
                 self.collectionController = collectionController
             }
         }
     }
     
-    private func instantiateCollectionViewController(contentSize: CGSize, anchorRect: CGRect) -> MapItemCollectionViewController {
+    private func instantiateCollectionViewController(contentSize: CGSize, anchorRect: CGRect, presentation: PopoverPresentation) -> MapItemCollectionViewController {
         guard let collectionController = self.storyboard.instantiateViewControllerWithIdentifier("mapItemCollectionViewController") as? MapItemCollectionViewController else {
             abort()
         }
@@ -126,7 +121,7 @@ public class AppCoordinator: NSObject, UISplitViewControllerDelegate, UINavigati
 
         if let popover = collectionController.popoverPresentationController {
             popover.backgroundColor = UIColor.blackColor()
-            popover.permittedArrowDirections = popoverPresentation.permittedArrowDirections
+            popover.permittedArrowDirections = presentation.permittedArrowDirections
             popover.sourceRect = anchorRect
             popover.sourceView = self.mapViewController.mapView
             popover.delegate = self
@@ -149,6 +144,7 @@ public class AppCoordinator: NSObject, UISplitViewControllerDelegate, UINavigati
     // -- MARK: UISplitViewControllerDelegate --
     
     public func splitViewController(svc: UISplitViewController, willChangeToDisplayMode displayMode: UISplitViewControllerDisplayMode) {
+        print("displayMode \(displayMode)")
     }
     
     // -- MARK: UINavigationControllerDelegate --
@@ -172,7 +168,7 @@ public class AppCoordinator: NSObject, UISplitViewControllerDelegate, UINavigati
     
     public func popoverPresentationControllerDidDismissPopover(popoverController: UIPopoverPresentationController) {
         self.collectionController = nil
-        self.mapViewController.detailMapItems.value = nil
+        self.mapViewController.mapSelection.value = nil
         self.mapViewModel.selectedMapItem.value = nil
     }
 }

@@ -15,6 +15,8 @@ public class SearchViewModel {
         case SearchResults
     }
     
+    public typealias Selection = (mapItem: MapItem, index: Int)
+    
     // Inputs
     public let searchActive: Input<Bool>
     public let searchTerm: Input<String>
@@ -23,7 +25,7 @@ public class SearchViewModel {
     // Outputs
     public var dataSource: Latest<TableViewDataSourceAdapter<[SearchResultItem]>>
     public var resultsMajorAxisLabel: Latest<String>
-    public var searchSelection: Observable<MapItem?>
+    public var searchSelection: Observable<Selection?>
     
     private var observations = [Observation]()
 
@@ -87,8 +89,8 @@ public class SearchViewModel {
         }).latest()
         
         searchSelection = combine(searchSelectionIndex, dataSource) { index, dataSource in
-            if let index = index {
-                return dataSource.source.value?[index].mapItem
+            if let index = index, let searchResult = dataSource.source.value?[index] {
+                return (mapItem: searchResult.mapItem, index: searchResult.index)
             } else {
                 return nil
             }
@@ -113,15 +115,13 @@ func applyFilterToMapItems<T: MapItem> (sourceList: [T], enabled: Bool, searchTe
 }
 
 public struct SearchResultItem: TableViewCellConfigurator {
+    public let name: String
     public let mapItem: MapItem
+    public let index: Int
 
-    public init(item: MapItem) {
-        self.mapItem = item
-    }
-    
     public func configureCell(cell: UITableViewCell) {
         if let resultCell = cell as? SearchResultCell {
-            resultCell.nameLabel?.text = mapItem.name
+            resultCell.nameLabel?.text = name
             resultCell.roadLabel?.text = mapItem.road
             resultCell.iconImageView?.image = UIImage(named: mapItem.iconName)
         }
@@ -129,9 +129,13 @@ public struct SearchResultItem: TableViewCellConfigurator {
 }
 
 public func toSearchResultItems(items: [FavouriteTrafficCamera]) -> [SearchResultItem] {
-    return items.map { SearchResultItem(item: $0.location) }
+    return items.map { favourite in
+        SearchResultItem(name: favourite.name, mapItem: favourite.location, index: favourite.cameraIndex)
+    }
 }
 
 public func toSearchResultItem(items: [MapItem]) -> [SearchResultItem] {
-    return items.map { SearchResultItem(item: $0) }
+    return items.map { item in
+        SearchResultItem(name: item.name, mapItem: item, index: 0)
+    }
 }

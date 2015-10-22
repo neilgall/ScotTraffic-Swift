@@ -20,20 +20,20 @@ public class MapItemCollectionViewModel: NSObject, UICollectionViewDataSource, M
     let fetcher: HTTPFetcher
     let favourites: Favourites
     
-    public init(mapItems: Observable<[MapItem]>, selection: Observable<MapItem?>, fetcher: HTTPFetcher, favourites: Favourites) {
+    public init(mapItems: Observable<[MapItem]>, selection: Observable<SearchViewModel.Selection?>, fetcher: HTTPFetcher, favourites: Favourites) {
         self.fetcher = fetcher
         self.favourites = favourites
 
-        self.cellItems = mapItems.map({
-            $0.flatMap({
+        self.cellItems = mapItems.map({ mapItem in
+            mapItem.flatMap({
                 MapItemCollectionViewCell.Item.forMapItem($0)
             })
         }).latest()
         
-        self.selectedItemIndex = combine(mapItems, selection) { items, selection in
-            selection.flatMap {
-                selection in items.indexOf {
-                    $0 == selection
+        self.selectedItemIndex = combine(cellItems, selection) { cellItems, selection in
+            selection.flatMap { selection in
+                cellItems.indexOf { item in
+                    item.matchesSelection(selection)
                 }
             }
         }
