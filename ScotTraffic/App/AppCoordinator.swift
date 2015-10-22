@@ -52,8 +52,13 @@ public class AppCoordinator: NSObject, UISplitViewControllerDelegate, UINavigati
         mapViewController.viewModel = mapViewModel
         mapViewController.minimumDetailItemsForAnnotationCallout = maximumItemsInDetailView+1
         
-        collectionViewModel = MapItemCollectionViewModel(mapItems: mapViewController.detailMapItems.map({ $0?.mapItems ?? [] }),
-            selection: searchViewModel.searchSelection, fetcher: appModel.fetcher)
+        let collectionMapItems = mapViewController.detailMapItems.map({ $0?.mapItems ?? [] })
+        collectionViewModel = MapItemCollectionViewModel(
+            mapItems: collectionMapItems,
+            
+            selection: searchViewModel.searchSelection,
+            fetcher: appModel.fetcher,
+            favourites: appModel.favourites)
         
         popoverPresentation = PopoverPresentation(traitCollection: splitViewController.traitCollection,
             viewBounds: splitViewController.view.bounds)

@@ -11,6 +11,7 @@ import UIKit
 public protocol MapItemCollectionViewCellDelegate: class {
     func collectionViewCellDidRequestShare(item: SharableItem)
     func collectionViewCellDidToggleFavourite(item: FavouriteTrafficCamera)
+    func collectionViewItemIsFavourite(item: FavouriteTrafficCamera) -> Bool
 }
 
 public class MapItemCollectionViewCell: UICollectionViewCell {

@@ -68,6 +68,7 @@
                                 <state key="normal" image="726-star">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
+                                <state key="selected" image="726-star-selected"/>
                                 <connections>
                                     <action selector="toggleFavourite" destination="5Fw-qe-gmJ" eventType="touchUpInside" id="fbb-GO-oEF"/>
                                 </connections>
@@ -133,6 +134,7 @@
     <resources>
         <image name="702-share" width="21" height="28"/>
         <image name="726-star" width="28" height="26"/>
+        <image name="726-star-selected" width="28" height="26"/>
         <image name="Midnight-640x44" width="640" height="44"/>
     </resources>
 </document>

@@ -10,7 +10,6 @@ import UIKit
 
 protocol MapItemCollectionViewModelDelegate: class {
     func mapItemCollectionViewModel(model: MapItemCollectionViewModel, didRequestShareItem item: SharableItem)
-    func mapItemCollectionViewModel(model: MapItemCollectionViewModel, didToggleFavouriteItem item: FavouriteTrafficCamera)
 }
 
 public class MapItemCollectionViewModel: NSObject, UICollectionViewDataSource, MapItemCollectionViewCellDelegate {
@@ -19,9 +18,11 @@ public class MapItemCollectionViewModel: NSObject, UICollectionViewDataSource, M
     let cellItems: Latest<[MapItemCollectionViewCell.Item]>
     let selectedItemIndex: Observable<Int?>
     let fetcher: HTTPFetcher
+    let favourites: Favourites
     
-    public init(mapItems: Observable<[MapItem]>, selection: Observable<MapItem?>, fetcher: HTTPFetcher) {
+    public init(mapItems: Observable<[MapItem]>, selection: Observable<MapItem?>, fetcher: HTTPFetcher, favourites: Favourites) {
         self.fetcher = fetcher
+        self.favourites = favourites
 
         self.cellItems = mapItems.map({
             $0.flatMap({
@@ -67,6 +68,10 @@ public class MapItemCollectionViewModel: NSObject, UICollectionViewDataSource, M
     }
     
     public func collectionViewCellDidToggleFavourite(item: FavouriteTrafficCamera) {
-        delegate?.mapItemCollectionViewModel(self, didToggleFavouriteItem: item)
+        favourites.toggleItem(item)
+    }
+    
+    public func collectionViewItemIsFavourite(item: FavouriteTrafficCamera) -> Bool {
+        return favourites.containsItem(item)
     }
 }

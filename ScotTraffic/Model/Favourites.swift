@@ -11,7 +11,7 @@ import MapKit
 let favouritesKey = "favouriteItems"
 let lastViewedKey = "lastViewedIdentifier"
 
-public typealias FavouriteIdentifier = String
+private typealias FavouriteIdentifier = String
 
 public struct FavouriteTrafficCamera {
     let location: TrafficCameraLocation
@@ -28,12 +28,15 @@ public struct FavouriteTrafficCamera {
         self.location = location
         self.cameraIndex = cameraIndex
     }
+    
+    public var identifier: String {
+        return location.cameras[cameraIndex].identifier
+    }
 }
 
 
 public class Favourites {
     private let userDefaults: UserDefaultsProtocol
-    private var userDefaultsNotification: AnyObject?
     private let items : Input<[FavouriteIdentifier]>
     public let trafficCameras: Observable<[FavouriteTrafficCamera]>
     
@@ -42,21 +45,12 @@ public class Favourites {
         self.items = Input(initial: [])
         self.trafficCameras = combine(trafficCameraLocations, self.items, combine: favouriteTrafficCamerasFromLocations)
         
-        self.userDefaultsNotification = NSNotificationCenter.defaultCenter()
-            .addObserverForName(NSUserDefaultsDidChangeNotification, object: nil, queue: nil) { _ in
-                self.reloadFromUserDefaults()
-        }
-        
         reloadFromUserDefaults()
     }
     
-    deinit {
-        if let userDefaultsNotification = self.userDefaultsNotification {
-            NSNotificationCenter.defaultCenter().removeObserver(userDefaultsNotification)
-        }
-    }
-    
-    public func toggleItem(identifier: FavouriteIdentifier) {
+    public func toggleItem(item: FavouriteTrafficCamera) {
+        let identifier = item.identifier
+        
         var items = self.items.value
         if let index = items.indexOf({ $0 == identifier }) {
             items.removeAtIndex(index)
@@ -64,6 +58,11 @@ public class Favourites {
             items.append(identifier)
         }
         self.items.value = items
+        userDefaults.setObject(self.items.value, forKey: favouritesKey)
+    }
+    
+    public func containsItem(item: FavouriteTrafficCamera) -> Bool {
+        return self.items.value.contains(item.identifier)
     }
     
     private func reloadFromUserDefaults() {
@@ -72,14 +71,9 @@ public class Favourites {
         }
         self.items.value = items
     }
-    
-    private func saveToUserDefaults() {
-        userDefaults.setObject(self.items.value, forKey: favouritesKey)
-        userDefaults.synchronize()
-    }
 }
 
-public func favouriteTrafficCamerasFromLocations(locations: [TrafficCameraLocation], favourites: [FavouriteIdentifier]) -> [FavouriteTrafficCamera] {
+private func favouriteTrafficCamerasFromLocations(locations: [TrafficCameraLocation], favourites: [FavouriteIdentifier]) -> [FavouriteTrafficCamera] {
     return locations.flatMap { location in
         guard let cameraIndex = location.cameras.indexOf({ favourites.contains($0.identifier) }) else {
             return nil
