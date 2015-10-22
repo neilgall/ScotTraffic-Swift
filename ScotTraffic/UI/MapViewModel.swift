@@ -102,18 +102,18 @@ func mapItemsFromRect<T: MapItem>(mapItems: [T], isEnabled: Bool, mapRect: MKMap
 func groupMapItems<MapItems: CollectionType where MapItems.Generator.Element == MapItem>
     (mapItems: MapItems, delegate: MapViewModelDelegate) -> [MapItemGroup]
 {
-    var groups = [ (rect: MKMapRect, items: MapItemGroup) ]()
+    var groups = [ (point: MKMapPoint, items: MapItemGroup) ]()
     
     mapItems.forEach { item in
         for i in 0..<groups.count {
-            if delegate.annotationAtMapPoint(groups[i].rect.centrePoint, wouldOverlapWithAnnotationAtMapPoint: item.mapPoint) {
+            if delegate.annotationAtMapPoint(groups[i].point, wouldOverlapWithAnnotationAtMapPoint: item.mapPoint) {
                 groups[i].items.append(item)
-                groups[i].rect = groups[i].rect.addPoint(item.mapPoint)
+                groups[i].point = groups[i].items.weightedCentrePoint
                 return
             }
         }
 
-        let group = (rect: MKMapRectMake(item.mapPoint.x, item.mapPoint.y, 0, 0), items: [item])
+        let group = (point: item.mapPoint, items: [item])
         groups.append(group)
     }
     

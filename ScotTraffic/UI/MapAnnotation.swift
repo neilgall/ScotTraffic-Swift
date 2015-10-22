@@ -23,7 +23,7 @@ public class MapAnnotation: NSObject, MKAnnotation {
     public init(mapItems: [MapItem]) {
         self.mapItems = mapItems
         
-        coordinate = MKCoordinateForMapPoint(mapItems.boundingRect.centrePoint)
+        coordinate = MKCoordinateForMapPoint(mapItems.weightedCentrePoint)
         subtitle = nil
 
         if mapItems.count == 1 {

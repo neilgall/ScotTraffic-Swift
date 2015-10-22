@@ -67,7 +67,16 @@ public enum GeographicAxis {
 
 extension SequenceType where Generator.Element == MapItem {
     public var boundingRect: MKMapRect {
-        return reduce(MKMapRectNull) { rect, mapItem in rect.addPoint(mapItem.mapPoint) }
+        return reduce(MKMapRectNull) { rect, mapItem in
+            rect.addPoint(mapItem.mapPoint)
+        }
+    }
+    
+    public var weightedCentrePoint: MKMapPoint {
+        let (sums, count) = reduce((MKMapPointMake(0, 0), 0)) { acc, mapItem in
+            (MKMapPointMake(acc.0.x + mapItem.mapPoint.x, acc.0.y + mapItem.mapPoint.y), acc.1+1)
+        }
+        return MKMapPointMake(sums.x / Double(count), sums.y / Double(count))
     }
     
     public var majorAxis: GeographicAxis {
