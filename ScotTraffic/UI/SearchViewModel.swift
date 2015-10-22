@@ -15,6 +15,7 @@ public class SearchViewModel {
         case SearchResults
     }
     
+    // A selected search result is a MapItem and an index into its sub-items
     public typealias Selection = (mapItem: MapItem, index: Int)
     
     // Inputs

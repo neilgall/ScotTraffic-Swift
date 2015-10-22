@@ -24,12 +24,14 @@ public class MapItemCollectionViewModel: NSObject, UICollectionViewDataSource, M
         self.fetcher = fetcher
         self.favourites = favourites
 
-        self.cellItems = mapItems.map({ mapItem in
-            mapItem.flatMap({
+        // Each MapItem can have multiple items to show in the collection view. Flat map into a cell item list.
+        self.cellItems = mapItems.map({ mapItems in
+            mapItems.flatMap({
                 MapItemCollectionViewCell.Item.forMapItem($0)
             })
         }).latest()
         
+        // Map the selected search result to a collection view cell
         self.selectedItemIndex = combine(cellItems, selection) { cellItems, selection in
             selection.flatMap { selection in
                 cellItems.indexOf { item in
