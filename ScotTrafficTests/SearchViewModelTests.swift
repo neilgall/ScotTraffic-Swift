@@ -106,7 +106,7 @@ class SearchViewModelTests: XCTestCase {
             return
         }
         
-        XCTAssertEqual(selection?.name, "Glasgow Airport")
+        XCTAssertEqual(selection?.mapItem.name, "Glasgow Airport")
     }
     
     func testSearchSelectionClearedByCancellingSearch() {
