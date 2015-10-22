@@ -32,11 +32,7 @@ public class TestAppModel: ScotTraffic {
         userDefaults = TestUserDefaults()
         settings = Settings(userDefaults: userDefaults)
         favourites = Favourites(userDefaults: userDefaults, trafficCameraLocations: trafficCameraLocations)
-    }
-    
-    public func notifyUserDefaultsChange() {
-        NSNotificationCenter.defaultCenter().postNotificationName(NSUserDefaultsDidChangeNotification, object: self)
-    }
+    }    
 }
     
 private func loadTestData<T where T: JSONObjectDecodable>(filename: String) -> [T] {

@@ -65,7 +65,7 @@ public class Favourites {
         return self.items.value.contains(item.identifier)
     }
     
-    private func reloadFromUserDefaults() {
+    public func reloadFromUserDefaults() {
         guard let items = userDefaults.objectForKey(favouritesKey) as? [FavouriteIdentifier] else {
             return
         }
