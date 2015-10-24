@@ -25,11 +25,11 @@ public class MapItemCollectionViewModel: NSObject, UICollectionViewDataSource, M
         self.favourites = favourites
 
         // Each MapItem can have multiple items to show in the collection view. Flat map into a cell item list.
-        self.cellItems = mapItems.map({ mapItems in
-            mapItems.flatMap({
+        self.cellItems = mapItems.map { mapItems in
+            mapItems.flatMap {
                 MapItemCollectionViewCell.Item.forMapItem($0)
-            })
-        }).latest()
+            }
+        }.latest()
         
         // Map the selected search result to a collection view cell
         self.selectedItemIndex = combine(cellItems, selection) { cellItems, selection in

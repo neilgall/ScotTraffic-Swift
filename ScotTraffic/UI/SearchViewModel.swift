@@ -39,46 +39,55 @@ public class SearchViewModel {
         let favourites = scotTraffic.favourites.trafficCameras.latest()
 
         let trafficCameras = combine(
-            scotTraffic.trafficCameraLocations, scotTraffic.settings.showTrafficCamerasOnMap, self.searchTerm,
+            scotTraffic.trafficCameraLocations,
+            scotTraffic.settings.showTrafficCamerasOnMap,
+            searchTerm,
             combine: applyFilterToMapItems)
         
         let safetyCameras = combine(
-            scotTraffic.safetyCameras, scotTraffic.settings.showSafetyCamerasOnMap, self.searchTerm,
+            scotTraffic.safetyCameras,
+            scotTraffic.settings.showSafetyCamerasOnMap,
+            searchTerm,
             combine: applyFilterToMapItems)
         
         let alerts = combine(
-            scotTraffic.alerts, scotTraffic.settings.showAlertsOnMap, self.searchTerm,
+            scotTraffic.alerts,
+            scotTraffic.settings.showAlertsOnMap,
+            searchTerm,
             combine: applyFilterToMapItems)
         
         let roadworks = combine(
-            scotTraffic.roadworks, scotTraffic.settings.showRoadworksOnMap, self.searchTerm,
+            scotTraffic.roadworks,
+            scotTraffic.settings.showRoadworksOnMap,
+            searchTerm,
             combine: applyFilterToMapItems)
         
         let combinedResults: Observable<[MapItem]> = combine(trafficCameras, safetyCameras, alerts, roadworks) {
             return $0 + $1 + $2 + $3
         }
             
-        let searchResults = combinedResults.map({ $0.sortGeographically() }).latest()
+        let searchResults = combinedResults.map { $0.sortGeographically() }.latest()
         let searchResultsMajorAxis = combinedResults.map { $0.majorAxis }
 
         let displayContent: Observable<DisplayContent> = searchTerm.map { text in
             text.isEmpty ? .Favourites : .SearchResults
         }
         
-        dataSource = displayContent.onChange().map({ contentType in
+        dataSource = displayContent.onChange().map { contentType in
             switch contentType {
             case .Favourites:
                 return favourites
                     .map(toSearchResultItems)
                     .tableViewDataSource(SearchResultCell.cellIdentifier)
+
             case .SearchResults:
                 return searchResults
                     .map(toSearchResultItem)
                     .tableViewDataSource(SearchResultCell.cellIdentifier)
             }
-        }).latest()
+        }.latest()
         
-        resultsMajorAxisLabel = combine(displayContent, searchResultsMajorAxis, combine: {
+        resultsMajorAxisLabel = combine(displayContent, searchResultsMajorAxis) {
             if $0 == DisplayContent.Favourites {
                 return ""
             } else {
@@ -87,7 +96,7 @@ public class SearchViewModel {
                 case .EastWest: return "West to East"
                 }
             }
-        }).latest()
+        }.latest()
         
         searchSelection = combine(searchSelectionIndex, dataSource) { index, dataSource in
             if let index = index, let searchResult = dataSource.source.value?[index] {
@@ -129,13 +138,13 @@ public struct SearchResultItem: TableViewCellConfigurator {
     }
 }
 
-public func toSearchResultItems(items: [FavouriteTrafficCamera]) -> [SearchResultItem] {
+func toSearchResultItems(items: [FavouriteTrafficCamera]) -> [SearchResultItem] {
     return items.map { favourite in
         SearchResultItem(name: favourite.name, mapItem: favourite.location, index: favourite.cameraIndex)
     }
 }
 
-public func toSearchResultItem(items: [MapItem]) -> [SearchResultItem] {
+func toSearchResultItem(items: [MapItem]) -> [SearchResultItem] {
     return items.map { item in
         SearchResultItem(name: item.name, mapItem: item, index: 0)
     }

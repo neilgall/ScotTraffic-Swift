@@ -51,8 +51,6 @@ class MapViewController: UIViewController, MKMapViewDelegate, MapViewModelDelega
             scrollingMap = true
             mapView.setVisibleMapRect(viewModel.visibleMapRect.value, animated: false)
         }
-        
-        navigationItem.leftBarButtonItem = splitViewController?.displayModeButtonItem()
     }
     
     var currentAnnotations: Set<MapAnnotation> {
