@@ -10,15 +10,16 @@ import UIKit
 
 let maximumItemsInDetailView = 10
 
-public class AppCoordinator: NSObject, UISplitViewControllerDelegate, UINavigationControllerDelegate, UIPopoverPresentationControllerDelegate {
+public class AppCoordinator: NSObject, NGSplitViewControllerDelegate, UINavigationControllerDelegate, UIPopoverPresentationControllerDelegate {
     let appModel: AppModel
     let storyboard: UIStoryboard
     let rootWindow: UIWindow
     
-    let splitViewController: AppSplitViewController
+    let splitViewController: NGSplitViewController
     let searchViewController: SearchViewController
     let mapViewController: MapViewController
     var collectionController: MapItemCollectionViewController?
+    let popoverPresentation: Input<PopoverPresentation>
     
     let mapViewModel: MapViewModel
     let searchViewModel: SearchViewModel
@@ -30,19 +31,23 @@ public class AppCoordinator: NSObject, UISplitViewControllerDelegate, UINavigati
         self.rootWindow = rootWindow
         self.storyboard = UIStoryboard(name: "Main", bundle: nil)
         
-        splitViewController = rootWindow.rootViewController as! AppSplitViewController
-        splitViewController.presentsWithGesture = false
-        
-        // verify the Storyboard is structured as we expect
-        guard let masterNavigationController = splitViewController.viewControllers[0] as? UINavigationController,
-            let detailNavigationController = splitViewController.viewControllers[1] as? UINavigationController,
-            let masterViewController = masterNavigationController.topViewController as? SearchViewController,
-            let detailViewController = detailNavigationController.topViewController as? MapViewController else {
-                abort()
+        // Verify storyboard structure
+        guard
+            let splitViewController = rootWindow.rootViewController as? NGSplitViewController,
+            let masterNavigationController = storyboard.instantiateViewControllerWithIdentifier("searchNavigationController") as? UINavigationController,
+            let detailNavigationController = storyboard.instantiateViewControllerWithIdentifier("mapNavigationController") as? UINavigationController,
+            let searchViewController = masterNavigationController.topViewController as? SearchViewController,
+            let mapViewController = detailNavigationController.topViewController as? MapViewController
+        else {
+            abort()
         }
         
-        searchViewController = masterViewController
-        mapViewController = detailViewController
+        self.splitViewController = splitViewController
+        self.searchViewController = searchViewController
+        self.mapViewController = mapViewController
+        
+        splitViewController.masterViewController = masterNavigationController
+        splitViewController.detailViewController = detailNavigationController
         
         searchViewModel = SearchViewModel(scotTraffic: appModel)
         searchViewController.searchViewModel = searchViewModel
@@ -60,6 +65,8 @@ public class AppCoordinator: NSObject, UISplitViewControllerDelegate, UINavigati
             selection: searchViewModel.searchSelection,
             fetcher: appModel.fetcher,
             favourites: appModel.favourites)
+        
+        popoverPresentation = Input(initial: PopoverPresentation(traitCollection: splitViewController.traitCollection, viewBounds: splitViewController.view.bounds))
     }
     
     public func start() {
@@ -81,7 +88,7 @@ public class AppCoordinator: NSObject, UISplitViewControllerDelegate, UINavigati
         }))
     
         // show/hide popover as map selection and popover presentation change
-        let popover = combine(mapViewController.mapSelection, splitViewController.popoverPresentation) { ($0,$1) }
+        let popover = combine(mapViewController.mapSelection, popoverPresentation) { ($0,$1) }
         
         observations.append(popover.output({ (selection, presentation)->Void in
             if let selection = selection where selection.mapItems.flatCount <= maximumItemsInDetailView {
@@ -136,15 +143,21 @@ public class AppCoordinator: NSObject, UISplitViewControllerDelegate, UINavigati
     }
     
     private func showMap() {
-        if let nav = mapViewController.navigationController {
-            splitViewController.showDetailViewController(nav, sender: self)
-        }
+        splitViewController.dismissOverlaidMasterViewController()
     }
     
-    // -- MARK: UISplitViewControllerDelegate --
+    // -- MARK: NGSplitViewControllerDelegate --
     
-    public func splitViewController(svc: UISplitViewController, willChangeToDisplayMode displayMode: UISplitViewControllerDisplayMode) {
-        print("displayMode \(displayMode)")
+    public func splitViewControllerTraitCollectionChanged(splitViewController: NGSplitViewController) {
+        popoverPresentation.value = PopoverPresentation(traitCollection: splitViewController.traitCollection, viewBounds: splitViewController.view.bounds)
+    }
+    
+    public func splitViewController(splitViewController: NGSplitViewController, willHideMasterViewController viewController: UIViewController) {
+        mapViewController.navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "708-search"), style: .Plain, target: self, action: Selector("searchButtonTapped"))
+    }
+    
+    public func splitViewController(splitViewController: NGSplitViewController, willShowMasterViewController viewController: UIViewController) {
+        mapViewController.navigationItem.leftBarButtonItem = nil
     }
     
     // -- MARK: UINavigationControllerDelegate --
@@ -170,5 +183,11 @@ public class AppCoordinator: NSObject, UISplitViewControllerDelegate, UINavigati
         self.collectionController = nil
         self.mapViewController.mapSelection.value = nil
         self.mapViewModel.selectedMapItem.value = nil
+    }
+    
+    // -- MARK: UI Actions --
+    
+    func searchButtonTapped() {
+        splitViewController.overlayMasterViewController()
     }
 }
