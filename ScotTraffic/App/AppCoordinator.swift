@@ -89,7 +89,8 @@ public class AppCoordinator: NSObject, NGSplitViewControllerDelegate, UINavigati
         }))
     
         // show/hide popover as map selection and popover presentation change
-        let popover = combine(mapViewController.mapSelection, popoverPresentation) { ($0,$1) }
+        let throttledMapSelection = mapViewController.mapSelection.throttle(0.3, queue: dispatch_get_main_queue())
+        let popover = combine(throttledMapSelection, popoverPresentation) { ($0,$1) }
         
         observations.append(popover.output({ (selection, presentation)->Void in
             if let selection = selection where selection.mapItems.flatCount <= maximumItemsInDetailView {
@@ -103,24 +104,23 @@ public class AppCoordinator: NSObject, NGSplitViewControllerDelegate, UINavigati
     }
     
     private func showDetailForMapSelection(selection: MapSelection, presentation: PopoverPresentation) {
-        if let collectionController = self.collectionController {
-            collectionController.viewModel = collectionViewModel
-            
-        } else {
-            let anchorRect = splitViewController.view.convertRect(selection.mapViewRect, fromView: mapViewController.mapView)
-            let contentSize = presentation.preferredCollectionContentSize
-            let scroll = presentation.mapScrollDistanceToPresentContentSize(contentSize, anchoredToRect: anchorRect)
-            let offsetAnchorRect = CGRectOffset(selection.mapViewRect, scroll.x, scroll.y)
-            
-            mapViewController.scrollBy(x: scroll.x, y: scroll.y) {
-                let collectionController = self.instantiateCollectionViewController(contentSize, anchorRect: offsetAnchorRect, presentation: presentation)
+        let anchorRect = splitViewController.view.convertRect(selection.mapViewRect, fromView: mapViewController.mapView)
+        let contentSize = presentation.preferredCollectionContentSize
+        let scroll = presentation.mapScrollDistanceToPresentContentSize(contentSize, anchoredToRect: anchorRect)
+        let offsetAnchorRect = CGRectOffset(selection.mapViewRect, scroll.x, scroll.y)
+        
+        mapViewController.scrollBy(x: scroll.x, y: scroll.y) {
+            if self.collectionController == nil {
+                let collectionController = self.instantiateCollectionViewController(contentSize)
                 self.splitViewController.presentViewController(collectionController, animated: true, completion: nil)
                 self.collectionController = collectionController
             }
+            
+            self.setupCollectionPopoverWithAnchorRect(offsetAnchorRect, presentation: presentation)
         }
     }
-    
-    private func instantiateCollectionViewController(contentSize: CGSize, anchorRect: CGRect, presentation: PopoverPresentation) -> MapItemCollectionViewController {
+
+    private func instantiateCollectionViewController(contentSize: CGSize) -> MapItemCollectionViewController {
         guard let collectionController = self.storyboard.instantiateViewControllerWithIdentifier("mapItemCollectionViewController") as? MapItemCollectionViewController else {
             abort()
         }
@@ -128,16 +128,18 @@ public class AppCoordinator: NSObject, NGSplitViewControllerDelegate, UINavigati
         collectionController.viewModel = collectionViewModel
         collectionController.modalPresentationStyle = .Popover
         collectionController.preferredContentSize = contentSize
-
-        if let popover = collectionController.popoverPresentationController {
+        return collectionController
+    }
+    
+    private func setupCollectionPopoverWithAnchorRect(anchorRect: CGRect, presentation: PopoverPresentation) {
+        if let popover = self.collectionController?.popoverPresentationController {
             popover.backgroundColor = UIColor.blackColor()
             popover.permittedArrowDirections = presentation.permittedArrowDirections
+            popover.passthroughViews = [splitViewController.view]
             popover.sourceRect = anchorRect
             popover.sourceView = self.mapViewController.mapView
             popover.delegate = self
         }
-    
-        return collectionController
     }
     
     private func hideDetail() {

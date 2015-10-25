@@ -109,7 +109,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, MapViewModelDelega
     }
     
     func zoomToSelectedMapItem(item: MapItem?) {
-        if let item = item where !mapView.visibleMapRect.contains(item.mapPoint) {
+        if let item = item where shouldZoomToMapItem(item) {
             let targetRect = MKMapRectInset(MKMapRectNull.addPoint(item.mapPoint), zoomToMapItemInsetX, zoomToMapItemInsetY)
             zoomToMapRectWithPadding(targetRect, animated: true)
         }
@@ -121,6 +121,16 @@ class MapViewController: UIViewController, MKMapViewDelegate, MapViewModelDelega
         mapView.setVisibleMapRect(mapRect, animated: animated)
     }
 
+    func shouldZoomToMapItem(mapItem: MapItem) -> Bool {
+        if !mapView.visibleMapRect.contains(mapItem.mapPoint) {
+            return true
+        }
+        if let annotation = viewModel?.annotationForMapItem(mapItem)
+            where annotation.mapItems.flatCount >= minimumDetailItemsForAnnotationCallout {
+                return true
+        }
+        return false
+    }
     
     // -- MARK: MKMapViewDelegete --
     

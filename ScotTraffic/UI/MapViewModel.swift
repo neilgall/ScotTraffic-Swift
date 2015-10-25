@@ -22,7 +22,6 @@ public class MapViewModel {
     let selectedMapItem: Input<MapItem?>
     let delegate: Input<MapViewModelDelegate?>
 
-    let mapItemGroups : Observable<[MapItemGroup]>
     let annotations: Observable<[MapAnnotation]>
     let selectedAnnotation: Observable<MapAnnotation?>
  
@@ -63,22 +62,31 @@ public class MapViewModel {
             expandedVisibleMapRect,
             combine: mapItemsFromRect)
         
-        mapItemGroups = combine(trafficCameras, safetyCameras, alerts, roadworks, delegate) {
+        let mapItemGroups: Observable<[MapItemGroup]> = combine(trafficCameras, safetyCameras, alerts, roadworks, delegate) {
             guard let delegate = $4 else {
                 return []
             }
             return groupMapItems([$0, $1, $2, $3].flatten(), delegate: delegate)
         }
         
-        annotations = mapItemGroups.map {
+        annotations = mapItemGroups.map({
             $0.map { group in MapAnnotation(mapItems: group) }
-        }
+        }).latest()
         
         let selectedMapItemGroup = combine(mapItemGroups, selectedMapItem, combine:mapItemGroupContainingItem)
 
         selectedAnnotation = selectedMapItemGroup.map { optionalGroup in
             optionalGroup.map { items in MapAnnotation(mapItems: items) }
         }
+    }
+    
+    public func annotationForMapItem(mapItem: MapItem) -> MapAnnotation? {
+        for annotation in annotations.pullValue ?? [] {
+            if annotation.mapItems.contains({ $0 == mapItem }) {
+                return annotation
+            }
+        }
+        return nil
     }
 }
 
