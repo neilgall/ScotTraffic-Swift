@@ -25,7 +25,7 @@ public class SearchViewModel {
     
     // Outputs
     public var dataSource: Latest<TableViewDataSourceAdapter<[SearchResultItem]>>
-    public var resultsMajorAxisLabel: Latest<String>
+    public var sectionHeader: Latest<String>
     public var searchSelection: Observable<Selection?>
     
     private var observations = [Observation]()
@@ -87,9 +87,9 @@ public class SearchViewModel {
             }
         }.latest()
         
-        resultsMajorAxisLabel = combine(displayContent, searchResultsMajorAxis) {
+        sectionHeader = combine(displayContent, searchResultsMajorAxis) {
             if $0 == DisplayContent.Favourites {
-                return ""
+                return "Favourites"
             } else {
                 switch $1 {
                 case .NorthSouth: return "North to South"

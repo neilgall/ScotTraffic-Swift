@@ -9,17 +9,9 @@
 import UIKit
 import MapKit
 
-private enum TableSections : Int {
-    case SearchBarSection = 0
-    case TableTitleSection
-    case ContentSection
-    case NumberOfSections
-}
-
 class SearchViewController: UITableViewController, UISearchBarDelegate {
 
     var searchBar: UISearchBar?
-    
     var searchViewModel: SearchViewModel?
     var dataSourceChangeObserver: Observation!
 
@@ -33,7 +25,7 @@ class SearchViewController: UITableViewController, UISearchBarDelegate {
         searchBar.autocapitalizationType = .Words
         searchBar.placeholder = "Place name or road"
         searchBar.showsCancelButton = false
-        self.searchBar = searchBar
+        navigationItem.titleView = searchBar
 
         if let dataSource = searchViewModel?.dataSource {
             // Reload on data source change or adapter updates
@@ -47,6 +39,7 @@ class SearchViewController: UITableViewController, UISearchBarDelegate {
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
         searchViewModel?.searchActive.value = true
+        tableView.reloadData()
     }
     
     @IBAction func cancelSearch() {
@@ -56,57 +49,26 @@ class SearchViewController: UITableViewController, UISearchBarDelegate {
     }
     
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        return TableSections.NumberOfSections.rawValue
+        return searchViewModel?.dataSource.value?.numberOfSectionsInTableView(tableView) ?? 0
     }
-
+    
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if section == TableSections.ContentSection.rawValue {
-            return searchViewModel?.dataSource.value?.tableView(tableView, numberOfRowsInSection: 0) ?? 0
-        } else {
-            return 0
-        }
+        return searchViewModel?.dataSource.value?.tableView(tableView, numberOfRowsInSection: section) ?? 0
     }
-
+    
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        if indexPath.section == TableSections.ContentSection.rawValue {
-            if let cell = searchViewModel?.dataSource.value?.tableView(tableView, cellForRowAtIndexPath: indexPath) {
-                return cell
-            }
-        }
-        return tableView.dequeueReusableCellWithIdentifier(SearchResultCell.cellIdentifier, forIndexPath: indexPath)
+        return searchViewModel!.dataSource.value!.tableView(tableView, cellForRowAtIndexPath: indexPath)
     }
     
     override func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        if section == TableSections.TableTitleSection.rawValue {
-            return searchViewModel?.resultsMajorAxisLabel.value ?? nil
-        } else {
-            return nil
-        }
-    }
-    
-    override func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        if section == TableSections.SearchBarSection.rawValue {
-            return searchBar
-        } else {
-            return nil
-        }
+        return searchViewModel!.sectionHeader.value
     }
     
     override func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        switch TableSections(rawValue: section)! {
-            
-        case .SearchBarSection:
-            return 44
-
-        case .TableTitleSection:
-            guard let title = searchViewModel?.resultsMajorAxisLabel.value where !title.isEmpty else {
-                return 0
-            }
-            return 20
-
-        default:
+        guard let title = searchViewModel?.sectionHeader.value where !title.isEmpty else {
             return 0
         }
+        return 20
     }
 
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
