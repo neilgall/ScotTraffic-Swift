@@ -24,6 +24,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, MapViewModelDelega
 
     @IBOutlet var mapView: MKMapView!
 
+    let mapScrollEvent = Event()
     let mapSelection = Input<MapSelection?>(initial: nil)
     var minimumDetailItemsForAnnotationCallout: Int = 1
     
@@ -134,6 +135,10 @@ class MapViewController: UIViewController, MKMapViewDelegate, MapViewModelDelega
     
     // -- MARK: MKMapViewDelegete --
     
+    func mapView(mapView: MKMapView, regionWillChangeAnimated animated: Bool) {
+        mapScrollEvent.send()
+    }
+    
     func mapView(mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
         scrollingMap = false
         viewModel?.visibleMapRect.value = mapView.visibleMapRect
@@ -180,8 +185,8 @@ class MapViewController: UIViewController, MKMapViewDelegate, MapViewModelDelega
     
     func mapView(mapView: MKMapView, didDeselectAnnotationView view: MKAnnotationView) {
         if !updatingAnnotations {
-            viewModel?.selectedMapItem.value = nil
-            mapSelection.value = nil
+            self.viewModel?.selectedMapItem.value = nil
+            self.mapSelection.value = nil
         }
     }
 

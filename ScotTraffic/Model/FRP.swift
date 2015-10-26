@@ -73,12 +73,6 @@ public class Observable<Value> : ObservableType {
     }
 }
 
-public class Event<Value> : Observable<Value> {
-    public func send(value: Value) {
-        pushValue(value)
-    }
-}
-
 public class Input<Value> : Observable<Value> {
     public var value: Value {
         didSet {
@@ -96,6 +90,16 @@ public class Input<Value> : Observable<Value> {
     
     override public var pullValue: Value? {
         return value
+    }
+}
+
+public class Event : Input<Void> {
+    public init() {
+        super.init(initial: ())
+    }
+    
+    public func send() {
+        pushValue( () )
     }
 }
 

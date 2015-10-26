@@ -22,7 +22,7 @@ public func == (a: MapItem, b: MapItem) -> Bool {
         && MKMapPointEqualToPoint(a.mapPoint, b.mapPoint))
 }
 
-extension MKMapRect {
+extension MKMapRect: Equatable {
     public func addPoint(point: MKMapPoint) -> MKMapRect {
         if MKMapRectIsNull(self) {
             return MKMapRectMake(point.x, point.y, 0, 0)
@@ -58,6 +58,10 @@ extension MKMapRect {
     public func contains(point: MKMapPoint) -> Bool {
         return MKMapRectContainsPoint(self, point)
     }
+}
+
+public func == (lhs: MKMapRect, rhs: MKMapRect) -> Bool {
+    return MKMapRectEqualToRect(lhs, rhs)
 }
 
 public enum GeographicAxis {

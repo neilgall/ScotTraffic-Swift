@@ -89,8 +89,7 @@ public class AppCoordinator: NSObject, NGSplitViewControllerDelegate, UINavigati
         }))
     
         // show/hide popover as map selection and popover presentation change
-        let throttledMapSelection = mapViewController.mapSelection.throttle(0.3, queue: dispatch_get_main_queue())
-        let popover = combine(throttledMapSelection, popoverPresentation) { ($0,$1) }
+        let popover = combine(mapViewController.mapSelection, popoverPresentation) { ($0,$1) }
         
         observations.append(popover.output({ (selection, presentation)->Void in
             if let selection = selection where selection.mapItems.flatCount <= maximumItemsInDetailView {
@@ -100,23 +99,26 @@ public class AppCoordinator: NSObject, NGSplitViewControllerDelegate, UINavigati
             }
         }))
         
+        // hide popover if map scrolls
+        observations.append(mapViewController.mapScrollEvent.output({
+            self.dismissCollectionPopoverAnimated(true)
+        }))
+        
         updateShowSearchButton()
     }
     
     private func showDetailForMapSelection(selection: MapSelection, presentation: PopoverPresentation) {
+        dismissCollectionPopoverAnimated(false)
+        
         let anchorRect = splitViewController.view.convertRect(selection.mapViewRect, fromView: mapViewController.mapView)
         let contentSize = presentation.preferredCollectionContentSize
         let scroll = presentation.mapScrollDistanceToPresentContentSize(contentSize, anchoredToRect: anchorRect)
-        let offsetAnchorRect = CGRectOffset(selection.mapViewRect, scroll.x, scroll.y)
+        let offsetAnchorRectInMapView = CGRectOffset(selection.mapViewRect, scroll.x, scroll.y)
         
         mapViewController.scrollBy(x: scroll.x, y: scroll.y) {
-            if self.collectionController == nil {
-                let collectionController = self.instantiateCollectionViewController(contentSize)
-                self.splitViewController.presentViewController(collectionController, animated: true, completion: nil)
-                self.collectionController = collectionController
-            }
-            
-            self.setupCollectionPopoverWithAnchorRect(offsetAnchorRect, presentation: presentation)
+            self.collectionController = self.instantiateCollectionViewController(contentSize)
+            self.setupCollectionPopoverWithAnchorRect(offsetAnchorRectInMapView, presentation: presentation)
+            self.splitViewController.presentViewController(self.collectionController!, animated: true, completion: nil)
         }
     }
 
@@ -128,15 +130,16 @@ public class AppCoordinator: NSObject, NGSplitViewControllerDelegate, UINavigati
         collectionController.viewModel = collectionViewModel
         collectionController.modalPresentationStyle = .Popover
         collectionController.preferredContentSize = contentSize
+        
         return collectionController
     }
     
-    private func setupCollectionPopoverWithAnchorRect(anchorRect: CGRect, presentation: PopoverPresentation) {
+    private func setupCollectionPopoverWithAnchorRect(anchorRectInMapView: CGRect, presentation: PopoverPresentation) {
         if let popover = self.collectionController?.popoverPresentationController {
             popover.backgroundColor = UIColor.blackColor()
             popover.permittedArrowDirections = presentation.permittedArrowDirections
             popover.passthroughViews = [splitViewController.view]
-            popover.sourceRect = anchorRect
+            popover.sourceRect = anchorRectInMapView
             popover.sourceView = self.mapViewController.mapView
             popover.delegate = self
         }
@@ -149,6 +152,13 @@ public class AppCoordinator: NSObject, NGSplitViewControllerDelegate, UINavigati
     
     private func showMap() {
         splitViewController.dismissOverlaidMasterViewController()
+    }
+    
+    private func dismissCollectionPopoverAnimated(animated: Bool) {
+        if collectionController != nil {
+            splitViewController.dismissViewControllerAnimated(animated, completion: nil)
+            collectionController = nil
+        }
     }
     
     private func updateShowSearchButton() {
@@ -197,6 +207,7 @@ public class AppCoordinator: NSObject, NGSplitViewControllerDelegate, UINavigati
     // -- MARK: UI Actions --
     
     func searchButtonTapped() {
+        dismissCollectionPopoverAnimated(true)
         splitViewController.overlayMasterViewController()
     }
 }
