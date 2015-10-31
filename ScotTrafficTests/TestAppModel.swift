@@ -44,7 +44,7 @@ private func loadTestData<T where T: JSONObjectDecodable>(filename: String) -> [
             }
         }
     }
-    abort()
+    fatalError("unable to find \(filename).json")
 }
 
 public class TestUserDefaults: UserDefaultsProtocol {

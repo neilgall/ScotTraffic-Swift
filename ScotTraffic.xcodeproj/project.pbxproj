@@ -31,6 +31,7 @@
 		286559231BC3198D0058A35A /* MapViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 286559221BC3198D0058A35A /* MapViewModel.swift */; };
 		286559251BC31D020058A35A /* MapAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 286559241BC31D020058A35A /* MapAnnotation.swift */; };
 		286559271BC32D880058A35A /* ImageCompositor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 286559261BC32D880058A35A /* ImageCompositor.swift */; };
+		287B230D1BE511E400DBF3F1 /* CollectionAnnotationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 287B230C1BE511E400DBF3F1 /* CollectionAnnotationView.swift */; };
 		28875EA41BBC72FB00E67A16 /* Network.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28875EA31BBC72FB00E67A16 /* Network.swift */; };
 		28875EA71BBC739100E67A16 /* JSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28875EA61BBC739100E67A16 /* JSON.swift */; };
 		28875EA91BBC7A2F00E67A16 /* JSONTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28875EA81BBC7A2F00E67A16 /* JSONTests.swift */; };
@@ -42,7 +43,7 @@
 		289201D41BBC5AEB00DA4A9A /* FRP.swift in Sources */ = {isa = PBXBuildFile; fileRef = 289201D31BBC5AEB00DA4A9A /* FRP.swift */; };
 		28AF4A051BD6ECD9009B0AE8 /* SearchResultCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28AF4A041BD6ECD9009B0AE8 /* SearchResultCell.swift */; };
 		28AF4A071BD82342009B0AE8 /* FadeTransition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28AF4A061BD82342009B0AE8 /* FadeTransition.swift */; };
-		28AF4A0B1BD849C0009B0AE8 /* PopoverPresentation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28AF4A0A1BD849C0009B0AE8 /* PopoverPresentation.swift */; };
+		28AF4A0B1BD849C0009B0AE8 /* PopoverContentSize.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28AF4A0A1BD849C0009B0AE8 /* PopoverContentSize.swift */; };
 		28BFBC5B1BBC91AA00827069 /* FRPTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28BFBC5A1BBC91AA00827069 /* FRPTests.swift */; };
 		28DB3BF31BC025D0001AAC2A /* Functions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28DB3BF21BC025D0001AAC2A /* Functions.swift */; };
 		28DB3BF51BC02892001AAC2A /* SafetyCameras.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28DB3BF41BC02892001AAC2A /* SafetyCameras.swift */; };
@@ -112,6 +113,7 @@
 		286559221BC3198D0058A35A /* MapViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapViewModel.swift; sourceTree = "<group>"; };
 		286559241BC31D020058A35A /* MapAnnotation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapAnnotation.swift; sourceTree = "<group>"; };
 		286559261BC32D880058A35A /* ImageCompositor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageCompositor.swift; sourceTree = "<group>"; };
+		287B230C1BE511E400DBF3F1 /* CollectionAnnotationView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollectionAnnotationView.swift; sourceTree = "<group>"; };
 		28875EA31BBC72FB00E67A16 /* Network.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Network.swift; sourceTree = "<group>"; };
 		28875EA61BBC739100E67A16 /* JSON.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JSON.swift; sourceTree = "<group>"; };
 		28875EA81BBC7A2F00E67A16 /* JSONTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JSONTests.swift; sourceTree = "<group>"; };
@@ -123,7 +125,7 @@
 		289201D31BBC5AEB00DA4A9A /* FRP.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FRP.swift; sourceTree = "<group>"; };
 		28AF4A041BD6ECD9009B0AE8 /* SearchResultCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchResultCell.swift; sourceTree = "<group>"; };
 		28AF4A061BD82342009B0AE8 /* FadeTransition.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FadeTransition.swift; sourceTree = "<group>"; };
-		28AF4A0A1BD849C0009B0AE8 /* PopoverPresentation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PopoverPresentation.swift; sourceTree = "<group>"; };
+		28AF4A0A1BD849C0009B0AE8 /* PopoverContentSize.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PopoverContentSize.swift; sourceTree = "<group>"; };
 		28BFBC5A1BBC91AA00827069 /* FRPTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FRPTests.swift; sourceTree = "<group>"; };
 		28DB3BF21BC025D0001AAC2A /* Functions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Functions.swift; sourceTree = "<group>"; };
 		28DB3BF41BC02892001AAC2A /* SafetyCameras.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SafetyCameras.swift; sourceTree = "<group>"; };
@@ -277,6 +279,7 @@
 				286559221BC3198D0058A35A /* MapViewModel.swift */,
 				286559241BC31D020058A35A /* MapAnnotation.swift */,
 				286559261BC32D880058A35A /* ImageCompositor.swift */,
+				287B230C1BE511E400DBF3F1 /* CollectionAnnotationView.swift */,
 			);
 			name = Map;
 			sourceTree = "<group>";
@@ -290,7 +293,7 @@
 				284DE0971BBDD0D800E6A678 /* AppModel.swift */,
 				2865591D1BC316590058A35A /* AppCoordinator.swift */,
 				28F6009E1BDB8E3E00ED71CA /* NGSplitViewController.swift */,
-				28AF4A0A1BD849C0009B0AE8 /* PopoverPresentation.swift */,
+				28AF4A0A1BD849C0009B0AE8 /* PopoverContentSize.swift */,
 			);
 			path = App;
 			sourceTree = "<group>";
@@ -514,6 +517,7 @@
 				286559151BC1DCB70058A35A /* Favourites.swift in Sources */,
 				716D9E951BCA5EA1005A6B49 /* MapItemCollectionViewController.swift in Sources */,
 				28DB3BF81BC02968001AAC2A /* Weather.swift in Sources */,
+				287B230D1BE511E400DBF3F1 /* CollectionAnnotationView.swift in Sources */,
 				286559231BC3198D0058A35A /* MapViewModel.swift in Sources */,
 				286559211BC3182C0058A35A /* MapViewController.swift in Sources */,
 				288AC88D1BCFA062004EA6A0 /* MapItemCollectionViewCell.swift in Sources */,
@@ -526,7 +530,7 @@
 				716D9E991BCBC2F1005A6B49 /* ScotTraffic.swift in Sources */,
 				28AF4A071BD82342009B0AE8 /* FadeTransition.swift in Sources */,
 				716D9E971BCA614D005A6B49 /* MapItemCollectionViewModel.swift in Sources */,
-				28AF4A0B1BD849C0009B0AE8 /* PopoverPresentation.swift in Sources */,
+				28AF4A0B1BD849C0009B0AE8 /* PopoverContentSize.swift in Sources */,
 				284DE0981BBDD0D800E6A678 /* AppModel.swift in Sources */,
 				280486591BC0917B003BA360 /* MapItem.swift in Sources */,
 				289201D21BBC580300DA4A9A /* TrafficCameras.swift in Sources */,

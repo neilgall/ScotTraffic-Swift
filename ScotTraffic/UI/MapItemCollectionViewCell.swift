@@ -67,7 +67,7 @@ public class MapItemCollectionViewCell: UICollectionViewCell {
                 return [ IncidentItem(incident) ]
                 
             } else {
-                abort()
+                fatalError("Unexpected mapItem \(mapItem)")
             }
         }
     }
@@ -102,7 +102,7 @@ public class MapItemCollectionViewCell: UICollectionViewCell {
     }
     
     func configure(item: Item, usingHTTPFetcher fetcher: HTTPFetcher) {
-        abort()
+        fatalError("Must override in subclass")
     }
 }
 

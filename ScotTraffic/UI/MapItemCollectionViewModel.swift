@@ -15,24 +15,27 @@ protocol MapItemCollectionViewModelDelegate: class {
 public class MapItemCollectionViewModel: NSObject, UICollectionViewDataSource, MapItemCollectionViewCellDelegate {
     
     weak var delegate: MapItemCollectionViewModelDelegate?
+    let mapItems: Input<[MapItem]>
     let cellItems: Latest<[MapItemCollectionViewCell.Item]>
     let selectedItemIndex: Observable<Int?>
     let fetcher: HTTPFetcher
     let favourites: Favourites
     
-    public init(mapItems: Observable<[MapItem]>, selection: Observable<SearchViewModel.Selection?>, fetcher: HTTPFetcher, favourites: Favourites) {
+    public init(selection: Observable<SearchViewModel.Selection?>, fetcher: HTTPFetcher, favourites: Favourites) {
         self.fetcher = fetcher
         self.favourites = favourites
 
+        mapItems = Input(initial: [])
+        
         // Each MapItem can have multiple items to show in the collection view. Flat map into a cell item list.
-        self.cellItems = mapItems.map { mapItems in
+        cellItems = mapItems.map { mapItems in
             mapItems.flatMap {
                 MapItemCollectionViewCell.Item.forMapItem($0)
             }
         }.latest()
         
         // Map the selected search result to a collection view cell
-        self.selectedItemIndex = combine(cellItems, selection) { cellItems, selection in
+        selectedItemIndex = combine(cellItems, selection) { cellItems, selection in
             selection.flatMap { selection in
                 cellItems.indexOf { item in
                     item.matchesSelection(selection)

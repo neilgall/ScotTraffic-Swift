@@ -9,30 +9,25 @@
 import MapKit
 import UIKit
 
-let minimumAnnotationSpacingX: CGFloat = 35
-let minimumAnnotationSpacingY: CGFloat = 32
-let zoomEdgePadding = UIEdgeInsetsMake(60, 40, 60, 40)
-let zoomToMapItemInsetX: Double = -40000
-let zoomToMapItemInsetY: Double = -40000
-
-public struct MapSelection {
-    let mapItems: [MapItem]
-    let mapViewRect: CGRect
-}
+private let minimumAnnotationSpacingX: CGFloat = 35
+private let minimumAnnotationSpacingY: CGFloat = 32
+private let zoomEdgePadding = UIEdgeInsetsMake(60, 40, 60, 40)
+private let zoomToMapItemInsetX: Double = -40000
+private let zoomToMapItemInsetY: Double = -40000
+private let calloutEdgeInsets = UIEdgeInsetsMake(10, 10, 10, 10)
 
 class MapViewController: UIViewController, MKMapViewDelegate, MapViewModelDelegate {
 
     @IBOutlet var mapView: MKMapView!
 
-    let mapScrollEvent = Event()
-    let mapSelection = Input<MapSelection?>(initial: nil)
-    var minimumDetailItemsForAnnotationCallout: Int = 1
+    var maximumDetailItemsForCollectionCallout: Int = 1
     
     var viewModel: MapViewModel?
     var observations = [Observation]()
     var updatingAnnotations: Bool = false
     var scrollingMap: Bool = false
     var callbackOnMapScroll: (Void->Void)?
+    var calloutConstructor: ([MapItem] -> UIViewController)?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -43,11 +38,6 @@ class MapViewController: UIViewController, MKMapViewDelegate, MapViewModelDelega
             observations.append(viewModel.annotations.output(self.updateAnnotations))
             observations.append(viewModel.selectedAnnotation.output(self.autoSelectAnnotation))
             observations.append(viewModel.selectedMapItem.output(self.zoomToSelectedMapItem))
-            
-            observations.append(mapSelection
-                .filter({ $0 == nil })
-                .output({ _ in self.deselectAnnotations() })
-            )
             
             scrollingMap = true
             mapView.setVisibleMapRect(viewModel.visibleMapRect.value, animated: false)
@@ -86,29 +76,37 @@ class MapViewController: UIViewController, MKMapViewDelegate, MapViewModelDelega
         }
     }
     
-    func scrollBy(x x: CGFloat, y: CGFloat, completion: Void->Void) {
-        let targetRect = CGRectOffset(mapView.bounds, -x, -y)
-        let region = mapView.convertRect(targetRect, toRegionFromView: mapView)
+    private func showMapItems(mapItems: [MapItem], fromAnnotationView annotationView: ContainerAnnotationView) {
+        guard let constructor = calloutConstructor else {
+            return
+        }
         
-        if (fabs(x) > 10 || fabs(y) > 10) {
-            callbackOnMapScroll = completion
-            scrollingMap = true
-            mapView.setRegion(region, animated: true)
-        } else {
-            mapView.setRegion(region, animated: false)
-            completion()
+        let viewController = constructor(mapItems)
+        
+        viewController.willMoveToParentViewController(self)
+        viewController.beginAppearanceTransition(true, animated: true)
+        addChildViewController(viewController)
+        annotationView.showCollectionView(viewController.view, inMapView: mapView, withPreferredSize: viewController.preferredContentSize, edgeInsets: calloutEdgeInsets) {
+            viewController.endAppearanceTransition()
+            viewController.didMoveToParentViewController(self)
+        }
+    }
+    
+    private func removeChildViewControllersPresentedFrom(annotationView: ContainerAnnotationView) {
+        for viewController in childViewControllers {
+            if viewController.view.superview == annotationView {
+                viewController.willMoveToParentViewController(nil)
+                viewController.beginAppearanceTransition(false, animated: true)
+                annotationView.hideCollectionViewAnimated(true) {
+                    viewController.removeFromParentViewController()
+                    viewController.endAppearanceTransition()
+                }
+            }
         }
     }
 
     // MARK: - Navigation
 
-    func annotationZoomButtonTapped(sender: AnyObject?) {
-        guard let annotation = mapView?.selectedAnnotations.first as? MapAnnotation else {
-            return
-        }
-        zoomToMapRectWithPadding(annotation.mapItems.boundingRect, animated: true)
-    }
-    
     func zoomToSelectedMapItem(item: MapItem?) {
         if let item = item where shouldZoomToMapItem(item) {
             let targetRect = MKMapRectInset(MKMapRectNull.addPoint(item.mapPoint), zoomToMapItemInsetX, zoomToMapItemInsetY)
@@ -119,7 +117,10 @@ class MapViewController: UIViewController, MKMapViewDelegate, MapViewModelDelega
     func zoomToMapRectWithPadding(targetRect: MKMapRect, animated: Bool) {
         let mapRect = mapView.mapRectThatFits(targetRect, edgePadding: zoomEdgePadding)
         scrollingMap = true
-        mapView.setVisibleMapRect(mapRect, animated: animated)
+        
+        updateVisibleMapRectAnimated(animated) {
+            self.mapView.setVisibleMapRect(mapRect, animated: false)
+        }
     }
 
     func shouldZoomToMapItem(mapItem: MapItem) -> Bool {
@@ -127,16 +128,29 @@ class MapViewController: UIViewController, MKMapViewDelegate, MapViewModelDelega
             return true
         }
         if let annotation = viewModel?.annotationForMapItem(mapItem)
-            where annotation.mapItems.flatCount >= minimumDetailItemsForAnnotationCallout {
+            where annotation.mapItems.flatCount <= maximumDetailItemsForCollectionCallout {
                 return true
         }
         return false
     }
     
+    func updateVisibleMapRectAnimated(animated:Bool, updateBlock: Void->Void) {
+        if !animated {
+            updateBlock()
+        } else {
+            CATransaction.begin()
+            CATransaction.setDisableActions(false)
+            CATransaction.setAnimationDuration(10.0)
+            CATransaction.setAnimationTimingFunction(CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseInEaseOut))
+            updateBlock()
+            CATransaction.commit()
+        }
+    }
+    
     // -- MARK: MKMapViewDelegete --
     
     func mapView(mapView: MKMapView, regionWillChangeAnimated animated: Bool) {
-        mapScrollEvent.send()
+        deselectAnnotations()
     }
     
     func mapView(mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
@@ -154,21 +168,22 @@ class MapViewController: UIViewController, MKMapViewDelegate, MapViewModelDelega
             return nil
         }
         
-        let canShowCallout = mapAnnotation.mapItems.flatCount >= minimumDetailItemsForAnnotationCallout
+        let showsCustomCallout = mapAnnotation.mapItems.flatCount <= maximumDetailItemsForCollectionCallout
+        let reuseIdentifier = "\(mapAnnotation.reuseIdentifier).\(showsCustomCallout)"
         
-        let annotationView = mapView.dequeueReusableAnnotationViewWithIdentifier(mapAnnotation.reuseIdentifier)
-            ?? MKAnnotationView(annotation: annotation, reuseIdentifier: mapAnnotation.reuseIdentifier)
+        let annotationView = mapView.dequeueReusableAnnotationViewWithIdentifier(reuseIdentifier)
+            ?? (showsCustomCallout
+                ? ContainerAnnotationView(annotation: annotation, reuseIdentifier: reuseIdentifier)
+                : MKAnnotationView(annotation: annotation, reuseIdentifier: reuseIdentifier))
 
         annotationView.image = mapAnnotation.image
-        annotationView.canShowCallout = canShowCallout
-        annotationView.rightCalloutAccessoryView = nil
+        annotationView.canShowCallout = !showsCustomCallout
 
         if mapAnnotation.mapItems.count > 1 {
             if let zoomInImage = UIImage(named: "736-zoom-in") {
                 let button = UIButton(type: .Custom)
                 button.frame = CGRectMake(0, 0, zoomInImage.size.width, zoomInImage.size.height)
                 button.setImage(zoomInImage, forState: .Normal)
-                button.addTarget(self, action: Selector("annotationZoomButtonTapped:"), forControlEvents: .TouchUpInside)
                 annotationView.rightCalloutAccessoryView = button
             }
         }
@@ -176,17 +191,30 @@ class MapViewController: UIViewController, MKMapViewDelegate, MapViewModelDelega
         return annotationView
     }
     
-    func mapView(mapView: MKMapView, didSelectAnnotationView view: MKAnnotationView) {
-        if let annotation = view.annotation as? MapAnnotation {
-            let rect = view.convertRect(view.bounds, toView: mapView)
-            mapSelection.value = MapSelection(mapItems: annotation.mapItems, mapViewRect: rect)
+    func mapView(mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
+        guard let annotation = mapView.selectedAnnotations.first as? MapAnnotation else {
+            return
         }
+        zoomToMapRectWithPadding(annotation.mapItems.boundingRect, animated: true)
+    }
+    
+    func mapView(mapView: MKMapView, didSelectAnnotationView view: MKAnnotationView) {
+        guard let annotation = view.annotation as? MapAnnotation, annotationView = view as? ContainerAnnotationView else {
+            return
+        }
+        
+        showMapItems(annotation.mapItems, fromAnnotationView: annotationView)
     }
     
     func mapView(mapView: MKMapView, didDeselectAnnotationView view: MKAnnotationView) {
         if !updatingAnnotations {
             self.viewModel?.selectedMapItem.value = nil
-            self.mapSelection.value = nil
+            
+            guard let annotationView = view as? ContainerAnnotationView else {
+                return
+            }
+            
+            removeChildViewControllersPresentedFrom(annotationView)
         }
     }
 

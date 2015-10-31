@@ -293,7 +293,7 @@ public class NGSplitViewController: UIViewController {
             case .DetailOnly:
                 animateInMasterViewControllerOverlay()
             default:
-                abort()
+                illegalTransition(fromPresentationStyle, to: toPresentationStyle)
             }
             
         case .DetailOnly:
@@ -307,7 +307,7 @@ public class NGSplitViewController: UIViewController {
                 detail.view.frame = containerFrames.detail
                 crossFadeFromViewController(master, toViewController: detail)
             default:
-                abort()
+                illegalTransition(fromPresentationStyle, to: toPresentationStyle)
             }
             
         case .MasterOnly:
@@ -320,7 +320,7 @@ public class NGSplitViewController: UIViewController {
                 master.view.frame = containerFrames.master
                 crossFadeFromViewController(detail, toViewController: master)
             default:
-                abort()
+                illegalTransition(fromPresentationStyle, to: toPresentationStyle)
             }
             
         case .SideBySide:
@@ -332,10 +332,14 @@ public class NGSplitViewController: UIViewController {
             case .MasterOverlay:
                 overlayHideButton = nil
             default:
-                abort()
+                illegalTransition(fromPresentationStyle, to: toPresentationStyle)
             }
             break
         }
+    }
+    
+    private func illegalTransition(from: PresentationStyle, to: PresentationStyle) {
+        fatalError("illegal transition from \(from) to \(to)")
     }
     
     private func notifyDelegateOfChangeFromPresentationStyle(fromPresentationStyle: PresentationStyle, toPresentationStyle: PresentationStyle) {
