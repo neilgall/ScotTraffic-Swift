@@ -30,17 +30,17 @@ class SearchViewModelTests: XCTestCase {
         XCTAssertEqual(searchResults[1].mapItem.name, "Auchengeich")
     }
     
-    func testHeadingLabelIsEmptyWhenSearchTermIsEmpty() {
+    func testHeaderIsFavouritesWhenSearchTermIsEmpty() {
         let testData = TestAppModel()
         let viewModel = SearchViewModel(scotTraffic: testData)
         viewModel.searchTerm.value = ""
 
-        guard let heading = viewModel.resultsMajorAxisLabel.pullValue else {
+        guard let header = viewModel.sectionHeader.pullValue else {
             XCTFail()
             return
         }
         
-        XCTAssertEqual(heading, "")
+        XCTAssertEqual(header, "Favourites")
     }
     
     func testDataSourceIsSearchResultsWhenSearchTermIsNonEmpty() {
@@ -56,30 +56,30 @@ class SearchViewModelTests: XCTestCase {
         XCTAssertEqual(searchResults.count, 19)
     }
     
-    func testHeadingIsNorthToSouthForA90Search() {
+    func testHeaderIsNorthToSouthForA90Search() {
         let testData = TestAppModel()
         let viewModel = SearchViewModel(scotTraffic: testData)
         viewModel.searchTerm.value = "A90"
         
-        guard let heading = viewModel.resultsMajorAxisLabel.pullValue else {
+        guard let header = viewModel.sectionHeader.pullValue else {
             XCTFail()
             return
         }
         
-        XCTAssertEqual(heading, "North to South")
+        XCTAssertEqual(header, "North to South")
     }
 
-    func testHeadingIsWestToEastForM8Search() {
+    func testHeaderIsWestToEastForM8Search() {
         let testData = TestAppModel()
         let viewModel = SearchViewModel(scotTraffic: testData)
         viewModel.searchTerm.value = "M8"
         
-        guard let heading = viewModel.resultsMajorAxisLabel.pullValue else {
+        guard let header = viewModel.sectionHeader.pullValue else {
             XCTFail()
             return
         }
         
-        XCTAssertEqual(heading, "West to East")
+        XCTAssertEqual(header, "West to East")
     }
     
     func testDefaultSearchSelectionIsNil() {
@@ -136,6 +136,23 @@ class SearchViewModelTests: XCTestCase {
             return
         }
         
+        XCTAssertNil(selection)
+    }
+    
+    func testDeactivatingSearchClearsSearchTermAndSelection() {
+        let viewModel = SearchViewModel(scotTraffic: TestAppModel())
+        viewModel.searchActive.value = true
+        viewModel.searchTerm.value = "M80"
+        viewModel.searchSelectionIndex.value = 3
+        
+        viewModel.searchActive.value = false
+        
+        guard let term = viewModel.searchTerm.pullValue, selection = viewModel.searchSelection.pullValue else {
+            XCTFail()
+            return
+        }
+        
+        XCTAssertTrue(term.isEmpty)
         XCTAssertNil(selection)
     }
 }

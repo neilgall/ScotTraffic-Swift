@@ -110,6 +110,16 @@ public class SearchViewModel {
         observations.append(searchTerm.willOutput({
             self.searchSelectionIndex.value = nil
         }))
+        
+        // clear search term and selection on deactivating search
+        observations.append(searchActive.filter({ $0 == false }).output({ _ in
+            self.searchTerm.value = ""
+            self.searchSelectionIndex.value = nil
+        }))
+    }
+    
+    public func setSearchActive(active: Bool) {
+        self.searchActive.value = active
     }
 }
 

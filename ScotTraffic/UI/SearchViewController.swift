@@ -44,7 +44,6 @@ class SearchViewController: UITableViewController, UISearchBarDelegate {
     
     @IBAction func cancelSearch() {
         searchBar?.text = ""
-        searchViewModel?.searchTerm.value = ""
         searchViewModel?.searchActive.value = false
     }
     
