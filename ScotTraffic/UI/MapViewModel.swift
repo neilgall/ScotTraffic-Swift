@@ -18,10 +18,13 @@ public protocol MapViewModelDelegate {
 
 public class MapViewModel {
 
+    // Inputs
     let visibleMapRect: Input<MKMapRect>
     let selectedMapItem: Input<MapItem?>
+    let animatingMapRect: Input<Bool>
     let delegate: Input<MapViewModelDelegate?>
 
+    // Outputs
     let annotations: Observable<[MapAnnotation]>
     let selectedAnnotation: Observable<MapAnnotation?>
  
@@ -29,6 +32,7 @@ public class MapViewModel {
         
         visibleMapRect = scotTraffic.settings.visibleMapRect
         selectedMapItem = Input(initial: nil)
+        animatingMapRect = Input(initial: false)
         delegate = Input(initial: nil)
         
         let expandedVisibleMapRect = visibleMapRect.map { rect in
@@ -73,7 +77,9 @@ public class MapViewModel {
             $0.map { group in MapAnnotation(mapItems: group) }
         }).latest()
         
-        let selectedMapItemGroup = combine(mapItemGroups, selectedMapItem, combine:mapItemGroupContainingItem)
+        let selectedMapItemGroup = combine(mapItemGroups, selectedMapItem, animatingMapRect) { groups, item, animating in
+            return animating ? nil : mapItemGroupFromGroups(groups, containingItem: item)
+        }
 
         selectedAnnotation = selectedMapItemGroup.map { optionalGroup in
             optionalGroup.map { items in MapAnnotation(mapItems: items) }
@@ -128,7 +134,7 @@ func groupMapItems<MapItems: CollectionType where MapItems.Generator.Element == 
     return groups.map { $0.items }
 }
 
-func mapItemGroupContainingItem(groups: [MapItemGroup], item: MapItem?) -> [MapItem]? {
+func mapItemGroupFromGroups(groups: [MapItemGroup], containingItem item: MapItem?) -> [MapItem]? {
     guard let item = item else {
         return nil
     }

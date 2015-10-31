@@ -25,7 +25,6 @@ class MapViewController: UIViewController, MKMapViewDelegate, MapViewModelDelega
     var viewModel: MapViewModel?
     var observations = [Observation]()
     var updatingAnnotations: Bool = false
-    var scrollingMap: Bool = false
     var callbackOnMapScroll: (Void->Void)?
     var calloutConstructor: ([MapItem] -> UIViewController)?
     
@@ -39,7 +38,6 @@ class MapViewController: UIViewController, MKMapViewDelegate, MapViewModelDelega
             observations.append(viewModel.selectedAnnotation.output(self.autoSelectAnnotation))
             observations.append(viewModel.selectedMapItem.output(self.zoomToSelectedMapItem))
             
-            scrollingMap = true
             mapView.setVisibleMapRect(viewModel.visibleMapRect.value, animated: false)
         }
     }
@@ -60,12 +58,17 @@ class MapViewController: UIViewController, MKMapViewDelegate, MapViewModelDelega
     }
     
     func autoSelectAnnotation(annotation: MapAnnotation?) {
-        guard let annotation = annotation else {
+        guard let annotation = annotation where annotation.mapItems.flatCount <= maximumDetailItemsForCollectionCallout else {
             return
         }
+        
         for unselected in currentAnnotations {
             if unselected == annotation {
                 mapView.selectAnnotation(unselected, animated: true)
+                
+                // we have now consumed the selectedMapItem
+                viewModel?.selectedMapItem.value = nil
+                break
             }
         }
     }
@@ -116,11 +119,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, MapViewModelDelega
     
     func zoomToMapRectWithPadding(targetRect: MKMapRect, animated: Bool) {
         let mapRect = mapView.mapRectThatFits(targetRect, edgePadding: zoomEdgePadding)
-        scrollingMap = true
-        
-        updateVisibleMapRectAnimated(animated) {
-            self.mapView.setVisibleMapRect(mapRect, animated: false)
-        }
+        self.mapView.setVisibleMapRect(mapRect, animated: true)
     }
 
     func shouldZoomToMapItem(mapItem: MapItem) -> Bool {
@@ -128,25 +127,21 @@ class MapViewController: UIViewController, MKMapViewDelegate, MapViewModelDelega
             return true
         }
         if let annotation = viewModel?.annotationForMapItem(mapItem)
-            where annotation.mapItems.flatCount <= maximumDetailItemsForCollectionCallout {
+            where annotation.mapItems.flatCount > maximumDetailItemsForCollectionCallout {
                 return true
         }
         return false
-    }
-    
-    func updateVisibleMapRectAnimated(animated:Bool, updateBlock: Void->Void) {
-        // FIXME: animations
-        updateBlock()
     }
     
     // -- MARK: MKMapViewDelegete --
     
     func mapView(mapView: MKMapView, regionWillChangeAnimated animated: Bool) {
         deselectAnnotations()
+        viewModel?.animatingMapRect.value = animated
     }
     
     func mapView(mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
-        scrollingMap = false
+        viewModel?.animatingMapRect.value = false
         viewModel?.visibleMapRect.value = mapView.visibleMapRect
         
         if let callback = callbackOnMapScroll {
@@ -199,8 +194,6 @@ class MapViewController: UIViewController, MKMapViewDelegate, MapViewModelDelega
     
     func mapView(mapView: MKMapView, didDeselectAnnotationView view: MKAnnotationView) {
         if !updatingAnnotations {
-            self.viewModel?.selectedMapItem.value = nil
-            
             if let annotationView = view as? ContainerAnnotationView {
                 removeChildViewControllersPresentedFrom(annotationView)
             }
