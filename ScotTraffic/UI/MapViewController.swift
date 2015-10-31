@@ -86,7 +86,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, MapViewModelDelega
         viewController.willMoveToParentViewController(self)
         viewController.beginAppearanceTransition(true, animated: true)
         addChildViewController(viewController)
-        annotationView.showCollectionView(viewController.view, inMapView: mapView, withPreferredSize: viewController.preferredContentSize, edgeInsets: calloutEdgeInsets) {
+        annotationView.showView(viewController.view, inMapView: mapView, withPreferredSize: viewController.preferredContentSize, edgeInsets: calloutEdgeInsets) {
             viewController.endAppearanceTransition()
             viewController.didMoveToParentViewController(self)
         }
@@ -135,16 +135,8 @@ class MapViewController: UIViewController, MKMapViewDelegate, MapViewModelDelega
     }
     
     func updateVisibleMapRectAnimated(animated:Bool, updateBlock: Void->Void) {
-        if !animated {
-            updateBlock()
-        } else {
-            CATransaction.begin()
-            CATransaction.setDisableActions(false)
-            CATransaction.setAnimationDuration(10.0)
-            CATransaction.setAnimationTimingFunction(CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseInEaseOut))
-            updateBlock()
-            CATransaction.commit()
-        }
+        // FIXME: animations
+        updateBlock()
     }
     
     // -- MARK: MKMapViewDelegete --
@@ -202,7 +194,6 @@ class MapViewController: UIViewController, MKMapViewDelegate, MapViewModelDelega
         guard let annotation = view.annotation as? MapAnnotation, annotationView = view as? ContainerAnnotationView else {
             return
         }
-        
         showMapItems(annotation.mapItems, fromAnnotationView: annotationView)
     }
     
@@ -210,11 +201,9 @@ class MapViewController: UIViewController, MKMapViewDelegate, MapViewModelDelega
         if !updatingAnnotations {
             self.viewModel?.selectedMapItem.value = nil
             
-            guard let annotationView = view as? ContainerAnnotationView else {
-                return
+            if let annotationView = view as? ContainerAnnotationView {
+                removeChildViewControllersPresentedFrom(annotationView)
             }
-            
-            removeChildViewControllersPresentedFrom(annotationView)
         }
     }
 

@@ -15,7 +15,7 @@ class ContainerAnnotationView: MKAnnotationView {
     
     private var calloutView: UIView?
 
-    func showCollectionView(view: UIView, inMapView container: MKMapView, withPreferredSize preferredSize: CGSize, edgeInsets insets: UIEdgeInsets, completion: Void->Void) {
+    func showView(view: UIView, inMapView container: MKMapView, withPreferredSize preferredSize: CGSize, edgeInsets insets: UIEdgeInsets, completion: Void->Void) {
         let containerBounds = UIEdgeInsetsInsetRect(container.bounds, insets)
         let size = CGSize(
             width: min(preferredSize.width, containerBounds.size.width),
@@ -104,5 +104,12 @@ class ContainerAnnotationView: MKAnnotationView {
             return nil
         }
         return calloutView.hitTest(convertPoint(point, toView: calloutView), withEvent: event)
+    }
+    
+    override func pointInside(point: CGPoint, withEvent event: UIEvent?) -> Bool {
+        guard let calloutView = calloutView else {
+            return false
+        }
+        return CGRectContainsPoint(calloutView.frame, point)
     }
 }
