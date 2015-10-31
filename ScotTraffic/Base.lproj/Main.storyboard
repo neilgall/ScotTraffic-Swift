@@ -227,22 +227,42 @@
                         <animations/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstItem="hLZ-bs-o9D" firstAttribute="centerX" secondItem="XYx-Ml-sth" secondAttribute="centerX" id="0R0-d1-W6g"/>
                             <constraint firstItem="IxH-PL-c3P" firstAttribute="top" secondItem="XYx-Ml-sth" secondAttribute="bottom" id="BQj-qO-Gda"/>
                             <constraint firstItem="XYx-Ml-sth" firstAttribute="top" secondItem="qWR-ZP-M4a" secondAttribute="bottom" id="BkD-6K-pST"/>
                             <constraint firstItem="XYx-Ml-sth" firstAttribute="leading" secondItem="t6e-Yk-w2S" secondAttribute="leadingMargin" constant="-20" id="D96-fP-h5J"/>
                             <constraint firstItem="IxH-PL-c3P" firstAttribute="top" secondItem="7rc-dl-emz" secondAttribute="bottom" constant="20" id="GIZ-cJ-BKS"/>
+                            <constraint firstItem="XYx-Ml-sth" firstAttribute="centerY" secondItem="t6e-Yk-w2S" secondAttribute="centerY" id="JMT-wp-sa4"/>
                             <constraint firstAttribute="trailingMargin" secondItem="7rc-dl-emz" secondAttribute="trailing" constant="-20" id="Jmi-0u-CkS"/>
+                            <constraint firstItem="hLZ-bs-o9D" firstAttribute="bottom" secondItem="XYx-Ml-sth" secondAttribute="bottom" id="Lm4-43-kpQ"/>
                             <constraint firstItem="IxH-PL-c3P" firstAttribute="top" secondItem="hLZ-bs-o9D" secondAttribute="bottom" id="Nga-hn-fDt"/>
                             <constraint firstItem="7rc-dl-emz" firstAttribute="top" secondItem="qWR-ZP-M4a" secondAttribute="bottom" id="PBH-Rd-MAv"/>
+                            <constraint firstAttribute="width" secondItem="XYx-Ml-sth" secondAttribute="width" id="RFp-9E-Vcx"/>
+                            <constraint firstItem="XYx-Ml-sth" firstAttribute="top" secondItem="7rc-dl-emz" secondAttribute="top" id="TJF-jf-YKc"/>
                             <constraint firstItem="hLZ-bs-o9D" firstAttribute="top" secondItem="7rc-dl-emz" secondAttribute="bottom" id="V45-i0-Tf7"/>
+                            <constraint firstAttribute="height" secondItem="XYx-Ml-sth" secondAttribute="height" id="Xca-Rg-GC1"/>
                             <constraint firstAttribute="trailingMargin" secondItem="hLZ-bs-o9D" secondAttribute="trailing" constant="-20" id="Y7G-bC-D2u"/>
                             <constraint firstItem="hLZ-bs-o9D" firstAttribute="leading" secondItem="t6e-Yk-w2S" secondAttribute="leadingMargin" constant="-20" id="a8D-jO-b34"/>
+                            <constraint firstItem="hLZ-bs-o9D" firstAttribute="width" secondItem="XYx-Ml-sth" secondAttribute="width" id="aKv-FJ-kE7"/>
+                            <constraint firstItem="XYx-Ml-sth" firstAttribute="centerX" secondItem="7rc-dl-emz" secondAttribute="centerX" id="bpB-0D-PWt"/>
                             <constraint firstItem="7rc-dl-emz" firstAttribute="leading" secondItem="t6e-Yk-w2S" secondAttribute="leadingMargin" constant="-20" id="ch0-y4-Q1K"/>
+                            <constraint firstItem="XYx-Ml-sth" firstAttribute="centerX" secondItem="t6e-Yk-w2S" secondAttribute="centerX" id="iOu-Xu-cr9"/>
                             <constraint firstAttribute="trailingMargin" secondItem="XYx-Ml-sth" secondAttribute="trailing" constant="-20" id="mjb-am-aWw"/>
+                            <constraint firstItem="XYx-Ml-sth" firstAttribute="width" secondItem="7rc-dl-emz" secondAttribute="width" id="tdi-EY-kZd"/>
                         </constraints>
                         <variation key="default">
                             <mask key="constraints">
+                                <exclude reference="Jmi-0u-CkS"/>
+                                <exclude reference="PBH-Rd-MAv"/>
+                                <exclude reference="ch0-y4-Q1K"/>
+                                <exclude reference="BkD-6K-pST"/>
+                                <exclude reference="D96-fP-h5J"/>
+                                <exclude reference="mjb-am-aWw"/>
+                                <exclude reference="Y7G-bC-D2u"/>
+                                <exclude reference="a8D-jO-b34"/>
+                                <exclude reference="BQj-qO-Gda"/>
                                 <exclude reference="GIZ-cJ-BKS"/>
+                                <exclude reference="Nga-hn-fDt"/>
                             </mask>
                         </variation>
                     </view>

@@ -8,7 +8,8 @@
 
 import MapKit
 
-private let scaleAnimationDuration = 0.15
+private let scaleAnimationDuration: NSTimeInterval = 0.15
+private let minimumContainedViewAlpha: CGFloat = 0.5
 
 class ContainerAnnotationView: MKAnnotationView {
     
@@ -27,10 +28,6 @@ class ContainerAnnotationView: MKAnnotationView {
         let top = containerBounds.minY - frameInContainer.minY
         let bottom = frameInContainer.maxY - containerBounds.maxY
         
-        print ("preferredSize \(preferredSize) actual size \(size)")
-        print ("frame \(frame) in container \(frameInContainer) bounds \(containerBounds)")
-        print ("left \(left) right \(right) top \(top) bottom \(bottom)")
-        
         if left > 0 {
             frame.origin.x += left
         } else if right > 0 {
@@ -42,22 +39,24 @@ class ContainerAnnotationView: MKAnnotationView {
             frame.origin.y -= bottom
         }
         
-        print ("adjusted frame \(frame)")
-        
+        view.translatesAutoresizingMaskIntoConstraints = true
+        view.frame = frame
         view.bounds = CGRect(origin: CGPointZero, size: frame.size)
         view.center = CGPoint(x: self.bounds.midX, y: self.bounds.midY)
-        view.alpha = 0
-        
-        addSubview(view)
-        calloutView = view
-
         view.transform = scaleDownTransformForSize(frame.size)
+        view.alpha = minimumContainedViewAlpha
+        
+        calloutView = view
+        addSubview(view)
 
+        print("begin appear animation")
+        
         UIView.animateWithDuration(scaleAnimationDuration, delay: 0, options: [.CurveEaseOut], animations: {
             view.center = CGPoint(x: frame.midX, y: frame.midY)
             view.transform = CGAffineTransformIdentity
             view.alpha = 1
         }, completion: { finished in
+            print("end appear animation finished=\(finished)")
             completion()
         })
     }
@@ -77,7 +76,7 @@ class ContainerAnnotationView: MKAnnotationView {
         UIView.animateWithDuration(scaleAnimationDuration, delay: 0, options: [.CurveEaseIn], animations: {
             view.center = CGPoint(x: self.bounds.midX, y: self.bounds.midY)
             view.transform = self.scaleDownTransformForSize(view.bounds.size)
-            view.alpha = 0
+            view.alpha = minimumContainedViewAlpha
         }, completion: { finished in
             view.removeFromSuperview()
             self.setNeedsLayout()
