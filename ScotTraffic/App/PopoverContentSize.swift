@@ -9,7 +9,7 @@
 import UIKit
 
 public func popoverContentSize(traitCollection: UITraitCollection, viewBounds: CGRect) -> CGSize {
-    if traitCollection.horizontalSizeClass == .Compact {
+    if traitCollection.horizontalSizeClass == .Compact && viewBounds.width < 500 {
         // inset from the screen edges
         if aspectIsPortrait(viewBounds) {
             return preferredCollectionContentSizeForWidth(CGRectGetWidth(viewBounds)-20)
