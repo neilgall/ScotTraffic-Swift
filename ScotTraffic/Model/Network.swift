@@ -28,6 +28,7 @@ public class HTTPFetcher: NSObject, NSURLSessionDelegate {
     private let baseURL: NSURL
     private let reachability: Reachability?
     private var session: NSURLSession!
+    private var indicator = NetworkActivityIndicator()
     
     public let serverIsReachable: Observable<Bool>
     
@@ -88,7 +89,11 @@ public class HTTPFetcher: NSObject, NSURLSessionDelegate {
             } else if let data = data {
                 completion(Either.Value(data))
             }
+            
+            self.indicator.pop()
         }
+
+        indicator.push()
         task.resume()
     }
 }
@@ -124,4 +129,27 @@ public func UIImageFromData(data: NSData) throws -> UIImage {
         throw NetworkError.CannotParseImage
     }
     return image
+}
+
+
+private class NetworkActivityIndicator {
+    private var count = 0
+    
+    func push() {
+        dispatch_async(dispatch_get_main_queue()) {
+            if self.count == 0 {
+                UIApplication.sharedApplication().networkActivityIndicatorVisible = true
+            }
+            self.count += 1
+        }
+    }
+    
+    func pop() {
+        dispatch_async(dispatch_get_main_queue()) {
+            self.count -= 1
+            if self.count == 0 {
+                UIApplication.sharedApplication().networkActivityIndicatorVisible = false
+            }
+        }
+    }
 }
