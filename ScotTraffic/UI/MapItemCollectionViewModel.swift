@@ -8,24 +8,26 @@
 
 import UIKit
 
-protocol MapItemCollectionViewModelDelegate: class {
-    func mapItemCollectionViewModel(model: MapItemCollectionViewModel, didRequestShareItem item: SharableItem)
-}
-
 public class MapItemCollectionViewModel: NSObject, UICollectionViewDataSource, MapItemCollectionViewCellDelegate {
-    
-    weak var delegate: MapItemCollectionViewModelDelegate?
-    let mapItems: Input<[MapItem]>
-    let cellItems: Latest<[MapItemCollectionViewCell.Item]>
-    let selectedItemIndex: Observable<Int?>
+
+    // Sources
     let fetcher: HTTPFetcher
     let favourites: Favourites
+
+    // Inputs
+    let mapItems: Input<[MapItem]>
+    
+    // Outputs
+    let cellItems: Latest<[MapItemCollectionViewCell.Item]>
+    let selectedItemIndex: Observable<Int?>
+    let shareItem: Input<SharableItem?>
     
     public init(selection: Observable<SearchViewModel.Selection?>, fetcher: HTTPFetcher, favourites: Favourites) {
         self.fetcher = fetcher
         self.favourites = favourites
 
         mapItems = Input(initial: [])
+        shareItem = Input(initial: nil)
         
         // Each MapItem can have multiple items to show in the collection view. Flat map into a cell item list.
         cellItems = mapItems.map { mapItems in
@@ -68,8 +70,8 @@ public class MapItemCollectionViewModel: NSObject, UICollectionViewDataSource, M
     
     // -- MARK: MapItemCollectionViewCellDelegate --
     
-    public func collectionViewCellDidRequestShare(item: SharableItem) {
-        delegate?.mapItemCollectionViewModel(self, didRequestShareItem: item)
+    public func collectionViewCell(cell: MapItemCollectionViewCell, didRequestShareItem item: SharableItem, fromRect rect: CGRect) {
+        shareItem.value = item
     }
     
     public func collectionViewCellDidToggleFavourite(item: FavouriteTrafficCamera) {

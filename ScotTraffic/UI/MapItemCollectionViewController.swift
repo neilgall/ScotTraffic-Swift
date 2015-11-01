@@ -8,7 +8,7 @@
 
 import UIKit
 
-public class MapItemCollectionViewController: UIViewController, UICollectionViewDelegate, MapItemCollectionViewModelDelegate {
+public class MapItemCollectionViewController: UIViewController, UICollectionViewDelegate {
 
     @IBOutlet var collectionView: UICollectionView?
     @IBOutlet var collectionViewLayout: UICollectionViewFlowLayout?
@@ -56,7 +56,6 @@ public class MapItemCollectionViewController: UIViewController, UICollectionView
     
     private func connectToModel() {
         if let viewModel = viewModel where isViewLoaded() {
-            viewModel.delegate = self
             
             observations.append(viewModel.cellItems.output({ _ in
                 self.reload()
@@ -72,9 +71,6 @@ public class MapItemCollectionViewController: UIViewController, UICollectionView
     
     private func disconnectFromModel() {
         observations.removeAll()
-        if let oldModel = viewModel {
-            oldModel.delegate = nil
-        }
     }
     
     private func reload() {
@@ -132,15 +128,5 @@ public class MapItemCollectionViewController: UIViewController, UICollectionView
     
     public func scrollViewDidEndDecelerating(scrollView: UIScrollView) {
         pageControl?.currentPage = mostVisiblePageIndex()
-    }
-    
-    // -- MARK: MapItemCollectionViewModelDelegate --
-    
-    public func mapItemCollectionViewModel(model: MapItemCollectionViewModel, didRequestShareItem item: SharableItem) {
-        
-    }
-    
-    public func mapItemCollectionViewModel(model: MapItemCollectionViewModel, didToggleFavouriteItem item: FavouriteTrafficCamera) {
-        
-    }
+    }    
 }

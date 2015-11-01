@@ -81,6 +81,11 @@ public class AppCoordinator: NSObject, NGSplitViewControllerDelegate, UINavigati
             self.mapViewModel.selectedMapItem.value = selection?.mapItem
         }))
         
+        // sharing
+        observations.append(collectionViewModel.shareItem.filter({ $0 != nil }).output({ item in
+            self.shareItem(item!)
+        }))
+        
         updateShowSearchButton()
     }
 
@@ -117,6 +122,23 @@ public class AppCoordinator: NSObject, NGSplitViewControllerDelegate, UINavigati
             mapViewController.navigationItem.leftBarButtonItem = nil
         } else {
             mapViewController.navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "708-search"), style: .Plain, target: self, action: Selector("searchButtonTapped"))
+        }
+    }
+    
+    private func shareItem(item: SharableItem) {
+        var activityItems: [AnyObject] = [ item.name ]
+        if let link = item.link {
+            activityItems.append(link)
+        }
+        if let image = item.image {
+            activityItems.append(image)
+        }
+        
+        let controller = UIActivityViewController(activityItems: activityItems, applicationActivities: nil)
+        controller.modalPresentationStyle = .Popover
+        
+        splitViewController.presentViewController(controller, animated: true) {
+            self.collectionViewModel.shareItem.value = nil
         }
     }
     

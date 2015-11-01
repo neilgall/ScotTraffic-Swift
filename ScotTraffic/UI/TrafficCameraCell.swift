@@ -35,7 +35,7 @@ class TrafficCameraCell: MapItemCollectionViewCell {
     private func obtainImage(supplier: ImageSupplier, usingHTTPFetcher fetcher: HTTPFetcher) {
         self.errorLabel?.hidden = true
         
-        let image = supplier.image(fetcher)
+        let image = supplier.image(fetcher).latest()
         
         observations.append(image.output { [weak self] image in
             self?.errorLabel?.hidden = (image != nil)
@@ -56,7 +56,8 @@ class TrafficCameraCell: MapItemCollectionViewCell {
     
     @IBAction func share() {
         if let name = locationName, let image = image?.pullValue {
-            delegate?.collectionViewCellDidRequestShare(SharableTrafficCamera(name: name, image: image))
+            let item = SharableTrafficCamera(name: name, image: image)
+            delegate?.collectionViewCell(self, didRequestShareItem: item, fromRect: shareButton!.frame)
         }
     }
     

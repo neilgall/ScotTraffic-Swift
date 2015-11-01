@@ -8,7 +8,7 @@
 
 import MapKit
 
-private let scaleAnimationDuration: NSTimeInterval = 0.15
+private let scaleAnimationDuration: NSTimeInterval = 0.22
 private let minimumContainedViewAlpha: CGFloat = 0.5
 
 class ContainerAnnotationView: MKAnnotationView {

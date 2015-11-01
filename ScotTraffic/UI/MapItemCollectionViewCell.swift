@@ -9,7 +9,7 @@
 import UIKit
 
 public protocol MapItemCollectionViewCellDelegate: class {
-    func collectionViewCellDidRequestShare(item: SharableItem)
+    func collectionViewCell(cell: MapItemCollectionViewCell, didRequestShareItem item: SharableItem, fromRect rect: CGRect)
     func collectionViewCellDidToggleFavourite(item: FavouriteTrafficCamera)
     func collectionViewItemIsFavourite(item: FavouriteTrafficCamera) -> Bool
 }
