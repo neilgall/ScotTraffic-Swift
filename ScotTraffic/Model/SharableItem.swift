@@ -9,7 +9,7 @@
 import UIKit
 
 public protocol SharableItem {
-    var name: String { get }
+    var text: String { get }
     var image: UIImage? { get }
     var link: NSURL? { get }
 }

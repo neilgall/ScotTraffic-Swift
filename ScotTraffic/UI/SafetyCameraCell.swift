@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import MapKit
 
 class SafetyCameraCell: MapItemCollectionViewCell {
     @IBOutlet var iconImageView: UIImageView?
@@ -36,17 +37,20 @@ class SafetyCameraCell: MapItemCollectionViewCell {
             self?.imageView?.image = image
         })
         
-        observations.append(image.map({ $0 != nil }).output { [weak self] enabled in
-            self?.shareButton?.enabled = enabled
+        observations.append(image.output { [weak self] _ in
+            self?.shareButton?.enabled = true
         })
         
         // keep the unmasked image for sharing
-        self.image = image
+        self.image = image.latest()
     }
     
     @IBAction func share() {
         if let item = item, let image = image?.pullValue, case .SafetyCameraItem(let safetyCamera) = item {
-            delegate?.collectionViewCellDidRequestShare(SharableTrafficCamera(name: safetyCamera.name, image: image))
+            let coordinate = MKCoordinateForMapPoint(safetyCamera.mapPoint)
+            let shareItem = SharableSafetyCamera(name: safetyCamera.name, image: image, coordinate: coordinate, link: safetyCamera.url)
+            let rect = convertRect(shareButton!.bounds, fromView: shareButton!)
+            delegate?.collectionViewCell(self, didRequestShareItem: shareItem, fromRect: rect)
         }
     }
     
@@ -101,8 +105,26 @@ private func applyGradientMask(image: UIImage?) -> UIImage? {
     return maskedImage.map { UIImage(CGImage: $0) }
 }
 
-struct SharableSafetyCamera: SharableItem {
+private struct SharableSafetyCamera: SharableItem {
     let name: String
     let image: UIImage?
-    let link: NSURL? = nil
+    let coordinate: CLLocationCoordinate2D
+    let link: NSURL?
+    
+    var text: String {
+        let latStr = formatCoordinate(coordinate.latitude, positiveSymbol: "N", negativeSymbol: "S")
+        let lonStr = formatCoordinate(coordinate.longitude, positiveSymbol: "E", negativeSymbol: "W")
+        return "Safety Camera: \(name) \(latStr) \(lonStr)\n\nShared using ScotTraffic"
+    }
+    
+    func formatCoordinate(coord: CLLocationDegrees, positiveSymbol: String, negativeSymbol: String) -> String {
+        let formatter = NSNumberFormatter()
+        formatter.numberStyle = NSNumberFormatterStyle.DecimalStyle
+        formatter.maximumFractionDigits = 6
+        guard let coordString = formatter.stringFromNumber(NSNumber(double: fabs(coord))) else {
+            return ""
+        }
+        let suffix = coord < 0 ? negativeSymbol : positiveSymbol
+        return "\(coordString)º\(suffix)"
+    }
 }

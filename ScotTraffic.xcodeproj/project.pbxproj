@@ -39,6 +39,7 @@
 		288AC88F1BCFA43B004EA6A0 /* SharableItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 288AC88E1BCFA43B004EA6A0 /* SharableItem.swift */; };
 		288AC8911BCFABE2004EA6A0 /* SafetyCameraCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 288AC8901BCFABE2004EA6A0 /* SafetyCameraCell.swift */; };
 		288AC8931BCFB954004EA6A0 /* IncidentCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 288AC8921BCFB954004EA6A0 /* IncidentCell.swift */; };
+		28903ABE1BE62E2500EC8054 /* Reachability.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28903ABD1BE62E2500EC8054 /* Reachability.swift */; };
 		289201D21BBC580300DA4A9A /* TrafficCameras.swift in Sources */ = {isa = PBXBuildFile; fileRef = 289201D11BBC580300DA4A9A /* TrafficCameras.swift */; };
 		289201D41BBC5AEB00DA4A9A /* FRP.swift in Sources */ = {isa = PBXBuildFile; fileRef = 289201D31BBC5AEB00DA4A9A /* FRP.swift */; };
 		28AF4A051BD6ECD9009B0AE8 /* SearchResultCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28AF4A041BD6ECD9009B0AE8 /* SearchResultCell.swift */; };
@@ -121,6 +122,7 @@
 		288AC88E1BCFA43B004EA6A0 /* SharableItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SharableItem.swift; sourceTree = "<group>"; };
 		288AC8901BCFABE2004EA6A0 /* SafetyCameraCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SafetyCameraCell.swift; sourceTree = "<group>"; };
 		288AC8921BCFB954004EA6A0 /* IncidentCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IncidentCell.swift; sourceTree = "<group>"; };
+		28903ABD1BE62E2500EC8054 /* Reachability.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Reachability.swift; sourceTree = "<group>"; };
 		289201D11BBC580300DA4A9A /* TrafficCameras.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TrafficCameras.swift; sourceTree = "<group>"; };
 		289201D31BBC5AEB00DA4A9A /* FRP.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FRP.swift; sourceTree = "<group>"; };
 		28AF4A041BD6ECD9009B0AE8 /* SearchResultCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchResultCell.swift; sourceTree = "<group>"; };
@@ -249,6 +251,7 @@
 				28875EA31BBC72FB00E67A16 /* Network.swift */,
 				280486501BC08216003BA360 /* PeriodicStarter.swift */,
 				2817D92C1BC5D2B70082F4A7 /* WithFlag.swift */,
+				28903ABD1BE62E2500EC8054 /* Reachability.swift */,
 			);
 			name = Core;
 			sourceTree = "<group>";
@@ -530,6 +533,7 @@
 				716D9E991BCBC2F1005A6B49 /* ScotTraffic.swift in Sources */,
 				28AF4A071BD82342009B0AE8 /* FadeTransition.swift in Sources */,
 				716D9E971BCA614D005A6B49 /* MapItemCollectionViewModel.swift in Sources */,
+				28903ABE1BE62E2500EC8054 /* Reachability.swift in Sources */,
 				28AF4A0B1BD849C0009B0AE8 /* PopoverContentSize.swift in Sources */,
 				284DE0981BBDD0D800E6A678 /* AppModel.swift in Sources */,
 				280486591BC0917B003BA360 /* MapItem.swift in Sources */,

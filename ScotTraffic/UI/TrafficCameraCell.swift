@@ -57,7 +57,8 @@ class TrafficCameraCell: MapItemCollectionViewCell {
     @IBAction func share() {
         if let name = locationName, let image = image?.pullValue {
             let item = SharableTrafficCamera(name: name, image: image)
-            delegate?.collectionViewCell(self, didRequestShareItem: item, fromRect: shareButton!.frame)
+            let rect = convertRect(shareButton!.bounds, fromView: shareButton!)
+            delegate?.collectionViewCell(self, didRequestShareItem: item, fromRect: rect)
         }
     }
     
@@ -76,8 +77,12 @@ class TrafficCameraCell: MapItemCollectionViewCell {
     }
 }
 
-struct SharableTrafficCamera: SharableItem {
+private struct SharableTrafficCamera: SharableItem {
     let name: String
     let image: UIImage?
     let link: NSURL? = nil
+    
+    var text: String {
+        return "Traffic Camera Image: \(name)\n\nShared using ScotTraffic"
+    }
 }

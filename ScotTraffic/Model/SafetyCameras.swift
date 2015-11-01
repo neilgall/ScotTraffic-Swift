@@ -23,6 +23,7 @@ public enum SpeedLimit {
 public final class SafetyCamera : MapItem, ImageSupplier {
     public let name: String
     public let road: String
+    public let url: NSURL?
     public let mapPoint: MKMapPoint
     public let speedLimit: SpeedLimit
     public let weatherLocation: WeatherLocationCode
@@ -30,9 +31,10 @@ public final class SafetyCamera : MapItem, ImageSupplier {
     public let count: Int = 1
     public let iconName = "safetycamera"
     
-    public init(name: String, road: String, speedLimit: SpeedLimit, mapPoint: MKMapPoint, weatherLocation: WeatherLocationCode, images: [String]) {
+    public init(name: String, road: String, url: NSURL?, speedLimit: SpeedLimit, mapPoint: MKMapPoint, weatherLocation: WeatherLocationCode, images: [String]) {
         self.name = name
         self.road = road
+        self.url = url
         self.speedLimit = speedLimit
         self.mapPoint = mapPoint
         self.weatherLocation = weatherLocation
@@ -67,6 +69,7 @@ extension SafetyCamera: JSONObjectDecodable {
         return try SafetyCamera(
             name: json <~ "name",
             road: json <~ "road",
+            url: (json <~ "url").flatMap { NSURL(string: $0) },
             speedLimit: json <~ "speedLimit",
             mapPoint: MKMapPointForCoordinate(CLLocationCoordinate2DMake(json <~ "latitude", json <~ "longitude")),
             weatherLocation: json <~ "weather",

@@ -93,16 +93,6 @@ public class Input<Value> : Observable<Value> {
     }
 }
 
-public class Event : Input<Void> {
-    public init() {
-        super.init(initial: ())
-    }
-    
-    public func send() {
-        pushValue( () )
-    }
-}
-
 class Observer<ValueType>: Observation {
     private let source: Observable<ValueType>
     private let id: Int
@@ -138,6 +128,22 @@ public class WillOutput<ValueType>: Observer<ValueType> {
 }
 
 public class Never<ValueType> : Observable<ValueType> {
+}
+
+public class Const<ValueType> : Observable<ValueType> {
+    let value: ValueType
+
+    public init(value: ValueType) {
+        self.value = value
+    }
+    
+    override public var canPullValue: Bool {
+        return true
+    }
+    
+    override public var pullValue: ValueType? {
+        return value
+    }
 }
 
 class Filter<ValueType> : Observable<ValueType> {

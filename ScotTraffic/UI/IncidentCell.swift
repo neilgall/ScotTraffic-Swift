@@ -14,6 +14,7 @@ class IncidentCell: MapItemCollectionViewCell {
     @IBOutlet var dateLabel: UILabel?
     @IBOutlet var titleLabel: UILabel?
     @IBOutlet var textLabel: UILabel?
+    @IBOutlet var shareButton: UIButton?
     private var item: SharableIncident?
     
     override func configure(item: Item, usingHTTPFetcher fetcher: HTTPFetcher) {
@@ -33,14 +34,15 @@ class IncidentCell: MapItemCollectionViewCell {
                 self.textLabel?.text = text
                 self.setNeedsLayout()
                 
-                self.item = SharableIncident(name: text, link: incident.url)
+                self.item = SharableIncident(name: text, type: incident.type, link: incident.url)
             }
         }
     }
     
     @IBAction func share() {
         if let item = item {
-            delegate?.collectionViewCellDidRequestShare(item)
+            let rect = convertRect(shareButton!.bounds, fromView: shareButton!)
+            delegate?.collectionViewCell(self, didRequestShareItem: item, fromRect: rect)
         }
     }
     
@@ -77,8 +79,14 @@ private func formatIncidentHTMLText(text: String) -> String {
     }
 }
 
-struct SharableIncident: SharableItem {
+private struct SharableIncident: SharableItem {
     let name: String
+    let type: IncidentType
     let image: UIImage? = nil
     let link: NSURL?
+    
+    var text: String {
+        let typeStr = (type == .Alert) ? "Incident" : "Roadworks"
+        return "\(typeStr): \(name)\n\nShared using ScotTraffic"
+    }
 }

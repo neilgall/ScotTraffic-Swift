@@ -20,14 +20,14 @@ public class MapItemCollectionViewModel: NSObject, UICollectionViewDataSource, M
     // Outputs
     let cellItems: Latest<[MapItemCollectionViewCell.Item]>
     let selectedItemIndex: Observable<Int?>
-    let shareItem: Input<SharableItem?>
+    let shareAction: Input<ShareAction?>
     
     public init(selection: Observable<SearchViewModel.Selection?>, fetcher: HTTPFetcher, favourites: Favourites) {
         self.fetcher = fetcher
         self.favourites = favourites
 
         mapItems = Input(initial: [])
-        shareItem = Input(initial: nil)
+        shareAction = Input(initial: nil)
         
         // Each MapItem can have multiple items to show in the collection view. Flat map into a cell item list.
         cellItems = mapItems.map { mapItems in
@@ -71,7 +71,7 @@ public class MapItemCollectionViewModel: NSObject, UICollectionViewDataSource, M
     // -- MARK: MapItemCollectionViewCellDelegate --
     
     public func collectionViewCell(cell: MapItemCollectionViewCell, didRequestShareItem item: SharableItem, fromRect rect: CGRect) {
-        shareItem.value = item
+        shareAction.value = ShareAction(item: item, sourceView: cell, sourceRect: rect)
     }
     
     public func collectionViewCellDidToggleFavourite(item: FavouriteTrafficCamera) {
@@ -82,3 +82,10 @@ public class MapItemCollectionViewModel: NSObject, UICollectionViewDataSource, M
         return favourites.containsItem(item)
     }
 }
+
+public struct ShareAction {
+    let item: SharableItem
+    let sourceView: UIView
+    let sourceRect: CGRect
+}
+

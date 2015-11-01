@@ -82,8 +82,8 @@ public class AppCoordinator: NSObject, NGSplitViewControllerDelegate, UINavigati
         }))
         
         // sharing
-        observations.append(collectionViewModel.shareItem.filter({ $0 != nil }).output({ item in
-            self.shareItem(item!)
+        observations.append(collectionViewModel.shareAction.filter({ $0 != nil }).output({ action in
+            self.shareAction(action!)
         }))
         
         updateShowSearchButton()
@@ -125,20 +125,22 @@ public class AppCoordinator: NSObject, NGSplitViewControllerDelegate, UINavigati
         }
     }
     
-    private func shareItem(item: SharableItem) {
-        var activityItems: [AnyObject] = [ item.name ]
-        if let link = item.link {
+    private func shareAction(action: ShareAction) {
+        var activityItems: [AnyObject] = [ action.item.text ]
+        if let link = action.item.link {
             activityItems.append(link)
         }
-        if let image = item.image {
+        if let image = action.item.image {
             activityItems.append(image)
         }
         
         let controller = UIActivityViewController(activityItems: activityItems, applicationActivities: nil)
         controller.modalPresentationStyle = .Popover
+        controller.popoverPresentationController?.sourceView = action.sourceView
+        controller.popoverPresentationController?.sourceRect = action.sourceRect
         
         splitViewController.presentViewController(controller, animated: true) {
-            self.collectionViewModel.shareItem.value = nil
+            self.collectionViewModel.shareAction.value = nil
         }
     }
     

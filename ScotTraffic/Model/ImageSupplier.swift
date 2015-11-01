@@ -16,7 +16,7 @@ extension ImageSupplier {
 
     func image(fetcher: HTTPFetcher) -> Observable<UIImage?> {
         guard let imageName = imageName else {
-            return Never()
+            return Const(value: nil)
         }
         
         let dataSource = HTTPDataSource(fetcher: fetcher, path: imageName)
