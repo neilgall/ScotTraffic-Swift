@@ -101,7 +101,7 @@ public class MapItemCollectionViewCell: UICollectionViewCell {
         }
     }
     
-    func configure(item: Item, usingHTTPFetcher fetcher: HTTPFetcher) {
+    func configure(item: Item) {
         fatalError("Must override in subclass")
     }
 }

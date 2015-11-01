@@ -43,7 +43,7 @@ public final class Incident : MapItem {
 
 extension IncidentType: JSONValueDecodable {
     public static func decodeJSON(json: JSONValue, forKey key: JSONKey) throws -> IncidentType {
-        guard let str = json as? String else {
+        guard let str = json.value as? String else {
             throw JSONError.ExpectedValue(key: key, type: String.self)
         }
         switch str {

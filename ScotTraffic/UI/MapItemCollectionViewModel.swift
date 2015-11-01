@@ -11,7 +11,6 @@ import UIKit
 public class MapItemCollectionViewModel: NSObject, UICollectionViewDataSource, MapItemCollectionViewCellDelegate {
 
     // Sources
-    let fetcher: HTTPFetcher
     let favourites: Favourites
 
     // Inputs
@@ -22,8 +21,7 @@ public class MapItemCollectionViewModel: NSObject, UICollectionViewDataSource, M
     let selectedItemIndex: Observable<Int?>
     let shareAction: Input<ShareAction?>
     
-    public init(selection: Observable<SearchViewModel.Selection?>, fetcher: HTTPFetcher, favourites: Favourites) {
-        self.fetcher = fetcher
+    public init(selection: Observable<SearchViewModel.Selection?>, favourites: Favourites) {
         self.favourites = favourites
 
         mapItems = Input(initial: [])
@@ -62,7 +60,7 @@ public class MapItemCollectionViewModel: NSObject, UICollectionViewDataSource, M
         
         if let cell = cell as? MapItemCollectionViewCell {
             cell.delegate = self
-            cell.configure(cellItem, usingHTTPFetcher: fetcher)
+            cell.configure(cellItem)
         }
         
         return cell

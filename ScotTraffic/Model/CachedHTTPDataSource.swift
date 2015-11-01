@@ -8,28 +8,28 @@
 
 import Foundation
 
-class CachedHTTPDataSource: Observable<Either<NSData,NetworkError>>, Startable {
+class CachedHTTPDataSource: DataSource {
     
     private let httpSource: HTTPDataSource
     private let cacheSource: CacheDataSource
     private var observations = [Observation]()
     
+    let value = Observable<Either<NSData, NetworkError>>()
+
     init(fetcher: HTTPFetcher, cache: DiskCache, path: String) {
         httpSource = HTTPDataSource(fetcher: fetcher, path: path)
         cacheSource = CacheDataSource(cache: cache, key: path)
         
-        super.init()
-        
-        observations.append(httpSource.output({ dataOrError in
-            self.pushValue(dataOrError)
+        observations.append(httpSource.value.output({ dataOrError in
+            self.value.pushValue(dataOrError)
             if case .Value(let data) = dataOrError {
                 self.cacheSource.update(data)
             }
         }))
     
-        observations.append(cacheSource.output({ data in
-            if let data = data {
-                self.pushValue(.Value(data))
+        observations.append(cacheSource.value.output({ dataOrError in
+            if case .Value(let data) = dataOrError {
+                self.value.pushValue(.Value(data))
             }
         }))
     }
@@ -38,11 +38,18 @@ class CachedHTTPDataSource: Observable<Either<NSData,NetworkError>>, Startable {
         cacheSource.start()
         httpSource.start()
     }
+
+    static func dataSourceWithFetcher(fetcher: HTTPFetcher, cache: DiskCache) -> String -> DataSource {
+        return { path in
+            CachedHTTPDataSource(fetcher: fetcher, cache: cache, path: path)
+        }
+    }
 }
 
-private class CacheDataSource: Observable<NSData?>, Startable {
+private class CacheDataSource: DataSource {
     let cache: DiskCache
     let key: String
+    let value = Observable<Either<NSData,NetworkError>>()
     
     init(cache: DiskCache, key: String) {
         self.cache = cache
@@ -50,7 +57,11 @@ private class CacheDataSource: Observable<NSData?>, Startable {
     }
     
     func start() {
-        cache.dataForKey(key, completion: pushValue)
+        cache.dataForKey(key) { data in
+            if let data = data {
+                self.value.pushValue(.Value(data))
+            }
+        }
     }
     
     func update(data: NSData) {

@@ -22,6 +22,7 @@
 		280493791BA8BB4800990BD1 /* ScotTrafficUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 280493781BA8BB4800990BD1 /* ScotTrafficUITests.swift */; };
 		2813B2D91BE647550017F847 /* DiskCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2813B2D81BE647550017F847 /* DiskCache.swift */; };
 		2813B2DB1BE647C90017F847 /* CachedHTTPDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2813B2DA1BE647C90017F847 /* CachedHTTPDataSource.swift */; };
+		2813B2DD1BE655020017F847 /* DataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2813B2DC1BE655020017F847 /* DataSource.swift */; };
 		2817D92D1BC5D2B70082F4A7 /* WithFlag.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2817D92C1BC5D2B70082F4A7 /* WithFlag.swift */; };
 		2841A0F01BCD9B3900D22A8E /* EitherTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2841A0EF1BCD9B3900D22A8E /* EitherTests.swift */; };
 		284DE0961BBDCD4200E6A678 /* Either.swift in Sources */ = {isa = PBXBuildFile; fileRef = 284DE0951BBDCD4200E6A678 /* Either.swift */; };
@@ -107,6 +108,7 @@
 		2804937A1BA8BB4800990BD1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		2813B2D81BE647550017F847 /* DiskCache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DiskCache.swift; sourceTree = "<group>"; };
 		2813B2DA1BE647C90017F847 /* CachedHTTPDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CachedHTTPDataSource.swift; sourceTree = "<group>"; };
+		2813B2DC1BE655020017F847 /* DataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataSource.swift; sourceTree = "<group>"; };
 		2817D92C1BC5D2B70082F4A7 /* WithFlag.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WithFlag.swift; sourceTree = "<group>"; };
 		2841A0EF1BCD9B3900D22A8E /* EitherTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EitherTests.swift; sourceTree = "<group>"; };
 		284DE0951BBDCD4200E6A678 /* Either.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Either.swift; sourceTree = "<group>"; };
@@ -252,6 +254,7 @@
 				289201D31BBC5AEB00DA4A9A /* FRP.swift */,
 				28875EA61BBC739100E67A16 /* JSON.swift */,
 				28DB3BF21BC025D0001AAC2A /* Functions.swift */,
+				2813B2DC1BE655020017F847 /* DataSource.swift */,
 				28875EA31BBC72FB00E67A16 /* Network.swift */,
 				280486501BC08216003BA360 /* PeriodicStarter.swift */,
 				2813B2D81BE647550017F847 /* DiskCache.swift */,
@@ -549,6 +552,7 @@
 				280493591BA8BB4800990BD1 /* AppDelegate.swift in Sources */,
 				2813B2DB1BE647C90017F847 /* CachedHTTPDataSource.swift in Sources */,
 				286559251BC31D020058A35A /* MapAnnotation.swift in Sources */,
+				2813B2DD1BE655020017F847 /* DataSource.swift in Sources */,
 				28F6009F1BDB8E3E00ED71CA /* NGSplitViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

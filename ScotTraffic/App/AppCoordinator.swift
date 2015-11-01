@@ -58,7 +58,6 @@ public class AppCoordinator: NSObject, NGSplitViewControllerDelegate, UINavigati
         
         collectionViewModel = MapItemCollectionViewModel(
             selection: searchViewModel.searchSelection,
-            fetcher: appModel.fetcher,
             favourites: appModel.favourites)
     }
     

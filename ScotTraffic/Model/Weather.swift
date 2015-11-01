@@ -55,7 +55,7 @@ public final class Weather {
 
 extension WindDirection: JSONValueDecodable {
     public static func decodeJSON(json: JSONValue, forKey key: JSONKey) throws -> WindDirection {
-        guard let str: String = json as? String else {
+        guard let str: String = json.value as? String else {
             throw JSONError.ExpectedValue(key: key, type: String.self)
         }
         switch str.lowercaseString {

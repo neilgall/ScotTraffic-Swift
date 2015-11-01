@@ -30,8 +30,9 @@ public final class SafetyCamera : MapItem, ImageSupplier {
     public let images: [String]
     public let count: Int = 1
     public let iconName = "safetycamera"
+    public let dataSource: DataSource?
     
-    public init(name: String, road: String, url: NSURL?, speedLimit: SpeedLimit, mapPoint: MKMapPoint, weatherLocation: WeatherLocationCode, images: [String]) {
+    public init(name: String, road: String, url: NSURL?, speedLimit: SpeedLimit, mapPoint: MKMapPoint, weatherLocation: WeatherLocationCode, images: [String], dataSourceFactory: String->DataSource) {
         self.name = name
         self.road = road
         self.url = url
@@ -39,16 +40,13 @@ public final class SafetyCamera : MapItem, ImageSupplier {
         self.mapPoint = mapPoint
         self.weatherLocation = weatherLocation
         self.images = images
-    }
-    
-    public var imageName: String? {
-        return images.first
+        self.dataSource = images.first.map { dataSourceFactory($0) }
     }
 }
 
 extension SpeedLimit: JSONValueDecodable {
     public static func decodeJSON(json: JSONValue, forKey key: JSONKey) throws -> SpeedLimit {
-        guard let str = json as? String else {
+        guard let str = json.value as? String else {
             throw JSONError.ExpectedValue(key: key, type: String.self)
         }
         switch str {
@@ -73,6 +71,8 @@ extension SafetyCamera: JSONObjectDecodable {
             speedLimit: json <~ "speedLimit",
             mapPoint: MKMapPointForCoordinate(CLLocationCoordinate2DMake(json <~ "latitude", json <~ "longitude")),
             weatherLocation: json <~ "weather",
-            images: json <~ "images")
+            images: json <~ "images",
+            dataSourceFactory: json.context as! String->DataSource
+        )
     }
 }

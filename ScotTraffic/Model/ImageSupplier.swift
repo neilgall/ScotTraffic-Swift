@@ -8,19 +8,18 @@
 
 import UIKit
 
-protocol ImageSupplier {
-    var imageName: String? { get }
+public protocol ImageSupplier {
+    var dataSource: DataSource? { get }
 }
 
 extension ImageSupplier {
 
-    func image(fetcher: HTTPFetcher) -> Observable<UIImage?> {
-        guard let imageName = imageName else {
+    var image: Observable<UIImage?> {
+        guard let dataSource = dataSource else {
             return Const(value: nil)
         }
         
-        let dataSource = HTTPDataSource(fetcher: fetcher, path: imageName)
-        let imageOrError = dataSource.map { (dataOrError: Either<NSData,NetworkError>) -> UIImage? in
+        let imageOrError = dataSource.value.map { (dataOrError: Either<NSData,NetworkError>) -> UIImage? in
             switch dataOrError {
             case .Value(let data):
                 return UIImage(data: data)
@@ -29,7 +28,10 @@ extension ImageSupplier {
             }
         }
         
-        dataSource.start()
         return imageOrError
+    }
+    
+    func updateImage() {
+        dataSource?.start()
     }
 }

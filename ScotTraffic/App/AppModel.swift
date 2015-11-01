@@ -30,9 +30,7 @@ public class AppModel: ScotTraffic {
         let diskCache = DiskCache(withPath: "scottraffic")
         let fetcher = HTTPFetcher(baseURL: NSURL(string: "http://dev.scottraffic.co.uk")!)
         
-        let dataSourceForPath : String -> CachedHTTPDataSource = { path in
-            return CachedHTTPDataSource(fetcher: fetcher, cache: diskCache, path: path)
-        }
+        let dataSourceForPath = CachedHTTPDataSource.dataSourceWithFetcher(fetcher, cache: diskCache)
         
         let userDefaults = NSUserDefaults.standardUserDefaults()
 
@@ -43,8 +41,8 @@ public class AppModel: ScotTraffic {
         // -- Traffic Cameras --
         
         let trafficCamerasSource = dataSourceForPath("trafficcameras.json")
-        let trafficCameraLocations = trafficCamerasSource.map {
-            $0.map(Array<TrafficCameraLocation>.decodeJSON <== JSONArrayFromData)
+        let trafficCameraLocations = trafficCamerasSource.value.map {
+            $0.map(Array<TrafficCameraLocation>.decodeJSON(dataSourceForPath) <== JSONArrayFromData)
         }
         self.trafficCameraLocations = valueFromEither(trafficCameraLocations).latest()
         self.favourites = Favourites(userDefaults: userDefaults, trafficCameraLocations: self.trafficCameraLocations)
@@ -53,8 +51,8 @@ public class AppModel: ScotTraffic {
         // -- Safety Cameras --
         
         let safetyCamerasSource = dataSourceForPath("safetycameras.json")
-        let safetyCameras = safetyCamerasSource.map {
-            $0.map(Array<SafetyCamera>.decodeJSON <== JSONArrayFromData)
+        let safetyCameras = safetyCamerasSource.value.map {
+            $0.map(Array<SafetyCamera>.decodeJSON(dataSourceForPath) <== JSONArrayFromData)
         }
         self.safetyCameras = valueFromEither(safetyCameras).latest()
  
@@ -62,8 +60,8 @@ public class AppModel: ScotTraffic {
         // -- Incidents / Roadworks --
         
         let incidentsSource = dataSourceForPath("incidents.json")
-        let incidents = incidentsSource.map {
-            $0.map(Array<Incident>.decodeJSON <== JSONArrayFromData)
+        let incidents = incidentsSource.value.map {
+            $0.map(Array<Incident>.decodeJSON(Void) <== JSONArrayFromData)
         }
         let allIncidents = valueFromEither(incidents)
         self.alerts = allIncidents.map { $0.filter { $0.type == IncidentType.Alert } }.latest()
@@ -73,8 +71,8 @@ public class AppModel: ScotTraffic {
         // -- Weather --
         
         let weatherSource = dataSourceForPath("weather.json")
-        let weather = weatherSource.map {
-            $0.map(Array<Weather>.decodeJSON <== JSONArrayFromData)
+        let weather = weatherSource.value.map {
+            $0.map(Array<Weather>.decodeJSON(Void) <== JSONArrayFromData)
         }
         self.weather = valueFromEither(weather).latest()
         

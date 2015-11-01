@@ -21,33 +21,29 @@ class TrafficCameraCell: MapItemCollectionViewCell {
     private var image: Observable<UIImage?>?
     private var observations = [Observation]()
     
-    override func configure(item: Item, usingHTTPFetcher fetcher: HTTPFetcher) {
+    override func configure(item: Item) {
         if case .TrafficCameraItem(let location, let camera) = item {
             locationName = trafficCameraName(camera, atLocation: location)
             favouriteItem = FavouriteTrafficCamera(location: location, camera: camera)
 
+            errorLabel?.hidden = true
             titleLabel?.text = locationName
-            obtainImage(camera, usingHTTPFetcher: fetcher)
             updateFavouriteButton()
+        
+            let image = camera.image
+            
+            observations.append(image.output { [weak self] image in
+                self?.errorLabel?.hidden = (image != nil)
+                self?.imageView?.image = image
+            })
+        
+            observations.append(image.map({ $0 != nil }).output { [weak self] enabled in
+                self?.shareButton?.enabled = enabled
+                self?.favouriteButton?.enabled = enabled
+            })
+        
+            self.image = image.latest()
         }
-    }
-    
-    private func obtainImage(supplier: ImageSupplier, usingHTTPFetcher fetcher: HTTPFetcher) {
-        self.errorLabel?.hidden = true
-        
-        let image = supplier.image(fetcher).latest()
-        
-        observations.append(image.output { [weak self] image in
-            self?.errorLabel?.hidden = (image != nil)
-            self?.imageView?.image = image
-        })
-        
-        observations.append(image.map({ $0 != nil }).output { [weak self] enabled in
-            self?.shareButton?.enabled = enabled
-            self?.favouriteButton?.enabled = enabled
-        })
-        
-        self.image = image
     }
     
     private func updateFavouriteButton() {

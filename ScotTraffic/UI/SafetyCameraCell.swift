@@ -20,29 +20,26 @@ class SafetyCameraCell: MapItemCollectionViewCell {
     private var image: Observable<UIImage?>?
     private var observations = [Observation]()
     
-    override func configure(item: Item, usingHTTPFetcher fetcher: HTTPFetcher) {
+    override func configure(item: Item) {
         if case .SafetyCameraItem(let safetyCamera) = item {
             self.item = item
             iconImageView?.image = iconForSpeedLimit(safetyCamera.speedLimit)
             roadLabel?.text = safetyCamera.road
             descriptionLabel?.text = safetyCamera.name
-            obtainImage(safetyCamera, usingHTTPFetcher: fetcher)
+            
+            let image = safetyCamera.image
+            
+            observations.append(image.map(applyGradientMask).output { [weak self] image in
+                self?.imageView?.image = image
+            })
+            
+            observations.append(image.output { [weak self] _ in
+                self?.shareButton?.enabled = true
+            })
+
+            // keep the original image for sharing
+            self.image = image.latest()
         }
-    }
-    
-    func obtainImage(supplier: ImageSupplier, usingHTTPFetcher fetcher: HTTPFetcher) {
-        let image = supplier.image(fetcher)
-        
-        observations.append(image.map(applyGradientMask).output { [weak self] image in
-            self?.imageView?.image = image
-        })
-        
-        observations.append(image.output { [weak self] _ in
-            self?.shareButton?.enabled = true
-        })
-        
-        // keep the unmasked image for sharing
-        self.image = image.latest()
     }
     
     @IBAction func share() {

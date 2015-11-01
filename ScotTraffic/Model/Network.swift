@@ -98,9 +98,10 @@ public class HTTPFetcher: NSObject, NSURLSessionDelegate {
     }
 }
 
-class HTTPDataSource: Observable<Either<NSData,NetworkError>>, Startable {
+class HTTPDataSource: DataSource {
     let fetcher: HTTPFetcher
     let path: String
+    let value = Observable<Either<NSData,NetworkError>>()
     
     init(fetcher: HTTPFetcher, path: String) {
         self.fetcher = fetcher
@@ -110,15 +111,15 @@ class HTTPDataSource: Observable<Either<NSData,NetworkError>>, Startable {
     func start() {
         self.fetcher.fetchDataAtPath(path) { data in
             dispatch_async(dispatch_get_main_queue()) {
-                self.pushValue(data)
+                self.value.pushValue(data)
             }
         }
     }
 }
 
-public func JSONArrayFromData(data: NSData) throws -> JSONArray {
+public func JSONArrayFromData(data: NSData) throws -> ContextlessJSONArray {
     let json = try NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions())
-    guard let array = json as? JSONArray else {
+    guard let array = json as? ContextlessJSONArray else {
         throw JSONError.ExpectedArray(key: "")
     }
     return array

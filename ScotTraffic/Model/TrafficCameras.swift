@@ -43,15 +43,13 @@ public final class TrafficCamera: ImageSupplier {
     public let identifier: String
     public let direction: TrafficCameraDirection?
     public let isAvailable: Bool
+    public let dataSource: DataSource?
     
-    public init(identifier: String, direction: TrafficCameraDirection?, isAvailable: Bool) {
+    public init(identifier: String, direction: TrafficCameraDirection?, isAvailable: Bool, dataSourceFactory: String->DataSource) {
         self.identifier = identifier
         self.direction = direction
         self.isAvailable = isAvailable
-    }
-    
-    var imageName: String? {
-        return identifier
+        self.dataSource = dataSourceFactory(identifier)
     }
 }
 
@@ -73,7 +71,7 @@ func trafficCameraName(camera: TrafficCamera, atLocation location: TrafficCamera
 
 extension TrafficCameraDirection: JSONValueDecodable {
     public static func decodeJSON(json: JSONValue, forKey key: JSONKey) throws -> TrafficCameraDirection {
-        guard let dir = json as? String else {
+        guard let dir = json.value as? String else {
             throw JSONError.ExpectedValue(key: key, type: String.self)
         }
         switch dir.lowercaseString {
@@ -103,7 +101,8 @@ extension TrafficCamera: JSONObjectDecodable {
         return try TrafficCamera(
             identifier: json <~ "image",
             direction: json <~ "direction",
-            isAvailable: json <~ "available"
+            isAvailable: json <~ "available",
+            dataSourceFactory: json.context as! String->DataSource
         )
     }
 }

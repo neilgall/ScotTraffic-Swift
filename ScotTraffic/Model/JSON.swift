@@ -9,15 +9,31 @@
 import Foundation
 
 public typealias JSONKey = String
-public typealias JSONValue = AnyObject
-public typealias JSONArray = [JSONValue]
-public typealias JSONObject = [JSONKey : JSONValue]
+public typealias JSONContext = Any?
+public typealias ContextlessJSONValue = AnyObject
+public typealias ContextlessJSONArray = [ContextlessJSONValue]
+public typealias ContextlessJSONObject = [JSONKey : ContextlessJSONValue]
+
+public struct JSONValue {
+    let value: ContextlessJSONValue
+    let context: JSONContext
+}
+
+public struct JSONArray {
+    let value: ContextlessJSONArray
+    let context: JSONContext
+}
+
+public struct JSONObject {
+    let value: ContextlessJSONObject
+    let context: JSONContext
+}
 
 public enum JSONError : ErrorType, CustomStringConvertible {
     case ExpectedDictionary(key: JSONKey)
     case ExpectedArray(key: JSONKey)
     case ExpectedValue(key: JSONKey, type: Any.Type)
-    case ParseError(key: JSONKey, value: JSONValue, message: String)
+    case ParseError(key: JSONKey, value: ContextlessJSONValue, message: String)
     
     public var description: String {
         switch self {
@@ -37,8 +53,8 @@ public protocol JSONValueDecodable {
     static func decodeJSON(json: JSONValue, forKey key: JSONKey) throws -> Self
 }
 
-func genericDecodeJSON<T: JSONValueDecodable> (json: JSONValue?, forKey key: JSONKey, type: Any.Type) throws -> T {
-    guard let value = json as? T else {
+private func genericDecodeJSON<TargetType: JSONValueDecodable> (json: JSONValue?, forKey key: JSONKey, type: Any.Type) throws -> TargetType {
+    guard let value = json?.value as? TargetType else {
         throw JSONError.ExpectedValue(key: key, type: type)
     }
     return value
@@ -94,26 +110,36 @@ extension Bool: JSONValueDecodable {
 
 extension Array where Element: JSONValueDecodable {
     public static func decodeJSON(json: JSONArray, forKey key: JSONKey) throws -> [Element] {
-        return try json.map { return try Element.decodeJSON($0, forKey: key) }
+        return try json.value.map {
+            return try Element.decodeJSON(JSONValue(value: $0, context: json.context), forKey: key)
+        }
     }
     
     public static func decodeJSON(json: JSONArray) throws -> [Element] {
         return try decodeJSON(json, forKey: "")
     }
+    
+    public static func decodeJSON(context: JSONContext)(json: ContextlessJSONArray) throws -> [Element] {
+        return try decodeJSON(JSONArray(value: json, context: context), forKey: "")
+    }
 }
 
 extension Array where Element: JSONObjectDecodable {
     public static func decodeJSON(json: JSONArray, forKey key: JSONKey) throws -> [Element] {
-        return try json.map { item in
-            guard let object = item as? JSONObject else {
+        return try json.value.map { item in
+            guard let object = item as? ContextlessJSONObject else {
                 throw JSONError.ExpectedDictionary(key: key)
             }
-            return try Element.decodeJSON(object, forKey: key)
+            return try Element.decodeJSON(JSONObject(value: object, context: json.context), forKey: key)
         }
     }
 
     public static func decodeJSON(json: JSONArray) throws -> [Element] {
         return try decodeJSON(json, forKey: "")
+    }
+    
+    public static func decodeJSON(context: JSONContext)(json: ContextlessJSONArray) throws -> [Element] {
+        return try decodeJSON(JSONArray(value: json, context: context), forKey: "")
     }
 }
 
@@ -137,47 +163,47 @@ extension JSONObjectDecodable {
 
 infix operator <~ { associativity left precedence 150 }
 
-public func <~ <T: JSONValueDecodable> (json: JSONObject, key: String) throws -> T {
-    guard let value = json[key] else {
+public func <~ <TargetType: JSONValueDecodable> (json: JSONObject, key: String) throws -> TargetType {
+    guard let value = json.value[key] else {
         throw JSONError.ExpectedValue(key: key, type: Any.self)
     }
-    return try T.decodeJSON(value, forKey: key)
+    return try TargetType.decodeJSON(JSONValue(value: value, context: json.context), forKey: key)
 }
 
-public func <~ <T: JSONValueDecodable>(json: JSONObject, key: String) throws -> [T] {
-    guard let array = json[key] as? JSONArray else {
+public func <~ <TargetType: JSONValueDecodable> (json: JSONObject, key: String) throws -> [TargetType] {
+    guard let array = json.value[key] as? ContextlessJSONArray else {
         throw JSONError.ExpectedArray(key: key)
     }
-    return try [T].decodeJSON(array, forKey: key)
+    return try [TargetType].decodeJSON(JSONArray(value: array, context: json.context), forKey: key)
 }
 
-public func <~ <T: JSONValueDecodable>(json: JSONObject, key: String) throws -> T? {
-    guard let value = json[key] else {
+public func <~ <TargetType: JSONValueDecodable>(json: JSONObject, key: String) throws -> TargetType? {
+    guard let value = json.value[key] else {
         return nil
     }
-    return try T.decodeJSON(value, forKey: key)
+    return try TargetType.decodeJSON(JSONValue(value: value, context: json.context), forKey: key)
 }
 
-public func <~ <T: JSONObjectDecodable>(json: JSONObject, key: String) throws -> T {
-    guard let dict = json[key] as? JSONObject else {
+public func <~ <TargetType: JSONObjectDecodable>(json: JSONObject, key: String) throws -> TargetType {
+    guard let object = json.value[key] as? ContextlessJSONObject else {
         throw JSONError.ExpectedDictionary(key: key)
     }
-    return try T.decodeJSON(dict, forKey: key)
+    return try TargetType.decodeJSON(JSONObject(value: object, context: json.context), forKey: key)
 }
 
-public func <~ <T: JSONObjectDecodable>(json: JSONObject, key: String) throws -> [T] {
-    guard let array = json[key] as? JSONArray else {
+public func <~ <TargetType: JSONObjectDecodable>(json: JSONObject, key: String) throws -> [TargetType] {
+    guard let array = json.value[key] as? ContextlessJSONArray else {
         throw JSONError.ExpectedArray(key: key)
     }
-    return try [T].decodeJSON(array, forKey: key)
+    return try [TargetType].decodeJSON(JSONArray(value: array, context: json.context), forKey: key)
 }
 
-public func <~ <T: JSONObjectDecodable>(json: JSONObject, key: String) throws -> T? {
-    guard let value = json[key] else {
+public func <~ <TargetType: JSONObjectDecodable>(json: JSONObject, key: String) throws -> TargetType? {
+    guard let value = json.value[key] else {
         return nil
     }
-    guard let dict = value as? JSONObject else {
+    guard let object = value as? ContextlessJSONObject else {
         throw JSONError.ExpectedDictionary(key: key)
     }
-    return try T.decodeJSON(dict, forKey: key)
+    return try TargetType.decodeJSON(JSONObject(value: object, context: json.context), forKey: key)
 }

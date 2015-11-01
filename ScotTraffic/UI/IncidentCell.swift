@@ -17,7 +17,7 @@ class IncidentCell: MapItemCollectionViewCell {
     @IBOutlet var shareButton: UIButton?
     private var item: SharableIncident?
     
-    override func configure(item: Item, usingHTTPFetcher fetcher: HTTPFetcher) {
+    override func configure(item: Item) {
         textLabel?.text = nil
         
         if case .IncidentItem(let incident) = item {
