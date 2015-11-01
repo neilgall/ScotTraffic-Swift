@@ -70,7 +70,7 @@ public class AppCoordinator: NSObject, NGSplitViewControllerDelegate, UINavigati
 
         // network reachability
         observations.append(appModel.fetcher.serverIsReachable.onFallingEdge(notifyNoNetworkReachability))
-
+        
         // show map when search cancelled
         observations.append(searchViewModel.searchActive.onFallingEdge(showMap))
         
@@ -81,6 +81,11 @@ public class AppCoordinator: NSObject, NGSplitViewControllerDelegate, UINavigati
         observations.append(collectionViewModel.shareAction.output(shareAction))
         
         updateShowSearchButton()
+    
+        // defer any initial reachability notification until the view has appeared
+        dispatch_async(dispatch_get_main_queue()) {
+            self.appModel.fetcher.startReachabilityNotifier()
+        }
     }
 
     private func viewControllerWithMapItems(mapItems: [MapItem]) -> UIViewController {
