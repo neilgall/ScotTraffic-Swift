@@ -19,7 +19,7 @@ public class AppModel: ScotTraffic {
     public let settings: Settings
     public let favourites: Favourites
     
-    let fetcher: HTTPFetcher
+    public let fetcher: HTTPFetcher
     let errorSources: Observable<AppError>
     let fetchStarters: [PeriodicStarter]
     var internalObservers = [Observation]()
@@ -88,5 +88,13 @@ public class AppModel: ScotTraffic {
         let fiveMinuteRefresh = PeriodicStarter(startables: [trafficCamerasSource, incidentsSource], period: 300)
         let halfHourlyRefresh = PeriodicStarter(startables: [safetyCamerasSource, weatherSource], period: 1800)
         self.fetchStarters = [fiveMinuteRefresh, halfHourlyRefresh]
+        
+        // -- Refresh on restoring internet connection
+        
+        internalObservers.append(fetcher.serverIsReachable.onRisingEdge({
+            for starter in self.fetchStarters {
+                starter.restart(fireImmediately: true)
+            }
+        }))
     }
 }

@@ -25,14 +25,51 @@ public enum NetworkError : ErrorType {
 }
 
 public class HTTPFetcher: NSObject, NSURLSessionDelegate {
-    let baseURL: NSURL
-    var session: NSURLSession!
+    private let baseURL: NSURL
+    private let reachability: Reachability?
+    private var session: NSURLSession!
+    
+    public let serverIsReachable: Observable<Bool>
     
     public init(baseURL: NSURL) {
         self.baseURL = baseURL
+        do {
+            self.reachability = try Reachability.reachabilityForInternetConnection()
+        } catch {
+            self.reachability = nil
+        }
+        
+        // assume reachable at first as the true->false transition is the important one
+        let serverIsReachable = Input(initial: true)
+        self.serverIsReachable = serverIsReachable
+        
         super.init()
+        
         let configuration = NSURLSessionConfiguration.defaultSessionConfiguration()
         session = NSURLSession(configuration: configuration, delegate: self, delegateQueue: nil)
+        
+        reachability?.whenReachable = { _ in
+            dispatch_async(dispatch_get_main_queue()) {
+                serverIsReachable.value = true
+            }
+        }
+        reachability?.whenUnreachable = { _ in
+            dispatch_async(dispatch_get_main_queue()) {
+                serverIsReachable.value = false
+            }
+        }
+    }
+    
+    public func startReachabilityNotifier() {
+        do {
+            try reachability?.startNotifier()
+        } catch {
+            print("Unable to start notifier")
+        }
+
+        if let reachability = self.reachability, flag = serverIsReachable as? Input<Bool> {
+            flag.value = reachability.currentReachabilityStatus != .NotReachable
+        }
     }
 
     public func URLSession(session: NSURLSession, didBecomeInvalidWithError error: NSError?) {

@@ -584,9 +584,17 @@ extension Observable where Value: Equatable {
     }
 }
 
-extension Observable where Value: BooleanType {
+extension Observable where Value: BooleanType, Value: Equatable {
     public var not: Observable<Bool> {
         return map { b in !b }
+    }
+    
+    public func onRisingEdge(closure: Void -> Void) -> Observation {
+        return onChange().filter({ $0.boolValue == true }).output({ _ in closure() })
+    }
+
+    public func onFallingEdge(closure: Void -> Void) -> Observation {
+        return onChange().filter({ $0.boolValue == false }).output({ _ in closure() })
     }
 }
 

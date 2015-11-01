@@ -68,23 +68,17 @@ public class AppCoordinator: NSObject, NGSplitViewControllerDelegate, UINavigati
         mapViewController.navigationController?.delegate = self
         mapViewController.calloutConstructor = viewControllerWithMapItems
 
+        // network reachability
+        observations.append(appModel.fetcher.serverIsReachable.onFallingEdge(notifyNoNetworkReachability))
+
         // show map when search cancelled
-        observations.append(searchViewModel.searchActive.filter({ $0 == false }).output({ _ in
-            self.showMap()
-        }))
+        observations.append(searchViewModel.searchActive.onFallingEdge(showMap))
         
         // show map when search selection changes
-        observations.append(searchViewModel.searchSelection.output({ selection in
-            if selection != nil {
-                self.showMap()
-            }
-            self.mapViewModel.selectedMapItem.value = selection?.mapItem
-        }))
+        observations.append(searchViewModel.searchSelection.output(searchSelectionChanged))
         
         // sharing
-        observations.append(collectionViewModel.shareAction.filter({ $0 != nil }).output({ action in
-            self.shareAction(action!)
-        }))
+        observations.append(collectionViewModel.shareAction.output(shareAction))
         
         updateShowSearchButton()
     }
@@ -106,15 +100,15 @@ public class AppCoordinator: NSObject, NGSplitViewControllerDelegate, UINavigati
         collectionController = nil
     }
     
-    private func showMap() {
-        splitViewController.dismissOverlaidMasterViewController()
+    private func searchSelectionChanged(selection: SearchViewModel.Selection?) {
+        if selection != nil {
+            showMap()
+        }
+        mapViewModel.selectedMapItem.value = selection?.mapItem
     }
     
-    private func dismissCollectionPopoverAnimated(animated: Bool) {
-        if collectionController != nil {
-            splitViewController.dismissViewControllerAnimated(animated, completion: nil)
-            collectionController = nil
-        }
+    private func showMap() {
+        splitViewController.dismissOverlaidMasterViewController()
     }
     
     private func updateShowSearchButton() {
@@ -123,9 +117,19 @@ public class AppCoordinator: NSObject, NGSplitViewControllerDelegate, UINavigati
         } else {
             mapViewController.navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "708-search"), style: .Plain, target: self, action: Selector("searchButtonTapped"))
         }
+        
+        if splitViewController.detailViewControllerIsVisible {
+            searchViewController.navigationItem.rightBarButtonItem = nil
+        } else {
+            searchViewController.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Done, target: self, action: Selector("searchDoneButtonTapped"))
+        }
     }
     
-    private func shareAction(action: ShareAction) {
+    private func shareAction(action: ShareAction?) {
+        guard let action = action else {
+            return
+        }
+        
         var activityItems: [AnyObject] = [ action.item.text ]
         if let link = action.item.link {
             activityItems.append(link)
@@ -142,6 +146,12 @@ public class AppCoordinator: NSObject, NGSplitViewControllerDelegate, UINavigati
         splitViewController.presentViewController(controller, animated: true) {
             self.collectionViewModel.shareAction.value = nil
         }
+    }
+    
+    private func notifyNoNetworkReachability() {
+        let alert = UIAlertController(title: "No Internet Connection", message: "Your device is not connected to the internet. The most recently available information is being shown.", preferredStyle: .Alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
+        splitViewController.presentViewController(alert, animated: true, completion: nil)
     }
     
     // -- MARK: NGSplitViewControllerDelegate --
@@ -166,7 +176,11 @@ public class AppCoordinator: NSObject, NGSplitViewControllerDelegate, UINavigati
     // -- MARK: UI Actions --
     
     func searchButtonTapped() {
-        dismissCollectionPopoverAnimated(true)
+        mapViewController.deselectAnnotations()
         splitViewController.overlayMasterViewController()
+    }
+    
+    func searchDoneButtonTapped() {
+        splitViewController.dismissOverlaidMasterViewController()
     }
 }
