@@ -248,4 +248,37 @@ class FRPTests: XCTestCase {
         XCTAssertEqual(t.vals, [0, 6, 6, 7])
         XCTAssertEqual(u.vals, [0, 6, 7])
     }
+    
+    func testGateDoesNotPushWhenGateIsFalse() {
+        let s = Input<Int>(initial: 0)
+        let g = Input<Bool>(initial: false)
+        let t = s.gate(g)
+        let c = Capture(t)
+        
+        s.value = 6
+        XCTAssertEqual(c.vals, [])
+    }
+
+    func testGatePushesWhenGateIsTrue() {
+        let s = Input<Int>(initial: 0)
+        let g = Input<Bool>(initial: true)
+        let t = s.gate(g)
+        let c = Capture(t)
+        
+        s.value = 6
+        XCTAssertEqual(c.vals, [6])
+    }
+    
+    func testGatePushesDeferredOnRisingEdge() {
+        let s = Input<Int>(initial: 0)
+        let g = Input<Bool>(initial: false)
+        let t = s.gate(g)
+        let c = Capture(t)
+        
+        s.value = 6
+        XCTAssertEqual(c.vals, [])
+
+        g.value = true
+        XCTAssertEqual(c.vals, [6])
+    }
 }

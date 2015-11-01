@@ -77,11 +77,11 @@ public class MapViewModel {
             $0.map { group in MapAnnotation(mapItems: group) }
         }).latest()
         
-        let selectedMapItemGroup = combine(mapItemGroups, selectedMapItem, animatingMapRect) { groups, item, animating in
-            return animating ? nil : mapItemGroupFromGroups(groups, containingItem: item)
+        let selectedMapItemGroup = combine(mapItemGroups, selectedMapItem) { groups, item in
+            return mapItemGroupFromGroups(groups, containingItem: item)
         }
 
-        selectedAnnotation = selectedMapItemGroup.map { optionalGroup in
+        selectedAnnotation = selectedMapItemGroup.gate(animatingMapRect.not).map { optionalGroup in
             optionalGroup.map { items in MapAnnotation(mapItems: items) }
         }
     }

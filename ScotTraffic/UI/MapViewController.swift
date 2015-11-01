@@ -25,7 +25,6 @@ class MapViewController: UIViewController, MKMapViewDelegate, MapViewModelDelega
     var viewModel: MapViewModel?
     var observations = [Observation]()
     var updatingAnnotations: Bool = false
-    var callbackOnMapScroll: (Void->Void)?
     var calloutConstructor: ([MapItem] -> UIViewController)?
     
     override func viewDidLoad() {
@@ -143,11 +142,6 @@ class MapViewController: UIViewController, MKMapViewDelegate, MapViewModelDelega
     func mapView(mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
         viewModel?.animatingMapRect.value = false
         viewModel?.visibleMapRect.value = mapView.visibleMapRect
-        
-        if let callback = callbackOnMapScroll {
-            callback()
-            callbackOnMapScroll = nil
-        }
     }
     
     func mapView(mapView: MKMapView, viewForAnnotation annotation: MKAnnotation) -> MKAnnotationView? {

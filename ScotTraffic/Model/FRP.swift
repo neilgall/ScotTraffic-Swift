@@ -258,6 +258,49 @@ class OnChange<ValueType: Equatable> : Observable<ValueType> {
     }
 }
 
+class Gate<ValueType> : Observable<ValueType> {
+    let valueLatest: Latest<ValueType>
+    let gateLatest: Latest<Bool>
+    var sourceObservers: [Observation] = []
+    var transactionCount = 0
+    var needsUpdate = false
+    
+    init(_ source: Observable<ValueType>, gate: Observable<Bool>) {
+        valueLatest = source.latest()
+        gateLatest = gate.latest()
+        super.init()
+        sourceObservers.append(Observer(valueLatest) { t in self.update(t) })
+        sourceObservers.append(Observer(gateLatest) { t in self.update(t) })
+    }
+
+    private func update<S>(transaction: Transaction<S>) {
+        switch transaction {
+        case .Begin:
+            if transactionCount == 0 {
+                self.pushTransaction(.Begin)
+                needsUpdate = false
+            }
+            transactionCount += 1
+            
+        case .End:
+            needsUpdate = true
+            fallthrough
+            
+        case .Cancel:
+            transactionCount -= 1
+            if transactionCount == 0 {
+                if needsUpdate, let value = valueLatest.pullValue, let gate = gateLatest.pullValue where gate == true {
+                    pushTransaction(.End(value))
+                    needsUpdate = false
+                } else {
+                    pushTransaction(.Cancel)
+                }
+            }
+        }
+    }
+}
+
+
 class Throttle<ValueType> : Observable<ValueType> {
     private let timer: dispatch_source_t
     private let minimumInterval: NSTimeInterval
@@ -523,11 +566,21 @@ extension Observable {
     public func throttle(minimumInterval: NSTimeInterval, queue: dispatch_queue_t) -> Observable<ValueType> {
         return Throttle(self, minimumInterval: minimumInterval, queue: queue)
     }
+
+    public func gate(gate: Observable<Bool>) -> Observable<ValueType> {
+        return Gate(self, gate: gate)
+    }
 }
 
 extension Observable where Value: Equatable {
     public func onChange() -> Observable<ValueType> {
         return OnChange(self)
+    }
+}
+
+extension Observable where Value: BooleanType {
+    public var not: Observable<Bool> {
+        return map { b in !b }
     }
 }
 
