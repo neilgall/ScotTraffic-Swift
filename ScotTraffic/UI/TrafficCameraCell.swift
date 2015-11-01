@@ -30,19 +30,18 @@ class TrafficCameraCell: MapItemCollectionViewCell {
             titleLabel?.text = locationName
             updateFavouriteButton()
         
-            let image = camera.image
-            
-            observations.append(image.output { [weak self] image in
+            observations.append(camera.image.output { [weak self] image in
                 self?.errorLabel?.hidden = (image != nil)
                 self?.imageView?.image = image
             })
         
-            observations.append(image.map({ $0 != nil }).output { [weak self] enabled in
+            observations.append(camera.image.map({ $0 != nil }).output { [weak self] enabled in
                 self?.shareButton?.enabled = enabled
                 self?.favouriteButton?.enabled = enabled
             })
         
-            self.image = image.latest()
+            self.image = camera.image.latest()
+            camera.updateImage()
         }
     }
     

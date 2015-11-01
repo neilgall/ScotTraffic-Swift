@@ -20,16 +20,16 @@ class CachedHTTPDataSource: DataSource {
         httpSource = HTTPDataSource(fetcher: fetcher, path: path)
         cacheSource = CacheDataSource(cache: cache, key: path)
         
+        observations.append(cacheSource.value.output({ dataOrError in
+            if case .Value(let data) = dataOrError {
+                self.value.pushValue(.Value(data))
+            }
+        }))
+        
         observations.append(httpSource.value.output({ dataOrError in
             self.value.pushValue(dataOrError)
             if case .Value(let data) = dataOrError {
                 self.cacheSource.update(data)
-            }
-        }))
-    
-        observations.append(cacheSource.value.output({ dataOrError in
-            if case .Value(let data) = dataOrError {
-                self.value.pushValue(.Value(data))
             }
         }))
     }

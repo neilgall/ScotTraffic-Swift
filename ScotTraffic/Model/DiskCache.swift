@@ -48,7 +48,6 @@ public class DiskCache: NSObject {
                     completion(data)
                 }
             } catch {
-                NSLog("failed to read \(url): \(error)")
                 dispatch_async(dispatch_get_main_queue()) {
                     completion(nil)
                 }

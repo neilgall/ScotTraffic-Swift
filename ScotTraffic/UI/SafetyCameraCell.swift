@@ -27,18 +27,17 @@ class SafetyCameraCell: MapItemCollectionViewCell {
             roadLabel?.text = safetyCamera.road
             descriptionLabel?.text = safetyCamera.name
             
-            let image = safetyCamera.image
-            
-            observations.append(image.map(applyGradientMask).output { [weak self] image in
+            observations.append(safetyCamera.image.map(applyGradientMask).output { [weak self] image in
                 self?.imageView?.image = image
             })
             
-            observations.append(image.output { [weak self] _ in
+            observations.append(safetyCamera.image.output { [weak self] _ in
                 self?.shareButton?.enabled = true
             })
 
             // keep the original image for sharing
-            self.image = image.latest()
+            self.image = safetyCamera.image.latest()
+            safetyCamera.updateImage()
         }
     }
     
