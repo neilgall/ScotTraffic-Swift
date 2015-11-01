@@ -20,6 +20,8 @@
 		280493601BA8BB4800990BD1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2804935F1BA8BB4800990BD1 /* Assets.xcassets */; };
 		280493631BA8BB4800990BD1 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 280493611BA8BB4800990BD1 /* LaunchScreen.storyboard */; };
 		280493791BA8BB4800990BD1 /* ScotTrafficUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 280493781BA8BB4800990BD1 /* ScotTrafficUITests.swift */; };
+		2813B2D91BE647550017F847 /* DiskCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2813B2D81BE647550017F847 /* DiskCache.swift */; };
+		2813B2DB1BE647C90017F847 /* CachedHTTPDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2813B2DA1BE647C90017F847 /* CachedHTTPDataSource.swift */; };
 		2817D92D1BC5D2B70082F4A7 /* WithFlag.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2817D92C1BC5D2B70082F4A7 /* WithFlag.swift */; };
 		2841A0F01BCD9B3900D22A8E /* EitherTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2841A0EF1BCD9B3900D22A8E /* EitherTests.swift */; };
 		284DE0961BBDCD4200E6A678 /* Either.swift in Sources */ = {isa = PBXBuildFile; fileRef = 284DE0951BBDCD4200E6A678 /* Either.swift */; };
@@ -103,6 +105,8 @@
 		280493741BA8BB4800990BD1 /* ScotTrafficUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ScotTrafficUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		280493781BA8BB4800990BD1 /* ScotTrafficUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScotTrafficUITests.swift; sourceTree = "<group>"; };
 		2804937A1BA8BB4800990BD1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		2813B2D81BE647550017F847 /* DiskCache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DiskCache.swift; sourceTree = "<group>"; };
+		2813B2DA1BE647C90017F847 /* CachedHTTPDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CachedHTTPDataSource.swift; sourceTree = "<group>"; };
 		2817D92C1BC5D2B70082F4A7 /* WithFlag.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WithFlag.swift; sourceTree = "<group>"; };
 		2841A0EF1BCD9B3900D22A8E /* EitherTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EitherTests.swift; sourceTree = "<group>"; };
 		284DE0951BBDCD4200E6A678 /* Either.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Either.swift; sourceTree = "<group>"; };
@@ -250,6 +254,8 @@
 				28DB3BF21BC025D0001AAC2A /* Functions.swift */,
 				28875EA31BBC72FB00E67A16 /* Network.swift */,
 				280486501BC08216003BA360 /* PeriodicStarter.swift */,
+				2813B2D81BE647550017F847 /* DiskCache.swift */,
+				2813B2DA1BE647C90017F847 /* CachedHTTPDataSource.swift */,
 				2817D92C1BC5D2B70082F4A7 /* WithFlag.swift */,
 				28903ABD1BE62E2500EC8054 /* Reachability.swift */,
 			);
@@ -524,6 +530,7 @@
 				286559231BC3198D0058A35A /* MapViewModel.swift in Sources */,
 				286559211BC3182C0058A35A /* MapViewController.swift in Sources */,
 				288AC88D1BCFA062004EA6A0 /* MapItemCollectionViewCell.swift in Sources */,
+				2813B2D91BE647550017F847 /* DiskCache.swift in Sources */,
 				710535651BCC141C00FDB70C /* UserDefaultsProtocol.swift in Sources */,
 				28DB3BF31BC025D0001AAC2A /* Functions.swift in Sources */,
 				280486531BC08711003BA360 /* SearchViewController.swift in Sources */,
@@ -540,6 +547,7 @@
 				289201D21BBC580300DA4A9A /* TrafficCameras.swift in Sources */,
 				28875EA71BBC739100E67A16 /* JSON.swift in Sources */,
 				280493591BA8BB4800990BD1 /* AppDelegate.swift in Sources */,
+				2813B2DB1BE647C90017F847 /* CachedHTTPDataSource.swift in Sources */,
 				286559251BC31D020058A35A /* MapAnnotation.swift in Sources */,
 				28F6009F1BDB8E3E00ED71CA /* NGSplitViewController.swift in Sources */,
 			);

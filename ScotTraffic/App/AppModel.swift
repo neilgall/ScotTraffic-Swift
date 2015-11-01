@@ -20,20 +20,29 @@ public class AppModel: ScotTraffic {
     public let favourites: Favourites
     
     public let fetcher: HTTPFetcher
-    let errorSources: Observable<AppError>
-    let fetchStarters: [PeriodicStarter]
-    var internalObservers = [Observation]()
+
+    private let diskCache: DiskCache
+    private let errorSources: Observable<AppError>
+    private let fetchStarters: [PeriodicStarter]
+    private var internalObservers = [Observation]()
     
     public init() {
-        self.fetcher = HTTPFetcher(baseURL: NSURL(string: "http://dev.scottraffic.co.uk")!)
+        let diskCache = DiskCache(withPath: "scottraffic")
+        let fetcher = HTTPFetcher(baseURL: NSURL(string: "http://dev.scottraffic.co.uk")!)
+        
+        let dataSourceForPath : String -> CachedHTTPDataSource = { path in
+            return CachedHTTPDataSource(fetcher: fetcher, cache: diskCache, path: path)
+        }
         
         let userDefaults = NSUserDefaults.standardUserDefaults()
-        self.settings = Settings(userDefaults: userDefaults)
 
+        self.diskCache = diskCache
+        self.fetcher = fetcher
+        self.settings = Settings(userDefaults: userDefaults)
         
         // -- Traffic Cameras --
         
-        let trafficCamerasSource = HTTPDataSource(fetcher: self.fetcher, path: "trafficcameras.json")
+        let trafficCamerasSource = dataSourceForPath("trafficcameras.json")
         let trafficCameraLocations = trafficCamerasSource.map {
             $0.map(Array<TrafficCameraLocation>.decodeJSON <== JSONArrayFromData)
         }
@@ -43,7 +52,7 @@ public class AppModel: ScotTraffic {
         
         // -- Safety Cameras --
         
-        let safetyCamerasSource = HTTPDataSource(fetcher: self.fetcher, path: "safetycameras.json")
+        let safetyCamerasSource = dataSourceForPath("safetycameras.json")
         let safetyCameras = safetyCamerasSource.map {
             $0.map(Array<SafetyCamera>.decodeJSON <== JSONArrayFromData)
         }
@@ -52,7 +61,7 @@ public class AppModel: ScotTraffic {
         
         // -- Incidents / Roadworks --
         
-        let incidentsSource = HTTPDataSource(fetcher: self.fetcher, path: "incidents.json")
+        let incidentsSource = dataSourceForPath("incidents.json")
         let incidents = incidentsSource.map {
             $0.map(Array<Incident>.decodeJSON <== JSONArrayFromData)
         }
@@ -63,7 +72,7 @@ public class AppModel: ScotTraffic {
         
         // -- Weather --
         
-        let weatherSource = HTTPDataSource(fetcher: self.fetcher, path: "weather.json")
+        let weatherSource = dataSourceForPath("weather.json")
         let weather = weatherSource.map {
             $0.map(Array<Weather>.decodeJSON <== JSONArrayFromData)
         }
@@ -97,4 +106,5 @@ public class AppModel: ScotTraffic {
             }
         }))
     }
+    
 }
