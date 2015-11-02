@@ -2,8 +2,27 @@
 //  NGSplitViewController.swift
 //  NGSplitViewController
 //
-//  Created by Neil Gall on 23/10/2015.
-//  Copyright © 2015 Neil Gall. All rights reserved.
+//  The MIT License (MIT)
+//
+//  Copyright (c) 2015 Neil Gall
+//
+//  Permission is hereby granted, free of charge, to any person obtaining a copy
+//  of this software and associated documentation files (the "Software"), to deal
+//  in the Software without restriction, including without limitation the rights
+//  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+//  copies of the Software, and to permit persons to whom the Software is
+//  furnished to do so, subject to the following conditions:
+//
+//  The above copyright notice and this permission notice shall be included in
+//  all copies or substantial portions of the Software.
+//
+//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+//  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+//  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+//  THE SOFTWARE.
 //
 
 import UIKit
@@ -18,7 +37,9 @@ import UIKit
      * @param viewWidth           The overall view width for for the NGSplitViewController
      * @return true If the master view controller should be shown; false if it should be hidden
      */
-    optional func splitViewController(splitViewController: NGSplitViewController, shouldShowMasterForHorizontalSizeClass horizontalSizeClass: UIUserInterfaceSizeClass, viewWidth: CGFloat) -> Bool
+    optional func splitViewController(splitViewController: NGSplitViewController,
+        shouldShowMasterViewControllerForHorizontalSizeClass horizontalSizeClass: UIUserInterfaceSizeClass,
+        viewWidth: CGFloat) -> Bool
 
     /**
      * Notify that the split view controller has changed the master view controller's visibility. When the master is
@@ -137,9 +158,9 @@ public class NGSplitViewController: UIViewController {
     
     /**
      * The ratio of the master view controller's view width to the overall split view controller's view
-     * in side-by-side presentation. Defaults to 320/768 as per UISplitViewController
+     * in side-by-side presentation. Defaults to 320/1024 as per UISplitViewController
      */
-    public var splitRatio: CGFloat = 320.0/768.0 {
+    public var splitRatio: CGFloat = 320.0/1024.0 {
         didSet {
             view.setNeedsLayout()
         }
@@ -194,16 +215,16 @@ public class NGSplitViewController: UIViewController {
         }
     }
     
-    private var presentationStyle: PresentationStyle = .MasterOnly {
-        willSet(newStyle) {
-            transitionFromPresentationStyle(presentationStyle, toPresentationStyle: newStyle)
-        }
+    private var presentationStyle: PresentationStyle = .SideBySide {
         didSet(oldStyle) {
+            transitionFromPresentationStyle(oldStyle, toPresentationStyle: presentationStyle)
             view.setNeedsLayout()
             updateChildTraitCollections()
             notifyDelegateOfChangeFromPresentationStyle(oldStyle, toPresentationStyle: presentationStyle)
         }
     }
+    
+    private var animatingMasterOverlay: Bool = false
 
     // -- MARK: UIViewController implementation
     
@@ -218,17 +239,22 @@ public class NGSplitViewController: UIViewController {
     
     public override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
-        updatePresentationStyle()
+        
+        updatePresentationStyleForHorizontalSizeClass(traitCollection.horizontalSizeClass, viewWidth: self.view.bounds.size.width)
         updateFrames()
         updateChildTraitCollections()
     }
     
     public override func traitCollectionDidChange(previousTraitCollection: UITraitCollection?) {
-        updatePresentationStyle()
+        updatePresentationStyleForHorizontalSizeClass(traitCollection.horizontalSizeClass, viewWidth: self.view.bounds.size.width)
         updateChildTraitCollections()
         view.setNeedsLayout()
-        
-        delegate?.splitViewControllerTraitCollectionChanged?(self)
+    }
+    
+    public override func viewWillTransitionToSize(size: CGSize, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {
+        updatePresentationStyleForHorizontalSizeClass(traitCollection.horizontalSizeClass, viewWidth: size.width)
+        updateChildTraitCollections()
+        view.setNeedsLayout()
     }
     
     public override func viewWillLayoutSubviews() {
@@ -253,7 +279,10 @@ public class NGSplitViewController: UIViewController {
             
         case .DetailOnly:
             // fudge to fix a strange unexpected call to viewWillLayoutSubviews() on the animate-out transition
-            masterFrame = CGRectMake(-320, 0, 320, view.bounds.size.height)
+            if animatingMasterOverlay {
+                masterFrame = CGRectMake(-320, 0, 320, view.bounds.size.height)
+            }
+            break
 
         case .MasterOnly:
             break
@@ -267,8 +296,8 @@ public class NGSplitViewController: UIViewController {
             return
         }
         
-        child.willMoveToParentViewController(self)
         addChildViewController(child)
+        child.view.translatesAutoresizingMaskIntoConstraints = false
         addChildView(child, withFrame: frame)
         child.didMoveToParentViewController(self)
     }
@@ -278,8 +307,8 @@ public class NGSplitViewController: UIViewController {
             return
         }
 
-        child.view.translatesAutoresizingMaskIntoConstraints = false
         child.view.frame = frame
+        child.view.alpha = 1.0
         view.addSubview(child.view)
         view.setNeedsLayout()
     }
@@ -292,15 +321,17 @@ public class NGSplitViewController: UIViewController {
         child.willMoveToParentViewController(nil)
         removeChildView(child)
         child.removeFromParentViewController()
-        child.didMoveToParentViewController(nil)
     }
     
     private func removeChildView(childViewController: UIViewController?) {
         childViewController?.view.removeFromSuperview()
     }
     
-    private func updatePresentationStyle() {
-        if showsMasterForSizeClass[traitCollection.horizontalSizeClass] ?? true {
+    private func updatePresentationStyleForHorizontalSizeClass(horizontalSizeClass: UIUserInterfaceSizeClass, viewWidth: CGFloat) {
+        let delegateOverride = delegate?.splitViewController?(self, shouldShowMasterViewControllerForHorizontalSizeClass: horizontalSizeClass, viewWidth: viewWidth)
+        let showMaster = delegateOverride ?? (horizontalSizeClass == .Regular)
+        
+        if showMaster {
             presentationStyle = .SideBySide
         } else {
             presentationStyle = .DetailOnly
@@ -342,6 +373,7 @@ public class NGSplitViewController: UIViewController {
             return
         }
         
+        animatingMasterOverlay = true
         let frames = containerFrames
         
         let button = UIButton(type: .Custom)
@@ -357,8 +389,12 @@ public class NGSplitViewController: UIViewController {
         UIView.animateWithDuration(transitionDuration,
             delay: 0,
             options: .CurveEaseOut,
-            animations: { master.view.transform = CGAffineTransformIdentity },
-            completion: nil)
+            animations: {
+                master.view.transform = CGAffineTransformIdentity
+            },
+            completion: { _ in
+                self.animatingMasterOverlay = false
+        })
     }
     
     private func animateOutMasterViewControllerOverlay() {
@@ -366,6 +402,7 @@ public class NGSplitViewController: UIViewController {
             return
         }
         
+        animatingMasterOverlay = true
         let frame = containerFrames.master
         
         UIView.animateWithDuration(transitionDuration,
@@ -377,6 +414,7 @@ public class NGSplitViewController: UIViewController {
             completion: { _ in
                 self.overlayHideButton = nil
                 self.removeChildView(master)
+                self.animatingMasterOverlay = false
         })
     }
     
@@ -384,8 +422,6 @@ public class NGSplitViewController: UIViewController {
         guard fromPresentationStyle != toPresentationStyle, let master = masterViewController, let detail = detailViewController else {
             return
         }
-        
-        print("\(fromPresentationStyle) -> \(toPresentationStyle)")
         
         switch (fromPresentationStyle, toPresentationStyle) {
 
@@ -441,16 +477,27 @@ public class NGSplitViewController: UIViewController {
     }
     
     private func crossFadeFromViewController(from: UIViewController, toViewController to: UIViewController) {
-        transitionFromViewController(from,
-            toViewController: to,
-            duration: transitionDuration,
-            options: [.CurveEaseInOut, .TransitionCrossDissolve, .LayoutSubviews],
-            animations: {},
-            completion: nil)
+        from.beginAppearanceTransition(false, animated: true)
+        to.beginAppearanceTransition(true, animated: true)
+        view.insertSubview(to.view, belowSubview: from.view)
+        to.view.alpha = 0.0
+        
+        UIView.animateWithDuration(transitionDuration,
+            delay: 0,
+            options: [.CurveEaseInOut],
+            animations: {
+                to.view.alpha = 1.0
+                from.view.alpha = 0.0
+            },
+            completion: { _ in
+                from.view.removeFromSuperview()
+                from.endAppearanceTransition()
+                to.endAppearanceTransition()
+        })
     }
 }
 
-extension CGRect {
+private extension CGRect {
     func divide(split: CGFloat) -> (left: CGRect, right: CGRect) {
         var left: CGRect = CGRectZero
         var right: CGRect = CGRectZero

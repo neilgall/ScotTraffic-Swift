@@ -161,6 +161,10 @@ public class AppCoordinator: NSObject, NGSplitViewControllerDelegate {
     
     // -- MARK: NGSplitViewControllerDelegate --
     
+    public func splitViewController(splitViewController: NGSplitViewController, shouldShowMasterViewControllerForHorizontalSizeClass horizontalSizeClass: UIUserInterfaceSizeClass, viewWidth: CGFloat) -> Bool {
+        return horizontalSizeClass == .Regular && viewWidth > 768
+    }
+    
     public func splitViewController(splitViewController: NGSplitViewController, didChangeMasterViewControllerVisibility viewController: UIViewController) {
         updateShowSearchButton()
     }
