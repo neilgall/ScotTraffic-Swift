@@ -27,11 +27,16 @@ public class NGSplitViewController: UIViewController {
             guard isViewLoaded() else {
                 return
             }
-            if let oldVC = masterViewController, newVC = newMasterViewController {
+            
+            if presentationStyle.showsMaster, let oldVC = masterViewController, newVC = newMasterViewController {
                 crossFadeFromViewController(oldVC, toViewController: newVC)
-            } else if let oldVC = masterViewController {
+            }
+            
+            if let oldVC = masterViewController {
                 removeChild(oldVC)
-            } else if let newVC = newMasterViewController {
+            }
+            
+            if let newVC = newMasterViewController {
                 addChild(newVC, withFrame: containerFrames.master)
             }
         }
@@ -42,11 +47,16 @@ public class NGSplitViewController: UIViewController {
             guard isViewLoaded() else {
                 return
             }
-            if let oldVC = detailViewController, newVC = newDetailViewController {
+            
+            if presentationStyle.showsDetail, let oldVC = detailViewController, newVC = newDetailViewController {
                 crossFadeFromViewController(oldVC, toViewController: newVC)
-            } else if let oldVC = detailViewController {
+            }
+            
+            if let oldVC = detailViewController {
                 removeChild(oldVC)
-            } else if let newVC = newDetailViewController {
+            }
+            
+            if let newVC = newDetailViewController {
                 addChild(newVC, withFrame: containerFrames.detail)
             }
         }
@@ -126,6 +136,7 @@ public class NGSplitViewController: UIViewController {
         super.viewDidLoad()
 
         let frames = containerFrames
+        
         addChild(masterViewController, withFrame: frames.master)
         addChild(detailViewController, withFrame: frames.detail)
     }
@@ -168,7 +179,7 @@ public class NGSplitViewController: UIViewController {
         case .DetailOnly:
             // fudge to fix a strange unexpected call to viewWillLayoutSubviews() on the animate-out transition
             masterFrame = CGRectMake(-320, 0, 320, view.bounds.size.height)
-            
+
         case .MasterOnly:
             break
         }
@@ -183,10 +194,18 @@ public class NGSplitViewController: UIViewController {
         
         child.willMoveToParentViewController(self)
         addChildViewController(child)
+        addChildView(child, withFrame: frame)
+        child.didMoveToParentViewController(self)
+    }
+    
+    private func addChildView(childViewController: UIViewController?, withFrame frame: CGRect) {
+        guard isViewLoaded(), let child = childViewController else {
+            return
+        }
+
         child.view.translatesAutoresizingMaskIntoConstraints = false
         child.view.frame = frame
         view.addSubview(child.view)
-        child.didMoveToParentViewController(self)
         view.setNeedsLayout()
     }
 
@@ -196,9 +215,13 @@ public class NGSplitViewController: UIViewController {
         }
         
         child.willMoveToParentViewController(nil)
-        child.view.removeFromSuperview()
+        removeChildView(child)
         child.removeFromParentViewController()
         child.didMoveToParentViewController(nil)
+    }
+    
+    private func removeChildView(childViewController: UIViewController?) {
+        childViewController?.view.removeFromSuperview()
     }
     
     private func updatePresentationStyle() {
@@ -253,7 +276,7 @@ public class NGSplitViewController: UIViewController {
         view.addSubview(button)
         
         overlayHideButton = button
-        addChild(masterViewController, withFrame: frames.master)
+        addChildView(masterViewController, withFrame: frames.master)
         
         master.view.transform = CGAffineTransformMakeTranslation(-frames.master.size.width, 0)
         UIView.animateWithDuration(transitionDuration,
@@ -278,7 +301,7 @@ public class NGSplitViewController: UIViewController {
             },
             completion: { _ in
                 self.overlayHideButton = nil
-                self.removeChild(master)
+                self.removeChildView(master)
         })
     }
     
@@ -287,59 +310,45 @@ public class NGSplitViewController: UIViewController {
             return
         }
         
-        switch toPresentationStyle {
-        case .MasterOverlay:
-            switch fromPresentationStyle {
-            case .DetailOnly:
-                animateInMasterViewControllerOverlay()
-            default:
-                illegalTransition(fromPresentationStyle, to: toPresentationStyle)
-            }
+        print("\(fromPresentationStyle) -> \(toPresentationStyle)")
+        
+        switch (fromPresentationStyle, toPresentationStyle) {
+
+        case (.SideBySide, .MasterOnly):
+            removeChildView(detail)
             
-        case .DetailOnly:
-            switch fromPresentationStyle {
-            case .MasterOverlay:
-                animateOutMasterViewControllerOverlay()
-            case .SideBySide:
-                removeChild(master)
-                break
-            case .MasterOnly:
-                detail.view.frame = containerFrames.detail
-                crossFadeFromViewController(master, toViewController: detail)
-            default:
-                illegalTransition(fromPresentationStyle, to: toPresentationStyle)
-            }
+        case (.SideBySide, .DetailOnly):
+            removeChildView(master)
             
-        case .MasterOnly:
-            switch fromPresentationStyle {
-            case .MasterOverlay:
-                break
-            case .SideBySide:
-                removeChild(detail)
-            case .DetailOnly:
-                master.view.frame = containerFrames.master
-                crossFadeFromViewController(detail, toViewController: master)
-            default:
-                illegalTransition(fromPresentationStyle, to: toPresentationStyle)
-            }
+        case (.DetailOnly, .MasterOverlay):
+            animateInMasterViewControllerOverlay()
+        
+        case (.MasterOverlay, .DetailOnly):
+            animateOutMasterViewControllerOverlay()
+        
+        case (.MasterOverlay, .MasterOnly):
+            overlayHideButton = nil
+
+        case (.MasterOnly, .DetailOnly):
+            detail.view.frame = containerFrames.detail
+            crossFadeFromViewController(master, toViewController: detail)
+
+        case (.DetailOnly, .MasterOnly):
+            master.view.frame = containerFrames.master
+            crossFadeFromViewController(detail, toViewController: master)
+
+        case (.DetailOnly, .SideBySide):
+            addChildView(master, withFrame: containerFrames.master)
             
-        case .SideBySide:
-            switch fromPresentationStyle {
-            case .DetailOnly:
-                addChild(master, withFrame: containerFrames.master)
-            case .MasterOnly:
-                addChild(detail, withFrame: containerFrames.detail)
-            case .MasterOverlay:
-                overlayHideButton = nil
-            default:
-                illegalTransition(fromPresentationStyle, to: toPresentationStyle)
-            }
-            break
+        case (.MasterOnly, .SideBySide):
+            addChildView(detail, withFrame: containerFrames.detail)
+            
+        case (.MasterOverlay, .SideBySide):
+            overlayHideButton = nil
+
+        default:
+            fatalError("illegal transition from \(fromPresentationStyle) to \(toPresentationStyle)")
         }
-    }
-    
-    private func illegalTransition(from: PresentationStyle, to: PresentationStyle) {
-        fatalError("illegal transition from \(from) to \(to)")
     }
     
     private func notifyDelegateOfChangeFromPresentationStyle(fromPresentationStyle: PresentationStyle, toPresentationStyle: PresentationStyle) {
