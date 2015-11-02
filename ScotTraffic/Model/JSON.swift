@@ -17,16 +17,31 @@ public typealias ContextlessJSONObject = [JSONKey : ContextlessJSONValue]
 public struct JSONValue {
     let value: ContextlessJSONValue
     let context: JSONContext
+
+    public init(value: ContextlessJSONValue, context: JSONContext) {
+        self.value = value
+        self.context = context
+    }
 }
 
 public struct JSONArray {
     let value: ContextlessJSONArray
     let context: JSONContext
+    
+    public init(value: ContextlessJSONArray, context: JSONContext) {
+        self.value = value
+        self.context = context
+    }
 }
 
 public struct JSONObject {
     let value: ContextlessJSONObject
     let context: JSONContext
+
+    public init(value: ContextlessJSONObject, context: JSONContext) {
+        self.value = value
+        self.context = context
+    }
 }
 
 public enum JSONError : ErrorType, CustomStringConvertible {

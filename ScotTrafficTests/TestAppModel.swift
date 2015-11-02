@@ -39,12 +39,21 @@ private func loadTestData<T where T: JSONObjectDecodable>(filename: String) -> [
     for bundle in NSBundle.allBundles() {
         if let path = bundle.pathForResource(filename, ofType: "json", inDirectory: "Data"), let data = NSData(contentsOfFile: path) {
             do {
-                return try [T].decodeJSON(JSONArrayFromData(data))
+                let array = try JSONArrayFromData(data)
+                let context: String->DataSource = { _ in DummyDataSource() }
+                return try [T].decodeJSON(JSONArray(value: array, context: context ))
             } catch {
             }
         }
     }
     fatalError("unable to find \(filename).json")
+}
+
+private class DummyDataSource: DataSource {
+    var value: Observable<Either<NSData, NetworkError>> = Input(initial: .Value(NSData()))
+    
+    func start() {
+    }
 }
 
 public class TestUserDefaults: UserDefaultsProtocol {
