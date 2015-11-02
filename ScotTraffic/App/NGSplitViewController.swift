@@ -9,19 +9,75 @@
 import UIKit
 
 @objc public protocol NGSplitViewControllerDelegate {
-    optional func splitViewControllerTraitCollectionChanged(splitViewController: NGSplitViewController)
+    /**
+     * Should the split view show the master view controller for a given horizontal size class and overall view width?
+     * By default, the master view controller is visible in a regular size class and hidden in a compact.
+     *
+     * @param splitViewController The NGSplitViewController making the request
+     * @param horizontalSizeClass The overall horizontalSizeClass for the NGSplitViewController
+     * @param viewWidth           The overall view width for for the NGSplitViewController
+     * @return true If the master view controller should be shown; false if it should be hidden
+     */
+    optional func splitViewController(splitViewController: NGSplitViewController, shouldShowMasterForHorizontalSizeClass horizontalSizeClass: UIUserInterfaceSizeClass, viewWidth: CGFloat) -> Bool
+
+    /**
+     * Notify that the split view controller has changed the master view controller's visibility. When the master is
+     * hidden, the application should present some user interface to allow the master to be presented temporarily using
+     * overlayMasterViewController()
+     *
+     * @param splitViewController The NGSplitViewController performing the notification
+     * @param viewController      The UIViewController in the master position which has changed visibility
+     */
     optional func splitViewController(splitViewController: NGSplitViewController, didChangeMasterViewControllerVisibility viewController: UIViewController)
+
+    /**
+     * Notify that the split view controller has changed the master view controller's visibility. When the detail is
+     * hidden, the application should present some user interface to allow the detail to be shown again using
+     * dismissOverlaidMasterViewController()
+     *
+     * @param splitViewController The NGSplitViewController performing the notification
+     * @param viewController      The UIViewController in the detail position which has changed visibility
+     */
     optional func splitViewController(splitViewController: NGSplitViewController, didChangeDetailViewControllerVisibility viewController: UIViewController)
 }
 
+/**
+ * A replacement UISplitViewController with a simpler, saner API and no magic.
+ * 
+ * This view controller along with its master and detail view controllers can be created in Interface Builder
+ * but the relationships must be configured in code. This is as simple as setting the masterViewController and
+ * detailViewController properties, and assigning a delegate.
+ *
+ * By default, NGSplitViewController shows the master and detail view controllers side-by-side when in a
+ * regular horizontal size class. The split ratio can be changed by adjusting the splitRatio property.
+ * In a compact horizontal size class, the master view controller disappears leaving the detail to fill the
+ * view of the NGSplitViewController. The application should arrange for some means to present the master
+ * view controller, and call overlayMasterViewController() to do so. On narrow (<=320 points overall) views
+ * the master view controller replaces the full view of the detail using a cross-fade. On wider views, the
+ * master view controller slides in from the left. The application should present some means to return to
+ * the detail view using dismissOverlaidMasterViewController(), although on wider screens any touch in the
+ * right margin outside the overlay will also dismiss the overlay.
+ *
+ * The precise behaviour of when the master view controller is shown and hidden can be overridden by the
+ * delegate.
+ */
 public class NGSplitViewController: UIViewController {
 
     // -- MARK: Public API
-    
+
+    /**
+     * The transition duration in seconds for cross-fades and master overlays
+     */
     public var transitionDuration: NSTimeInterval = 0.3
     
+    /**
+     * The NGSplitViewControllerDelegate.
+     */
     public var delegate: NGSplitViewControllerDelegate?
 
+    /**
+     * The master view controller, shown on the left in a side-by-side presentation
+     */
     public var masterViewController: UIViewController? {
         willSet(newMasterViewController) {
             guard isViewLoaded() else {
@@ -42,6 +98,9 @@ public class NGSplitViewController: UIViewController {
         }
     }
     
+    /**
+     * The detail view controller, shown on the right in a side-by-side presentation
+     */
     public var detailViewController: UIViewController? {
         willSet(newDetailViewController) {
             guard isViewLoaded() else {
@@ -62,20 +121,33 @@ public class NGSplitViewController: UIViewController {
         }
     }
     
+    /**
+     * Is the master view controller currently visible?
+     */
     public var masterViewControllerIsVisible: Bool {
         return presentationStyle.showsMaster
     }
     
+    /**
+     * Is the detail view controller currently visible?
+     */
     public var detailViewControllerIsVisible: Bool {
         return presentationStyle.showsDetail
     }
     
-    public var splitRatio: CGFloat = 0.333 {
+    /**
+     * The ratio of the master view controller's view width to the overall split view controller's view
+     * in side-by-side presentation. Defaults to 320/768 as per UISplitViewController
+     */
+    public var splitRatio: CGFloat = 320.0/768.0 {
         didSet {
             view.setNeedsLayout()
         }
     }
     
+    /**
+     * When in a detail-only presentation, show the master view controller as an overlay
+     */
     public func overlayMasterViewController() {
         guard presentationStyle == .DetailOnly else {
             return
@@ -88,6 +160,9 @@ public class NGSplitViewController: UIViewController {
         }
     }
     
+    /**
+     * Dismiss the overlaid master view controller
+     */
     public func dismissOverlaidMasterViewController() {
         if presentationStyle == .MasterOnly || presentationStyle == .MasterOverlay {
             presentationStyle = .DetailOnly
@@ -225,7 +300,7 @@ public class NGSplitViewController: UIViewController {
     }
     
     private func updatePresentationStyle() {
-        if traitCollection.horizontalSizeClass == .Regular {
+        if showsMasterForSizeClass[traitCollection.horizontalSizeClass] ?? true {
             presentationStyle = .SideBySide
         } else {
             presentationStyle = .DetailOnly
