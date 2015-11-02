@@ -10,7 +10,7 @@ import UIKit
 
 let maximumItemsInDetailView = 10
 
-public class AppCoordinator: NSObject, NGSplitViewControllerDelegate, UINavigationControllerDelegate {
+public class AppCoordinator: NSObject, NGSplitViewControllerDelegate {
     let appModel: AppModel
     let rootWindow: UIWindow
     
@@ -63,8 +63,6 @@ public class AppCoordinator: NSObject, NGSplitViewControllerDelegate, UINavigati
     
     public func start() {
         splitViewController.delegate = self
-        searchViewController.navigationController?.delegate = self
-        mapViewController.navigationController?.delegate = self
         mapViewController.calloutConstructor = viewControllerWithMapItems
 
         // network reachability
@@ -80,6 +78,7 @@ public class AppCoordinator: NSObject, NGSplitViewControllerDelegate, UINavigati
         observations.append(collectionViewModel.shareAction.output(shareAction))
         
         updateShowSearchButton()
+        updateCancelSearchButton()
     
         // defer any initial reachability notification until the view has appeared
         dispatch_async(dispatch_get_main_queue()) {
@@ -121,7 +120,9 @@ public class AppCoordinator: NSObject, NGSplitViewControllerDelegate, UINavigati
         } else {
             mapViewController.navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "708-search"), style: .Plain, target: self, action: Selector("searchButtonTapped"))
         }
-        
+    }
+    
+    private func updateCancelSearchButton() {
         if splitViewController.detailViewControllerIsVisible {
             searchViewController.navigationItem.rightBarButtonItem = nil
         } else {
@@ -164,17 +165,8 @@ public class AppCoordinator: NSObject, NGSplitViewControllerDelegate, UINavigati
         updateShowSearchButton()
     }
     
-    // -- MARK: UINavigationControllerDelegate --
-    
-    public func navigationController(navigationController: UINavigationController, animationControllerForOperation operation: UINavigationControllerOperation, fromViewController fromVC: UIViewController, toViewController toVC: UIViewController) -> UIViewControllerAnimatedTransitioning? {
-        
-        if navigationController === searchViewController.navigationController {
-            if toVC === searchViewController || toVC === mapViewController.navigationController {
-                return FadeTranstion()
-            }
-        }
-        
-        return nil
+    public func splitViewController(splitViewController: NGSplitViewController, didChangeDetailViewControllerVisibility viewController: UIViewController) {
+        updateCancelSearchButton()
     }
     
     // -- MARK: UI Actions --
