@@ -13,8 +13,9 @@ private let minimumContainedViewAlpha: CGFloat = 0.5
 
 class ContainerAnnotationView: MKAnnotationView {
     
+    var animationSequence = AsyncSequence()
     private var calloutView: UIView?
-
+    
     func showView(view: UIView, inMapView container: MKMapView, withPreferredSize preferredSize: CGSize, edgeInsets insets: UIEdgeInsets, completion: Void->Void) {
         let containerBounds = UIEdgeInsetsInsetRect(container.bounds, insets)
         let size = CGSize(
@@ -40,7 +41,6 @@ class ContainerAnnotationView: MKAnnotationView {
         }
         
         view.translatesAutoresizingMaskIntoConstraints = true
-        view.frame = frame
         view.bounds = CGRect(origin: CGPointZero, size: frame.size)
         view.center = CGPoint(x: self.bounds.midX, y: self.bounds.midY)
         view.transform = scaleDownTransformForSize(frame.size)
@@ -49,14 +49,11 @@ class ContainerAnnotationView: MKAnnotationView {
         calloutView = view
         addSubview(view)
 
-        print("begin appear animation")
-        
         UIView.animateWithDuration(scaleAnimationDuration, delay: 0, options: [.CurveEaseOut], animations: {
             view.center = CGPoint(x: frame.midX, y: frame.midY)
             view.transform = CGAffineTransformIdentity
             view.alpha = 1
         }, completion: { finished in
-            print("end appear animation finished=\(finished)")
             completion()
         })
     }
@@ -85,6 +82,10 @@ class ContainerAnnotationView: MKAnnotationView {
         })
     }
     
+    func isPresentingViewController(viewController: UIViewController) -> Bool {
+        return viewController.view.superview === self
+    }
+    
     func scaleDownTransformForSize(size: CGSize) -> CGAffineTransform {
         return CGAffineTransformMakeScale(self.bounds.size.width / size.width, self.bounds.size.height / size.height)
         
@@ -103,7 +104,9 @@ class ContainerAnnotationView: MKAnnotationView {
         guard let calloutView = calloutView where CGRectContainsPoint(calloutView.frame, point) else {
             return nil
         }
-        return calloutView.hitTest(convertPoint(point, toView: calloutView), withEvent: event)
+        let view = calloutView.hitTest(convertPoint(point, toView: calloutView), withEvent: event)
+        print("ContainerAnnotationView hitTest(\(point), \(event)) -> \(view) nr=\(view?.nextResponder())")
+        return view
     }
     
     override func pointInside(point: CGPoint, withEvent event: UIEvent?) -> Bool {

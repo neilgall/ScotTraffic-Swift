@@ -67,7 +67,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, MapViewModelDelega
                 
                 // we have now consumed the selectedMapItem
                 viewModel?.selectedMapItem.value = nil
-                break
+                return
             }
         }
     }
@@ -84,25 +84,36 @@ class MapViewController: UIViewController, MKMapViewDelegate, MapViewModelDelega
         }
         
         let viewController = constructor(mapItems)
-        
-        viewController.willMoveToParentViewController(self)
-        viewController.beginAppearanceTransition(true, animated: true)
-        addChildViewController(viewController)
-        annotationView.showView(viewController.view, inMapView: mapView, withPreferredSize: viewController.preferredContentSize, edgeInsets: calloutEdgeInsets) {
-            viewController.endAppearanceTransition()
-            viewController.didMoveToParentViewController(self)
+        attachViewController(viewController, toAnnotationView: annotationView)
+    }
+    
+    private func hideMapItemsPresentedFromAnnotationView(annotationView: ContainerAnnotationView) {
+        for viewController in childViewControllers.filter({ annotationView.isPresentingViewController($0) }) {
+            detachViewController(viewController, fromAnnotationView: annotationView)
         }
     }
     
-    private func removeChildViewControllersPresentedFrom(annotationView: ContainerAnnotationView) {
-        for viewController in childViewControllers {
-            if viewController.view.superview == annotationView {
-                viewController.willMoveToParentViewController(nil)
-                viewController.beginAppearanceTransition(false, animated: true)
-                annotationView.hideCollectionViewAnimated(true) {
-                    viewController.removeFromParentViewController()
-                    viewController.endAppearanceTransition()
-                }
+    private func attachViewController(viewController: UIViewController, toAnnotationView annotationView: ContainerAnnotationView) {
+        annotationView.animationSequence.dispatch { completion in
+            viewController.willMoveToParentViewController(self)
+            viewController.beginAppearanceTransition(true, animated: true)
+            self.addChildViewController(viewController)
+            annotationView.showView(viewController.view, inMapView: self.mapView, withPreferredSize: viewController.preferredContentSize, edgeInsets: calloutEdgeInsets) {
+                viewController.endAppearanceTransition()
+                viewController.didMoveToParentViewController(self)
+                completion()
+            }
+        }
+    }
+    
+    private func detachViewController(viewController: UIViewController, fromAnnotationView annotationView: ContainerAnnotationView) {
+        annotationView.animationSequence.dispatch { completion in
+            viewController.willMoveToParentViewController(nil)
+            viewController.beginAppearanceTransition(false, animated: true)
+            annotationView.hideCollectionViewAnimated(true) {
+                viewController.removeFromParentViewController()
+                viewController.endAppearanceTransition()
+                completion()
             }
         }
     }
@@ -189,7 +200,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, MapViewModelDelega
     func mapView(mapView: MKMapView, didDeselectAnnotationView view: MKAnnotationView) {
         if !updatingAnnotations {
             if let annotationView = view as? ContainerAnnotationView {
-                removeChildViewControllersPresentedFrom(annotationView)
+                hideMapItemsPresentedFromAnnotationView(annotationView)
             }
         }
     }

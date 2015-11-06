@@ -24,6 +24,7 @@
 		2813B2DB1BE647C90017F847 /* CachedHTTPDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2813B2DA1BE647C90017F847 /* CachedHTTPDataSource.swift */; };
 		2813B2DD1BE655020017F847 /* DataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2813B2DC1BE655020017F847 /* DataSource.swift */; };
 		2817D92D1BC5D2B70082F4A7 /* WithFlag.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2817D92C1BC5D2B70082F4A7 /* WithFlag.swift */; };
+		2831B68C1BED52DC005B4933 /* AsyncSequence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2831B68B1BED52DC005B4933 /* AsyncSequence.swift */; };
 		2841A0F01BCD9B3900D22A8E /* EitherTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2841A0EF1BCD9B3900D22A8E /* EitherTests.swift */; };
 		284DE0961BBDCD4200E6A678 /* Either.swift in Sources */ = {isa = PBXBuildFile; fileRef = 284DE0951BBDCD4200E6A678 /* Either.swift */; };
 		284DE0981BBDD0D800E6A678 /* AppModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 284DE0971BBDD0D800E6A678 /* AppModel.swift */; };
@@ -110,6 +111,7 @@
 		2813B2DA1BE647C90017F847 /* CachedHTTPDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CachedHTTPDataSource.swift; sourceTree = "<group>"; };
 		2813B2DC1BE655020017F847 /* DataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataSource.swift; sourceTree = "<group>"; };
 		2817D92C1BC5D2B70082F4A7 /* WithFlag.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WithFlag.swift; sourceTree = "<group>"; };
+		2831B68B1BED52DC005B4933 /* AsyncSequence.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AsyncSequence.swift; sourceTree = "<group>"; };
 		2841A0EF1BCD9B3900D22A8E /* EitherTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EitherTests.swift; sourceTree = "<group>"; };
 		284DE0951BBDCD4200E6A678 /* Either.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Either.swift; sourceTree = "<group>"; };
 		284DE0971BBDD0D800E6A678 /* AppModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppModel.swift; sourceTree = "<group>"; };
@@ -280,6 +282,7 @@
 			children = (
 				286559191BC2A7200058A35A /* FRP-UI-Extensions.swift */,
 				28AF4A061BD82342009B0AE8 /* FadeTransition.swift */,
+				2831B68B1BED52DC005B4933 /* AsyncSequence.swift */,
 			);
 			name = Core;
 			sourceTree = "<group>";
@@ -516,6 +519,7 @@
 				2865591A1BC2A7200058A35A /* FRP-UI-Extensions.swift in Sources */,
 				28875EA41BBC72FB00E67A16 /* Network.swift in Sources */,
 				28AF4A051BD6ECD9009B0AE8 /* SearchResultCell.swift in Sources */,
+				2831B68C1BED52DC005B4933 /* AsyncSequence.swift in Sources */,
 				718F00C91BCEFF8800D51B43 /* TrafficCameraCell.swift in Sources */,
 				28DB3BF51BC02892001AAC2A /* SafetyCameras.swift in Sources */,
 				280486511BC08216003BA360 /* PeriodicStarter.swift in Sources */,
