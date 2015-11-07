@@ -9,8 +9,11 @@
 import UIKit
 import MapKit
 
-class SafetyCameraCell: MapItemCollectionViewCell {
+private let mapRectSize: Double = 4000
+
+class SafetyCameraCell: MapItemCollectionViewCell, MKMapViewDelegate {
     @IBOutlet var iconImageView: UIImageView?
+    @IBOutlet var mapView: MKMapView?
     @IBOutlet var roadLabel: UILabel?
     @IBOutlet var descriptionLabel: UILabel?
     @IBOutlet var imageView: UIImageView?
@@ -18,6 +21,7 @@ class SafetyCameraCell: MapItemCollectionViewCell {
 
     private var item: Item?
     private var image: Observable<UIImage?>?
+    private var mapImage: Input<UIImage?> = Input(initial: nil)
     private var observations = [Observation]()
     
     override func configure(item: Item) {
@@ -26,12 +30,23 @@ class SafetyCameraCell: MapItemCollectionViewCell {
             iconImageView?.image = iconForSpeedLimit(safetyCamera.speedLimit)
             roadLabel?.text = safetyCamera.road
             descriptionLabel?.text = safetyCamera.name
+
+            if let mapView = mapView {
+                mapView.alpha = 0
+                mapView.visibleMapRect = MKMapRect(origin: safetyCamera.mapPoint, size: MKMapSize(width: mapRectSize, height: mapRectSize))
+                mapView.setCenterCoordinate(MKCoordinateForMapPoint(safetyCamera.mapPoint), animated: false)
+                mapView.addAnnotation(MapAnnotation(mapItems: [safetyCamera]))
+            }
             
-            observations.append(safetyCamera.image.map(applyGradientMask).output { [weak self] image in
+            // model image, otherwise map image
+            let imageSelector = union(safetyCamera.image, mapImage.gate(safetyCamera.image.map({ $0 == nil })))
+            
+            observations.append(imageSelector.map(applyGradientMask).output { [weak self] image in
                 self?.imageView?.image = image
+                self?.mapView?.hidden = (image != nil)
             })
             
-            observations.append(safetyCamera.image.output { [weak self] _ in
+            observations.append(imageSelector.output { [weak self] _ in
                 self?.shareButton?.enabled = true
             })
 
@@ -53,6 +68,15 @@ class SafetyCameraCell: MapItemCollectionViewCell {
     override func prepareForReuse() {
         observations.removeAll()
         image = nil
+        mapImage.value = nil
+    }
+    
+    // -- MARK: MKMapViewDelegate
+    
+    func mapViewDidFinishRenderingMap(mapView: MKMapView, fullyRendered: Bool) {
+        mapView.alpha = 1
+        mapImage.value = mapView.snapshotImage()
+        mapView.alpha = 0
     }
 }
 

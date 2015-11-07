@@ -18,12 +18,25 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="284"/>
                         <animations/>
                     </imageView>
-                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="RLV-et-j90" userLabel="CameraImage">
+                    <mapView clipsSubviews="YES" multipleTouchEnabled="YES" alpha="0.80000000000000004" contentMode="scaleToFill" mapType="hybrid" zoomEnabled="NO" scrollEnabled="NO" rotateEnabled="NO" showsPointsOfInterest="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TCX-4t-KEg">
+                        <rect key="frame" x="0.0" y="44" width="320" height="240"/>
+                        <animations/>
+                        <connections>
+                            <outlet property="delegate" destination="gTV-IL-0wX" id="y4q-co-naj"/>
+                        </connections>
+                    </mapView>
+                    <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="RLV-et-j90" userLabel="CameraImage">
                         <rect key="frame" x="0.0" y="44" width="320" height="240"/>
                         <animations/>
                         <constraints>
+                            <constraint firstAttribute="width" secondItem="RLV-et-j90" secondAttribute="height" multiplier="4:3" id="Y3w-kh-ud4"/>
                             <constraint firstAttribute="width" secondItem="RLV-et-j90" secondAttribute="height" multiplier="4:3" priority="999" id="cmh-wO-WEB"/>
                         </constraints>
+                        <variation key="default">
+                            <mask key="constraints">
+                                <exclude reference="cmh-wO-WEB"/>
+                            </mask>
+                        </variation>
                     </imageView>
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="iYR-BE-oXa" userLabel="Details">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="284"/>
@@ -135,6 +148,8 @@
                 <constraint firstItem="cnZ-ei-phh" firstAttribute="bottom" secondItem="iYR-BE-oXa" secondAttribute="bottom" id="3Am-mm-qh9"/>
                 <constraint firstItem="RLV-et-j90" firstAttribute="leading" secondItem="iYR-BE-oXa" secondAttribute="leading" id="4rK-oe-Ddl"/>
                 <constraint firstItem="cnZ-ei-phh" firstAttribute="top" secondItem="iYR-BE-oXa" secondAttribute="top" id="56D-yl-Cc1"/>
+                <constraint firstItem="cnZ-ei-phh" firstAttribute="trailing" secondItem="TCX-4t-KEg" secondAttribute="trailing" id="79O-C8-LrG"/>
+                <constraint firstItem="cnZ-ei-phh" firstAttribute="leading" secondItem="TCX-4t-KEg" secondAttribute="leading" id="9cA-Pr-qAp"/>
                 <constraint firstItem="RLV-et-j90" firstAttribute="top" secondItem="iYR-BE-oXa" secondAttribute="top" constant="44" id="D9t-LJ-W7g"/>
                 <constraint firstItem="iYR-BE-oXa" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" constant="-10" id="DuG-o8-wkg"/>
                 <constraint firstItem="cnZ-ei-phh" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" id="IWw-us-mej"/>
@@ -144,10 +159,12 @@
                 <constraint firstItem="RLV-et-j90" firstAttribute="leading" secondItem="cnZ-ei-phh" secondAttribute="leading" id="Nyg-59-jnh"/>
                 <constraint firstItem="cnZ-ei-phh" firstAttribute="trailing" secondItem="iYR-BE-oXa" secondAttribute="trailing" id="PKg-ZE-MSt"/>
                 <constraint firstItem="RLV-et-j90" firstAttribute="trailing" secondItem="cnZ-ei-phh" secondAttribute="trailing" id="PR8-6u-Qqf"/>
+                <constraint firstItem="cnZ-ei-phh" firstAttribute="top" secondItem="TCX-4t-KEg" secondAttribute="top" constant="-44" id="Svp-9A-MOK"/>
                 <constraint firstItem="iYR-BE-oXa" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" constant="-10" id="YOP-bB-ULd"/>
                 <constraint firstItem="iYR-BE-oXa" firstAttribute="bottom" secondItem="RLV-et-j90" secondAttribute="bottom" id="bud-Ah-YJz"/>
                 <constraint firstItem="cnZ-ei-phh" firstAttribute="leading" secondItem="iYR-BE-oXa" secondAttribute="leading" id="exB-pT-P0U"/>
                 <constraint firstItem="RLV-et-j90" firstAttribute="bottom" secondItem="cnZ-ei-phh" secondAttribute="bottom" id="hO2-bt-BlF"/>
+                <constraint firstItem="cnZ-ei-phh" firstAttribute="bottom" secondItem="TCX-4t-KEg" secondAttribute="bottom" id="hxP-1P-0GQ"/>
                 <constraint firstItem="RLV-et-j90" firstAttribute="trailing" secondItem="iYR-BE-oXa" secondAttribute="trailing" id="rit-f4-yCs"/>
             </constraints>
             <variation key="default">
@@ -163,6 +180,7 @@
                 <outlet property="descriptionLabel" destination="TFJ-d8-Ya5" id="fSX-OT-1AS"/>
                 <outlet property="iconImageView" destination="Uiw-IN-UHk" id="6Ei-aF-AnO"/>
                 <outlet property="imageView" destination="RLV-et-j90" id="hY9-fr-5dv"/>
+                <outlet property="mapView" destination="TCX-4t-KEg" id="asj-f7-ij7"/>
                 <outlet property="roadLabel" destination="wCu-Qu-zja" id="6Q9-N3-56V"/>
                 <outlet property="shareButton" destination="goU-j0-Ddd" id="iKc-v0-uWm"/>
             </connections>
