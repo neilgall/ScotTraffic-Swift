@@ -12,8 +12,16 @@ private let scaleAnimationDuration: NSTimeInterval = 0.22
 private let minimumContainedViewAlpha: CGFloat = 0.5
 private let calloutEdgeInsets = UIEdgeInsetsMake(10, 10, 10, 10)
 
+protocol CalloutContainerViewDelegate {
+    func calloutContainerView(calloutContainerView: CalloutContainerView, didDismissCalloutForAnnotationView annotationView: MKAnnotationView)
+}
+
 class CalloutContainerView: UIView {
 
+    private var annotationsByCallout = ViewKeyedMap<MKAnnotationView>()
+    
+    var delegate: CalloutContainerViewDelegate?
+    
     override func layoutSubviews() {
         // manual layout
     }
@@ -38,6 +46,7 @@ class CalloutContainerView: UIView {
         view.alpha = minimumContainedViewAlpha
         
         addSubview(view)
+        annotationsByCallout[view] = annotationView
         
         UIView.animateWithDuration(scaleAnimationDuration, delay: 0, options: [.CurveEaseOut], animations: {
             view.center = CGPoint(x: calloutFrame.midX, y: calloutFrame.midY)
@@ -46,12 +55,21 @@ class CalloutContainerView: UIView {
         }, completion: { finished in
             completion()
         })
+        
+        let swipe = UISwipeGestureRecognizer(target: self, action: Selector("handleSwipeGesture:"))
+        swipe.direction = [.Up, .Down]
+        view.addGestureRecognizer(swipe)
     }
     
     func hideCalloutView(view: UIView, forAnnotationView annotationView: MKAnnotationView, animated: Bool, completion: Void->Void) {
-        if !animated {
+        let finish = {
             view.removeFromSuperview()
+            self.annotationsByCallout[view] = nil
             completion()
+        }
+        
+        if !animated {
+            finish()
             return
         }
         
@@ -60,9 +78,16 @@ class CalloutContainerView: UIView {
             view.transform = scaleDownTransformFromSize(view.bounds.size, toSize: annotationView.bounds.size)
             view.alpha = minimumContainedViewAlpha
         }, completion: { finished in
-            view.removeFromSuperview()
-            completion()
+            finish()
         })
+    }
+    
+    func handleSwipeGesture(swipe: UIGestureRecognizer) {
+        guard let view = swipe.view, let annotationView = annotationsByCallout[view] else {
+            return
+        }
+        
+        delegate?.calloutContainerView(self, didDismissCalloutForAnnotationView: annotationView)
     }
     
     private func centerOfView(view: UIView) -> CGPoint {
