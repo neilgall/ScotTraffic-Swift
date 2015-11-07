@@ -24,8 +24,16 @@ class SafetyCameraCell: MapItemCollectionViewCellWithMap {
         if case .SafetyCameraItem(let safetyCamera) = item {
             self.item = item
             iconImageView?.image = iconForSpeedLimit(safetyCamera.speedLimit)
-            roadLabel?.text = safetyCamera.road
-            descriptionLabel?.text = safetyCamera.name
+            
+            if safetyCamera.road.isEmpty {
+                roadLabel?.text = safetyCamera.name
+                roadLabel?.font = UIFont.systemFontOfSize(17.0)
+                descriptionLabel?.text = nil
+            } else {
+                roadLabel?.text = safetyCamera.road
+                roadLabel?.font = UIFont.systemFontOfSize(20.0)
+                descriptionLabel?.text = safetyCamera.name
+            }
 
             configureMap(safetyCamera)
 
@@ -48,8 +56,9 @@ class SafetyCameraCell: MapItemCollectionViewCellWithMap {
     }
     
     @IBAction func share() {
-        if let item = item, let image = image?.pullValue, case .SafetyCameraItem(let safetyCamera) = item {
+        if let item = item, case .SafetyCameraItem(let safetyCamera) = item {
             let coordinate = MKCoordinateForMapPoint(safetyCamera.mapPoint)
+            let image = self.image?.pullValue?.flatMap { $0 }
             let shareItem = SharableSafetyCamera(name: safetyCamera.name, image: image, coordinate: coordinate, link: safetyCamera.url)
             let rect = convertRect(shareButton!.bounds, fromView: shareButton!)
             delegate?.collectionViewCell(self, didRequestShareItem: shareItem, fromRect: rect)
