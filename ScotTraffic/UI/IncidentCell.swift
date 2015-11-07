@@ -44,7 +44,7 @@ class IncidentCell: MapItemCollectionViewCellWithMap {
                 self.textLabel?.text = text
                 self.setNeedsLayout()
                 
-                self.item = SharableIncident(name: text, type: incident.type, link: incident.url)
+                self.item = SharableIncident(name: text, type: incident.type, link: incident.url, mapImage: self.mapImage.latest())
             }
         }
     }
@@ -73,7 +73,10 @@ private func iconForIncidentType(type: IncidentType) -> UIImage? {
 }
 
 private func formatIncidentDate(date: NSDate) -> String {
-    return ""
+    let formatter = NSDateFormatter()
+    formatter.dateStyle = .MediumStyle
+    formatter.timeStyle = .NoStyle
+    return formatter.stringFromDate(date)
 }
 
 private func formatIncidentHTMLText(text: String) -> String {
@@ -94,8 +97,12 @@ private func formatIncidentHTMLText(text: String) -> String {
 private struct SharableIncident: SharableItem {
     let name: String
     let type: IncidentType
-    let image: UIImage? = nil
     let link: NSURL?
+    let mapImage: Observable<UIImage?>
+    
+    var image: UIImage? {
+        return mapImage.pullValue?.flatMap { $0 }
+    }
     
     var text: String {
         let typeStr = (type == .Alert) ? "Incident" : "Roadworks"

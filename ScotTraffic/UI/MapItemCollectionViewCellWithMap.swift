@@ -18,9 +18,11 @@ class MapItemCollectionViewCellWithMap : MapItemCollectionViewCell, MKMapViewDel
 
     func configureMap(mapItem: MapItem) {
         if let mapView = mapView {
+            let origin = MKMapPoint(x: mapItem.mapPoint.x - mapRectSize * 0.5, y: mapItem.mapPoint.y - mapRectSize * 0.65)
+            let mapRect = MKMapRect(origin: origin, size: MKMapSize(width: mapRectSize, height: mapRectSize))
+        
             mapView.alpha = 0
-            mapView.visibleMapRect = MKMapRect(origin: mapItem.mapPoint, size: MKMapSize(width: mapRectSize, height: mapRectSize))
-            mapView.setCenterCoordinate(MKCoordinateForMapPoint(mapItem.mapPoint), animated: false)
+            mapView.visibleMapRect = mapView.mapRectThatFits(mapRect)
             mapView.addAnnotation(MapAnnotation(mapItems: [mapItem]))
         }
     }

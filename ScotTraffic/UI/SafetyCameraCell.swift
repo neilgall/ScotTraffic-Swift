@@ -42,7 +42,7 @@ class SafetyCameraCell: MapItemCollectionViewCellWithMap {
             })
 
             // keep the original image for sharing
-            self.image = safetyCamera.image.latest()
+            self.image = imageSelector.latest()
             safetyCamera.updateImage()
         }
     }
