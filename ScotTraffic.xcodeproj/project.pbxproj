@@ -35,7 +35,8 @@
 		286559231BC3198D0058A35A /* MapViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 286559221BC3198D0058A35A /* MapViewModel.swift */; };
 		286559251BC31D020058A35A /* MapAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 286559241BC31D020058A35A /* MapAnnotation.swift */; };
 		286559271BC32D880058A35A /* ImageCompositor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 286559261BC32D880058A35A /* ImageCompositor.swift */; };
-		287B230D1BE511E400DBF3F1 /* ContainerAnnotationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 287B230C1BE511E400DBF3F1 /* ContainerAnnotationView.swift */; };
+		2879A9741BEE5DA900923FFE /* CalloutContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2879A9731BEE5DA900923FFE /* CalloutContainerView.swift */; };
+		2879A9761BEE648800923FFE /* ViewKeyedMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2879A9751BEE648800923FFE /* ViewKeyedMap.swift */; };
 		28875EA41BBC72FB00E67A16 /* Network.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28875EA31BBC72FB00E67A16 /* Network.swift */; };
 		28875EA71BBC739100E67A16 /* JSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28875EA61BBC739100E67A16 /* JSON.swift */; };
 		28875EA91BBC7A2F00E67A16 /* JSONTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28875EA81BBC7A2F00E67A16 /* JSONTests.swift */; };
@@ -122,7 +123,8 @@
 		286559221BC3198D0058A35A /* MapViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapViewModel.swift; sourceTree = "<group>"; };
 		286559241BC31D020058A35A /* MapAnnotation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapAnnotation.swift; sourceTree = "<group>"; };
 		286559261BC32D880058A35A /* ImageCompositor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageCompositor.swift; sourceTree = "<group>"; };
-		287B230C1BE511E400DBF3F1 /* ContainerAnnotationView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContainerAnnotationView.swift; sourceTree = "<group>"; };
+		2879A9731BEE5DA900923FFE /* CalloutContainerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CalloutContainerView.swift; sourceTree = "<group>"; };
+		2879A9751BEE648800923FFE /* ViewKeyedMap.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewKeyedMap.swift; sourceTree = "<group>"; };
 		28875EA31BBC72FB00E67A16 /* Network.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Network.swift; sourceTree = "<group>"; };
 		28875EA61BBC739100E67A16 /* JSON.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JSON.swift; sourceTree = "<group>"; };
 		28875EA81BBC7A2F00E67A16 /* JSONTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JSONTests.swift; sourceTree = "<group>"; };
@@ -283,6 +285,7 @@
 				286559191BC2A7200058A35A /* FRP-UI-Extensions.swift */,
 				28AF4A061BD82342009B0AE8 /* FadeTransition.swift */,
 				2831B68B1BED52DC005B4933 /* AsyncSequence.swift */,
+				2879A9751BEE648800923FFE /* ViewKeyedMap.swift */,
 			);
 			name = Core;
 			sourceTree = "<group>";
@@ -294,7 +297,7 @@
 				286559221BC3198D0058A35A /* MapViewModel.swift */,
 				286559241BC31D020058A35A /* MapAnnotation.swift */,
 				286559261BC32D880058A35A /* ImageCompositor.swift */,
-				287B230C1BE511E400DBF3F1 /* ContainerAnnotationView.swift */,
+				2879A9731BEE5DA900923FFE /* CalloutContainerView.swift */,
 			);
 			name = Map;
 			sourceTree = "<group>";
@@ -523,7 +526,9 @@
 				718F00C91BCEFF8800D51B43 /* TrafficCameraCell.swift in Sources */,
 				28DB3BF51BC02892001AAC2A /* SafetyCameras.swift in Sources */,
 				280486511BC08216003BA360 /* PeriodicStarter.swift in Sources */,
+				2879A9761BEE648800923FFE /* ViewKeyedMap.swift in Sources */,
 				2865591E1BC316590058A35A /* AppCoordinator.swift in Sources */,
+				2879A9741BEE5DA900923FFE /* CalloutContainerView.swift in Sources */,
 				286559271BC32D880058A35A /* ImageCompositor.swift in Sources */,
 				28DB3BFA1BC02C88001AAC2A /* Incidents.swift in Sources */,
 				288AC88F1BCFA43B004EA6A0 /* SharableItem.swift in Sources */,
@@ -533,7 +538,6 @@
 				286559151BC1DCB70058A35A /* Favourites.swift in Sources */,
 				716D9E951BCA5EA1005A6B49 /* MapItemCollectionViewController.swift in Sources */,
 				28DB3BF81BC02968001AAC2A /* Weather.swift in Sources */,
-				287B230D1BE511E400DBF3F1 /* ContainerAnnotationView.swift in Sources */,
 				286559231BC3198D0058A35A /* MapViewModel.swift in Sources */,
 				286559211BC3182C0058A35A /* MapViewController.swift in Sources */,
 				288AC88D1BCFA062004EA6A0 /* MapItemCollectionViewCell.swift in Sources */,

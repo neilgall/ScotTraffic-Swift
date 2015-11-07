@@ -14,18 +14,20 @@ private let minimumAnnotationSpacingY: CGFloat = 32
 private let zoomEdgePadding = UIEdgeInsetsMake(60, 40, 60, 40)
 private let zoomToMapItemInsetX: Double = -40000
 private let zoomToMapItemInsetY: Double = -40000
-private let calloutEdgeInsets = UIEdgeInsetsMake(10, 10, 10, 10)
 
 class MapViewController: UIViewController, MKMapViewDelegate, MapViewModelDelegate {
 
     @IBOutlet var mapView: MKMapView!
-
+    @IBOutlet var calloutContainerView: CalloutContainerView!
+    
     var maximumDetailItemsForCollectionCallout: Int = 1
     
     var viewModel: MapViewModel?
     var observations = [Observation]()
     var updatingAnnotations: Bool = false
     var calloutConstructor: ([MapItem] -> UIViewController)?
+    var calloutViewControllerByAnnotation = ViewKeyedMap<UIViewController>()
+    var animationSequence = AsyncSequence()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -78,7 +80,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, MapViewModelDelega
         }
     }
     
-    private func showMapItems(mapItems: [MapItem], fromAnnotationView annotationView: ContainerAnnotationView) {
+    private func showMapItems(mapItems: [MapItem], fromAnnotationView annotationView: MKAnnotationView) {
         guard let constructor = calloutConstructor else {
             return
         }
@@ -87,32 +89,35 @@ class MapViewController: UIViewController, MKMapViewDelegate, MapViewModelDelega
         attachViewController(viewController, toAnnotationView: annotationView)
     }
     
-    private func hideMapItemsPresentedFromAnnotationView(annotationView: ContainerAnnotationView) {
-        for viewController in childViewControllers.filter({ annotationView.isPresentingViewController($0) }) {
-            detachViewController(viewController, fromAnnotationView: annotationView)
+    private func hideMapItemsPresentedFromAnnotationView(annotationView: MKAnnotationView) {
+        guard let viewController = calloutViewControllerByAnnotation[annotationView] else {
+            return
         }
+        detachViewController(viewController, fromAnnotationView: annotationView)
     }
     
-    private func attachViewController(viewController: UIViewController, toAnnotationView annotationView: ContainerAnnotationView) {
-        annotationView.animationSequence.dispatch { completion in
+    private func attachViewController(viewController: UIViewController, toAnnotationView annotationView: MKAnnotationView) {
+        animationSequence.dispatch { completion in
             viewController.willMoveToParentViewController(self)
             viewController.beginAppearanceTransition(true, animated: true)
             self.addChildViewController(viewController)
-            annotationView.showView(viewController.view, inMapView: self.mapView, withPreferredSize: viewController.preferredContentSize, edgeInsets: calloutEdgeInsets) {
+            self.calloutContainerView.addCalloutView(viewController.view, withPreferredSize: viewController.preferredContentSize, fromAnnotationView: annotationView) {
                 viewController.endAppearanceTransition()
                 viewController.didMoveToParentViewController(self)
+                self.calloutViewControllerByAnnotation[annotationView] = viewController
                 completion()
             }
         }
     }
     
-    private func detachViewController(viewController: UIViewController, fromAnnotationView annotationView: ContainerAnnotationView) {
-        annotationView.animationSequence.dispatch { completion in
+    private func detachViewController(viewController: UIViewController, fromAnnotationView annotationView: MKAnnotationView) {
+        animationSequence.dispatch { completion in
             viewController.willMoveToParentViewController(nil)
             viewController.beginAppearanceTransition(false, animated: true)
-            annotationView.hideCollectionViewAnimated(true) {
+            self.calloutContainerView.hideCalloutView(viewController.view, forAnnotationView: annotationView, animated: true) {
                 viewController.removeFromParentViewController()
                 viewController.endAppearanceTransition()
+                self.calloutViewControllerByAnnotation[annotationView] = nil
                 completion()
             }
         }
@@ -164,9 +169,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, MapViewModelDelega
         let reuseIdentifier = "\(mapAnnotation.reuseIdentifier).\(showsCustomCallout)"
         
         let annotationView = mapView.dequeueReusableAnnotationViewWithIdentifier(reuseIdentifier)
-            ?? (showsCustomCallout
-                ? ContainerAnnotationView(annotation: annotation, reuseIdentifier: reuseIdentifier)
-                : MKAnnotationView(annotation: annotation, reuseIdentifier: reuseIdentifier))
+            ?? MKAnnotationView(annotation: annotation, reuseIdentifier: reuseIdentifier)
 
         annotationView.image = mapAnnotation.image
         annotationView.canShowCallout = !showsCustomCallout
@@ -191,17 +194,16 @@ class MapViewController: UIViewController, MKMapViewDelegate, MapViewModelDelega
     }
     
     func mapView(mapView: MKMapView, didSelectAnnotationView view: MKAnnotationView) {
-        guard let annotation = view.annotation as? MapAnnotation, annotationView = view as? ContainerAnnotationView else {
+        // views which show the
+        guard !view.canShowCallout, let annotation = view.annotation as? MapAnnotation else {
             return
         }
-        showMapItems(annotation.mapItems, fromAnnotationView: annotationView)
+        showMapItems(annotation.mapItems, fromAnnotationView: view)
     }
     
     func mapView(mapView: MKMapView, didDeselectAnnotationView view: MKAnnotationView) {
         if !updatingAnnotations {
-            if let annotationView = view as? ContainerAnnotationView {
-                hideMapItemsPresentedFromAnnotationView(annotationView)
-            }
+            hideMapItemsPresentedFromAnnotationView(view)
         }
     }
 
