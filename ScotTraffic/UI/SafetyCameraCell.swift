@@ -9,11 +9,8 @@
 import UIKit
 import MapKit
 
-private let mapRectSize: Double = 4000
-
-class SafetyCameraCell: MapItemCollectionViewCell, MKMapViewDelegate {
+class SafetyCameraCell: MapItemCollectionViewCellWithMap {
     @IBOutlet var iconImageView: UIImageView?
-    @IBOutlet var mapView: MKMapView?
     @IBOutlet var roadLabel: UILabel?
     @IBOutlet var descriptionLabel: UILabel?
     @IBOutlet var imageView: UIImageView?
@@ -21,7 +18,6 @@ class SafetyCameraCell: MapItemCollectionViewCell, MKMapViewDelegate {
 
     private var item: Item?
     private var image: Observable<UIImage?>?
-    private var mapImage: Input<UIImage?> = Input(initial: nil)
     private var observations = [Observation]()
     
     override func configure(item: Item) {
@@ -31,13 +27,8 @@ class SafetyCameraCell: MapItemCollectionViewCell, MKMapViewDelegate {
             roadLabel?.text = safetyCamera.road
             descriptionLabel?.text = safetyCamera.name
 
-            if let mapView = mapView {
-                mapView.alpha = 0
-                mapView.visibleMapRect = MKMapRect(origin: safetyCamera.mapPoint, size: MKMapSize(width: mapRectSize, height: mapRectSize))
-                mapView.setCenterCoordinate(MKCoordinateForMapPoint(safetyCamera.mapPoint), animated: false)
-                mapView.addAnnotation(MapAnnotation(mapItems: [safetyCamera]))
-            }
-            
+            configureMap(safetyCamera)
+
             // model image, otherwise map image
             let imageSelector = union(safetyCamera.image, mapImage.gate(safetyCamera.image.map({ $0 == nil })))
             
@@ -69,15 +60,7 @@ class SafetyCameraCell: MapItemCollectionViewCell, MKMapViewDelegate {
         observations.removeAll()
         image = nil
         mapImage.value = nil
-    }
-    
-    // -- MARK: MKMapViewDelegate
-    
-    func mapViewDidFinishRenderingMap(mapView: MKMapView, fullyRendered: Bool) {
-        mapView.alpha = 1
-        mapImage.value = mapView.snapshotImage()
-        mapView.alpha = 0
-    }
+    }    
 }
 
 private func iconForSpeedLimit(speedLimit: SpeedLimit) -> UIImage? {
@@ -91,38 +74,6 @@ private func iconForSpeedLimit(speedLimit: SpeedLimit) -> UIImage? {
     case .National: return UIImage(named: "nsl")
     default: return nil
     }
-}
-
-private func applyGradientMask(image: UIImage?) -> UIImage? {
-    guard let image = image else {
-        return nil
-    }
-    
-    let size = image.size
-    
-    let colorSpace = CGColorSpaceCreateDeviceGray()
-    let context = CGBitmapContextCreate(nil,
-        Int(size.width),
-        Int(size.height),
-        8,
-        Int(size.width),
-        colorSpace,
-        CGImageAlphaInfo.Only.rawValue)
-    
-    let colors = [ UIColor.blackColor().CGColor, UIColor.clearColor().CGColor ]
-    let colorLocations: [CGFloat] = [ 0.3, 1.0 ]
-    
-    let gradient = CGGradientCreateWithColors(colorSpace, colors, colorLocations)
-    CGContextDrawLinearGradient(context,
-        gradient,
-        CGPointMake(size.width/2, 0),
-        CGPointMake(size.width/2, size.height),
-        CGGradientDrawingOptions.DrawsBeforeStartLocation)
-    
-    let mask = CGBitmapContextCreateImage(context)
-    
-    let maskedImage = CGImageCreateWithMask(image.CGImage, mask)
-    return maskedImage.map { UIImage(CGImage: $0) }
 }
 
 private struct SharableSafetyCamera: SharableItem {

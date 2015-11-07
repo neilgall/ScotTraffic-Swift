@@ -7,15 +7,19 @@
 //
 
 import UIKit
+import MapKit
 
-class IncidentCell: MapItemCollectionViewCell {
+class IncidentCell: MapItemCollectionViewCellWithMap {
     
+    @IBOutlet var backgroundImageView: UIImageView?
     @IBOutlet var iconImageView: UIImageView?
     @IBOutlet var dateLabel: UILabel?
     @IBOutlet var titleLabel: UILabel?
     @IBOutlet var textLabel: UILabel?
     @IBOutlet var shareButton: UIButton?
+
     private var item: SharableIncident?
+    private var observations = [Observation]()
     
     override func configure(item: Item) {
         textLabel?.text = nil
@@ -24,7 +28,13 @@ class IncidentCell: MapItemCollectionViewCell {
             iconImageView?.image = iconForIncidentType(incident.type)
             titleLabel?.text = incident.name
             dateLabel?.text = formatIncidentDate(incident.date)
+
+            configureMap(incident)
             
+            observations.append(mapImage.map(applyGradientMask).output({ [weak self] image in
+                self?.backgroundImageView?.image = image
+            }))
+
             // The first time we parse HTML using NSAttributedString involves dynamically
             // linking the WebKit framework which causes a noticable delay. Because the
             // collection view cells are populated immediately on the transition to the
@@ -47,7 +57,9 @@ class IncidentCell: MapItemCollectionViewCell {
     }
     
     override func prepareForReuse() {
+        observations.removeAll()
         item = nil
+        backgroundImageView?.image = nil
     }
 }
 

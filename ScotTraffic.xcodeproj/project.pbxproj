@@ -52,6 +52,7 @@
 		28AF4A071BD82342009B0AE8 /* FadeTransition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28AF4A061BD82342009B0AE8 /* FadeTransition.swift */; };
 		28AF4A0B1BD849C0009B0AE8 /* PopoverContentSize.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28AF4A0A1BD849C0009B0AE8 /* PopoverContentSize.swift */; };
 		28BFBC5B1BBC91AA00827069 /* FRPTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28BFBC5A1BBC91AA00827069 /* FRPTests.swift */; };
+		28D3928C1BEE942800924F16 /* MapItemCollectionViewCellWithMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28D3928B1BEE942800924F16 /* MapItemCollectionViewCellWithMap.swift */; };
 		28DB3BF31BC025D0001AAC2A /* Functions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28DB3BF21BC025D0001AAC2A /* Functions.swift */; };
 		28DB3BF51BC02892001AAC2A /* SafetyCameras.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28DB3BF41BC02892001AAC2A /* SafetyCameras.swift */; };
 		28DB3BF81BC02968001AAC2A /* Weather.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28DB3BF71BC02968001AAC2A /* Weather.swift */; };
@@ -141,6 +142,7 @@
 		28AF4A061BD82342009B0AE8 /* FadeTransition.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FadeTransition.swift; sourceTree = "<group>"; };
 		28AF4A0A1BD849C0009B0AE8 /* PopoverContentSize.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PopoverContentSize.swift; sourceTree = "<group>"; };
 		28BFBC5A1BBC91AA00827069 /* FRPTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FRPTests.swift; sourceTree = "<group>"; };
+		28D3928B1BEE942800924F16 /* MapItemCollectionViewCellWithMap.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapItemCollectionViewCellWithMap.swift; sourceTree = "<group>"; };
 		28DB3BF21BC025D0001AAC2A /* Functions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Functions.swift; sourceTree = "<group>"; };
 		28DB3BF41BC02892001AAC2A /* SafetyCameras.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SafetyCameras.swift; sourceTree = "<group>"; };
 		28DB3BF71BC02968001AAC2A /* Weather.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Weather.swift; sourceTree = "<group>"; };
@@ -372,6 +374,7 @@
 				716D9E941BCA5EA1005A6B49 /* MapItemCollectionViewController.swift */,
 				716D9E961BCA614D005A6B49 /* MapItemCollectionViewModel.swift */,
 				288AC88C1BCFA062004EA6A0 /* MapItemCollectionViewCell.swift */,
+				28D3928B1BEE942800924F16 /* MapItemCollectionViewCellWithMap.swift */,
 				718F00BF1BCEFC8000D51B43 /* TrafficCameraCell.xib */,
 				718F00C81BCEFF8800D51B43 /* TrafficCameraCell.swift */,
 				718F00C11BCEFC8000D51B43 /* SafetyCameraCell.xib */,
@@ -550,6 +553,7 @@
 				28DB3BF31BC025D0001AAC2A /* Functions.swift in Sources */,
 				280486531BC08711003BA360 /* SearchViewController.swift in Sources */,
 				280486571BC087F4003BA360 /* Settings.swift in Sources */,
+				28D3928C1BEE942800924F16 /* MapItemCollectionViewCellWithMap.swift in Sources */,
 				289201D41BBC5AEB00DA4A9A /* FRP.swift in Sources */,
 				2817D92D1BC5D2B70082F4A7 /* WithFlag.swift in Sources */,
 				716D9E991BCBC2F1005A6B49 /* ScotTraffic.swift in Sources */,
