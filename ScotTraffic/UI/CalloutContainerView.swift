@@ -96,10 +96,7 @@ class CalloutContainerView: UIView {
     }
     
     private func calloutFrameForPreferredSize(preferredSize: CGSize, fromAnnotationView annotationView: MKAnnotationView) -> CGRect {
-        let size = CGSize(
-            width: min(preferredSize.width, containerBounds.size.width),
-            height: min(preferredSize.height, containerBounds.size.height))
-        
+        let size = reduceSize(preferredSize, toFitContainer: containerBounds.size)
         let calloutFrameRelativeToAnnotation = CGRect(origin: CGPoint(x: -size.width/2, y: -size.height/2), size: size)
         var calloutFrameInContainer = annotationView.convertRect(calloutFrameRelativeToAnnotation, toView: self)
         let left = containerBounds.minX - calloutFrameInContainer.minX
@@ -120,6 +117,14 @@ class CalloutContainerView: UIView {
         
         return CGRectIntegral(calloutFrameInContainer)
     }
+}
+
+private func reduceSize(size: CGSize, toFitContainer containerSize: CGSize) -> CGSize {
+    if size.width < containerSize.width && size.height < containerSize.height {
+        return size
+    }
+    let scale = min(containerSize.width / size.width, containerSize.height / size.height)
+    return CGSize(width: size.width * scale, height: size.height * scale)
 }
 
 private func scaleDownTransformFromSize(fromSize: CGSize, toSize: CGSize) -> CGAffineTransform {
