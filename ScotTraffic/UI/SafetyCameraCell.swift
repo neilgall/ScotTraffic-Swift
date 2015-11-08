@@ -81,7 +81,7 @@ private func iconForSpeedLimit(speedLimit: SpeedLimit) -> UIImage? {
     case .MPH60: return UIImage(named: "60")
     case .MPH70: return UIImage(named: "70")
     case .National: return UIImage(named: "nsl")
-    default: return nil
+    default: return UIImage(named: "safetycamera-with-border")
     }
 }
 
