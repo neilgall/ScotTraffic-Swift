@@ -13,10 +13,12 @@ public class DiskCache: NSObject {
     private let directoryURL: NSURL
     private let readQueue: NSOperationQueue
     private let writeQueue: NSOperationQueue
+    private let fileManager: NSFileManager
     
     public init(withPath path: String) {
         readQueue = NSOperationQueue()
         writeQueue = NSOperationQueue()
+        fileManager = NSFileManager()
 
         let cacheURLs = NSFileManager.defaultManager().URLsForDirectory(.CachesDirectory, inDomains:.UserDomainMask)
         guard cacheURLs.count > 0 else {
@@ -31,6 +33,8 @@ public class DiskCache: NSObject {
         } catch {
             NSLog("failed to create directory \(directoryURL): \(error)")
         }
+        
+        NSLog("using cache at \(directoryURL)")
     }
     
     public func dataForKey(key: String, completion: NSData? -> ()) {
@@ -64,6 +68,7 @@ public class DiskCache: NSObject {
             }
             
             do {
+                try self.ensureParentDirectoryExistsAtURL(url)
                 try data.writeToURL(url, options: .DataWritingAtomic)
             } catch {
                 NSLog("failed to write \(url): \(error)")
@@ -99,5 +104,15 @@ public class DiskCache: NSObject {
         readQueue.operations.forEach { operation.addDependency($0) }
         writeQueue.operations.forEach { operation.addDependency($0) }
         writeQueue.addOperation(operation)
+    }
+    
+    private func ensureParentDirectoryExistsAtURL(url: NSURL) throws {
+        if var components = url.pathComponents {
+            components.removeLast()
+            let directoryPath = NSString.pathWithComponents(components)
+            if !fileManager.fileExistsAtPath(directoryPath) {
+                try fileManager.createDirectoryAtPath(directoryPath, withIntermediateDirectories: true, attributes: nil)
+            }
+        }
     }
 }
