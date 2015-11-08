@@ -29,7 +29,7 @@
                         <rect key="frame" x="0.0" y="44" width="320" height="240"/>
                         <animations/>
                         <constraints>
-                            <constraint firstAttribute="width" secondItem="RLV-et-j90" secondAttribute="height" multiplier="4:3" id="Y3w-kh-ud4"/>
+                            <constraint firstAttribute="width" secondItem="RLV-et-j90" secondAttribute="height" multiplier="4:3" priority="999" id="Y3w-kh-ud4"/>
                             <constraint firstAttribute="width" secondItem="RLV-et-j90" secondAttribute="height" multiplier="4:3" priority="999" id="cmh-wO-WEB"/>
                         </constraints>
                         <variation key="default">
@@ -157,20 +157,28 @@
                 <constraint firstItem="cnZ-ei-phh" firstAttribute="trailing" secondItem="iYR-BE-oXa" secondAttribute="trailing" id="PKg-ZE-MSt"/>
                 <constraint firstItem="RLV-et-j90" firstAttribute="trailing" secondItem="cnZ-ei-phh" secondAttribute="trailing" id="PR8-6u-Qqf"/>
                 <constraint firstItem="cnZ-ei-phh" firstAttribute="top" secondItem="TCX-4t-KEg" secondAttribute="top" constant="-44" id="Svp-9A-MOK"/>
+                <constraint firstItem="RLV-et-j90" firstAttribute="trailing" secondItem="TCX-4t-KEg" secondAttribute="trailing" id="Vkd-yC-D2f"/>
                 <constraint firstItem="iYR-BE-oXa" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" constant="-10" id="YOP-bB-ULd"/>
                 <constraint firstItem="iYR-BE-oXa" firstAttribute="bottom" secondItem="RLV-et-j90" secondAttribute="bottom" id="bud-Ah-YJz"/>
                 <constraint firstItem="cnZ-ei-phh" firstAttribute="leading" secondItem="iYR-BE-oXa" secondAttribute="leading" id="exB-pT-P0U"/>
                 <constraint firstItem="RLV-et-j90" firstAttribute="bottom" secondItem="cnZ-ei-phh" secondAttribute="bottom" id="hO2-bt-BlF"/>
                 <constraint firstItem="cnZ-ei-phh" firstAttribute="bottom" secondItem="TCX-4t-KEg" secondAttribute="bottom" id="hxP-1P-0GQ"/>
+                <constraint firstItem="RLV-et-j90" firstAttribute="leading" secondItem="TCX-4t-KEg" secondAttribute="leading" id="oGv-7N-i08"/>
                 <constraint firstItem="RLV-et-j90" firstAttribute="trailing" secondItem="iYR-BE-oXa" secondAttribute="trailing" id="rit-f4-yCs"/>
+                <constraint firstItem="RLV-et-j90" firstAttribute="bottom" secondItem="TCX-4t-KEg" secondAttribute="bottom" id="tgN-ye-Pgn"/>
+                <constraint firstItem="RLV-et-j90" firstAttribute="top" secondItem="TCX-4t-KEg" secondAttribute="top" id="vYe-um-t7H"/>
             </constraints>
             <variation key="default">
                 <mask key="constraints">
                     <exclude reference="DuG-o8-wkg"/>
                     <exclude reference="YOP-bB-ULd"/>
+                    <exclude reference="bud-Ah-YJz"/>
+                    <exclude reference="4rK-oe-Ddl"/>
+                    <exclude reference="D9t-LJ-W7g"/>
                     <exclude reference="Nyg-59-jnh"/>
                     <exclude reference="PR8-6u-Qqf"/>
                     <exclude reference="hO2-bt-BlF"/>
+                    <exclude reference="rit-f4-yCs"/>
                 </mask>
             </variation>
             <connections>
