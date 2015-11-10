@@ -53,8 +53,14 @@ func applyGradientMask(image: UIImage?) -> UIImage? {
         colorSpace,
         CGImageAlphaInfo.Only.rawValue)
     
-    let colors = [ UIColor.blackColor().CGColor, UIColor.clearColor().CGColor ]
-    let colorLocations: [CGFloat] = [ 0.3, 1.0 ]
+    let colors = [
+        UIColor(white: 0, alpha: 1.0).CGColor,
+        UIColor(white: 0, alpha: 0.0).CGColor
+    ]
+    let colorLocations: [CGFloat] = [
+        0.3,
+        1.0
+    ]
     
     let gradient = CGGradientCreateWithColors(colorSpace, colors, colorLocations)
     CGContextDrawLinearGradient(context,

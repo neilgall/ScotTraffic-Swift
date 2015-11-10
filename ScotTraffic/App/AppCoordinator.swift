@@ -10,7 +10,7 @@ import UIKit
 
 let maximumItemsInDetailView = 10
 
-public class AppCoordinator: NSObject, NGSplitViewControllerDelegate {
+public class AppCoordinator: NSObject, NGSplitViewControllerDelegate, SettingsTableViewControllerDelegate {
     let appModel: AppModel
     let rootWindow: UIWindow
     
@@ -63,7 +63,9 @@ public class AppCoordinator: NSObject, NGSplitViewControllerDelegate {
     
     public func start() {
         splitViewController.delegate = self
+
         mapViewController.calloutConstructor = viewControllerWithMapItems
+        mapViewController.navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named:"740-gear"), style: .Plain, target: self, action: Selector("settingsButtonTapped:"))
 
         // network reachability
         observations.append(appModel.fetcher.serverIsReachable.onFallingEdge(notifyNoNetworkReachability))
@@ -118,7 +120,7 @@ public class AppCoordinator: NSObject, NGSplitViewControllerDelegate {
         if splitViewController.masterViewControllerIsVisible {
             mapViewController.navigationItem.leftBarButtonItem = nil
         } else {
-            mapViewController.navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "708-search"), style: .Plain, target: self, action: Selector("searchButtonTapped"))
+            mapViewController.navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "708-search"), style: .Plain, target: self, action: Selector("searchButtonTapped:"))
         }
     }
     
@@ -126,7 +128,7 @@ public class AppCoordinator: NSObject, NGSplitViewControllerDelegate {
         if splitViewController.detailViewControllerIsVisible {
             searchViewController.navigationItem.rightBarButtonItem = nil
         } else {
-            searchViewController.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Done, target: self, action: Selector("searchDoneButtonTapped"))
+            searchViewController.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Done, target: self, action: Selector("searchDoneButtonTapped:"))
         }
     }
     
@@ -175,12 +177,36 @@ public class AppCoordinator: NSObject, NGSplitViewControllerDelegate {
     
     // -- MARK: UI Actions --
     
-    func searchButtonTapped() {
+    func searchButtonTapped(button: UIBarButtonItem) {
         mapViewController.deselectAnnotations()
         splitViewController.overlayMasterViewController()
     }
     
-    func searchDoneButtonTapped() {
+    func searchDoneButtonTapped(button: UIBarButtonItem) {
         splitViewController.dismissOverlaidMasterViewController()
+    }
+    
+    func settingsButtonTapped(button: UIBarButtonItem) {
+        guard let navigationController = storyboard.instantiateViewControllerWithIdentifier("settingsNavigationController") as? UINavigationController,
+            let settingsViewController = navigationController.topViewController as? SettingsTableViewController else {
+                fatalError("unexpected storyboard structure")
+        }
+        
+        navigationController.modalPresentationStyle = .Popover
+        if let popover = navigationController.popoverPresentationController {
+            popover.barButtonItem = button
+            popover.permittedArrowDirections = .Any
+        }
+
+        settingsViewController.settings = appModel.settings
+        settingsViewController.delegate = self
+
+        splitViewController.presentViewController(navigationController, animated: true, completion: nil)
+    }
+    
+    // -- MARK: SettingsTableViewControllerDelegate
+    
+    func settingsViewControllerDidDismiss(settingsViewController: SettingsTableViewController) {
+        splitViewController.dismissViewControllerAnimated(true, completion: nil)
     }
 }

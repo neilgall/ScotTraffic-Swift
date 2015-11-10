@@ -10,7 +10,7 @@ import MapKit
 
 private let scotlandMapRect = MKMapRectMake(129244330.1, 79649811.3, 3762380.0, 6443076.1)
 
-public enum TemperatureUnit: String {
+public enum TemperatureUnit: Int {
     case Celcius
     case Fahrenheit
 }
@@ -21,6 +21,7 @@ public class Settings {
     public let showAlertsOnMap: PersistentSetting<Bool>
     public let showRoadworksOnMap: PersistentSetting<Bool>
     public let showBridgesOnMap: PersistentSetting<Bool>
+    public let showCurrentLocationOnMap: PersistentSetting<Bool>
     public let temperatureUnit: PersistentSetting<TemperatureUnit>
     public let visibleMapRect: PersistentSetting<MKMapRect>
     
@@ -30,6 +31,7 @@ public class Settings {
         showAlertsOnMap = userDefaults.boolSetting("showAlertsOnMap", true)
         showRoadworksOnMap = userDefaults.boolSetting("showRoadworksOnMap", true)
         showBridgesOnMap = userDefaults.boolSetting("showBridgesOnMap", true)
+        showCurrentLocationOnMap = userDefaults.boolSetting("showCurrentLocationOnMap", false)
         temperatureUnit = userDefaults.enumSetting("temperatureUnit", TemperatureUnit.Celcius)
         visibleMapRect = userDefaults.setting("visibleMapRect", scotlandMapRect,
             to: { stringFromMapRect($0) }, from: { ($0 as? String).flatMap(mapRectFromString) })
@@ -43,6 +45,7 @@ public class Settings {
         showAlertsOnMap.start()
         showRoadworksOnMap.start()
         showBridgesOnMap.start()
+        showCurrentLocationOnMap.start()
         temperatureUnit.start()
         visibleMapRect.start()
     }
@@ -90,11 +93,11 @@ extension UserDefaultsProtocol {
         )
     }
     
-    func enumSetting<T where T:RawRepresentable, T.RawValue: StringLiteralConvertible>(key: String, _ defaultValue: T) -> PersistentSetting<T> {
+    func enumSetting<T where T:RawRepresentable, T.RawValue == Int>(key: String, _ defaultValue: T) -> PersistentSetting<T> {
         return PersistentSetting(self,
             key: key,
             defaultValue: defaultValue,
-            to: { String($0.rawValue) },
+            to: { $0.rawValue },
             from: { ($0 as? T.RawValue).flatMap { T(rawValue: $0) } }
         )
     }
