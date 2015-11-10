@@ -15,12 +15,22 @@ class SettingsToggleTableViewCell: UITableViewCell {
     @IBOutlet var toggleSwitch: UISwitch?
 
     private var toggle: Input<Bool>?
+    private var observation: Observation?
     
     func configure(configuration: SettingsToggleConfiguration) {
         self.iconImageView?.image = UIImage(named: configuration.iconImageName)
         self.titleLabel?.text = configuration.title
-        self.toggleSwitch?.on = configuration.toggle.value
         self.toggle = configuration.toggle
+        
+        self.observation = configuration.toggle.output({ on in
+            self.toggleSwitch?.setOn(on, animated: true)
+        })
+    }
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        toggle = nil
+        observation = nil
     }
     
     @IBAction func toggleSwitchChangedValue(sender: UISwitch) {

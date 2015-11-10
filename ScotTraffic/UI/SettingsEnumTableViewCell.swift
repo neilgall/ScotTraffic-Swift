@@ -14,6 +14,7 @@ class SettingsEnumTableViewCell: UITableViewCell {
     @IBOutlet var titleLabel: UILabel?
     @IBOutlet var enumControl: UISegmentedControl?
 
+    private var observation: Observation?
     private var updateValue: (Int -> Void)?
     
     func configure<EnumType where EnumType: RawRepresentable, EnumType.RawValue == Int>(configuration: SettingsEnumConfiguration<EnumType>) {
@@ -25,11 +26,19 @@ class SettingsEnumTableViewCell: UITableViewCell {
             self.enumControl?.insertSegmentWithTitle(title, atIndex: value.rawValue, animated: false)
         }
 
-        self.enumControl?.selectedSegmentIndex = configuration.setting.value.rawValue
+        observation = configuration.setting.throttle(0.5, queue: dispatch_get_main_queue()).output({ value in
+            self.enumControl?.selectedSegmentIndex = value.rawValue
+        })
 
         self.updateValue = { rawValue in
             configuration.setting.value = EnumType(rawValue: rawValue)!
         }
+    }
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        observation = nil
+        updateValue = nil
     }
     
     @IBAction func enumValueChanged(sender: UISegmentedControl) {

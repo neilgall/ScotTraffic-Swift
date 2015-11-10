@@ -18,6 +18,7 @@ public class AppModel: ScotTraffic {
     public let weather: Observable<[Weather]>
     public let settings: Settings
     public let favourites: Favourites
+    public let userLocation: UserLocation
     
     public let fetcher: HTTPFetcher
 
@@ -37,6 +38,8 @@ public class AppModel: ScotTraffic {
         self.diskCache = diskCache
         self.fetcher = fetcher
         self.settings = Settings(userDefaults: userDefaults)
+        self.userLocation = UserLocation(enabled: settings.showCurrentLocationOnMap)
+        
         
         // -- Traffic Cameras --
         
@@ -90,11 +93,13 @@ public class AppModel: ScotTraffic {
             print($0)
         }))
         
+        
         // -- Auto refresh --
         
         let fiveMinuteRefresh = PeriodicStarter(startables: [trafficCamerasSource, incidentsSource], period: 300)
         let halfHourlyRefresh = PeriodicStarter(startables: [safetyCamerasSource, weatherSource], period: 1800)
         self.fetchStarters = [fiveMinuteRefresh, halfHourlyRefresh]
+        
         
         // -- Refresh on restoring internet connection
         

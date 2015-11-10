@@ -39,6 +39,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, MapViewModelDelega
             observations.append(viewModel.annotations.output(self.updateAnnotations))
             observations.append(viewModel.selectedAnnotation.output(self.autoSelectAnnotation))
             observations.append(viewModel.selectedMapItem.output(self.zoomToSelectedMapItem))
+            observations.append(viewModel.showLocationOnMap.output(self.updateShowsCurrentLocation))
             
             mapView.setVisibleMapRect(viewModel.visibleMapRect.value, animated: false)
         }
@@ -57,6 +58,10 @@ class MapViewController: UIViewController, MKMapViewDelegate, MapViewModelDelega
             self.mapView.removeAnnotations(Array(annotationsToRemove))
             self.mapView.addAnnotations(Array(annotationsToAdd))
         }
+    }
+    
+    func updateShowsCurrentLocation(enable: Bool) {
+        mapView.showsUserLocation = enable
     }
     
     func autoSelectAnnotation(annotation: MapAnnotation?) {

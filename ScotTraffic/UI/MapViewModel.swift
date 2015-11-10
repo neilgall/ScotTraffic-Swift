@@ -27,10 +27,13 @@ public class MapViewModel {
     // Outputs
     let annotations: Observable<[MapAnnotation]>
     let selectedAnnotation: Observable<MapAnnotation?>
+    let showLocationOnMap: Observable<Bool>
  
     public init(scotTraffic: ScotTraffic) {
         
         visibleMapRect = scotTraffic.settings.visibleMapRect
+        showLocationOnMap = scotTraffic.userLocation.location.map { $0 != nil }
+        
         selectedMapItem = Input(initial: nil)
         animatingMapRect = Input(initial: false)
         delegate = Input(initial: nil)
