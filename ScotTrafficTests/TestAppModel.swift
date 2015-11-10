@@ -19,6 +19,7 @@ public class TestAppModel: ScotTraffic {
     public let settings: Settings
     public let favourites: Favourites
     public let userDefaults: UserDefaultsProtocol
+    public let userLocation: UserLocation
 
     public init() {
         trafficCameraLocations = Input<[TrafficCameraLocation]>(initial: loadTestData("trafficcameras"))
@@ -32,6 +33,7 @@ public class TestAppModel: ScotTraffic {
         userDefaults = TestUserDefaults()
         settings = Settings(userDefaults: userDefaults)
         favourites = Favourites(userDefaults: userDefaults, trafficCameraLocations: trafficCameraLocations)
+        userLocation = UserLocation(enabled: settings.showCurrentLocationOnMap)
     }    
 }
     
