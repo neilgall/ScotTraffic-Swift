@@ -252,7 +252,7 @@ class FRPTests: XCTestCase {
     func testGateDoesNotPushWhenGateIsFalse() {
         let s = Input<Int>(initial: 0)
         let g = Input<Bool>(initial: false)
-        let t = s.gate(g)
+        let t = g.gate(s)
         let c = Capture(t)
         
         s.value = 6
@@ -262,7 +262,7 @@ class FRPTests: XCTestCase {
     func testGatePushesWhenGateIsTrue() {
         let s = Input<Int>(initial: 0)
         let g = Input<Bool>(initial: true)
-        let t = s.gate(g)
+        let t = g.gate(s)
         let c = Capture(t)
         
         s.value = 6
@@ -272,7 +272,7 @@ class FRPTests: XCTestCase {
     func testGatePushesDeferredOnRisingEdge() {
         let s = Input<Int>(initial: 0)
         let g = Input<Bool>(initial: false)
-        let t = s.gate(g)
+        let t = g.gate(s)
         let c = Capture(t)
         
         s.value = 6
