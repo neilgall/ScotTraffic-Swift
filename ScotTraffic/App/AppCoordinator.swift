@@ -74,10 +74,10 @@ public class AppCoordinator: NSObject, NGSplitViewControllerDelegate, SettingsTa
         observations.append(searchViewModel.searchActive.onFallingEdge(showMap))
         
         // show map when search selection changes
-        observations.append(searchViewModel.searchSelection.output(searchSelectionChanged))
+        observations.append(searchViewModel.searchSelection => searchSelectionChanged)
         
         // sharing
-        observations.append(collectionViewModel.shareAction.output(shareAction))
+        observations.append(collectionViewModel.shareAction => shareAction)
         
         updateShowSearchButton()
         updateCancelSearchButton()

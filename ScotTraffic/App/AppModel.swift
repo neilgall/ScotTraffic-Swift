@@ -18,14 +18,12 @@ public class AppModel: ScotTraffic {
     public let weather: Observable<[Weather]>
     public let settings: Settings
     public let favourites: Favourites
-    public let userLocation: UserLocation
     
     public let fetcher: HTTPFetcher
 
     private let diskCache: DiskCache
-    private let errorSources: Observable<AppError>
     private let fetchStarters: [PeriodicStarter]
-    private var internalObservers = [Observation]()
+    private var observers = [Observation]()
     
     public init() {
         let diskCache = DiskCache(withPath: "scottraffic")
@@ -38,7 +36,6 @@ public class AppModel: ScotTraffic {
         self.diskCache = diskCache
         self.fetcher = fetcher
         self.settings = Settings(userDefaults: userDefaults)
-        self.userLocation = UserLocation(enabled: settings.showCurrentLocationOnMap)
         
         
         // -- Traffic Cameras --
@@ -83,20 +80,6 @@ public class AppModel: ScotTraffic {
         self.weather = valueFromEither(weather).latest()
         
         
-        // -- Merge errors from all sources
-        
-        self.errorSources = union(
-            errorFromEither(trafficCameraLocations),
-            errorFromEither(safetyCameras),
-            errorFromEither(incidents),
-            errorFromEither(weather)
-        )
-        
-        internalObservers.append(self.errorSources.output({
-            print($0)
-        }))
-        
-        
         // -- Auto refresh --
         
         let fiveMinuteRefresh = PeriodicStarter(startables: [trafficCamerasSource, incidentsSource], period: 300)
@@ -106,11 +89,10 @@ public class AppModel: ScotTraffic {
         
         // -- Refresh on restoring internet connection
         
-        internalObservers.append(fetcher.serverIsReachable.onRisingEdge({
+        self.observers.append(fetcher.serverIsReachable.onRisingEdge({
             for starter in self.fetchStarters {
                 starter.restart(fireImmediately: true)
             }
         }))
     }
-    
 }

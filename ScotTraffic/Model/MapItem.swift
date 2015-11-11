@@ -61,7 +61,11 @@ extension MKMapRect: Equatable {
 }
 
 public func == (lhs: MKMapRect, rhs: MKMapRect) -> Bool {
-    return MKMapRectEqualToRect(lhs, rhs)
+    let accuracy = 1e-3
+    return fabs(lhs.origin.x - rhs.origin.x) < accuracy
+        && fabs(lhs.origin.y - rhs.origin.y) < accuracy
+        && fabs(lhs.size.width - rhs.size.width) < accuracy
+        && fabs(lhs.size.height - rhs.size.height) < accuracy
 }
 
 public enum GeographicAxis {

@@ -37,7 +37,7 @@ class TrafficCameraCell: MapItemCollectionViewCell {
                 self?.imageView?.image = image
             })
         
-            observations.append(image.map({ $0 != nil }).output { [weak self] enabled in
+            observations.append(not(isNil(image)).output { [weak self] enabled in
                 self?.shareButton?.enabled = enabled
                 self?.favouriteButton?.enabled = enabled
             })
@@ -67,10 +67,16 @@ class TrafficCameraCell: MapItemCollectionViewCell {
     }
     
     override func prepareForReuse() {
+        super.prepareForReuse()
+        
         observations.removeAll()
         image = nil
         locationName = nil
         favouriteItem = nil
+        
+        errorLabel?.hidden = true
+        titleLabel?.text = nil
+        imageView?.image = nil
     }
 }
 

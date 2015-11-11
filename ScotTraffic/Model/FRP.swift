@@ -543,6 +543,12 @@ class Combine5<SourceType1, SourceType2, SourceType3, SourceType4, SourceType5, 
     }
 }
 
+infix operator => { associativity left precedence 150 }
+
+public func => <ValueType> (observable: Observable<ValueType>, closure: ValueType -> Void) -> Observation {
+    return Output(observable, closure)
+}
+
 extension Observable {
     public func output(closure: ValueType -> Void) -> Output<ValueType> {
         return Output(self, closure)
@@ -572,10 +578,6 @@ extension Observable {
     public func throttle(minimumInterval: NSTimeInterval, queue: dispatch_queue_t) -> Observable<ValueType> {
         return Throttle(self, minimumInterval: minimumInterval, queue: queue)
     }
-
-    public func gate(gate: Observable<Bool>) -> Observable<ValueType> {
-        return Gate(self, gate: gate)
-    }
 }
 
 extension Observable where Value: Equatable {
@@ -585,17 +587,33 @@ extension Observable where Value: Equatable {
 }
 
 extension Observable where Value: BooleanType, Value: Equatable {
-    public var not: Observable<Bool> {
-        return map { b in !b }
-    }
-    
     public func onRisingEdge(closure: Void -> Void) -> Observation {
-        return onChange().filter({ $0.boolValue == true }).output({ _ in closure() })
+        return onChange().filter({ $0.boolValue == true }) => { _ in closure() }
     }
 
     public func onFallingEdge(closure: Void -> Void) -> Observation {
-        return onChange().filter({ $0.boolValue == false }).output({ _ in closure() })
+        return onChange().filter({ $0.boolValue == false }) => { _ in closure() }
     }
+    
+    public func gate<SourceType>(source: Observable<SourceType>) -> Observable<SourceType> {
+        return Gate(source, gate: self.map({ $0.boolValue }))
+    }
+}
+
+public func not(observable: Observable<Bool>) -> Observable<Bool> {
+    return observable.map { b in !b }
+}
+
+public func isNil<ValueType>(observable: Observable<ValueType?>) -> Observable<Bool> {
+    return observable.map { $0 == nil }
+}
+
+public func && (lhs: Observable<Bool>, rhs: Observable<Bool>) -> Observable<Bool> {
+    return combine(lhs, rhs) { $0 && $1 }
+}
+
+public func || (lhs: Observable<Bool>, rhs: Observable<Bool>) -> Observable<Bool> {
+    return combine(lhs, rhs) { $0 || $1 }
 }
 
 public func union<ValueType>(sources: Observable<ValueType>...) -> Observable<ValueType> {

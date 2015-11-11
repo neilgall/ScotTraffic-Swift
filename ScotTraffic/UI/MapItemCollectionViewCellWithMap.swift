@@ -20,21 +20,30 @@ class MapItemCollectionViewCellWithMap : MapItemCollectionViewCell, MKMapViewDel
         if let mapView = mapView {
             let origin = MKMapPoint(x: mapItem.mapPoint.x - mapRectSize * 0.5, y: mapItem.mapPoint.y - mapRectSize * 0.65)
             let mapRect = MKMapRect(origin: origin, size: MKMapSize(width: mapRectSize, height: mapRectSize))
-        
+            
             mapView.alpha = 0
             mapView.visibleMapRect = mapView.mapRectThatFits(mapRect)
             mapView.addAnnotation(MapAnnotation(mapItems: [mapItem]))
         }
     }
     
+    override func prepareForReuse() {
+        mapImage.value = nil
+        if let mapView = mapView {
+            mapView.removeAnnotations(mapView.annotations)
+            mapView.visibleMapRect = MKMapRect(origin: MKMapPoint(x: 0, y: 0), size: MKMapSize(width: 0, height: 0))
+        }
+    }
+
     // -- MARK: MKMapViewDelegate
     
     func mapViewDidFinishRenderingMap(mapView: MKMapView, fullyRendered: Bool) {
-        mapView.alpha = 1
-        mapImage.value = mapView.snapshotImage()
-        mapView.alpha = 0
+        if fullyRendered {
+            mapView.alpha = 1
+            mapImage.value = mapView.snapshotImage()
+            mapView.alpha = 0
+        }
     }
-
 }
 
 func applyGradientMask(image: UIImage?) -> UIImage? {

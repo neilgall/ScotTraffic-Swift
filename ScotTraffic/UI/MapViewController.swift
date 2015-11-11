@@ -36,10 +36,10 @@ class MapViewController: UIViewController, MKMapViewDelegate, MapViewModelDelega
             viewModel.delegate.value = self
             calloutContainerView.delegate = self
             
-            observations.append(viewModel.annotations.output(self.updateAnnotations))
-            observations.append(viewModel.selectedAnnotation.output(self.autoSelectAnnotation))
-            observations.append(viewModel.selectedMapItem.output(self.zoomToSelectedMapItem))
-            observations.append(viewModel.showLocationOnMap.output(self.updateShowsCurrentLocation))
+            observations.append(viewModel.annotations => self.updateAnnotations)
+            observations.append(viewModel.selectedAnnotation => self.autoSelectAnnotation)
+            observations.append(viewModel.selectedMapItem => self.zoomToSelectedMapItem)
+            observations.append(viewModel.locationServices.authorised => self.updateShowsCurrentLocation)
             
             mapView.setVisibleMapRect(viewModel.visibleMapRect.value, animated: false)
         }

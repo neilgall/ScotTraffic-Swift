@@ -27,12 +27,12 @@ public class MapViewModel {
     // Outputs
     let annotations: Observable<[MapAnnotation]>
     let selectedAnnotation: Observable<MapAnnotation?>
-    let showLocationOnMap: Observable<Bool>
+    let locationServices: LocationServices
  
     public init(scotTraffic: ScotTraffic) {
         
         visibleMapRect = scotTraffic.settings.visibleMapRect
-        showLocationOnMap = scotTraffic.userLocation.location.map { $0 != nil }
+        locationServices = LocationServices(enabled: scotTraffic.settings.showCurrentLocationOnMap)
         
         selectedMapItem = Input(initial: nil)
         animatingMapRect = Input(initial: false)
@@ -84,7 +84,7 @@ public class MapViewModel {
             return mapItemGroupFromGroups(groups, containingItem: item)
         }
 
-        selectedAnnotation = selectedMapItemGroup.gate(animatingMapRect.not).map { optionalGroup in
+        selectedAnnotation = not(animatingMapRect).gate(selectedMapItemGroup).map { optionalGroup in
             optionalGroup.map { items in MapAnnotation(mapItems: items) }
         }
     }

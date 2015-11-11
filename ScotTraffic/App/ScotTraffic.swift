@@ -16,5 +16,4 @@ public protocol ScotTraffic {
     var weather: Observable<[Weather]> { get }
     var settings: Settings { get }
     var favourites: Favourites { get }
-    var userLocation: UserLocation { get }
 }

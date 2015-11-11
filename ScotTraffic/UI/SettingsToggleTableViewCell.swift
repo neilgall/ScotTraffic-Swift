@@ -22,9 +22,9 @@ class SettingsToggleTableViewCell: UITableViewCell {
         self.titleLabel?.text = configuration.title
         self.toggle = configuration.toggle
         
-        self.observation = configuration.toggle.output({ on in
+        self.observation = configuration.toggle => { on in
             self.toggleSwitch?.setOn(on, animated: true)
-        })
+        }
     }
     
     override func prepareForReuse() {

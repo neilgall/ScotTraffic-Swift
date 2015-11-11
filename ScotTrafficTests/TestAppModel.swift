@@ -19,7 +19,6 @@ public class TestAppModel: ScotTraffic {
     public let settings: Settings
     public let favourites: Favourites
     public let userDefaults: UserDefaultsProtocol
-    public let userLocation: UserLocation
 
     public init() {
         let trafficCameraDummyContext = TrafficCameraDecodeContext(makeImageDataSource: { _ in DummyDataSource() })
@@ -36,8 +35,7 @@ public class TestAppModel: ScotTraffic {
         userDefaults = TestUserDefaults()
         settings = Settings(userDefaults: userDefaults)
         favourites = Favourites(userDefaults: userDefaults, trafficCameraLocations: trafficCameraLocations)
-        userLocation = UserLocation(enabled: settings.showCurrentLocationOnMap)
-    }    
+    }
 }
     
 private func loadTestData<T, C where T: JSONObjectDecodable>(filename: String, context: C) -> [T] {

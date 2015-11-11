@@ -31,9 +31,9 @@ class IncidentCell: MapItemCollectionViewCellWithMap {
 
             configureMap(incident)
             
-            observations.append(mapImage.map(applyGradientMask).output({ [weak self] image in
+            observations.append(mapImage.map(applyGradientMask) => { [weak self] image in
                 self?.backgroundImageView?.image = image
-            }))
+            })
 
             // The first time we parse HTML using NSAttributedString involves dynamically
             // linking the WebKit framework which causes a noticable delay. Because the
@@ -57,8 +57,14 @@ class IncidentCell: MapItemCollectionViewCellWithMap {
     }
     
     override func prepareForReuse() {
+        super.prepareForReuse()
+        
         observations.removeAll()
         item = nil
+        
+        iconImageView?.image = nil
+        titleLabel?.text = nil
+        dateLabel?.text = nil
         backgroundImageView?.image = nil
     }
 }

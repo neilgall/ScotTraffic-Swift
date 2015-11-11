@@ -26,9 +26,9 @@ class SettingsEnumTableViewCell: UITableViewCell {
             self.enumControl?.insertSegmentWithTitle(title, atIndex: value.rawValue, animated: false)
         }
 
-        observation = configuration.setting.throttle(0.5, queue: dispatch_get_main_queue()).output({ value in
+        observation = configuration.setting.throttle(0.5, queue: dispatch_get_main_queue()) => { value in
             self.enumControl?.selectedSegmentIndex = value.rawValue
-        })
+        }
 
         self.updateValue = { rawValue in
             configuration.setting.value = EnumType(rawValue: rawValue)!

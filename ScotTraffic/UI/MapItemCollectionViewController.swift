@@ -57,15 +57,15 @@ public class MapItemCollectionViewController: UIViewController, UICollectionView
     private func connectToModel() {
         if let viewModel = viewModel where isViewLoaded() {
             
-            observations.append(viewModel.cellItems.output({ _ in
+            observations.append(viewModel.cellItems => { _ in
                 self.reload()
-            }))
+            })
             
-            observations.append(viewModel.selectedItemIndex.output({ index in
+            observations.append(viewModel.selectedItemIndex => { index in
                 if let index = index {
                     self.selectItemIndex(index)
                 }
-            }))
+            })
         }
     }
     

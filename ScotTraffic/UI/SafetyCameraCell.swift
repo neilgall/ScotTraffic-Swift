@@ -39,7 +39,7 @@ class SafetyCameraCell: MapItemCollectionViewCellWithMap {
 
             // image from server if available, otherwise map image
             let serverImage = safetyCamera.image
-            let imageSelector = union(serverImage, mapImage.gate(serverImage.map({ $0 == nil })))
+            let imageSelector = union(serverImage, isNil(serverImage).gate(mapImage))
             
             observations.append(imageSelector.map(applyGradientMask).output { [weak self] image in
                 self?.imageView?.image = image
@@ -67,9 +67,16 @@ class SafetyCameraCell: MapItemCollectionViewCellWithMap {
     }
     
     override func prepareForReuse() {
+        super.prepareForReuse()
+        
         observations.removeAll()
         image = nil
         mapImage.value = nil
+        
+        iconImageView?.image = nil
+        roadLabel?.text = nil
+        descriptionLabel?.text = nil
+        imageView?.image = nil
     }    
 }
 
