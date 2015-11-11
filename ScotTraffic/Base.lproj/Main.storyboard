@@ -424,7 +424,54 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="21B-nl-SAH" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="587" y="1310"/>
+            <point key="canvasLocation" x="1405" y="1703"/>
+        </scene>
+        <!--Weather View Controller-->
+        <scene sceneID="HWi-w3-hw1">
+            <objects>
+                <viewController id="wvP-C8-jue" customClass="WeatherViewController" customModule="ScotTraffic" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="LFG-vD-gpD"/>
+                        <viewControllerLayoutGuide type="bottom" id="Tib-Fa-ZQU"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="tvM-ZO-FdT">
+                        <rect key="frame" x="0.0" y="0.0" width="100" height="100"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="5ºC" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DJV-h8-Euc">
+                                <rect key="frame" x="16" y="40" width="30" height="21"/>
+                                <animations/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="chm-3h-rYg">
+                                <rect key="frame" x="51" y="0.0" width="33" height="100"/>
+                                <animations/>
+                            </imageView>
+                        </subviews>
+                        <animations/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="DJV-h8-Euc" firstAttribute="leading" secondItem="tvM-ZO-FdT" secondAttribute="leadingMargin" id="2Cq-Gx-FR5"/>
+                            <constraint firstItem="DJV-h8-Euc" firstAttribute="centerY" secondItem="chm-3h-rYg" secondAttribute="centerY" id="Ebs-Ih-ur3"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="chm-3h-rYg" secondAttribute="trailing" id="jCy-Fs-SUe"/>
+                            <constraint firstItem="chm-3h-rYg" firstAttribute="top" secondItem="LFG-vD-gpD" secondAttribute="bottom" id="nOK-pF-Lzf"/>
+                            <constraint firstItem="chm-3h-rYg" firstAttribute="leading" secondItem="DJV-h8-Euc" secondAttribute="trailing" constant="5" id="xWi-Zc-wlI"/>
+                            <constraint firstItem="Tib-Fa-ZQU" firstAttribute="top" secondItem="chm-3h-rYg" secondAttribute="bottom" id="xg5-d5-dSo"/>
+                        </constraints>
+                    </view>
+                    <nil key="simulatedStatusBarMetrics"/>
+                    <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+                    <size key="freeformSize" width="100" height="100"/>
+                    <connections>
+                        <outlet property="temperatureLabel" destination="DJV-h8-Euc" id="wyn-V6-Njz"/>
+                        <outlet property="weatherIconImageView" destination="chm-3h-rYg" id="7V4-4e-thO"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="goS-KT-bhh" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1827" y="1453"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="I0P-9x-HOW">

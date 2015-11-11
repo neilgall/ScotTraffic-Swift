@@ -31,6 +31,31 @@ public enum WindDirection {
     case NorthNorthWest
 }
 
+public enum WeatherType: String {
+    case Clear = "clear"
+    case PartCloudy = "partcloudy"
+    case Mist = "mist"
+    case Fog = "fog"
+    case Cloudy = "cloudy"
+    case Overcast = "overcast"
+    case LightRainShower = "light-rain-shower"
+    case Drizzle = "drizzle"
+    case LightRain = "light-rain"
+    case HeavyRainShower = "heavy-rain-shower"
+    case HeavyRain = "heavy-rain"
+    case SleetShower = "sleet-shower"
+    case Sleet = "sleet"
+    case HailShower = "hail-shower"
+    case Hail = "hail"
+    case LightSnowShower = "light-snow-shower"
+    case LightSnow = "light-snow"
+    case HeavySnowShower = "heavy-snow-shower"
+    case HeavySnow = "heavy-snow"
+    case ThunderShower = "thunder-shower"
+    case Thunder = "thunder"
+    case Unknown = "unknown"
+}
+
 public final class Weather {
     let identifier: Int
     let name: String
@@ -39,9 +64,9 @@ public final class Weather {
     let temperature: Celcius
     let windSpeed: WindSpeedKPH
     let windDirection: WindDirection
-    let weatherType: String
+    let weatherType: WeatherType
     
-    public init(identifier: Int, name: String, latitude: CLLocationDegrees, longitude: CLLocationDegrees, temperature: Celcius, windSpeed: WindSpeedKPH, windDirection: WindDirection, weatherType: String) {
+    public init(identifier: Int, name: String, latitude: CLLocationDegrees, longitude: CLLocationDegrees, temperature: Celcius, windSpeed: WindSpeedKPH, windDirection: WindDirection, weatherType: WeatherType) {
         self.identifier = identifier
         self.name = name
         self.latitude = latitude
@@ -50,6 +75,10 @@ public final class Weather {
         self.windSpeed = windSpeed
         self.windDirection = windDirection
         self.weatherType = weatherType
+    }
+    
+    public var temperatureFahrenheit: Float {
+        return temperature * 1.8 + 32
     }
 }
 
@@ -90,7 +119,7 @@ extension Weather: JSONObjectDecodable {
             temperature: json <~ "temp",
             windSpeed: json <~ "windSpeed",
             windDirection: json <~ "windDir",
-            weatherType: json <~ "type"
+            weatherType: WeatherType(rawValue: json <~ "type") ?? .Unknown
         )
     }
 }

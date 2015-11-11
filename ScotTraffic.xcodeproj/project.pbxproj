@@ -25,6 +25,7 @@
 		2813B2DD1BE655020017F847 /* DataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2813B2DC1BE655020017F847 /* DataSource.swift */; };
 		2817D92D1BC5D2B70082F4A7 /* WithFlag.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2817D92C1BC5D2B70082F4A7 /* WithFlag.swift */; };
 		2831B68C1BED52DC005B4933 /* AsyncSequence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2831B68B1BED52DC005B4933 /* AsyncSequence.swift */; };
+		283A90561BF4035B00BB5C46 /* WeatherViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 283A90551BF4035B00BB5C46 /* WeatherViewController.swift */; };
 		2841A0F01BCD9B3900D22A8E /* EitherTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2841A0EF1BCD9B3900D22A8E /* EitherTests.swift */; };
 		284DE0961BBDCD4200E6A678 /* Either.swift in Sources */ = {isa = PBXBuildFile; fileRef = 284DE0951BBDCD4200E6A678 /* Either.swift */; };
 		284DE0981BBDD0D800E6A678 /* AppModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 284DE0971BBDD0D800E6A678 /* AppModel.swift */; };
@@ -120,6 +121,7 @@
 		2813B2DC1BE655020017F847 /* DataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataSource.swift; sourceTree = "<group>"; };
 		2817D92C1BC5D2B70082F4A7 /* WithFlag.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WithFlag.swift; sourceTree = "<group>"; };
 		2831B68B1BED52DC005B4933 /* AsyncSequence.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AsyncSequence.swift; sourceTree = "<group>"; };
+		283A90551BF4035B00BB5C46 /* WeatherViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WeatherViewController.swift; sourceTree = "<group>"; };
 		2841A0EF1BCD9B3900D22A8E /* EitherTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EitherTests.swift; sourceTree = "<group>"; };
 		284DE0951BBDCD4200E6A678 /* Either.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Either.swift; sourceTree = "<group>"; };
 		284DE0971BBDD0D800E6A678 /* AppModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppModel.swift; sourceTree = "<group>"; };
@@ -264,6 +266,14 @@
 			path = ScotTrafficUITests;
 			sourceTree = "<group>";
 		};
+		283A90541BF402E900BB5C46 /* Weather */ = {
+			isa = PBXGroup;
+			children = (
+				283A90551BF4035B00BB5C46 /* WeatherViewController.swift */,
+			);
+			name = Weather;
+			sourceTree = "<group>";
+		};
 		284DE0991BBDDEB800E6A678 /* Core */ = {
 			isa = PBXGroup;
 			children = (
@@ -349,6 +359,7 @@
 				2865591B1BC312580058A35A /* Search */,
 				2865591F1BC3180E0058A35A /* Map */,
 				716D9E911BCA5B9F005A6B49 /* CollectionView */,
+				283A90541BF402E900BB5C46 /* Weather */,
 				286157C41BF29B90000C11D4 /* Settings */,
 			);
 			path = UI;
@@ -471,6 +482,7 @@
 		2804934D1BA8BB4800990BD1 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				LastSwiftUpdateCheck = 0710;
 				LastUpgradeCheck = 0700;
 				ORGANIZATIONNAME = "Neil Gall";
 				TargetAttributes = {
@@ -546,6 +558,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				288AC8911BCFABE2004EA6A0 /* SafetyCameraCell.swift in Sources */,
+				283A90561BF4035B00BB5C46 /* WeatherViewController.swift in Sources */,
 				284DE0961BBDCD4200E6A678 /* Either.swift in Sources */,
 				2804864F1BC074E4003BA360 /* AppErrors.swift in Sources */,
 				2865591A1BC2A7200058A35A /* FRP-UI-Extensions.swift in Sources */,
@@ -741,14 +754,16 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = ScotTraffic/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.4;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = uk.co.ScotTraffic;
+				PRODUCT_BUNDLE_IDENTIFIER = uk.co.ScotTraffic.iOS;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -757,12 +772,13 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = ScotTraffic/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.4;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = uk.co.ScotTraffic;
+				PRODUCT_BUNDLE_IDENTIFIER = uk.co.ScotTraffic.iOS;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = "1,2";
