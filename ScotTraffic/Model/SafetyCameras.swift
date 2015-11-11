@@ -64,6 +64,10 @@ extension SpeedLimit: JSONValueDecodable {
 
 public struct SafetyCameraDecodeContext {
     let makeImageDataSource: String -> DataSource
+    
+    public init(makeImageDataSource: String -> DataSource) {
+        self.makeImageDataSource = makeImageDataSource
+    }
 }
 
 extension SafetyCamera: JSONObjectDecodable {

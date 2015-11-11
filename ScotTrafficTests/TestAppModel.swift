@@ -22,11 +22,14 @@ public class TestAppModel: ScotTraffic {
     public let userLocation: UserLocation
 
     public init() {
-        trafficCameraLocations = Input<[TrafficCameraLocation]>(initial: loadTestData("trafficcameras"))
-        safetyCameras = Input<[SafetyCamera]>(initial: loadTestData("safetycameras"))
-        weather = Input<[Weather]>(initial: loadTestData("weather"))
+        let trafficCameraDummyContext = TrafficCameraDecodeContext(makeImageDataSource: { _ in DummyDataSource() })
+        let safetyCameraDummyContext = SafetyCameraDecodeContext(makeImageDataSource: { _ in DummyDataSource() })
         
-        let incidents = Input<[Incident]>(initial: loadTestData("incidents"))
+        trafficCameraLocations = Input<[TrafficCameraLocation]>(initial: loadTestData("trafficcameras", context: trafficCameraDummyContext))
+        safetyCameras = Input<[SafetyCamera]>(initial: loadTestData("safetycameras", context: safetyCameraDummyContext))
+        weather = Input<[Weather]>(initial: loadTestData("weather", context: ()))
+        
+        let incidents = Input<[Incident]>(initial: loadTestData("incidents", context: ()))
         alerts = incidents.map { $0.filter { $0.type == .Alert } }
         roadworks = incidents.map { $0.filter { $0.type == .Roadworks } }
         
@@ -37,13 +40,12 @@ public class TestAppModel: ScotTraffic {
     }    
 }
     
-private func loadTestData<T where T: JSONObjectDecodable>(filename: String) -> [T] {
+private func loadTestData<T, C where T: JSONObjectDecodable>(filename: String, context: C) -> [T] {
     for bundle in NSBundle.allBundles() {
         if let path = bundle.pathForResource(filename, ofType: "json", inDirectory: "Data"), let data = NSData(contentsOfFile: path) {
             do {
                 let array = try JSONArrayFromData(data)
-                let context: String->DataSource = { _ in DummyDataSource() }
-                return try [T].decodeJSON(JSONArray(value: array, context: context ))
+                return try [T].decodeJSON(JSONArray(value: array, context: context))
             } catch {
             }
         }

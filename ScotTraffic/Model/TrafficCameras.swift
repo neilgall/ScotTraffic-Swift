@@ -98,6 +98,10 @@ extension TrafficCameraLocation: JSONObjectDecodable {
 
 public struct TrafficCameraDecodeContext {
     let makeImageDataSource: String -> DataSource
+    
+    public init(makeImageDataSource: String -> DataSource) {
+        self.makeImageDataSource = makeImageDataSource
+    }
 }
 
 extension TrafficCamera: JSONObjectDecodable {
