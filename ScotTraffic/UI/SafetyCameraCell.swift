@@ -37,8 +37,9 @@ class SafetyCameraCell: MapItemCollectionViewCellWithMap {
 
             configureMap(safetyCamera)
 
-            // model image, otherwise map image
-            let imageSelector = union(safetyCamera.image, mapImage.gate(safetyCamera.image.map({ $0 == nil })))
+            // image from server if available, otherwise map image
+            let serverImage = safetyCamera.image
+            let imageSelector = union(serverImage, mapImage.gate(serverImage.map({ $0 == nil })))
             
             observations.append(imageSelector.map(applyGradientMask).output { [weak self] image in
                 self?.imageView?.image = image

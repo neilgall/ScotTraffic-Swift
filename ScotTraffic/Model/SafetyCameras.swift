@@ -62,8 +62,15 @@ extension SpeedLimit: JSONValueDecodable {
     }
 }
 
+public struct SafetyCameraDecodeContext {
+    let makeImageDataSource: String -> DataSource
+}
+
 extension SafetyCamera: JSONObjectDecodable {
     public static func decodeJSON(json: JSONObject, forKey key: JSONKey) throws -> SafetyCamera {
+        guard let context = json.context as? SafetyCameraDecodeContext else {
+            fatalError("invalid JSON decode context")
+        }
         return try SafetyCamera(
             name: json <~ "name",
             road: json <~ "road",
@@ -72,7 +79,7 @@ extension SafetyCamera: JSONObjectDecodable {
             mapPoint: MKMapPointForCoordinate(CLLocationCoordinate2DMake(json <~ "latitude", json <~ "longitude")),
             weatherLocation: json <~ "weather",
             images: json <~ "images",
-            dataSourceFactory: json.context as! String->DataSource
+            dataSourceFactory: context.makeImageDataSource
         )
     }
 }

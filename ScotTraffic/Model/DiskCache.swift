@@ -8,8 +8,13 @@
 
 import UIKit
 
-public class DiskCache: NSObject {
+public class DiskCache {
    
+    public enum Result {
+        case Hit(data: NSData, date: NSDate)
+        case Miss
+    }
+    
     private let directoryURL: NSURL
     private let readQueue: NSOperationQueue
     private let writeQueue: NSOperationQueue
@@ -37,24 +42,11 @@ public class DiskCache: NSObject {
         NSLog("using cache at \(directoryURL)")
     }
     
-    public func dataForKey(key: String, completion: NSData? -> ()) {
+    public func dataForKey(key: String, completion: Result -> ()) {
         let operation = NSBlockOperation() {
-            guard let url = NSURL(string: key, relativeToURL: self.directoryURL) else {
-                dispatch_async(dispatch_get_main_queue()) {
-                    completion(nil)
-                }
-                return
-            }
-            
-            do {
-                let data = try NSData(contentsOfURL: url, options: .DataReadingMapped)
-                dispatch_async(dispatch_get_main_queue()) {
-                    completion(data)
-                }
-            } catch {
-                dispatch_async(dispatch_get_main_queue()) {
-                    completion(nil)
-                }
+            let result = self.readCacheDataForKey(key)
+            dispatch_async(dispatch_get_main_queue()) {
+                completion(result)
             }
         }
         
@@ -63,16 +55,7 @@ public class DiskCache: NSObject {
     
     public func storeData(data: NSData, forKey key: String) {
         let operation = NSBlockOperation() {
-            guard let url = NSURL(string: key, relativeToURL: self.directoryURL) else {
-                return
-            }
-            
-            do {
-                try self.ensureParentDirectoryExistsAtURL(url)
-                try data.writeToURL(url, options: .DataWritingAtomic)
-            } catch {
-                NSLog("failed to write \(url): \(error)")
-            }
+            self.writeCacheData(data, forKey: key)
         }
         
         addWriteOperation(operation)
@@ -80,16 +63,7 @@ public class DiskCache: NSObject {
     
     public func removeDataForKey(key: String) {
         let operation = NSBlockOperation() {
-            guard let url = NSURL(string: key, relativeToURL: self.directoryURL) else {
-                return
-            }
-
-            do {
-                let fileManager = NSFileManager.defaultManager()
-                try fileManager.removeItemAtURL(url)
-            } catch {
-                NSLog("failed to remove \(url): \(error)")
-            }
+            self.deleteCacheDataForKey(key)
         }
         
         addWriteOperation(operation)
@@ -106,6 +80,46 @@ public class DiskCache: NSObject {
         writeQueue.addOperation(operation)
     }
     
+    private func readCacheDataForKey(key: String) -> Result {
+        if let url = NSURL(string: key, relativeToURL: self.directoryURL) {
+            do {
+                let attrs = try url.path.map { try self.fileManager.attributesOfItemAtPath($0) }
+                if let modificationDate = attrs?[NSFileModificationDate] as? NSDate {
+                    let data = try NSData(contentsOfURL: url, options: .DataReadingMapped)
+                    return .Hit(data: data, date: modificationDate)
+                }
+            } catch {
+                // ignore errors and send a cache miss
+            }
+        }
+        return .Miss
+    }
+    
+    private func writeCacheData(data: NSData, forKey key: String) {
+        guard let url = NSURL(string: key, relativeToURL: self.directoryURL) else {
+            return
+        }
+        
+        do {
+            try self.ensureParentDirectoryExistsAtURL(url)
+            try data.writeToURL(url, options: .DataWritingAtomic)
+        } catch {
+            NSLog("failed to write \(url): \(error)")
+        }
+    }
+    
+    private func deleteCacheDataForKey(key: String) {
+        guard let url = NSURL(string: key, relativeToURL: self.directoryURL) else {
+            return
+        }
+        
+        do {
+            try fileManager.removeItemAtURL(url)
+        } catch {
+            NSLog("failed to remove \(url): \(error)")
+        }
+    }
+
     private func ensureParentDirectoryExistsAtURL(url: NSURL) throws {
         if var components = url.pathComponents {
             components.removeLast()

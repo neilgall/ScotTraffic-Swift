@@ -96,13 +96,20 @@ extension TrafficCameraLocation: JSONObjectDecodable {
     }
 }
 
+public struct TrafficCameraDecodeContext {
+    let makeImageDataSource: String -> DataSource
+}
+
 extension TrafficCamera: JSONObjectDecodable {
     public static func decodeJSON(json: JSONObject, forKey key: JSONKey) throws -> TrafficCamera {
+        guard let context = json.context as? TrafficCameraDecodeContext else {
+            fatalError("invalid JSON decode context")
+        }
         return try TrafficCamera(
             identifier: json <~ "image",
             direction: json <~ "direction",
             isAvailable: json <~ "available",
-            dataSourceFactory: json.context as! String->DataSource
+            dataSourceFactory: context.makeImageDataSource
         )
     }
 }

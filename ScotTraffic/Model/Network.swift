@@ -109,6 +109,7 @@ class HTTPDataSource: DataSource {
     }
     
     func start() {
+        print ("GET \(path)")
         self.fetcher.fetchDataAtPath(path) { data in
             dispatch_async(dispatch_get_main_queue()) {
                 self.value.pushValue(data)

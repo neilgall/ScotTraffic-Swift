@@ -8,63 +8,88 @@
 
 import Foundation
 
-class CachedHTTPDataSource: DataSource {
-    
-    private let httpSource: HTTPDataSource
-    private let cacheSource: CacheDataSource
-    private var observations = [Observation]()
-    
-    let value = Observable<Either<NSData, NetworkError>>()
+public class CachedHTTPDataSource: DataSource {
 
-    init(fetcher: HTTPFetcher, cache: DiskCache, path: String) {
-        httpSource = HTTPDataSource(fetcher: fetcher, path: path)
-        cacheSource = CacheDataSource(cache: cache, key: path)
-        
-        observations.append(cacheSource.value.output({ dataOrError in
-            if case .Value(let data) = dataOrError {
-                self.value.pushValue(.Value(data))
-            }
-        }))
-        
-        observations.append(httpSource.value.output({ dataOrError in
-            self.value.pushValue(dataOrError)
-            if case .Value(let data) = dataOrError {
-                self.cacheSource.update(data)
-            }
-        }))
+    // Output
+    public let value = Observable<Either<NSData, NetworkError>>()
+    
+    private let diskCache: DiskCache
+    private let fetcher: HTTPFetcher
+    private let maximumCacheAge: NSTimeInterval
+    private let key: String
+
+    private var httpSource: HTTPDataSource?
+    private var httpObservation: Observation?
+    private var inFlight = false
+    
+    init(fetcher: HTTPFetcher, cache: DiskCache, maximumCacheAge: NSTimeInterval, path: String) {
+        self.fetcher = fetcher
+        self.diskCache = cache
+        self.maximumCacheAge = maximumCacheAge
+        self.key = path
     }
     
-    func start() {
-        cacheSource.start()
+    public func start() {
+        guard !inFlight else {
+            // already in-flight
+            return
+        }
+        
+        inFlight = true
+        diskCache.dataForKey(key) { result in
+            switch result {
+                
+            case .Hit(let data, let date):
+                let age = NSDate().timeIntervalSinceDate(date)
+                print ("cache hit \(self.key) age \(age)")
+                self.cacheHit(data, age: age)
+                
+            case .Miss:
+                print ("cache miss \(self.key)")
+                self.startHTTPSource(false)
+            }
+        }
+    }
+    
+    private func cacheHit(data: NSData, age: NSTimeInterval) {
+        value.pushValue(.Value(data))
+        if age < maximumCacheAge {
+            inFlight = false
+        } else {
+            // cache hit but old, so follow up with network fetch
+            startHTTPSource(true)
+        }
+    }
+    
+    private func startHTTPSource(afterCacheHit: Bool) {
+        let httpSource = HTTPDataSource(fetcher: self.fetcher, path: self.key)
+        
+        httpObservation = httpSource.value.output { dataOrError in
+            switch dataOrError {
+            case .Value(let data):
+                self.diskCache.storeData(data, forKey: self.key)
+                self.value.pushValue(dataOrError)
+
+            case .Error:
+                if !afterCacheHit {
+                    self.value.pushValue(dataOrError)
+                }
+            }
+            
+            self.endHTTPSource()
+        }
+        
+        self.httpSource = httpSource
         httpSource.start()
     }
+    
+    private func endHTTPSource() {
+        httpSource = nil
+        httpObservation = nil
+        inFlight = false
+    }
 
-    static func dataSourceWithFetcher(fetcher: HTTPFetcher, cache: DiskCache) -> String -> DataSource {
-        return { path in
-            CachedHTTPDataSource(fetcher: fetcher, cache: cache, path: path)
-        }
-    }
-}
-
-private class CacheDataSource: DataSource {
-    let cache: DiskCache
-    let key: String
-    let value = Observable<Either<NSData,NetworkError>>()
-    
-    init(cache: DiskCache, key: String) {
-        self.cache = cache
-        self.key = key
-    }
-    
-    func start() {
-        cache.dataForKey(key) { data in
-            if let data = data {
-                self.value.pushValue(.Value(data))
-            }
-        }
-    }
-    
-    func update(data: NSData) {
-        cache.storeData(data, forKey: key)
+    public static func dataSourceWithFetcher(fetcher: HTTPFetcher, cache: DiskCache)(maximumCacheAge: NSTimeInterval)(path: String) -> DataSource {
+        return CachedHTTPDataSource(fetcher: fetcher, cache: cache, maximumCacheAge: maximumCacheAge, path: path)
     }
 }

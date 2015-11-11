@@ -31,7 +31,7 @@ public class AppModel: ScotTraffic {
         let diskCache = DiskCache(withPath: "scottraffic")
         let fetcher = HTTPFetcher(baseURL: NSURL(string: "http://dev.scottraffic.co.uk")!)
         
-        let dataSourceForPath = CachedHTTPDataSource.dataSourceWithFetcher(fetcher, cache: diskCache)
+        let cachedDataSource = CachedHTTPDataSource.dataSourceWithFetcher(fetcher, cache: diskCache)
         
         let userDefaults = NSUserDefaults.standardUserDefaults()
 
@@ -43,26 +43,29 @@ public class AppModel: ScotTraffic {
         
         // -- Traffic Cameras --
         
-        let trafficCamerasSource = dataSourceForPath("trafficcameras.json")
+        let trafficCamerasSource = cachedDataSource(maximumCacheAge: 3600)(path: "trafficcameras.json")
+        let trafficCamerasContext = TrafficCameraDecodeContext(makeImageDataSource: cachedDataSource(maximumCacheAge: 300))
         let trafficCameraLocations = trafficCamerasSource.value.map {
-            $0.map(Array<TrafficCameraLocation>.decodeJSON(dataSourceForPath) <== JSONArrayFromData)
+            return $0.map(Array<TrafficCameraLocation>.decodeJSON(trafficCamerasContext) <== JSONArrayFromData)
         }
         self.trafficCameraLocations = valueFromEither(trafficCameraLocations).latest()
+
         self.favourites = Favourites(userDefaults: userDefaults, trafficCameraLocations: self.trafficCameraLocations)
 
         
         // -- Safety Cameras --
         
-        let safetyCamerasSource = dataSourceForPath("safetycameras.json")
+        let safetyCamerasSource = cachedDataSource(maximumCacheAge: 86400)(path: "safetycameras.json")
+        let safetyCamerasContext = SafetyCameraDecodeContext(makeImageDataSource: cachedDataSource(maximumCacheAge: 86400))
         let safetyCameras = safetyCamerasSource.value.map {
-            $0.map(Array<SafetyCamera>.decodeJSON(dataSourceForPath) <== JSONArrayFromData)
+            $0.map(Array<SafetyCamera>.decodeJSON(safetyCamerasContext) <== JSONArrayFromData)
         }
         self.safetyCameras = valueFromEither(safetyCameras).latest()
  
         
         // -- Incidents / Roadworks --
         
-        let incidentsSource = dataSourceForPath("incidents.json")
+        let incidentsSource = cachedDataSource(maximumCacheAge: 300)(path: "incidents.json")
         let incidents = incidentsSource.value.map {
             $0.map(Array<Incident>.decodeJSON(Void) <== JSONArrayFromData)
         }
@@ -73,7 +76,7 @@ public class AppModel: ScotTraffic {
         
         // -- Weather --
         
-        let weatherSource = dataSourceForPath("weather.json")
+        let weatherSource = cachedDataSource(maximumCacheAge: 900)(path: "weather.json")
         let weather = weatherSource.value.map {
             $0.map(Array<Weather>.decodeJSON(Void) <== JSONArrayFromData)
         }
