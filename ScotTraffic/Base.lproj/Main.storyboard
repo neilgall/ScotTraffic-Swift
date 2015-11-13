@@ -429,7 +429,7 @@
         <!--Weather View Controller-->
         <scene sceneID="HWi-w3-hw1">
             <objects>
-                <viewController id="wvP-C8-jue" customClass="WeatherViewController" customModule="ScotTraffic" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="weatherViewController" id="wvP-C8-jue" customClass="WeatherViewController" customModule="ScotTraffic" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="LFG-vD-gpD"/>
                         <viewControllerLayoutGuide type="bottom" id="Tib-Fa-ZQU"/>
