@@ -37,7 +37,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, MapViewModelDelega
             calloutContainerView.delegate = self
             
             observations.append(viewModel.annotations => self.updateAnnotations)
-            observations.append(viewModel.selectedAnnotation => self.autoSelectAnnotation)
+            observations.append(not(animationSequence.busy).gate(viewModel.selectedAnnotation) => self.autoSelectAnnotation)
             observations.append(viewModel.selectedMapItem => self.zoomToSelectedMapItem)
             observations.append(viewModel.locationServices.authorised => self.updateShowsCurrentLocation)
             
@@ -80,9 +80,9 @@ class MapViewController: UIViewController, MKMapViewDelegate, MapViewModelDelega
         }
     }
     
-    func deselectAnnotations() {
+    func deselectAnnotationsAnimated(animated: Bool) {
         for selected in mapView.selectedAnnotations {
-            mapView.deselectAnnotation(selected, animated: true)
+            mapView.deselectAnnotation(selected, animated: animated)
         }
     }
     
@@ -104,13 +104,13 @@ class MapViewController: UIViewController, MKMapViewDelegate, MapViewModelDelega
     
     private func attachViewController(viewController: UIViewController, toAnnotationView annotationView: MKAnnotationView) {
         animationSequence.dispatch { completion in
+            self.calloutViewControllerByAnnotation[annotationView] = viewController
             viewController.willMoveToParentViewController(self)
             viewController.beginAppearanceTransition(true, animated: true)
             self.addChildViewController(viewController)
             self.calloutContainerView.addCalloutView(viewController.view, withPreferredSize: viewController.preferredContentSize, fromAnnotationView: annotationView) {
                 viewController.endAppearanceTransition()
                 viewController.didMoveToParentViewController(self)
-                self.calloutViewControllerByAnnotation[annotationView] = viewController
                 completion()
             }
         }
@@ -120,7 +120,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, MapViewModelDelega
         animationSequence.dispatch { completion in
             viewController.willMoveToParentViewController(nil)
             viewController.beginAppearanceTransition(false, animated: true)
-            self.calloutContainerView.hideCalloutView(viewController.view, forAnnotationView: annotationView, animated: true) {
+            self.calloutContainerView.hideCalloutView(viewController.view, animated: true) {
                 viewController.removeFromParentViewController()
                 viewController.endAppearanceTransition()
                 self.calloutViewControllerByAnnotation[annotationView] = nil
@@ -157,7 +157,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, MapViewModelDelega
     // -- MARK: MKMapViewDelegete --
     
     func mapView(mapView: MKMapView, regionWillChangeAnimated animated: Bool) {
-        deselectAnnotations()
+        deselectAnnotationsAnimated(animated)
         viewModel?.animatingMapRect.value = animated
     }
     

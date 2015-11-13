@@ -61,14 +61,14 @@ class CalloutContainerView: UIView {
         view.addGestureRecognizer(swipe)
     }
     
-    func hideCalloutView(view: UIView, forAnnotationView annotationView: MKAnnotationView, animated: Bool, completion: Void->Void) {
+    func hideCalloutView(view: UIView, animated: Bool, completion: Void->Void) {
         let finish = {
             view.removeFromSuperview()
             self.annotationsByCallout[view] = nil
             completion()
         }
         
-        if !animated {
+        guard animated, let annotationView = annotationsByCallout[view] else {
             finish()
             return
         }

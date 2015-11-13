@@ -101,7 +101,7 @@ public class AppCoordinator: NSObject, NGSplitViewControllerDelegate, SettingsTa
     }
     
     private func hideDetail() {
-        mapViewController.deselectAnnotations()
+        mapViewController.deselectAnnotationsAnimated(true)
         collectionController = nil
     }
     
@@ -178,7 +178,7 @@ public class AppCoordinator: NSObject, NGSplitViewControllerDelegate, SettingsTa
     // -- MARK: UI Actions --
     
     func searchButtonTapped(button: UIBarButtonItem) {
-        mapViewController.deselectAnnotations()
+        mapViewController.deselectAnnotationsAnimated(false)
         splitViewController.overlayMasterViewController()
     }
     
