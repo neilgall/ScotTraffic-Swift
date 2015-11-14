@@ -33,7 +33,7 @@ public enum WindDirection {
 
 public enum WeatherType: String {
     case Clear = "clear"
-    case PartCloudy = "partcloudy"
+    case PartCloudy = "part-cloudy"
     case Mist = "mist"
     case Fog = "fog"
     case Cloudy = "cloudy"

@@ -8,6 +8,8 @@
 
 import UIKit
 
+private let collectionViewChromeHeight: CGFloat = 32+44
+
 public func popoverContentSize(traitCollection: UITraitCollection, viewBounds: CGRect) -> CGSize {
     if traitCollection.horizontalSizeClass == .Compact && viewBounds.width < 500 {
         // inset from the screen edges
@@ -23,11 +25,11 @@ public func popoverContentSize(traitCollection: UITraitCollection, viewBounds: C
 }
 
 private func preferredCollectionContentSizeForWidth(width: CGFloat) -> CGSize {
-    return CGSizeMake(width, width*0.75+64)
+    return CGSizeMake(width, width * 0.75 + collectionViewChromeHeight)
 }
 
 private func preferredCollectionContentSizeForHeight(height: CGFloat) -> CGSize {
-    return CGSizeMake((height-64)/0.75, height)
+    return CGSizeMake((height - collectionViewChromeHeight) / 0.75, height)
 }
 
 private func aspectIsPortrait(viewBounds: CGRect) -> Bool {

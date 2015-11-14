@@ -1,0 +1,21 @@
+{
+    "images": [
+        {
+            "idiom": "universal",
+            "scale": "1x",
+            "filename": "wsymbol_0049_freezing_drizzle.png"
+        },{
+            "idiom": "universal",
+            "scale": "2x",
+            "filename": "wsymbol_0049_freezing_drizzle@2x.png"
+        },{
+            "idiom": "universal",
+            "scale": "3x",
+            "filename": "wsymbol_0049_freezing_drizzle@3x.png"
+        }
+    ],
+    "info": {
+        "version": 1,
+        "author": "xcode"
+    }
+}
