@@ -29,6 +29,8 @@
 		2841A0F01BCD9B3900D22A8E /* EitherTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2841A0EF1BCD9B3900D22A8E /* EitherTests.swift */; };
 		284DE0961BBDCD4200E6A678 /* Either.swift in Sources */ = {isa = PBXBuildFile; fileRef = 284DE0951BBDCD4200E6A678 /* Either.swift */; };
 		284DE0981BBDD0D800E6A678 /* AppModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 284DE0971BBDD0D800E6A678 /* AppModel.swift */; };
+		285E17031BF760B000E13129 /* Sunrise.swift in Sources */ = {isa = PBXBuildFile; fileRef = 285E17021BF760B000E13129 /* Sunrise.swift */; };
+		285E17051BF768E900E13129 /* WeatherViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 285E17041BF768E900E13129 /* WeatherViewModel.swift */; };
 		286157C81BF29BD2000C11D4 /* SettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 286157C71BF29BD2000C11D4 /* SettingsTableViewController.swift */; };
 		286157CA1BF29CF6000C11D4 /* SettingsToggleTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 286157C91BF29CF6000C11D4 /* SettingsToggleTableViewCell.swift */; };
 		286157CC1BF29E6B000C11D4 /* SettingsConfigurations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 286157CB1BF29E6B000C11D4 /* SettingsConfigurations.swift */; };
@@ -125,6 +127,8 @@
 		2841A0EF1BCD9B3900D22A8E /* EitherTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EitherTests.swift; sourceTree = "<group>"; };
 		284DE0951BBDCD4200E6A678 /* Either.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Either.swift; sourceTree = "<group>"; };
 		284DE0971BBDD0D800E6A678 /* AppModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppModel.swift; sourceTree = "<group>"; };
+		285E17021BF760B000E13129 /* Sunrise.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Sunrise.swift; sourceTree = "<group>"; };
+		285E17041BF768E900E13129 /* WeatherViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WeatherViewModel.swift; sourceTree = "<group>"; };
 		286157C71BF29BD2000C11D4 /* SettingsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsTableViewController.swift; sourceTree = "<group>"; };
 		286157C91BF29CF6000C11D4 /* SettingsToggleTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsToggleTableViewCell.swift; sourceTree = "<group>"; };
 		286157CB1BF29E6B000C11D4 /* SettingsConfigurations.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsConfigurations.swift; sourceTree = "<group>"; };
@@ -270,6 +274,7 @@
 			isa = PBXGroup;
 			children = (
 				283A90551BF4035B00BB5C46 /* WeatherViewController.swift */,
+				285E17041BF768E900E13129 /* WeatherViewModel.swift */,
 			);
 			name = Weather;
 			sourceTree = "<group>";
@@ -379,6 +384,7 @@
 				286559141BC1DCB70058A35A /* Favourites.swift */,
 				288AC88E1BCFA43B004EA6A0 /* SharableItem.swift */,
 				286157D01BF2AD60000C11D4 /* LocationServices.swift */,
+				285E17021BF760B000E13129 /* Sunrise.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -599,8 +605,10 @@
 				716D9E991BCBC2F1005A6B49 /* ScotTraffic.swift in Sources */,
 				28AF4A071BD82342009B0AE8 /* FadeTransition.swift in Sources */,
 				716D9E971BCA614D005A6B49 /* MapItemCollectionViewModel.swift in Sources */,
+				285E17031BF760B000E13129 /* Sunrise.swift in Sources */,
 				28903ABE1BE62E2500EC8054 /* Reachability.swift in Sources */,
 				28AF4A0B1BD849C0009B0AE8 /* PopoverContentSize.swift in Sources */,
+				285E17051BF768E900E13129 /* WeatherViewModel.swift in Sources */,
 				284DE0981BBDD0D800E6A678 /* AppModel.swift in Sources */,
 				280486591BC0917B003BA360 /* MapItem.swift in Sources */,
 				286157CA1BF29CF6000C11D4 /* SettingsToggleTableViewCell.swift in Sources */,

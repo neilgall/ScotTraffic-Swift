@@ -13,35 +13,28 @@ class WeatherViewController: UIViewController {
     @IBOutlet var temperatureLabel: UILabel?
     @IBOutlet var weatherIconImageView: UIImageView?
     
-    var weather: Weather?
-    var settings: Settings?
+    var weatherViewModel: WeatherViewModel?
     var observations = [Observation]()
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         
-        guard let weather = self.weather, let settings = self.settings else {
-            temperatureLabel?.hidden = true
-            weatherIconImageView?.hidden = true
+        guard let model = weatherViewModel else {
             return
         }
         
-        temperatureLabel?.hidden = false
-        weatherIconImageView?.hidden = false
+        observations.append(model.weatherHidden => { hide in
+            self.temperatureLabel?.hidden = hide
+            self.weatherIconImageView?.hidden = hide
+            })
         
-        let temperatureText = settings.temperatureUnit.map { (unit: TemperatureUnit) -> String in
-            switch unit {
-            case .Celcius:
-                return "\(weather.temperature)ºC"
-            case .Fahrenheit:
-                return "\(weather.temperatureFahrenheit)ºF"
-            }
-        }
-        observations.append(temperatureText => {
+        observations.append(model.temperatureText => {
             self.temperatureLabel?.text = $0
         })
         
-        weatherIconImageView?.image = UIImage(named: iconForWeatherType(weather.weatherType))
+        observations.append(model.weatherIconName => {
+            self.weatherIconImageView?.image = UIImage(named: $0)
+        })
     }
     
     override func viewWillDisappear(animated: Bool) {
@@ -49,8 +42,4 @@ class WeatherViewController: UIViewController {
         
         observations.removeAll()
     }
-}
-
-func iconForWeatherType(type: WeatherType) -> String {
-    return "weather/wsymbol_0001_sunny"
 }

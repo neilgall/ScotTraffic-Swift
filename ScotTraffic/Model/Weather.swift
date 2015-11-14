@@ -6,7 +6,7 @@
 //  Copyright © 2015 Neil Gall. All rights reserved.
 //
 
-import CoreLocation
+import MapKit
 
 public typealias WeatherLocationCode = Int
 public typealias Celcius = Float
@@ -59,18 +59,16 @@ public enum WeatherType: String {
 public final class Weather {
     let identifier: Int
     let name: String
-    let latitude: CLLocationDegrees
-    let longitude: CLLocationDegrees
+    let mapPoint: MKMapPoint
     let temperature: Celcius
     let windSpeed: WindSpeedKPH
     let windDirection: WindDirection
     let weatherType: WeatherType
     
-    public init(identifier: Int, name: String, latitude: CLLocationDegrees, longitude: CLLocationDegrees, temperature: Celcius, windSpeed: WindSpeedKPH, windDirection: WindDirection, weatherType: WeatherType) {
+    public init(identifier: Int, name: String, mapPoint: MKMapPoint, temperature: Celcius, windSpeed: WindSpeedKPH, windDirection: WindDirection, weatherType: WeatherType) {
         self.identifier = identifier
         self.name = name
-        self.latitude = latitude
-        self.longitude = longitude
+        self.mapPoint = mapPoint
         self.temperature = temperature
         self.windSpeed = windSpeed
         self.windDirection = windDirection
@@ -114,8 +112,7 @@ extension Weather: JSONObjectDecodable {
         return try Weather(
             identifier: json <~ "identifier",
             name: json <~ "name",
-            latitude: json <~ "latitude",
-            longitude: json <~ "longitude",
+            mapPoint: MKMapPointForCoordinate(CLLocationCoordinate2D(latitude: json <~ "latitude", longitude: json <~ "longitude")),
             temperature: json <~ "temp",
             windSpeed: json <~ "windSpeed",
             windDirection: json <~ "windDir",

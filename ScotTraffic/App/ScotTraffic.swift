@@ -8,12 +8,14 @@
 
 import Foundation
 
+public typealias WeatherFinder = MapItem -> Weather?
+
 public protocol ScotTraffic {
     var trafficCameraLocations: Observable<[TrafficCameraLocation]> { get }
     var safetyCameras: Observable<[SafetyCamera]> { get }
     var alerts: Observable<[Incident]> { get }
     var roadworks: Observable<[Incident]> { get }
-    var weather: Observable<[Weather]> { get }
+    var weather: Observable<WeatherFinder> { get }
     var settings: Settings { get }
     var favourites: Favourites { get }
 }

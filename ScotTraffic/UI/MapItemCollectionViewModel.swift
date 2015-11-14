@@ -17,16 +17,18 @@ public class MapItemCollectionViewModel: NSObject, UICollectionViewDataSource, M
     let mapItems: Input<[MapItem]>
     
     // Outputs
+    let weatherViewModel: WeatherViewModel
     let cellItems: Latest<[MapItemCollectionViewCell.Item]>
     let selectedItemIndex: Observable<Int?>
     let shareAction: Input<ShareAction?>
     
-    public init(selection: Observable<SearchViewModel.Selection?>, favourites: Favourites) {
-        self.favourites = favourites
+    public init(scotTraffic: ScotTraffic, selection: Observable<SearchViewModel.Selection?>) {
+        self.favourites = scotTraffic.favourites
 
         mapItems = Input(initial: [])
         shareAction = Input(initial: nil)
-        
+        weatherViewModel = WeatherViewModel(settings: scotTraffic.settings, weatherFinder: scotTraffic.weather, mapItems: mapItems)
+    
         // Each MapItem can have multiple items to show in the collection view. Flat map into a cell item list.
         cellItems = mapItems.map { mapItems in
             mapItems.flatMap {

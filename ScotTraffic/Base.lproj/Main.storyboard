@@ -361,12 +361,27 @@
                                             <action selector="pageControlChanged" destination="WAd-4R-ZgQ" eventType="valueChanged" id="WAD-CT-7vn"/>
                                         </connections>
                                     </pageControl>
+                                    <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="9fU-YD-5ib" userLabel="Weather Container">
+                                        <rect key="frame" x="530" y="0.0" width="70" height="20"/>
+                                        <animations/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="70" id="3kk-1p-NL8"/>
+                                        </constraints>
+                                        <connections>
+                                            <segue destination="wvP-C8-jue" kind="embed" identifier="embedWeather" id="ize-ze-JGt"/>
+                                        </connections>
+                                    </containerView>
                                 </subviews>
                                 <animations/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <constraints>
+                                    <constraint firstItem="9fU-YD-5ib" firstAttribute="height" secondItem="hLZ-bs-o9D" secondAttribute="height" id="8jL-GN-09q"/>
+                                    <constraint firstItem="9fU-YD-5ib" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="2lL-3a-oJt" secondAttribute="trailing" constant="10" id="TFs-KP-fvN"/>
+                                    <constraint firstAttribute="trailing" secondItem="9fU-YD-5ib" secondAttribute="trailing" id="UoG-vo-9st"/>
                                     <constraint firstAttribute="height" constant="20" id="YXe-JP-PsC"/>
                                     <constraint firstItem="2lL-3a-oJt" firstAttribute="centerY" secondItem="hLZ-bs-o9D" secondAttribute="centerY" id="a8d-jf-ty0"/>
+                                    <constraint firstItem="9fU-YD-5ib" firstAttribute="centerY" secondItem="hLZ-bs-o9D" secondAttribute="centerY" id="fKl-NA-7Sq"/>
                                     <constraint firstItem="2lL-3a-oJt" firstAttribute="centerX" secondItem="hLZ-bs-o9D" secondAttribute="centerX" id="w4R-Bi-wcZ"/>
                                 </constraints>
                             </view>
@@ -420,6 +435,7 @@
                         <outlet property="collectionView" destination="7rc-dl-emz" id="d84-vW-SNh"/>
                         <outlet property="collectionViewLayout" destination="SaW-tb-lHn" id="aBT-UE-yoj"/>
                         <outlet property="pageControl" destination="2lL-3a-oJt" id="TAn-y2-q6c"/>
+                        <outlet property="weatherContainer" destination="9fU-YD-5ib" id="d9N-tT-GA3"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="21B-nl-SAH" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -439,19 +455,19 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="5ºC" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DJV-h8-Euc">
-                                <rect key="frame" x="16" y="40" width="30" height="21"/>
+                                <rect key="frame" x="16" y="41" width="27" height="18"/>
                                 <animations/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="chm-3h-rYg">
-                                <rect key="frame" x="51" y="0.0" width="33" height="100"/>
+                                <rect key="frame" x="48" y="0.0" width="36" height="100"/>
                                 <animations/>
                             </imageView>
                         </subviews>
                         <animations/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="DJV-h8-Euc" firstAttribute="leading" secondItem="tvM-ZO-FdT" secondAttribute="leadingMargin" id="2Cq-Gx-FR5"/>
                             <constraint firstItem="DJV-h8-Euc" firstAttribute="centerY" secondItem="chm-3h-rYg" secondAttribute="centerY" id="Ebs-Ih-ur3"/>
@@ -471,7 +487,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="goS-KT-bhh" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1827" y="1453"/>
+            <point key="canvasLocation" x="1962" y="1703"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="I0P-9x-HOW">

@@ -22,6 +22,14 @@ public func == (a: MapItem, b: MapItem) -> Bool {
         && MKMapPointEqualToPoint(a.mapPoint, b.mapPoint))
 }
 
+extension MKMapPoint {
+    public func distanceSqToMapPoint(other: MKMapPoint) -> Double {
+        let xd = x - other.x
+        let yd = y - other.y
+        return xd * xd + yd * yd
+    }
+}
+
 extension MKMapRect: Equatable {
     public func addPoint(point: MKMapPoint) -> MKMapRect {
         if MKMapRectIsNull(self) {

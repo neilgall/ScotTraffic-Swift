@@ -56,9 +56,7 @@ public class AppCoordinator: NSObject, NGSplitViewControllerDelegate, SettingsTa
         mapViewController.viewModel = mapViewModel
         mapViewController.maximumDetailItemsForCollectionCallout = maximumItemsInDetailView
         
-        collectionViewModel = MapItemCollectionViewModel(
-            selection: searchViewModel.searchSelection,
-            favourites: appModel.favourites)
+        collectionViewModel = MapItemCollectionViewModel(scotTraffic: appModel, selection: searchViewModel.searchSelection)
     }
     
     public func start() {

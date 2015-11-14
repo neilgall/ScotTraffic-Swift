@@ -15,7 +15,7 @@ public class AppModel: ScotTraffic {
     public let safetyCameras: Observable<[SafetyCamera]>
     public let alerts: Observable<[Incident]>
     public let roadworks: Observable<[Incident]>
-    public let weather: Observable<[Weather]>
+    public let weather: Observable<WeatherFinder>
     public let settings: Settings
     public let favourites: Favourites
     
@@ -77,7 +77,12 @@ public class AppModel: ScotTraffic {
         let weather = weatherSource.value.map {
             $0.map(Array<Weather>.decodeJSON(Void) <== JSONArrayFromData)
         }
-        self.weather = valueFromEither(weather).latest()
+        self.weather = valueFromEither(weather).latest().map() { (weather: [Weather]) -> WeatherFinder in
+            return { (mapItem: MapItem) -> Weather? in
+                let distanceSq = { (w: Weather) -> Double in w.mapPoint.distanceSqToMapPoint(mapItem.mapPoint) }
+                return weather.minElement( { distanceSq($0) < distanceSq($1) })
+            }
+        }
         
         
         // -- Auto refresh --

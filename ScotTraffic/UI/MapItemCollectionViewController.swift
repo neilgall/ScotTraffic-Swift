@@ -13,6 +13,8 @@ public class MapItemCollectionViewController: UIViewController, UICollectionView
     @IBOutlet var collectionView: UICollectionView?
     @IBOutlet var collectionViewLayout: UICollectionViewFlowLayout?
     @IBOutlet var pageControl: UIPageControl?
+    @IBOutlet var weatherContainer: UIView?
+    
     var observations = [Observation]()
     
     var viewModel: MapItemCollectionViewModel? {
@@ -51,6 +53,12 @@ public class MapItemCollectionViewController: UIViewController, UICollectionView
         
         if let size = collectionView?.bounds.size {
             collectionViewLayout?.itemSize = size
+        }
+    }
+    
+    override public func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        if segue.identifier == "embedWeather", let weatherViewController = segue.destinationViewController as? WeatherViewController {
+            weatherViewController.weatherViewModel = viewModel?.weatherViewModel
         }
     }
     
