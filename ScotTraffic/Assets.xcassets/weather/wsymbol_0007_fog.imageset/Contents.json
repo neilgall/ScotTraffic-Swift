@@ -3,15 +3,15 @@
         {
             "idiom": "universal",
             "scale": "1x",
-            "filename": "wsymbol_0008_clear_sky_night.png"
+            "filename": "wsymbol_0007_fog.png"
         },{
             "idiom": "universal",
             "scale": "2x",
-            "filename": "wsymbol_0008_clear_sky_night@2x.png"
+            "filename": "wsymbol_0007_fog@2x.png"
         },{
             "idiom": "universal",
             "scale": "3x",
-            "filename": "wsymbol_0008_clear_sky_night@3x.png"
+            "filename": "wsymbol_0007_fog@3x.png"
         }
     ],
     "info": {
