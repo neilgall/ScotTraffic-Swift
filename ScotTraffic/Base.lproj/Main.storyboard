@@ -382,7 +382,7 @@
                                     <constraint firstAttribute="height" constant="32" id="YXe-JP-PsC"/>
                                     <constraint firstItem="2lL-3a-oJt" firstAttribute="centerY" secondItem="hLZ-bs-o9D" secondAttribute="centerY" id="a8d-jf-ty0"/>
                                     <constraint firstItem="9fU-YD-5ib" firstAttribute="centerY" secondItem="hLZ-bs-o9D" secondAttribute="centerY" id="fKl-NA-7Sq"/>
-                                    <constraint firstItem="2lL-3a-oJt" firstAttribute="centerX" secondItem="hLZ-bs-o9D" secondAttribute="centerX" id="w4R-Bi-wcZ"/>
+                                    <constraint firstItem="2lL-3a-oJt" firstAttribute="centerX" secondItem="hLZ-bs-o9D" secondAttribute="centerX" priority="990" id="w4R-Bi-wcZ"/>
                                 </constraints>
                             </view>
                         </subviews>
