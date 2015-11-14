@@ -139,8 +139,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, MapViewModelDelega
     }
     
     func zoomToMapRectWithPadding(targetRect: MKMapRect, animated: Bool) {
-        let mapRect = mapView.mapRectThatFits(targetRect, edgePadding: zoomEdgePadding)
-        self.mapView.setVisibleMapRect(mapRect, animated: true)
+        mapView.setVisibleMapRect(targetRect, animated: true)
     }
 
     func shouldZoomToMapItem(mapItem: MapItem) -> Bool {
