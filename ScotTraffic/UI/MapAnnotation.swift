@@ -43,10 +43,13 @@ public class MapAnnotation: NSObject, MKAnnotation {
         
         var imageComponents = [String]()
  
-        if trafficCameraCount > 0 && availableTrafficCameraCount >= safetyCameraCount {
-            imageComponents.append(availableTrafficCameraCount > 0 ? "camera" : "camera-unavailable")
+        if availableTrafficCameraCount > 0 {
+            imageComponents.append("camera")
+        
+        } else if trafficCameraCount > safetyCameraCount {
+            imageComponents.append("camera-unavailable")
 
-        } else if safetyCameraCount > 0 && safetyCameraCount > availableTrafficCameraCount {
+        } else if safetyCameraCount > 0 {
             imageComponents.append("safetycamera")
         }
         
