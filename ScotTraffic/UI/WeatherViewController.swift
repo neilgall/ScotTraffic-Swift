@@ -26,7 +26,7 @@ class WeatherViewController: UIViewController {
         observations.append(model.weatherHidden => { hide in
             self.temperatureLabel?.hidden = hide
             self.weatherIconImageView?.hidden = hide
-            })
+        })
         
         observations.append(model.temperatureText => {
             self.temperatureLabel?.text = $0

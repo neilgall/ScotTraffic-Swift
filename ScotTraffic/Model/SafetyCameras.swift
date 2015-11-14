@@ -26,19 +26,17 @@ public final class SafetyCamera : MapItem, ImageSupplier {
     public let url: NSURL?
     public let mapPoint: MKMapPoint
     public let speedLimit: SpeedLimit
-    public let weatherLocation: WeatherLocationCode
     public let images: [String]
     public let count: Int = 1
     public let iconName = "safetycamera"
     public let dataSource: DataSource?
     
-    public init(name: String, road: String, url: NSURL?, speedLimit: SpeedLimit, mapPoint: MKMapPoint, weatherLocation: WeatherLocationCode, images: [String], dataSourceFactory: String->DataSource) {
+    public init(name: String, road: String, url: NSURL?, speedLimit: SpeedLimit, mapPoint: MKMapPoint, images: [String], dataSourceFactory: String->DataSource) {
         self.name = name
         self.road = road
         self.url = url
         self.speedLimit = speedLimit
         self.mapPoint = mapPoint
-        self.weatherLocation = weatherLocation
         self.images = images
         self.dataSource = images.first.map { dataSourceFactory($0) }
     }
@@ -81,7 +79,6 @@ extension SafetyCamera: JSONObjectDecodable {
             url: (json <~ "url").flatMap { NSURL(string: $0) },
             speedLimit: json <~ "speedLimit",
             mapPoint: MKMapPointForCoordinate(CLLocationCoordinate2DMake(json <~ "latitude", json <~ "longitude")),
-            weatherLocation: json <~ "weather",
             images: json <~ "images",
             dataSourceFactory: context.makeImageDataSource
         )

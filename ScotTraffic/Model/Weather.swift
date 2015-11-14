@@ -8,7 +8,6 @@
 
 import MapKit
 
-public typealias WeatherLocationCode = Int
 public typealias Celcius = Float
 public typealias WindSpeedKPH = Float
 
@@ -57,7 +56,6 @@ public enum WeatherType: String {
 }
 
 public final class Weather {
-    let identifier: Int
     let name: String
     let mapPoint: MKMapPoint
     let temperature: Celcius
@@ -65,8 +63,7 @@ public final class Weather {
     let windDirection: WindDirection
     let weatherType: WeatherType
     
-    public init(identifier: Int, name: String, mapPoint: MKMapPoint, temperature: Celcius, windSpeed: WindSpeedKPH, windDirection: WindDirection, weatherType: WeatherType) {
-        self.identifier = identifier
+    public init(name: String, mapPoint: MKMapPoint, temperature: Celcius, windSpeed: WindSpeedKPH, windDirection: WindDirection, weatherType: WeatherType) {
         self.name = name
         self.mapPoint = mapPoint
         self.temperature = temperature
@@ -110,7 +107,6 @@ extension WindDirection: JSONValueDecodable {
 extension Weather: JSONObjectDecodable {
     public static func decodeJSON(json: JSONObject, forKey key: JSONKey) throws -> Weather {
         return try Weather(
-            identifier: json <~ "identifier",
             name: json <~ "name",
             mapPoint: MKMapPointForCoordinate(CLLocationCoordinate2D(latitude: json <~ "latitude", longitude: json <~ "longitude")),
             temperature: json <~ "temp",
