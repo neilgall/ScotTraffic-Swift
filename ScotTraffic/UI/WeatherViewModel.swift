@@ -58,6 +58,17 @@ class WeatherViewModel {
             return "wsymbol_\(baseName)"
         }
     }
+    
+    private func testIconMaps() {
+        for map in [dayIcons, nightIcons] {
+            for (_, iconName) in map {
+                guard let _ = UIImage(named: "wsymbol_\(iconName)") else {
+                    fatalError("can't get image \(iconName)")
+                }
+                print("found image \(iconName)")
+            }
+        }
+    }
 }
 
 extension TemperatureUnit {

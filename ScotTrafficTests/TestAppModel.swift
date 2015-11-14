@@ -15,7 +15,7 @@ public class TestAppModel: ScotTraffic {
     public let safetyCameras: Observable<[SafetyCamera]>
     public let alerts: Observable<[Incident]>
     public let roadworks: Observable<[Incident]>
-    public let weather: Observable<[Weather]>
+    public let weather: Observable<WeatherFinder>
     public let settings: Settings
     public let favourites: Favourites
     public let userDefaults: UserDefaultsProtocol
@@ -26,7 +26,11 @@ public class TestAppModel: ScotTraffic {
         
         trafficCameraLocations = Input<[TrafficCameraLocation]>(initial: loadTestData("trafficcameras", context: trafficCameraDummyContext))
         safetyCameras = Input<[SafetyCamera]>(initial: loadTestData("safetycameras", context: safetyCameraDummyContext))
-        weather = Input<[Weather]>(initial: loadTestData("weather", context: ()))
+
+        let weatherItems = Input<[Weather]>(initial: loadTestData("weather", context: ()))
+        weather = weatherItems.map { weather in
+            return { mapItems in nil }
+        }
         
         let incidents = Input<[Incident]>(initial: loadTestData("incidents", context: ()))
         alerts = incidents.map { $0.filter { $0.type == .Alert } }
