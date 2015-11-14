@@ -67,7 +67,7 @@ class SearchViewController: UITableViewController, UISearchBarDelegate {
         guard let title = searchViewModel?.sectionHeader.value where !title.isEmpty else {
             return 0
         }
-        return 20
+        return 30
     }
 
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
