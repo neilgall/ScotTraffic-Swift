@@ -8,6 +8,12 @@
 
 import Foundation
 
+#if DEBUG
+    private let ScotTrafficBaseURL = NSURL(string: "https://dev.scottraffic.co.uk")!
+#else
+    private let ScotTrafficBaseURL = NSURL(string: "https://scottraffic.co.uk")!
+#endif
+
 public class AppModel: ScotTraffic {
     
     // ScotTraffic interface
@@ -27,7 +33,7 @@ public class AppModel: ScotTraffic {
     
     public init() {
         let diskCache = DiskCache(withPath: "scottraffic")
-        let fetcher = HTTPFetcher(baseURL: NSURL(string: "http://dev.scottraffic.co.uk")!)
+        let fetcher = HTTPFetcher(baseURL: ScotTrafficBaseURL)
         
         let cachedDataSource = CachedHTTPDataSource.dataSourceWithFetcher(fetcher, cache: diskCache)
         
