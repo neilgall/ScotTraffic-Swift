@@ -25,14 +25,16 @@ public class AsyncSequence {
     public func dispatch(block: AsyncBlock) {
         sequence.append(block)
         if sequence.count == 1 {
-            _busy.value = true
-            next()
+            dispatch_async(dispatch_get_main_queue()) {
+                self._busy.value = true
+                self.next()
+            }
         }
     }
     
     private func next() {
         if sequence.isEmpty {
-            _busy.value = false
+            self._busy.value = false
             return
         }
         sequence[0] {

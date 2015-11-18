@@ -107,7 +107,14 @@ public class AppCoordinator: NSObject, NGSplitViewControllerDelegate, SettingsTa
         if selection != nil {
             showMap()
         }
-        mapViewModel.selectedMapItem.value = selection?.mapItem
+        
+        // FIXME: This is to guard against rapid taps in the search view controller racing with the
+        // map view and callout animations. Need a better, more general solution to queue requests
+        // or cancel the imperative and latent consequences of earlier updates.
+        
+        if mapViewModel.selectedMapItem.value == nil {
+            mapViewModel.selectedMapItem.value = selection?.mapItem
+        }
     }
     
     private func showMap() {

@@ -39,7 +39,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, MapViewModelDelega
             observations.append(viewModel.annotations => self.updateAnnotations)
             observations.append(not(animationSequence.busy).gate(viewModel.selectedAnnotation) => self.autoSelectAnnotation)
             observations.append(viewModel.selectedMapItem => self.zoomToSelectedMapItem)
-            observations.append(viewModel.locationServices.authorised => self.updateShowsCurrentLocation)
+            observations.append(viewModel.showsUserLocationOnMap => self.updateShowsCurrentLocation)
             
             mapView.setVisibleMapRect(viewModel.visibleMapRect.value, animated: false)
         }
@@ -72,9 +72,10 @@ class MapViewController: UIViewController, MKMapViewDelegate, MapViewModelDelega
         for unselected in currentAnnotations {
             if unselected == annotation {
                 mapView.selectAnnotation(unselected, animated: true)
-                
-                // we have now consumed the selectedMapItem
-                viewModel?.selectedMapItem.value = nil
+
+                dispatch_async(dispatch_get_main_queue()) {
+                    self.viewModel?.selectedMapItem.value = nil
+                }
                 return
             }
         }
@@ -104,6 +105,10 @@ class MapViewController: UIViewController, MKMapViewDelegate, MapViewModelDelega
     
     private func attachViewController(viewController: UIViewController, toAnnotationView annotationView: MKAnnotationView) {
         animationSequence.dispatch { completion in
+            // FIXME: this is a workaround for a race in the map rect update and child presentation
+            // resulting from a search selection.
+            self.removeOrphanedChildViewControllers()
+
             self.calloutViewControllerByAnnotation[annotationView] = viewController
             viewController.willMoveToParentViewController(self)
             viewController.beginAppearanceTransition(true, animated: true)
@@ -126,6 +131,19 @@ class MapViewController: UIViewController, MKMapViewDelegate, MapViewModelDelega
                 self.calloutViewControllerByAnnotation[annotationView] = nil
                 completion()
             }
+        }
+    }
+    
+    private func removeOrphanedChildViewControllers() {
+        if childViewControllers.count > 0 {
+            print("removing \(childViewControllers.count) orphans")
+        }
+        for viewController in childViewControllers {
+            viewController.willMoveToParentViewController(nil)
+            viewController.beginAppearanceTransition(false, animated: false)
+            viewController.view.removeFromSuperview()
+            viewController.endAppearanceTransition()
+            viewController.removeFromParentViewController()
         }
     }
 

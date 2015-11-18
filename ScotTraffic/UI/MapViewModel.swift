@@ -18,21 +18,45 @@ public protocol MapViewModelDelegate {
 
 public class MapViewModel {
 
-    // Inputs
-    let visibleMapRect: Input<MKMapRect>
-    let selectedMapItem: Input<MapItem?>
-    let animatingMapRect: Input<Bool>
-    let delegate: Input<MapViewModelDelegate?>
+    // -- MARK: Inputs
+    
+    // The visible map rect
+    public let visibleMapRect: Input<MKMapRect>
+    
+    // The map items selected outside of the map view, if any
+    public let selectedMapItem: Input<MapItem?>
 
-    // Outputs
-    let annotations: Observable<[MapAnnotation]>
-    let selectedAnnotation: Observable<MapAnnotation?>
-    let locationServices: LocationServices
- 
+    // A delegate to answer queries on map annotation overlaps
+    public let delegate: Input<MapViewModelDelegate?>
+    
+    // A flag indicating whether the map is currently animating its visible rect
+    public let animatingMapRect: Input<Bool>
+    
+    // A general purpose animation sequence. Dispatch animations via this sequence to (a) serialise
+    // them and (b) defer annotation selection until the map is stable
+    public let animationSequence = AsyncSequence()
+
+    // -- MARK: Outputs
+    
+    // The set of annotations in the visible map rect
+    public let annotations: Observable<[MapAnnotation]>
+    
+    // The selected annotation, if any
+    public let selectedAnnotation: Observable<MapAnnotation?>
+    
+    // Indicates whether the user location should be shown on the map
+    public let showsUserLocationOnMap: Observable<Bool>
+    
+    // -- MARK: private data
+    
+    private let locationServices: LocationServices
+    private var observations = [Observation]()
+
     public init(scotTraffic: ScotTraffic) {
         
         visibleMapRect = scotTraffic.settings.visibleMapRect
         locationServices = LocationServices(enabled: scotTraffic.settings.showCurrentLocationOnMap)
+        showsUserLocationOnMap = locationServices.authorised
         
         selectedMapItem = Input(initial: nil)
         animatingMapRect = Input(initial: false)
@@ -79,12 +103,14 @@ public class MapViewModel {
         annotations = mapItemGroups.map({
             $0.map { group in MapAnnotation(mapItems: group) }
         }).latest()
+
+        let selectionInputWhenNotAnimating = not(animatingMapRect || animationSequence.busy).gate(selectedMapItem)
         
-        let selectedMapItemGroup = combine(mapItemGroups, selectedMapItem) { groups, item in
+        let selectedMapItemGroup = combine(mapItemGroups, selectionInputWhenNotAnimating) { groups, item in
             return mapItemGroupFromGroups(groups, containingItem: item)
         }
-
-        selectedAnnotation = not(animatingMapRect).gate(selectedMapItemGroup).map { optionalGroup in
+        
+        selectedAnnotation = selectedMapItemGroup.map { optionalGroup in
             optionalGroup.map { items in MapAnnotation(mapItems: items) }
         }
     }
