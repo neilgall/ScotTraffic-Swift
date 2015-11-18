@@ -13,23 +13,28 @@ public class AsyncSequence {
     public typealias AsyncCompletionBlock = Void -> Void
     public typealias AsyncBlock = AsyncCompletionBlock -> Void
 
-    public let busy: Observable<Bool> = Observable()
+    public let busy: Observable<Bool>
 
     private var sequence: [AsyncBlock] = []
+    private let _busy: Input<Bool> = Input(initial: false)
+
+    public init() {
+        busy = _busy
+    }
     
     public func dispatch(block: AsyncBlock) {
         sequence.append(block)
         if sequence.count == 1 {
+            _busy.value = true
             next()
         }
     }
     
     private func next() {
         if sequence.isEmpty {
-            busy.pushValue(false)
+            _busy.value = false
             return
         }
-        busy.pushValue(true)
         sequence[0] {
             _ = self.sequence.removeFirst()
             self.next()
