@@ -74,9 +74,16 @@ public class Observable<Value> : ObservableType {
 }
 
 public class Input<Value> : Observable<Value> {
+    private var inTransaction: Bool = false
+    
     public var value: Value {
+        willSet {
+            assert(!inTransaction)
+        }
         didSet {
+            inTransaction = true
             pushValue(value)
+            inTransaction = false
         }
     }
     
@@ -543,7 +550,7 @@ class Combine5<SourceType1, SourceType2, SourceType3, SourceType4, SourceType5, 
     }
 }
 
-infix operator => { associativity left precedence 150 }
+infix operator => { associativity right precedence 100 }
 
 public func => <ValueType> (observable: Observable<ValueType>, closure: ValueType -> Void) -> Observation {
     return Output(observable, closure)

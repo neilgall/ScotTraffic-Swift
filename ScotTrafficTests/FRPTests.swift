@@ -10,12 +10,12 @@ import XCTest
 import ScotTraffic
 
 // Must be a class so it can be mutated inside the observer closure
-class Capture<T> {
+private class Capture<T> {
     var obs = [Observation]()
     var vals: [T] = []
     
     init(_ o: Observable<T>) {
-        self.obs.append(o.output {
+        self.obs.append(o => {
             self.vals.append($0)
         })
     }
@@ -280,5 +280,81 @@ class FRPTests: XCTestCase {
 
         g.value = true
         XCTAssertEqual(c.vals, [6])
+    }
+    
+    func testGateDropsDeferredIfChangesAgain() {
+        let s = Input<Int>(initial: 0)
+        let g = Input<Bool>(initial: false)
+        let t = g.gate(s)
+        let c = Capture(t)
+
+        s.value = 5
+        s.value = 6
+        XCTAssertEqual(c.vals, [])
+        
+        g.value = true
+        XCTAssertEqual(c.vals, [6])
+    }
+    
+    func testBooleanOr() {
+        let s = Input<Bool>(initial: false)
+        let t = Input<Bool>(initial: false)
+        let c = Capture(s || t)
+        
+        s.value = true
+        t.value = true
+        s.value = false
+        t.value = false
+        
+        XCTAssertEqual(c.vals, [false, true, true, true, false])
+    }
+    
+    func testBooleanAnd() {
+        let s = Input<Bool>(initial: false)
+        let t = Input<Bool>(initial: false)
+        let c = Capture(s && t)
+        
+        s.value = true
+        t.value = true
+        s.value = false
+        t.value = false
+        
+        XCTAssertEqual(c.vals, [false, false, true, false, false])
+    }
+    
+    func testBooleanNot() {
+        let s = Input<Bool>(initial: false)
+        let c = Capture(not(s))
+        
+        s.value = true
+        s.value = false
+        
+        XCTAssertEqual(c.vals, [true, false, true])
+    }
+    
+    func testCompositionNotOr() {
+        let s = Input<Bool>(initial: false)
+        let t = Input<Bool>(initial: false)
+        let c = Capture(not(s || t))
+        
+        s.value = true
+        t.value = true
+        s.value = false
+        t.value = false
+        
+        XCTAssertEqual(c.vals, [true, false, false, false, true])
+    }
+
+    func testCompositionNotAnd() {
+        let s = Input<Bool>(initial: false)
+        let t = Input<Bool>(initial: false)
+        let c = Capture(not(s && t))
+        
+        s.value = true
+        t.value = true
+        s.value = false
+        t.value = false
+        
+        XCTAssertEqual(c.vals, [true, true, false, true, true])
     }
 }

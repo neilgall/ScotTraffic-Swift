@@ -9,18 +9,18 @@
 import Foundation
 import ScotTraffic
 
-public class TestAppModel: ScotTraffic {
+class TestAppModel: ScotTraffic {
     
-    public let trafficCameraLocations: Observable<[TrafficCameraLocation]>
-    public let safetyCameras: Observable<[SafetyCamera]>
-    public let alerts: Observable<[Incident]>
-    public let roadworks: Observable<[Incident]>
-    public let weather: Observable<WeatherFinder>
-    public let settings: Settings
-    public let favourites: Favourites
-    public let userDefaults: UserDefaultsProtocol
+    let trafficCameraLocations: Observable<[TrafficCameraLocation]>
+    let safetyCameras: Observable<[SafetyCamera]>
+    let alerts: Observable<[Incident]>
+    let roadworks: Observable<[Incident]>
+    let weather: Observable<WeatherFinder>
+    let settings: Settings
+    let favourites: Favourites
+    let userDefaults: UserDefaultsProtocol
 
-    public init() {
+    init() {
         let trafficCameraDummyContext = TrafficCameraDecodeContext(makeImageDataSource: { _ in DummyDataSource() })
         let safetyCameraDummyContext = SafetyCameraDecodeContext(makeImageDataSource: { _ in DummyDataSource() })
         
@@ -39,6 +39,10 @@ public class TestAppModel: ScotTraffic {
         userDefaults = TestUserDefaults()
         settings = Settings(userDefaults: userDefaults)
         favourites = Favourites(userDefaults: userDefaults, trafficCameraLocations: trafficCameraLocations)
+    }
+    
+    func trafficCameraLocationNamed(name: String) -> TrafficCameraLocation? {
+        return trafficCameraLocations.pullValue?.filter({ $0.name == name }).first
     }
 }
     
@@ -62,22 +66,22 @@ private class DummyDataSource: DataSource {
     }
 }
 
-public class TestUserDefaults: UserDefaultsProtocol {
+class TestUserDefaults: UserDefaultsProtocol {
     var userDefaults = [String:AnyObject]()
 
-    public func objectForKey(key: String) -> AnyObject? {
+    func objectForKey(key: String) -> AnyObject? {
         return userDefaults[key]
     }
     
-    public func setObject(object: AnyObject?, forKey key: String) {
+    func setObject(object: AnyObject?, forKey key: String) {
         userDefaults[key] = object
     }
     
-    public func removeObjectForKey(key: String) {
+    func removeObjectForKey(key: String) {
         userDefaults.removeValueForKey(key)
     }
     
-    public func synchronize() -> Bool {
+    func synchronize() -> Bool {
         return true
     }
 }

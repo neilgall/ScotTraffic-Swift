@@ -9,9 +9,21 @@
 import XCTest
 import ScotTraffic
 
-enum TestError : ErrorType {
+private enum TestError : ErrorType {
     case Error1
     case Error2
+}
+
+// Must be a class so it can be mutated inside the observer closure
+private class Capture<T> {
+    var obs = [Observation]()
+    var vals: [T] = []
+    
+    init(_ o: Observable<T>) {
+        self.obs.append(o => {
+            self.vals.append($0)
+        })
+    }
 }
 
 class EitherTests: XCTestCase {
