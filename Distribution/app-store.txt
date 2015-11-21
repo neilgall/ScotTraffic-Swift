@@ -1,0 +1,5 @@
+ScotTraffic is back! Completely rewritten for newer devices running iOS 8 and above, but the same ease of use you know and love. View Traffic Scotland camera images in near real-time, find out about roadworks and traffic incidents, and pinpoint the location of safety cameras all over Scotland. Local weather conditions and temperature are shown at every location. With ScotTraffic 2 you can save your favourite camera locations for quick access to the latest images, and share camera images and up-to-date traffic information by email, message or social media.
+
+A few features from the old app are not yet supported - for example, notifications for the Forth and Tay Road bridges - but these and more are coming soon.
+
+ScotTraffic is designed for quick access to road travel information, but please keep all Scotland's road users safe by not using your mobile device while driving.
