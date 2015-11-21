@@ -70,7 +70,7 @@ class TodayViewModel {
         
         let imageSupplier = selectedFavourite.map({ favourite in
             return favourite.location.cameras[favourite.cameraIndex]
-        })
+        }).latest()
         
         observations.append(imageSupplier => { supplier in
             self.observeSupplier = supplier.image.latest() => {
