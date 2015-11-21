@@ -40,10 +40,10 @@ class TodayViewController: UIViewController, NCWidgetProviding {
             self.titleLabel?.text = $0
         })
         observations.append(model.canMoveToPrevious => {
-            self.leftButton?.enabled = $0
+            self.leftButton?.hidden = !$0
         })
         observations.append(model.canMoveToNext => {
-            self.rightButton?.enabled = $0
+            self.rightButton?.hidden = !$0
         })
     }
     
