@@ -13,3 +13,6 @@ import Foundation
 #else
     public let ScotTrafficBaseURL = NSURL(string: "https://scottraffic.co.uk")!
 #endif
+
+public let ScotTrafficAppGroup = "group.uk.co.scottraffic.ios.favourites"
+public let TodayExtensionBundleIdentifier = "uk.co.ScotTraffic.iOS.TodayExtension"

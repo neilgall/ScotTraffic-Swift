@@ -25,15 +25,16 @@ public enum NetworkError : ErrorType {
 }
 
 public class HTTPFetcher: NSObject, NSURLSessionDelegate {
+    private let indicator: NetworkActivityIndicator?
     private let baseURL: NSURL
     private let reachability: Reachability?
     private var session: NSURLSession!
-    private var indicator = NetworkActivityIndicator()
     
     public let serverIsReachable: Observable<Bool>
     
-    public init(baseURL: NSURL) {
+    public init(baseURL: NSURL, indicator: NetworkActivityIndicator?) {
         self.baseURL = baseURL
+        self.indicator = indicator
         do {
             self.reachability = try Reachability.reachabilityForInternetConnection()
         } catch {
@@ -90,10 +91,10 @@ public class HTTPFetcher: NSObject, NSURLSessionDelegate {
                 completion(Either.Value(data))
             }
             
-            self.indicator.pop()
+            self.indicator?.pop()
         }
 
-        indicator.push()
+        indicator?.push()
         task.resume()
     }
 }
@@ -133,25 +134,8 @@ public func UIImageFromData(data: NSData) throws -> UIImage {
     return image
 }
 
-
-private class NetworkActivityIndicator {
-    private var count = 0
-    
-    func push() {
-        dispatch_async(dispatch_get_main_queue()) {
-            if self.count == 0 {
-                UIApplication.sharedApplication().networkActivityIndicatorVisible = true
-            }
-            self.count += 1
-        }
-    }
-    
-    func pop() {
-        dispatch_async(dispatch_get_main_queue()) {
-            self.count -= 1
-            if self.count == 0 {
-                UIApplication.sharedApplication().networkActivityIndicatorVisible = false
-            }
-        }
-    }
+public protocol NetworkActivityIndicator {
+    func push()
+    func pop()
 }
+

@@ -12,10 +12,13 @@ import UIKit
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     let appModel = AppModel()
+    var appWidgetManager: AppWidgetManager?
     var appCoordinator: AppCoordinator?
     var window: UIWindow?
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
+        
+        appWidgetManager = AppWidgetManager(favourites: appModel.favourites)
         
         if let window = window {
             let appCoordinator = AppCoordinator(appModel: appModel, rootWindow: window)

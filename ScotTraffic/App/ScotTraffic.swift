@@ -19,3 +19,4 @@ public protocol ScotTraffic {
     var settings: Settings { get }
     var favourites: Favourites { get }
 }
+

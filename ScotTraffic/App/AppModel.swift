@@ -27,11 +27,13 @@ public class AppModel: ScotTraffic {
     
     public init() {
         let diskCache = DiskCache(withPath: "scottraffic")
-        let fetcher = HTTPFetcher(baseURL: ScotTrafficBaseURL)
+        let fetcher = HTTPFetcher(baseURL: ScotTrafficBaseURL, indicator: AppNetworkActivityIndicator())
         
         let cachedDataSource = CachedHTTPDataSource.dataSourceWithFetcher(fetcher, cache: diskCache)
         
-        let userDefaults = NSUserDefaults.standardUserDefaults()
+        guard let userDefaults = NSUserDefaults(suiteName: ScotTrafficAppGroup) else {
+            fatalError("unable to create NSUserDefaults with suite name \(ScotTrafficAppGroup)")
+        }
 
         self.diskCache = diskCache
         self.fetcher = fetcher
