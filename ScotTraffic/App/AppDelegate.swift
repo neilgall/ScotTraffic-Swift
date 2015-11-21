@@ -11,13 +11,15 @@ import UIKit
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
-    let appModel = AppModel()
     var appWidgetManager: AppWidgetManager?
     var appCoordinator: AppCoordinator?
     var window: UIWindow?
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         
+        migrateUserDefaultsToAppGroup()
+        
+        let appModel = AppModel()
         appWidgetManager = AppWidgetManager(favourites: appModel.favourites)
         
         if let window = window {
@@ -38,7 +40,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func applicationWillEnterForeground(application: UIApplication) {
-        appModel.settings.reload()
+        if let appModel = appCoordinator?.appModel {
+            appModel.settings.reload()
+            appModel.favourites.reloadFromUserDefaults()
+        }
     }
 
     func applicationDidBecomeActive(application: UIApplication) {

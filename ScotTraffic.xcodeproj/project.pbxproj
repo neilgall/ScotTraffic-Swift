@@ -78,6 +78,7 @@
 		287F75521C00D1130040EE8A /* AppNetworkActivityIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 287F75511C00D1130040EE8A /* AppNetworkActivityIndicator.swift */; };
 		287F75561C00DA080040EE8A /* Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 287F75541C00DA000040EE8A /* Configuration.swift */; };
 		287F75581C00DC200040EE8A /* AppWidgetManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 287F75571C00DC200040EE8A /* AppWidgetManager.swift */; };
+		287F755A1C00E75E0040EE8A /* UserDefaultsMigration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 287F75591C00E75E0040EE8A /* UserDefaultsMigration.swift */; };
 		28875EA41BBC72FB00E67A16 /* Network.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28875EA31BBC72FB00E67A16 /* Network.swift */; };
 		28875EA71BBC739100E67A16 /* JSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28875EA61BBC739100E67A16 /* JSON.swift */; };
 		28875EA91BBC7A2F00E67A16 /* JSONTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28875EA81BBC7A2F00E67A16 /* JSONTests.swift */; };
@@ -215,6 +216,7 @@
 		287F75511C00D1130040EE8A /* AppNetworkActivityIndicator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppNetworkActivityIndicator.swift; sourceTree = "<group>"; };
 		287F75541C00DA000040EE8A /* Configuration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Configuration.swift; sourceTree = "<group>"; };
 		287F75571C00DC200040EE8A /* AppWidgetManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppWidgetManager.swift; sourceTree = "<group>"; };
+		287F75591C00E75E0040EE8A /* UserDefaultsMigration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserDefaultsMigration.swift; sourceTree = "<group>"; };
 		28875EA31BBC72FB00E67A16 /* Network.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Network.swift; sourceTree = "<group>"; };
 		28875EA61BBC739100E67A16 /* JSON.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JSON.swift; sourceTree = "<group>"; };
 		28875EA81BBC7A2F00E67A16 /* JSONTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JSONTests.swift; sourceTree = "<group>"; };
@@ -466,6 +468,7 @@
 				287F75571C00DC200040EE8A /* AppWidgetManager.swift */,
 				28F6009E1BDB8E3E00ED71CA /* NGSplitViewController.swift */,
 				28AF4A0A1BD849C0009B0AE8 /* PopoverContentSize.swift */,
+				287F75591C00E75E0040EE8A /* UserDefaultsMigration.swift */,
 			);
 			path = App;
 			sourceTree = "<group>";
@@ -730,6 +733,7 @@
 				28AF4A051BD6ECD9009B0AE8 /* SearchResultCell.swift in Sources */,
 				286157C81BF29BD2000C11D4 /* SettingsTableViewController.swift in Sources */,
 				2831B68C1BED52DC005B4933 /* AsyncSequence.swift in Sources */,
+				287F755A1C00E75E0040EE8A /* UserDefaultsMigration.swift in Sources */,
 				2897319B1BEE8B3B002C02EB /* UIViewSnapshot.swift in Sources */,
 				280388041C0F9AF100F8C149 /* Configuration.swift in Sources */,
 				718F00C91BCEFF8800D51B43 /* TrafficCameraCell.swift in Sources */,

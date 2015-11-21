@@ -9,7 +9,6 @@
 import MapKit
 
 let favouritesKey = "favouriteItems"
-let lastViewedKey = "lastViewedIdentifier"
 
 private typealias FavouriteIdentifier = String
 
