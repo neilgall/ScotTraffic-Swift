@@ -46,7 +46,7 @@ public class AppModel: ScotTraffic {
         
         // -- Traffic Cameras --
         
-        let trafficCamerasSource = cachedDataSource(maximumCacheAge: 3600)(path: "trafficcameras.json")
+        let trafficCamerasSource = cachedDataSource(maximumCacheAge: 900)(path: "trafficcameras.json")
         let trafficCamerasContext = TrafficCameraDecodeContext(makeImageDataSource: cachedDataSource(maximumCacheAge: 300))
         let trafficCameraLocations = trafficCamerasSource.value.map {
             return $0.map(Array<TrafficCameraLocation>.decodeJSON(trafficCamerasContext) <== JSONArrayFromData)
@@ -58,7 +58,7 @@ public class AppModel: ScotTraffic {
         
         // -- Safety Cameras --
         
-        let safetyCamerasSource = cachedDataSource(maximumCacheAge: 86400)(path: "safetycameras.json")
+        let safetyCamerasSource = cachedDataSource(maximumCacheAge: 900)(path: "safetycameras.json")
         let safetyCamerasContext = SafetyCameraDecodeContext(makeImageDataSource: cachedDataSource(maximumCacheAge: 86400))
         let safetyCameras = safetyCamerasSource.value.map {
             $0.map(Array<SafetyCamera>.decodeJSON(safetyCamerasContext) <== JSONArrayFromData)
