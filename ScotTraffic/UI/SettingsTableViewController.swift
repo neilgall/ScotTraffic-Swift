@@ -39,6 +39,13 @@ class SettingsTableViewController: UITableViewController {
         toggleConfigurations.removeAll()
 
         if let settings = settings {
+            if #available(iOS 9.0, *) {
+                toggleConfigurations.append(SettingsToggleConfiguration(
+                    iconImageName: "warning-traffic",
+                    title: "Traffic",
+                    toggle: settings.showTrafficOnMap))
+            }
+            
             toggleConfigurations.append(SettingsToggleConfiguration(
                 iconImageName: "camera",
                 title: "Traffic Cameras",

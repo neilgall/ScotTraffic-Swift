@@ -40,6 +40,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, MapViewModelDelega
             observations.append(not(animationSequence.busy).gate(viewModel.selectedAnnotation) => self.autoSelectAnnotation)
             observations.append(viewModel.selectedMapItem => self.zoomToSelectedMapItem)
             observations.append(viewModel.showsUserLocationOnMap => self.updateShowsCurrentLocation)
+            observations.append(viewModel.showTrafficOnMap => self.updateShowsTraffic)
             
             mapView.setVisibleMapRect(viewModel.visibleMapRect.value, animated: false)
         }
@@ -62,6 +63,12 @@ class MapViewController: UIViewController, MKMapViewDelegate, MapViewModelDelega
     
     func updateShowsCurrentLocation(enable: Bool) {
         mapView.showsUserLocation = enable
+    }
+    
+    func updateShowsTraffic(enable: Bool) {
+        if #available(iOS 9.0, *) {
+            mapView.showsTraffic = enable
+        }
     }
     
     func autoSelectAnnotation(annotation: MapAnnotation?) {

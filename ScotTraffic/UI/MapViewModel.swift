@@ -47,6 +47,10 @@ public class MapViewModel {
     // Indicates whether the user location should be shown on the map
     public let showsUserLocationOnMap: Observable<Bool>
     
+    // Indicates whether traffic should be shown on the map
+    public let showTrafficOnMap: Observable<Bool>
+    
+    
     // -- MARK: private data
     
     private let locationServices: LocationServices
@@ -57,6 +61,7 @@ public class MapViewModel {
         visibleMapRect = scotTraffic.settings.visibleMapRect
         locationServices = LocationServices(enabled: scotTraffic.settings.showCurrentLocationOnMap)
         showsUserLocationOnMap = locationServices.authorised
+        showTrafficOnMap = scotTraffic.settings.showTrafficOnMap
         
         selectedMapItem = Input(initial: nil)
         animatingMapRect = Input(initial: false)

@@ -16,6 +16,7 @@ public enum TemperatureUnit: Int {
 }
 
 public class Settings {
+    public let showTrafficOnMap: PersistentSetting<Bool>
     public let showTrafficCamerasOnMap: PersistentSetting<Bool>
     public let showSafetyCamerasOnMap: PersistentSetting<Bool>
     public let showAlertsOnMap: PersistentSetting<Bool>
@@ -26,6 +27,7 @@ public class Settings {
     public let visibleMapRect: PersistentSetting<MKMapRect>
     
     public init(userDefaults: UserDefaultsProtocol) {
+        showTrafficOnMap = userDefaults.boolSetting("showTrafficOnMap", false)
         showTrafficCamerasOnMap = userDefaults.boolSetting("showTrafficCamerasOnMap", true)
         showSafetyCamerasOnMap = userDefaults.boolSetting("showSafetyCamerasOnMap", true)
         showAlertsOnMap = userDefaults.boolSetting("showAlertsOnMap", true)
@@ -40,6 +42,7 @@ public class Settings {
     }
     
     public func reload() {
+        showTrafficOnMap.start()
         showTrafficCamerasOnMap.start()
         showSafetyCamerasOnMap.start()
         showAlertsOnMap.start()
