@@ -33,10 +33,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func applicationWillResignActive(application: UIApplication) {
+        NSUserDefaults.standardUserDefaults().synchronize()
     }
 
     func applicationDidEnterBackground(application: UIApplication) {
-        NSUserDefaults.standardUserDefaults().synchronize()
     }
 
     func applicationWillEnterForeground(application: UIApplication) {
