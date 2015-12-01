@@ -57,6 +57,7 @@ extension IncidentType: JSONValueDecodable {
 extension Incident: JSONObjectDecodable {
     public static func decodeJSON(json: JSONObject, forKey key: JSONKey) throws -> Incident {
         let dateFormatter = NSDateFormatter()
+        dateFormatter.locale = NSLocale(localeIdentifier: "en_GB")
         dateFormatter.dateFormat = "EEE, dd MMM yyyy HH:mm:ss z"
 
         let dateStr: String = try json <~ "date"
