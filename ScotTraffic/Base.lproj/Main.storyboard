@@ -232,35 +232,42 @@
                                     <outlet property="delegate" destination="gvi-de-hg4" id="Hrn-gj-obm"/>
                                 </connections>
                             </webView>
+                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" animating="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="bwJ-ey-aaX">
+                                <rect key="frame" x="290" y="290" width="20" height="20"/>
+                                <animations/>
+                            </activityIndicatorView>
                         </subviews>
                         <animations/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="1jo-G7-rt5" firstAttribute="top" secondItem="01o-eL-FwS" secondAttribute="bottom" id="9NP-Uk-4ol"/>
                             <constraint firstItem="1jo-G7-rt5" firstAttribute="centerY" secondItem="pAI-4b-3Ft" secondAttribute="centerY" id="AJX-X4-N4d"/>
                             <constraint firstItem="1jo-G7-rt5" firstAttribute="top" secondItem="pAI-4b-3Ft" secondAttribute="topMargin" id="BtN-3c-4Rq"/>
                             <constraint firstItem="1jo-G7-rt5" firstAttribute="centerX" secondItem="pAI-4b-3Ft" secondAttribute="centerX" id="Dwf-eM-fvb"/>
                             <constraint firstItem="1jo-G7-rt5" firstAttribute="leading" secondItem="pAI-4b-3Ft" secondAttribute="leadingMargin" constant="-20" id="KlV-22-MQQ"/>
-                            <constraint firstItem="YVP-pv-fi4" firstAttribute="top" secondItem="1jo-G7-rt5" secondAttribute="bottom" id="Kpe-QH-FLt"/>
-                            <constraint firstItem="YVP-pv-fi4" firstAttribute="top" secondItem="1jo-G7-rt5" secondAttribute="bottom" id="Mz2-Iz-Pem"/>
+                            <constraint firstItem="1jo-G7-rt5" firstAttribute="top" secondItem="01o-eL-FwS" secondAttribute="bottom" id="Llu-OP-FYP"/>
+                            <constraint firstItem="1jo-G7-rt5" firstAttribute="top" secondItem="01o-eL-FwS" secondAttribute="bottom" id="Nt0-Fk-LFz"/>
+                            <constraint firstItem="bwJ-ey-aaX" firstAttribute="centerX" secondItem="pAI-4b-3Ft" secondAttribute="centerX" id="PP0-fM-pLD"/>
                             <constraint firstAttribute="trailingMargin" secondItem="1jo-G7-rt5" secondAttribute="trailing" constant="-20" id="Pay-rm-d0f"/>
-                            <constraint firstItem="1jo-G7-rt5" firstAttribute="top" secondItem="01o-eL-FwS" secondAttribute="bottom" id="c8G-3S-Iq7"/>
+                            <constraint firstItem="bwJ-ey-aaX" firstAttribute="centerY" secondItem="pAI-4b-3Ft" secondAttribute="centerY" id="dzZ-3I-miz"/>
+                            <constraint firstItem="YVP-pv-fi4" firstAttribute="top" secondItem="1jo-G7-rt5" secondAttribute="bottom" id="lPp-nP-UPP"/>
                             <constraint firstAttribute="height" secondItem="1jo-G7-rt5" secondAttribute="height" id="moc-Fu-meV"/>
                             <constraint firstAttribute="width" secondItem="1jo-G7-rt5" secondAttribute="width" id="wLo-99-s5i"/>
+                            <constraint firstItem="YVP-pv-fi4" firstAttribute="top" secondItem="1jo-G7-rt5" secondAttribute="bottom" id="yWo-tk-8MZ"/>
                         </constraints>
                         <variation key="default">
                             <mask key="constraints">
-                                <exclude reference="9NP-Uk-4ol"/>
                                 <exclude reference="BtN-3c-4Rq"/>
                                 <exclude reference="KlV-22-MQQ"/>
+                                <exclude reference="Llu-OP-FYP"/>
+                                <exclude reference="Nt0-Fk-LFz"/>
                                 <exclude reference="Pay-rm-d0f"/>
-                                <exclude reference="c8G-3S-Iq7"/>
-                                <exclude reference="Kpe-QH-FLt"/>
-                                <exclude reference="Mz2-Iz-Pem"/>
+                                <exclude reference="lPp-nP-UPP"/>
+                                <exclude reference="yWo-tk-8MZ"/>
                             </mask>
                         </variation>
                     </view>
                     <connections>
+                        <outlet property="spinner" destination="bwJ-ey-aaX" id="3pe-QW-i6J"/>
                         <outlet property="webView" destination="1jo-G7-rt5" id="cHy-k4-krc"/>
                     </connections>
                 </viewController>

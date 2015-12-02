@@ -204,6 +204,7 @@ public class AppCoordinator: NSObject, NGSplitViewControllerDelegate, SettingsTa
         }
 
         settingsViewController.settings = appModel.settings
+        settingsViewController.serverIsReachable = appModel.fetcher.serverIsReachable
         settingsViewController.delegate = self
 
         splitViewController.presentViewController(navigationController, animated: true, completion: nil)

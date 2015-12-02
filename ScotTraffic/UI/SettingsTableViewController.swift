@@ -35,6 +35,7 @@ class SettingsTableViewController: UITableViewController {
 
     var settings: Settings?
     var delegate: SettingsTableViewControllerDelegate?
+    var serverIsReachable: Observable<Bool>?
     
     private var toggleConfigurations = [SettingsToggleConfiguration]()
     private var showCurrentLocationConfiguration: SettingsToggleConfiguration?
@@ -47,12 +48,6 @@ class SettingsTableViewController: UITableViewController {
         toggleConfigurations.removeAll()
 
         if let settings = settings {
-            if #available(iOS 9.0, *) {
-                toggleConfigurations.append(SettingsToggleConfiguration(
-                    iconImageName: "warning-traffic",
-                    title: "Traffic",
-                    toggle: settings.showTrafficOnMap))
-            }
             
             toggleConfigurations.append(SettingsToggleConfiguration(
                 iconImageName: "camera",
@@ -74,6 +69,13 @@ class SettingsTableViewController: UITableViewController {
                 title: "Roadworks",
                 toggle: settings.showRoadworksOnMap))
             
+            if #available(iOS 9.0, *) {
+                toggleConfigurations.append(SettingsToggleConfiguration(
+                    iconImageName: "warning-traffic",
+                    title: "Traffic",
+                    toggle: settings.showTrafficOnMap))
+            }
+
             showCurrentLocationConfiguration = SettingsToggleConfiguration(
                 iconImageName: "07-map-marker",
                 title: "Show current location",
@@ -165,9 +167,9 @@ class SettingsTableViewController: UITableViewController {
         if indexPath.section == TableSections.AboutSection.rawValue {
             switch AboutItems(rawValue: indexPath.row)! {
             case .AboutScotTraffic:
-                pushWebView("about.html")
+                pushWebView("about")
             case .SupportLink:
-                pushWebView("index.html")
+                pushWebView("index")
             default:
                 break
             }
@@ -175,13 +177,11 @@ class SettingsTableViewController: UITableViewController {
     }
     
     private func pushWebView(page: String) {
-        guard let url = NSURL(string: "\(ScotTrafficBaseURL)/support/\(page)") else {
-            return
-        }
         guard let webViewController = storyboard?.instantiateViewControllerWithIdentifier("webViewController") as? WebViewController else {
             return
         }
-        webViewController.url = url
+        webViewController.page = page
+        webViewController.loadFromWeb = serverIsReachable?.pullValue ?? false
         navigationController?.pushViewController(webViewController, animated: true)
     }
 }
