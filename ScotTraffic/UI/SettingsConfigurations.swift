@@ -20,3 +20,9 @@ struct SettingsEnumConfiguration<EnumType: Hashable> {
     let setting: Input<EnumType>
     let settingValueTitles: [EnumType : String]
 }
+
+struct SettingsInfoConfiguration {
+    let cellIdentifier: String
+    let text: String
+    let detailText: String?
+}

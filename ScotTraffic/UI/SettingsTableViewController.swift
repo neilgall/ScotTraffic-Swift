@@ -22,7 +22,8 @@ private enum SettingsItems: Int {
 }
 
 private enum AboutItems: Int {
-    case AboutScotTraffic = 0
+    case Version = 0
+    case AboutScotTraffic
     case SupportLink
     case Count
 }
@@ -40,12 +41,13 @@ class SettingsTableViewController: UITableViewController {
     private var toggleConfigurations = [SettingsToggleConfiguration]()
     private var showCurrentLocationConfiguration: SettingsToggleConfiguration?
     private var temperatureUnitConfiguration: SettingsEnumConfiguration<TemperatureUnit>?
-    private let aboutTitles: [String] = [ "About ScotTraffic", "Support" ]
+    private var infoConfigurations = [SettingsInfoConfiguration]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
         toggleConfigurations.removeAll()
+        infoConfigurations.removeAll()
 
         if let settings = settings {
             
@@ -89,6 +91,24 @@ class SettingsTableViewController: UITableViewController {
                     TemperatureUnit.Fahrenheit: "ºF",
                     TemperatureUnit.Celcius: "ºC"
                 ])
+            
+            let informationCellIdentifier = "SettingsInformationTableViewCell"
+            let disclosureCellIdentifier = "SettingsDisclosureTableViewCell"
+            
+            infoConfigurations.append(SettingsInfoConfiguration(
+                cellIdentifier: informationCellIdentifier,
+                text: "Version",
+                detailText: NSBundle.mainBundle().objectForInfoDictionaryKey("CFBundleShortVersionString") as? String))
+            
+            infoConfigurations.append(SettingsInfoConfiguration(
+                cellIdentifier: disclosureCellIdentifier,
+                text: "About ScotTraffic",
+                detailText: nil))
+            
+            infoConfigurations.append(SettingsInfoConfiguration(
+                cellIdentifier: disclosureCellIdentifier,
+                text: "Support",
+                detailText: nil))
         }
     }
     
@@ -152,8 +172,10 @@ class SettingsTableViewController: UITableViewController {
             }
             
         case .AboutSection:
-            let cell = tableView.dequeueReusableCellWithIdentifier("SettingsInformationCell", forIndexPath: indexPath)
-            cell.textLabel?.text = aboutTitles[indexPath.row]
+            let config = infoConfigurations[indexPath.row]
+            let cell = tableView.dequeueReusableCellWithIdentifier(config.cellIdentifier, forIndexPath: indexPath)
+            cell.textLabel?.text = config.text
+            cell.detailTextLabel?.text = config.detailText
             return cell
             
         default:
