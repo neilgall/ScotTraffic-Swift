@@ -232,9 +232,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, MapViewModelDelega
     }
     
     func mapView(mapView: MKMapView, didDeselectAnnotationView view: MKAnnotationView) {
-        if !updatingAnnotations {
-            hideMapItemsPresentedFromAnnotationView(view)
-        }
+        hideMapItemsPresentedFromAnnotationView(view)
     }
 
     // -- MARK: MapViewModelDelegate
