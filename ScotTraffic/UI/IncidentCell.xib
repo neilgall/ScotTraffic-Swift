@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="9060" systemVersion="15B42" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="9060" systemVersion="14F1021" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9051"/>
@@ -60,7 +60,7 @@
                         </variation>
                     </label>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5is-c3-A78" userLabel="Text">
-                        <rect key="frame" x="20" y="95" width="282" height="18"/>
+                        <rect key="frame" x="10" y="95" width="300" height="17.5"/>
                         <animations/>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                         <constraints>
@@ -76,7 +76,7 @@
                         </variation>
                     </label>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Date" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VEm-Am-XZP" userLabel="Date">
-                        <rect key="frame" x="20" y="258" width="282" height="16"/>
+                        <rect key="frame" x="10" y="258" width="300" height="16"/>
                         <animations/>
                         <fontDescription key="fontDescription" type="system" pointSize="13"/>
                         <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -109,7 +109,7 @@
                 <constraint firstItem="BqJ-0V-LEo" firstAttribute="centerY" secondItem="Dyw-ot-QPr" secondAttribute="centerY" id="8oh-yE-mDo"/>
                 <constraint firstItem="VEm-Am-XZP" firstAttribute="top" relation="greaterThanOrEqual" secondItem="5is-c3-A78" secondAttribute="bottom" constant="8" id="AXC-aJ-djH"/>
                 <constraint firstItem="oZL-Ie-8F8" firstAttribute="leading" secondItem="7vm-tn-s5F" secondAttribute="leading" id="C68-xZ-a2i"/>
-                <constraint firstItem="PMc-qd-2TC" firstAttribute="leading" secondItem="5is-c3-A78" secondAttribute="leading" constant="-10" id="Emj-I5-LdK"/>
+                <constraint firstItem="PMc-qd-2TC" firstAttribute="leading" secondItem="5is-c3-A78" secondAttribute="leading" id="Emj-I5-LdK"/>
                 <constraint firstItem="Dyw-ot-QPr" firstAttribute="top" relation="greaterThanOrEqual" secondItem="gTV-IL-0wX" secondAttribute="top" id="EpB-VM-XgR"/>
                 <constraint firstItem="7vm-tn-s5F" firstAttribute="bottom" secondItem="Ngo-q8-L8H" secondAttribute="bottom" id="FRM-9M-Jku"/>
                 <constraint firstItem="7vm-tn-s5F" firstAttribute="top" secondItem="Ngo-q8-L8H" secondAttribute="top" id="GeF-XK-fis"/>
@@ -126,7 +126,7 @@
                 <constraint firstItem="Dyw-ot-QPr" firstAttribute="centerY" secondItem="VEm-Am-XZP" secondAttribute="centerY" id="XRj-XZ-vnB"/>
                 <constraint firstItem="BqJ-0V-LEo" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" constant="16" id="aID-BV-Jns"/>
                 <constraint firstAttribute="trailing" secondItem="5is-c3-A78" secondAttribute="trailing" constant="20" id="cHe-s1-XGS"/>
-                <constraint firstItem="Dyw-ot-QPr" firstAttribute="trailing" secondItem="5is-c3-A78" secondAttribute="trailing" constant="10" id="eCR-wa-Vnq"/>
+                <constraint firstItem="Dyw-ot-QPr" firstAttribute="trailing" secondItem="5is-c3-A78" secondAttribute="trailing" constant="2" id="eCR-wa-Vnq"/>
                 <constraint firstItem="oZL-Ie-8F8" firstAttribute="bottom" secondItem="VEm-Am-XZP" secondAttribute="bottom" constant="10" id="fvb-9m-9We"/>
                 <constraint firstItem="7vm-tn-s5F" firstAttribute="trailing" secondItem="Ngo-q8-L8H" secondAttribute="trailing" id="k0i-0d-qLV"/>
                 <constraint firstItem="oZL-Ie-8F8" firstAttribute="trailing" secondItem="7vm-tn-s5F" secondAttribute="trailing" id="mXv-gO-r26"/>

@@ -81,7 +81,7 @@ private func iconForIncidentType(type: IncidentType) -> UIImage? {
 private func formatIncidentDate(date: NSDate) -> String {
     let formatter = NSDateFormatter()
     formatter.dateStyle = .MediumStyle
-    formatter.timeStyle = .NoStyle
+    formatter.timeStyle = .ShortStyle
     return formatter.stringFromDate(date)
 }
 
