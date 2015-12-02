@@ -8,12 +8,6 @@
 
 import Foundation
 
-#if DEBUG
-    private let ScotTrafficBaseURL = NSURL(string: "https://dev.scottraffic.co.uk")!
-#else
-    private let ScotTrafficBaseURL = NSURL(string: "https://scottraffic.co.uk")!
-#endif
-
 public class AppModel: ScotTraffic {
     
     // ScotTraffic interface

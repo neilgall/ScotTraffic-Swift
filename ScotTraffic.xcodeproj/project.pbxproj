@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		280388001C0F9A9F00F8C149 /* www in Resources */ = {isa = PBXBuildFile; fileRef = 280387FF1C0F9A9F00F8C149 /* www */; };
+		280388021C0F9AC300F8C149 /* WebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 280388011C0F9AC300F8C149 /* WebViewController.swift */; };
+		280388041C0F9AF100F8C149 /* Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 280388031C0F9AF100F8C149 /* Configuration.swift */; };
 		2804864F1BC074E4003BA360 /* AppErrors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2804864E1BC074E4003BA360 /* AppErrors.swift */; };
 		280486511BC08216003BA360 /* PeriodicStarter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 280486501BC08216003BA360 /* PeriodicStarter.swift */; };
 		280486531BC08711003BA360 /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 280486521BC08711003BA360 /* SearchViewController.swift */; };
@@ -100,6 +103,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		280387FF1C0F9A9F00F8C149 /* www */ = {isa = PBXFileReference; lastKnownFileType = folder; path = www; sourceTree = "<group>"; };
+		280388011C0F9AC300F8C149 /* WebViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebViewController.swift; sourceTree = "<group>"; };
+		280388031C0F9AF100F8C149 /* Configuration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Configuration.swift; sourceTree = "<group>"; };
 		2804864E1BC074E4003BA360 /* AppErrors.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppErrors.swift; sourceTree = "<group>"; };
 		280486501BC08216003BA360 /* PeriodicStarter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PeriodicStarter.swift; sourceTree = "<group>"; };
 		280486521BC08711003BA360 /* SearchViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchViewController.swift; sourceTree = "<group>"; };
@@ -304,7 +310,7 @@
 				286157C71BF29BD2000C11D4 /* SettingsTableViewController.swift */,
 				286157C91BF29CF6000C11D4 /* SettingsToggleTableViewCell.swift */,
 				286157CE1BF2A3C3000C11D4 /* SettingsEnumTableViewCell.swift */,
-				287F755C1C0F77270040EE8A /* WebViewController.swift */,
+				280388011C0F9AC300F8C149 /* WebViewController.swift */,
 			);
 			name = Settings;
 			sourceTree = "<group>";
@@ -343,26 +349,12 @@
 			name = Map;
 			sourceTree = "<group>";
 		};
-		287F75251C00C59A0040EE8A /* TodayExtension */ = {
-			isa = PBXGroup;
-			children = (
-				287F75481C00C8910040EE8A /* TodayExtension.entitlements */,
-				287F75261C00C59A0040EE8A /* TodayViewController.swift */,
-				287F75371C00C6CD0040EE8A /* TodayViewModel.swift */,
-				287F75491C00C8DE0040EE8A /* TodaySettings.swift */,
-				287F75281C00C59A0040EE8A /* MainInterface.storyboard */,
-				287F75351C00C6470040EE8A /* Images.xcassets */,
-				287F752B1C00C59A0040EE8A /* Info.plist */,
-			);
-			path = TodayExtension;
-			sourceTree = "<group>";
-		};
 		287F755E1C0F92740040EE8A /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				287F75741C0F933F0040EE8A /* www */,
 				2804935C1BA8BB4800990BD1 /* Main.storyboard */,
 				2804935F1BA8BB4800990BD1 /* Assets.xcassets */,
+				280387FF1C0F9A9F00F8C149 /* www */,
 				280493611BA8BB4800990BD1 /* LaunchScreen.storyboard */,
 				280493641BA8BB4800990BD1 /* Info.plist */,
 			);
@@ -372,6 +364,7 @@
 		289201CE1BBC570300DA4A9A /* App */ = {
 			isa = PBXGroup;
 			children = (
+				280388031C0F9AF100F8C149 /* Configuration.swift */,
 				716D9E981BCBC2F1005A6B49 /* ScotTraffic.swift */,
 				280493581BA8BB4800990BD1 /* AppDelegate.swift */,
 				2804864E1BC074E4003BA360 /* AppErrors.swift */,
@@ -558,11 +551,11 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				280388001C0F9A9F00F8C149 /* www in Resources */,
 				718F00C51BCEFC8000D51B43 /* SafetyCameraCell.xib in Resources */,
 				718F00C21BCEFC8000D51B43 /* BridgeStatusCell.xib in Resources */,
 				280493631BA8BB4800990BD1 /* LaunchScreen.storyboard in Resources */,
 				280493601BA8BB4800990BD1 /* Assets.xcassets in Resources */,
-				287F75751C0F933F0040EE8A /* www in Resources */,
 				718F00C41BCEFC8000D51B43 /* IncidentCell.xib in Resources */,
 				2804935E1BA8BB4800990BD1 /* Main.storyboard in Resources */,
 				718F00C31BCEFC8000D51B43 /* TrafficCameraCell.xib in Resources */,
@@ -601,6 +594,7 @@
 				286157C81BF29BD2000C11D4 /* SettingsTableViewController.swift in Sources */,
 				2831B68C1BED52DC005B4933 /* AsyncSequence.swift in Sources */,
 				2897319B1BEE8B3B002C02EB /* UIViewSnapshot.swift in Sources */,
+				280388041C0F9AF100F8C149 /* Configuration.swift in Sources */,
 				718F00C91BCEFF8800D51B43 /* TrafficCameraCell.swift in Sources */,
 				28DB3BF51BC02892001AAC2A /* SafetyCameras.swift in Sources */,
 				280486511BC08216003BA360 /* PeriodicStarter.swift in Sources */,
@@ -610,6 +604,7 @@
 				2865591E1BC316590058A35A /* AppCoordinator.swift in Sources */,
 				2879A9741BEE5DA900923FFE /* CalloutContainerView.swift in Sources */,
 				286559271BC32D880058A35A /* ImageCompositor.swift in Sources */,
+				280388021C0F9AC300F8C149 /* WebViewController.swift in Sources */,
 				28DB3BFA1BC02C88001AAC2A /* Incidents.swift in Sources */,
 				288AC88F1BCFA43B004EA6A0 /* SharableItem.swift in Sources */,
 				280486551BC087B6003BA360 /* SearchViewModel.swift in Sources */,
@@ -645,7 +640,6 @@
 				280493591BA8BB4800990BD1 /* AppDelegate.swift in Sources */,
 				2813B2DB1BE647C90017F847 /* CachedHTTPDataSource.swift in Sources */,
 				286559251BC31D020058A35A /* MapAnnotation.swift in Sources */,
-				287F755D1C0F77270040EE8A /* WebViewController.swift in Sources */,
 				2813B2DD1BE655020017F847 /* DataSource.swift in Sources */,
 				28F6009F1BDB8E3E00ED71CA /* NGSplitViewController.swift in Sources */,
 			);
