@@ -58,14 +58,16 @@ public func == (a: TrafficCamera, b: TrafficCamera) -> Bool {
 }
 
 func trafficCameraName(camera: TrafficCamera, atLocation location: TrafficCameraLocation) -> String {
+    let prefix = location.road.isEmpty ? location.name : "\(location.road) \(location.name)"
+    
     if let direction = camera.direction {
-        return "\(location.name) \(direction.rawValue)"
+        return "\(prefix) \(direction.rawValue)"
     
     } else if let index = location.cameras.indexOf({ $0 === camera }) where location.cameras.count > 1 {
-        return "\(location.name) Camera \(index+1)"
+        return "\(prefix) Camera \(index+1)"
 
     } else {
-        return location.name
+        return prefix
     }
 }
 
