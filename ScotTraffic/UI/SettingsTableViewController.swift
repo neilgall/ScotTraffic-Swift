@@ -11,12 +11,19 @@ import UIKit
 private enum TableSections: Int {
     case ContentSection = 0
     case SettingsSection
+    case AboutSection
     case Count
 }
 
 private enum SettingsItems: Int {
     case ShowCurrentLocation = 0
     case TemperatureUnit
+    case Count
+}
+
+private enum AboutItems: Int {
+    case AboutScotTraffic = 0
+    case SupportLink
     case Count
 }
 
@@ -32,6 +39,7 @@ class SettingsTableViewController: UITableViewController {
     private var toggleConfigurations = [SettingsToggleConfiguration]()
     private var showCurrentLocationConfiguration: SettingsToggleConfiguration?
     private var temperatureUnitConfiguration: SettingsEnumConfiguration<TemperatureUnit>?
+    private let aboutTitles: [String] = [ "About ScotTraffic", "Support" ]
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -98,6 +106,8 @@ class SettingsTableViewController: UITableViewController {
             return toggleConfigurations.count
         case .SettingsSection:
             return SettingsItems.Count.rawValue
+        case .AboutSection:
+            return AboutItems.Count.rawValue
         default:
             return 0
         }
@@ -109,6 +119,8 @@ class SettingsTableViewController: UITableViewController {
             return "Content"
         case .SettingsSection:
             return "Settings"
+        case .AboutSection:
+            return "Help"
         default:
             return nil
         }
@@ -137,10 +149,39 @@ class SettingsTableViewController: UITableViewController {
                 break
             }
             
+        case .AboutSection:
+            let cell = tableView.dequeueReusableCellWithIdentifier("SettingsInformationCell", forIndexPath: indexPath)
+            cell.textLabel?.text = aboutTitles[indexPath.row]
+            return cell
+            
         default:
             break
         }
 
         return tableView.dequeueReusableCellWithIdentifier("dummyCell", forIndexPath: indexPath)
+    }
+    
+    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        if indexPath.section == TableSections.AboutSection.rawValue {
+            switch AboutItems(rawValue: indexPath.row)! {
+            case .AboutScotTraffic:
+                pushWebView("about.html")
+            case .SupportLink:
+                pushWebView("index.html")
+            default:
+                break
+            }
+        }
+    }
+    
+    private func pushWebView(page: String) {
+        guard let url = NSURL(string: "\(ScotTrafficBaseURL)/support/\(page)") else {
+            return
+        }
+        guard let webViewController = storyboard?.instantiateViewControllerWithIdentifier("webViewController") as? WebViewController else {
+            return
+        }
+        webViewController.url = url
+        navigationController?.pushViewController(webViewController, animated: true)
     }
 }

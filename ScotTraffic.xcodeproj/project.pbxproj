@@ -307,6 +307,7 @@
 				286157C71BF29BD2000C11D4 /* SettingsTableViewController.swift */,
 				286157C91BF29CF6000C11D4 /* SettingsToggleTableViewCell.swift */,
 				286157CE1BF2A3C3000C11D4 /* SettingsEnumTableViewCell.swift */,
+				287F755C1C0F77270040EE8A /* WebViewController.swift */,
 			);
 			name = Settings;
 			sourceTree = "<group>";
@@ -620,6 +621,7 @@
 				280493591BA8BB4800990BD1 /* AppDelegate.swift in Sources */,
 				2813B2DB1BE647C90017F847 /* CachedHTTPDataSource.swift in Sources */,
 				286559251BC31D020058A35A /* MapAnnotation.swift in Sources */,
+				287F755D1C0F77270040EE8A /* WebViewController.swift in Sources */,
 				2813B2DD1BE655020017F847 /* DataSource.swift in Sources */,
 				28F6009F1BDB8E3E00ED71CA /* NGSplitViewController.swift in Sources */,
 			);
