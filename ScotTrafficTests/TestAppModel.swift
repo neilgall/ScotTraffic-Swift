@@ -60,7 +60,7 @@ private func loadTestData<T, C where T: JSONObjectDecodable>(filename: String, c
 }
 
 private class DummyDataSource: DataSource {
-    var value: Observable<Either<NSData, NetworkError>> = Input(initial: .Value(NSData()))
+    var value: Observable<DataSourceData> = Input(initial: .Empty)
     
     func start() {
     }

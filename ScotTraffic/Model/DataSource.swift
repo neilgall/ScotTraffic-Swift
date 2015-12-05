@@ -15,8 +15,10 @@ public enum DataSourceValue<ValueType> {
     case Empty
 }
 
+public typealias DataSourceData = DataSourceValue<NSData>
+
 public protocol DataSource: Startable {
-    var value: Observable<DataSourceValue<NSData>> { get }
+    var value: Observable<DataSourceData> { get }
 }
 
 public extension DataSourceValue {
@@ -59,7 +61,7 @@ public extension DataSourceValue {
 }
 
 public class EmptyDataSource : DataSource {
-    public var value: Observable<DataSourceValue<NSData>> {
+    public var value: Observable<DataSourceData> {
         return Const(value: .Empty)
     }
     

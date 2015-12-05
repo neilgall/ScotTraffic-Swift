@@ -77,7 +77,7 @@ public class HTTPFetcher: NSObject, NSURLSessionDelegate {
     public func URLSession(session: NSURLSession, didBecomeInvalidWithError error: NSError?) {
     }
     
-    public func fetchDataAtPath(path: String, completion: DataSourceValue<NSData> -> Void) {
+    public func fetchDataAtPath(path: String, completion: DataSourceData -> Void) {
         guard let url = NSURL(string: path, relativeToURL: baseURL) else {
             completion(DataSourceValue.Error(.Network(.MalformedURL)))
             return
@@ -102,7 +102,7 @@ public class HTTPFetcher: NSObject, NSURLSessionDelegate {
 class HTTPDataSource: DataSource {
     let fetcher: HTTPFetcher
     let path: String
-    let value = Observable<DataSourceValue<NSData>>()
+    let value = Observable<DataSourceData>()
     
     init(fetcher: HTTPFetcher, path: String) {
         self.fetcher = fetcher

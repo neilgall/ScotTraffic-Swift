@@ -11,7 +11,7 @@ import Foundation
 public class CachedHTTPDataSource: DataSource {
 
     // Output
-    public let value = Observable<DataSourceValue<NSData>>()
+    public let value = Observable<DataSourceData>()
     
     private let diskCache: DiskCache
     private let fetcher: HTTPFetcher
