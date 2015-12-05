@@ -52,8 +52,10 @@ public class CachedHTTPDataSource: DataSource {
     }
     
     private func cacheHit(data: NSData, age: NSTimeInterval) {
-        value.pushValue(.Cached(data))
-        if age < maximumCacheAge {
+        let expired = age > maximumCacheAge
+        value.pushValue(.Cached(data, expired: expired))
+        
+        if !expired {
             inFlight = false
         } else {
             // cache hit but old, so follow up with network fetch

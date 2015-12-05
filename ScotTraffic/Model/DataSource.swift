@@ -9,7 +9,7 @@
 import Foundation
 
 public enum DataSourceValue<ValueType> {
-    case Cached(ValueType)
+    case Cached(ValueType, expired: Bool)
     case Fresh(ValueType)
     case Error(AppError)
     case Empty
@@ -23,8 +23,8 @@ public extension DataSourceValue {
     public func map<TargetValueType>(transform: ValueType throws -> TargetValueType) -> DataSourceValue<TargetValueType> {
         do {
             switch self {
-            case .Cached(let data):
-                return .Cached(try transform(data))
+            case .Cached(let data, let expired):
+                return .Cached(try transform(data), expired: expired)
             case .Fresh(let data):
                 return .Fresh(try transform(data))
             case .Error(let error):
@@ -39,7 +39,7 @@ public extension DataSourceValue {
     
     public var value: ValueType? {
         switch self {
-        case .Cached(let value):
+        case .Cached(let value, _):
             return value
         case .Fresh(let value):
             return value

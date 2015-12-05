@@ -35,7 +35,7 @@ extension ImageDataSource {
     var image: Observable<UIImage?> {
         return imageValue.map({
             switch $0 {
-            case .Cached(let image):
+            case .Cached(let image, _):
                 return image
             case .Fresh(let image):
                 return image

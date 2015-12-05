@@ -8,7 +8,7 @@
 
 import UIKit
 
-private let spinnerAppearanceDelay = 0.75
+private let spinnerAppearanceDelay = 1.5
 
 class TrafficCameraCell: MapItemCollectionViewCell {
     
@@ -40,13 +40,18 @@ class TrafficCameraCell: MapItemCollectionViewCell {
             
             observations.append(imageValue.output { [weak self] image in
                 switch image {
-                case .Cached(let image):
+                case .Cached(let image, let expired):
                     self?.errorLabel?.hidden = true
                     self?.imageView?.image = image
+                    if !expired {
+                        self?.stopSpinner()
+                    }
+                    
                 case .Fresh(let image):
                     self?.errorLabel?.hidden = true
                     self?.imageView?.image = image
                     self?.stopSpinner()
+                    
                 case .Error, .Empty:
                     self?.errorLabel?.hidden = false
                     self?.imageView?.image = nil
@@ -65,10 +70,10 @@ class TrafficCameraCell: MapItemCollectionViewCell {
     }
     
     private func startSpinnerDeferred() {
-        self.spinnerTimer = NSTimer(timeInterval: spinnerAppearanceDelay, target: self, selector: Selector("startSpinner:"), userInfo: nil, repeats: false)
+        self.spinnerTimer = NSTimer.scheduledTimerWithTimeInterval(spinnerAppearanceDelay, target: self, selector: Selector("startSpinner"), userInfo: nil, repeats: false)
     }
     
-    private func startSpinner(timer: NSTimer) {
+    func startSpinner() {
         self.spinner?.startAnimating()
         self.spinnerTimer?.invalidate()
     }

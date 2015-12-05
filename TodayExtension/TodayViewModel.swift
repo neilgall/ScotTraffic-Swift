@@ -105,7 +105,7 @@ class TodayViewModel {
                 case .Fresh(let image):
                     self.image.pushValue(image)
                     self.showError.pushValue(false)
-                case .Cached(let image):
+                case .Cached(let image, _):
                     self.image.pushValue(image)
                     self.showError.pushValue(false)
                 case .Error, .Empty:
