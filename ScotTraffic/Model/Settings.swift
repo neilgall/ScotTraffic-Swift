@@ -10,11 +10,6 @@ import MapKit
 
 private let scotlandMapRect = MKMapRectMake(129244330.1, 79649811.3, 3762380.0, 6443076.1)
 
-public enum TemperatureUnit: Int {
-    case Celcius
-    case Fahrenheit
-}
-
 public class Settings {
     public let showTrafficOnMap: PersistentSetting<Bool>
     public let showTrafficCamerasOnMap: PersistentSetting<Bool>

@@ -11,6 +11,11 @@ import MapKit
 public typealias Celcius = Float
 public typealias WindSpeedKPH = Float
 
+public enum TemperatureUnit: Int {
+    case Celcius
+    case Fahrenheit
+}
+
 public enum WindDirection {
     case North
     case NorthNorthEast

@@ -26,8 +26,12 @@ public class MapItemCollectionViewModel: NSObject, UICollectionViewDataSource, M
         self.favourites = scotTraffic.favourites
 
         mapItems = Input(initial: [])
+        
         shareAction = Input(initial: nil)
-        weatherViewModel = WeatherViewModel(settings: scotTraffic.settings, weatherFinder: scotTraffic.weather, mapItems: mapItems)
+        weatherViewModel = WeatherViewModel(
+            weatherFinder: scotTraffic.weather,
+            mapItem: mapItems.map({ $0.first }),
+            temperatureUnit: scotTraffic.settings.temperatureUnit)
     
         // Each MapItem can have multiple items to show in the collection view. Flat map into a cell item list.
         cellItems = mapItems.map { mapItems in

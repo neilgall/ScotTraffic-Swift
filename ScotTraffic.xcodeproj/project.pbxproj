@@ -106,6 +106,10 @@
 		716D9E951BCA5EA1005A6B49 /* MapItemCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 716D9E941BCA5EA1005A6B49 /* MapItemCollectionViewController.swift */; };
 		716D9E971BCA614D005A6B49 /* MapItemCollectionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 716D9E961BCA614D005A6B49 /* MapItemCollectionViewModel.swift */; };
 		716D9E991BCBC2F1005A6B49 /* ScotTraffic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 716D9E981BCBC2F1005A6B49 /* ScotTraffic.swift */; };
+		71737F671C12DBFB00DAC5E1 /* Weather.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28DB3BF71BC02968001AAC2A /* Weather.swift */; };
+		71737F681C12DD5800DAC5E1 /* Sunrise.swift in Sources */ = {isa = PBXBuildFile; fileRef = 285E17021BF760B000E13129 /* Sunrise.swift */; };
+		71737F691C12DDF400DAC5E1 /* WeatherViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 285E17041BF768E900E13129 /* WeatherViewModel.swift */; };
+		71737F6A1C12E37200DAC5E1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2804935F1BA8BB4800990BD1 /* Assets.xcassets */; };
 		718F00BD1BCDA8D600D51B43 /* Data in Resources */ = {isa = PBXBuildFile; fileRef = 710535661BCDA81E00FDB70C /* Data */; };
 		718F00C21BCEFC8000D51B43 /* BridgeStatusCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 718F00BE1BCEFC8000D51B43 /* BridgeStatusCell.xib */; };
 		718F00C31BCEFC8000D51B43 /* TrafficCameraCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 718F00BF1BCEFC8000D51B43 /* TrafficCameraCell.xib */; };
@@ -713,6 +717,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				287F752A1C00C59A0040EE8A /* MainInterface.storyboard in Resources */,
+				71737F6A1C12E37200DAC5E1 /* Assets.xcassets in Resources */,
 				287F75361C00C6470040EE8A /* Images.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -814,6 +819,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				71737F671C12DBFB00DAC5E1 /* Weather.swift in Sources */,
+				71737F681C12DD5800DAC5E1 /* Sunrise.swift in Sources */,
 				287F753D1C00C7B30040EE8A /* Reachability.swift in Sources */,
 				287F75441C00C7D00040EE8A /* Favourites.swift in Sources */,
 				287F754E1C00CD5F0040EE8A /* WithFlag.swift in Sources */,
@@ -832,6 +839,7 @@
 				287F75411C00C7C30040EE8A /* Either.swift in Sources */,
 				287F753B1C00C7AE0040EE8A /* DiskCache.swift in Sources */,
 				287F75431C00C7CD0040EE8A /* TrafficCameras.swift in Sources */,
+				71737F691C12DDF400DAC5E1 /* WeatherViewModel.swift in Sources */,
 				287F75401C00C7C00040EE8A /* FRP.swift in Sources */,
 				287F75421C00C7C60040EE8A /* UserDefaultsProtocol.swift in Sources */,
 				287F754A1C00C8DE0040EE8A /* TodaySettings.swift in Sources */,

@@ -17,6 +17,8 @@ class TodayViewController: UIViewController, NCWidgetProviding {
     
     @IBOutlet var imageView: UIImageView?
     @IBOutlet var titleLabel: UILabel?
+    @IBOutlet var temperatureLabel: UILabel?
+    @IBOutlet var weatherIconImageView: UIImageView?
     @IBOutlet var controls: UIView?
     @IBOutlet var errorLabel: UILabel?
     @IBOutlet var leftButton: UIButton?
@@ -44,6 +46,16 @@ class TodayViewController: UIViewController, NCWidgetProviding {
         })
         observations.append(model.canMoveToNext => {
             self.rightButton?.hidden = !$0
+        })
+        observations.append(model.weatherViewModel.weatherHidden => {
+            self.temperatureLabel?.hidden = $0
+            self.weatherIconImageView?.hidden = $0
+        })
+        observations.append(model.weatherViewModel.temperatureText => {
+            self.temperatureLabel?.text = $0
+        })
+        observations.append(model.weatherViewModel.weatherIconName => {
+            self.weatherIconImageView?.image = UIImage(named: $0)
         })
     }
     

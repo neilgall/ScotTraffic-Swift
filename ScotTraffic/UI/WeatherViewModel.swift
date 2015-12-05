@@ -15,16 +15,15 @@ class WeatherViewModel {
     let temperatureText: Observable<String>
     let weatherIconName: Observable<String>
 
-    init(settings: Settings, weatherFinder: Observable<WeatherFinder>, mapItems: Observable<[MapItem]>) {
+    init(weatherFinder: Observable<MapItem -> Weather?>, mapItem: Observable<MapItem?>, temperatureUnit: Observable<TemperatureUnit>) {
         
-        // assume the map items are close enough geographically that picking the first one is accurate
-        let weather = combine(weatherFinder, mapItems) { weatherFinder, mapItems in
-            mapItems.first.flatMap { weatherFinder($0) }
+        let weather = combine(weatherFinder, mapItem) { weatherFinder, mapItem in
+            mapItem.flatMap({ weatherFinder($0) })
         }
         
         weatherHidden = isNil(weather)
  
-        temperatureText = combine(weather, settings.temperatureUnit) { weather, unit in
+        temperatureText = combine(weather, temperatureUnit) { weather, unit in
             guard let weather = weather else {
                 return ""
             }

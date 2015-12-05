@@ -20,8 +20,10 @@ class TodayViewModel {
     let diskCache: DiskCache
     let fetcher: HTTPFetcher
     let trafficCamerasSource: DataSource
+    let weatherSource: DataSource
     let favourites: Favourites
     let settings: TodaySettings
+    let weatherViewModel: WeatherViewModel
     var observations: [Observation] = []
     var observeSupplier: Observation? = nil
     
@@ -39,12 +41,29 @@ class TodayViewModel {
         self.fetcher = fetcher
         self.settings = TodaySettings(userDefaults: userDefaults)
         
+        // -- traffic cameras
+        
         self.trafficCamerasSource = cachedDataSource(maximumCacheAge: 900)(path: "trafficcameras.json")
         let trafficCamerasContext = TrafficCameraDecodeContext(makeImageDataSource: cachedDataSource(maximumCacheAge: 300))
         let trafficCameraLocations = trafficCamerasSource.value.map {
             return $0.map(Array<TrafficCameraLocation>.decodeJSON(trafficCamerasContext) <== JSONArrayFromData)
         }
+        
+        // -- weather
+        
+        self.weatherSource = cachedDataSource(maximumCacheAge: 900)(path: "weather.json")
+        let weather = weatherSource.value.map {
+            $0.map(Array<Weather>.decodeJSON(Void) <== JSONArrayFromData)
+        }
+        let weatherFinder = valueFromEither(weather).latest().map() { (weather: [Weather]) -> (MapItem -> Weather?) in
+            return { (mapItem: MapItem) -> Weather? in
+                let distanceSq = { (w: Weather) -> Double in w.mapPoint.distanceSqToMapPoint(mapItem.mapPoint) }
+                return weather.minElement( { distanceSq($0) < distanceSq($1) })
+            }
+        }
 
+        // -- favourites
+        
         self.favourites = Favourites(userDefaults: userDefaults,
             trafficCameraLocations: valueFromEither(trafficCameraLocations).latest())
         
@@ -53,9 +72,17 @@ class TodayViewModel {
             return favourites[index]
         }
         
+        // -- outputs
+        
         self.title = selectedFavourite.map({ favourite in
             return trafficCameraName(favourite.location.cameras[favourite.cameraIndex], atLocation: favourite.location)
         }).latest()
+        
+        self.weatherViewModel = WeatherViewModel(
+            weatherFinder: weatherFinder,
+            mapItem: selectedFavourite.map({ $0.location }),
+            temperatureUnit: settings.temperatureUnit)
+        
         
         self.canMoveToPrevious = settings.imageIndex.map({ index in
             return index > 0
@@ -71,7 +98,7 @@ class TodayViewModel {
         let imageSupplier = selectedFavourite.map({ favourite in
             return favourite.location.cameras[favourite.cameraIndex]
         }).latest()
-        
+
         observations.append(imageSupplier => { supplier in
             self.observeSupplier = supplier.image.latest() => {
                 if let image = $0 {
@@ -81,12 +108,14 @@ class TodayViewModel {
                     self.showError.pushValue(true)
                 }
             }
+            self.image.pushValue(UIImage(named: "image-placeholder")!)
             supplier.updateImage()
         })
     }
     
     func refresh() {
         trafficCamerasSource.start()
+        weatherSource.start()
         favourites.reloadFromUserDefaults()
     }
     
