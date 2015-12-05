@@ -38,12 +38,17 @@ class SafetyCameraCell: MapItemCollectionViewCellWithMap {
             configureMap(safetyCamera)
 
             // image from server if available, otherwise map image
-            let serverImage = safetyCamera.image
+            let serverImage = safetyCamera.imageValue.map({ (dsv: DataSourceValue<UIImage>) -> UIImage? in dsv.value })
             let imageSelector = union(serverImage, isNil(serverImage).gate(mapImage))
             
-            observations.append(imageSelector.map(applyGradientMask).output { [weak self] image in
-                self?.imageView?.image = image
-                self?.mapView?.hidden = (image != nil)
+            observations.append(imageSelector.output { [weak self] image in
+                if let image = image {
+                    self?.imageView?.image = applyGradientMask(image)
+                    self?.mapView?.hidden = true
+                } else {
+                    self?.imageView?.image = nil
+                    self?.mapView?.hidden = false
+                }
             })
             
             observations.append(imageSelector.output { [weak self] _ in

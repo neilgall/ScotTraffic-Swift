@@ -25,7 +25,7 @@ class TodayViewModel {
     let settings: TodaySettings
     let weatherViewModel: WeatherViewModel
     var observations: [Observation] = []
-    var observeSupplier: Observation? = nil
+    var observeImageDataSource: Observation? = nil
     
     init() {
         let diskCache = DiskCache(withPath: "scottraffic")
@@ -55,7 +55,7 @@ class TodayViewModel {
         let weather = weatherSource.value.map {
             $0.map(Array<Weather>.decodeJSON(Void) <== JSONArrayFromData)
         }
-        let weatherFinder = valueFromEither(weather).latest().map() { (weather: [Weather]) -> (MapItem -> Weather?) in
+        let weatherFinder = weather.map({ $0.value ?? [] }).latest().map() { (weather: [Weather]) -> (MapItem -> Weather?) in
             return { (mapItem: MapItem) -> Weather? in
                 let distanceSq = { (w: Weather) -> Double in w.mapPoint.distanceSqToMapPoint(mapItem.mapPoint) }
                 return weather.minElement( { distanceSq($0) < distanceSq($1) })
@@ -65,7 +65,7 @@ class TodayViewModel {
         // -- favourites
         
         self.favourites = Favourites(userDefaults: userDefaults,
-            trafficCameraLocations: valueFromEither(trafficCameraLocations).latest())
+            trafficCameraLocations: trafficCameraLocations.map({ $0.value ?? [] }).latest())
         
         let selectedFavourite: Observable<FavouriteTrafficCamera> = combine(favourites.trafficCameras, settings.imageIndex) { favourites, imageIndex in
             let index = max(0, min(imageIndex, favourites.count))
@@ -95,21 +95,25 @@ class TodayViewModel {
         self.image = Observable()
         self.showError = Observable()
         
-        let imageSupplier = selectedFavourite.map({ favourite in
+        let imageDataSource = selectedFavourite.map({ favourite in
             return favourite.location.cameras[favourite.cameraIndex]
         }).latest()
 
-        observations.append(imageSupplier => { supplier in
-            self.observeSupplier = supplier.image.latest() => {
-                if let image = $0 {
+        observations.append(imageDataSource => { dataSource in
+            self.observeImageDataSource = dataSource.imageValue.latest() => {
+                switch $0 {
+                case .Fresh(let image):
                     self.image.pushValue(image)
                     self.showError.pushValue(false)
-                } else {
+                case .Cached(let image):
+                    self.image.pushValue(image)
+                    self.showError.pushValue(false)
+                case .Error, .Empty:
                     self.showError.pushValue(true)
                 }
             }
             self.image.pushValue(UIImage(named: "image-placeholder")!)
-            supplier.updateImage()
+            dataSource.updateImage()
         })
     }
     

@@ -39,11 +39,11 @@ public final class TrafficCameraLocation : MapItem {
     }
 }
 
-public final class TrafficCamera: ImageSupplier {
+public final class TrafficCamera : ImageDataSource {
     public let identifier: String
     public let direction: TrafficCameraDirection?
     public let isAvailable: Bool
-    public let dataSource: DataSource?
+    public let dataSource: DataSource
     
     public init(identifier: String, direction: TrafficCameraDirection?, isAvailable: Bool, dataSourceFactory: String->DataSource) {
         self.identifier = identifier

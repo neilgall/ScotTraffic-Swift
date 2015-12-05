@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="9059" systemVersion="14F1021" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="9060" systemVersion="14F1021" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9049"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9051"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
     </dependencies>
     <objects>
@@ -117,6 +117,9 @@
                         <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
                         <nil key="highlightedColor"/>
                     </label>
+                    <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="white" translatesAutoresizingMaskIntoConstraints="NO" id="364-R0-Nzu">
+                        <rect key="frame" x="150" y="154" width="20" height="20"/>
+                    </activityIndicatorView>
                 </subviews>
                 <animations/>
                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
@@ -128,9 +131,11 @@
                 <constraint firstItem="7We-GT-JEA" firstAttribute="centerY" secondItem="1G4-kk-7uC" secondAttribute="centerY" id="0yg-59-6bX"/>
                 <constraint firstItem="1G4-kk-7uC" firstAttribute="trailing" secondItem="d0z-U4-tlr" secondAttribute="trailing" id="318-P2-AbH"/>
                 <constraint firstAttribute="trailing" secondItem="1G4-kk-7uC" secondAttribute="trailing" id="Kky-Mf-TUJ"/>
+                <constraint firstItem="1G4-kk-7uC" firstAttribute="centerY" secondItem="364-R0-Nzu" secondAttribute="centerY" id="Q07-Ed-t9N"/>
                 <constraint firstAttribute="bottom" secondItem="d0z-U4-tlr" secondAttribute="bottom" id="U5E-fL-Oy1"/>
                 <constraint firstItem="7We-GT-JEA" firstAttribute="centerX" secondItem="1G4-kk-7uC" secondAttribute="centerX" id="bvb-jU-Ewr"/>
                 <constraint firstItem="d0z-U4-tlr" firstAttribute="top" secondItem="1G4-kk-7uC" secondAttribute="bottom" id="d8M-Em-WMv"/>
+                <constraint firstItem="1G4-kk-7uC" firstAttribute="centerX" secondItem="364-R0-Nzu" secondAttribute="centerX" id="dXG-gq-xAW"/>
                 <constraint firstItem="1G4-kk-7uC" firstAttribute="top" secondItem="5Fw-qe-gmJ" secondAttribute="top" id="ghu-eK-i21"/>
                 <constraint firstItem="1G4-kk-7uC" firstAttribute="leading" secondItem="5Fw-qe-gmJ" secondAttribute="leading" id="j6t-tJ-tEG"/>
                 <constraint firstItem="d0z-U4-tlr" firstAttribute="top" secondItem="5Fw-qe-gmJ" secondAttribute="top" id="tB4-az-PkO"/>
@@ -150,6 +155,7 @@
                 <outlet property="favouriteButton" destination="ONW-It-gt2" id="ZDa-ft-mPt"/>
                 <outlet property="imageView" destination="1G4-kk-7uC" id="pk4-f6-fVH"/>
                 <outlet property="shareButton" destination="laJ-1m-iNY" id="psT-Ct-qzO"/>
+                <outlet property="spinner" destination="364-R0-Nzu" id="PBu-gV-Brs"/>
                 <outlet property="titleLabel" destination="ZBn-su-oAy" id="l1R-eP-vgK"/>
             </connections>
             <point key="canvasLocation" x="404" y="344"/>

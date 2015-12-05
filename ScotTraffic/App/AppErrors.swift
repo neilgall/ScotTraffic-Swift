@@ -10,6 +10,7 @@ import Foundation
 
 public enum AppError : ErrorType {
     case Network(NetworkError)
+    case Image(ImageError)
     case JSON(JSONError)
     case System(NSError)
     case Unknown(ErrorType)
@@ -19,6 +20,8 @@ public enum AppError : ErrorType {
             return e as! AppError
         } else if e.dynamicType == NetworkError.self {
             return AppError.Network(e as! NetworkError)
+        } else if e.dynamicType == ImageError.self {
+            return AppError.Image(e as! ImageError)
         } else if e.dynamicType == JSONError.self {
             return AppError.JSON(e as! JSONError)
         } else if e.dynamicType == NSError.self {

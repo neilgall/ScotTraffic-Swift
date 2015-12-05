@@ -77,18 +77,18 @@ public class HTTPFetcher: NSObject, NSURLSessionDelegate {
     public func URLSession(session: NSURLSession, didBecomeInvalidWithError error: NSError?) {
     }
     
-    public func fetchDataAtPath(path: String, completion: Either<NSData,NetworkError> -> Void) {
+    public func fetchDataAtPath(path: String, completion: DataSourceValue<NSData> -> Void) {
         guard let url = NSURL(string: path, relativeToURL: baseURL) else {
-            completion(Either.Error(NetworkError.MalformedURL))
+            completion(DataSourceValue.Error(.Network(.MalformedURL)))
             return
         }
         
         let task = session.dataTaskWithURL(url) { data, _, error in
             if let error = error {
-                completion(Either.Error(NetworkError.FetchError(error)))
+                completion(DataSourceValue.Error(.Network(.FetchError(error))))
                 
             } else if let data = data {
-                completion(Either.Value(data))
+                completion(DataSourceValue.Fresh(data))
             }
             
             self.indicator?.pop()
@@ -102,7 +102,7 @@ public class HTTPFetcher: NSObject, NSURLSessionDelegate {
 class HTTPDataSource: DataSource {
     let fetcher: HTTPFetcher
     let path: String
-    let value = Observable<Either<NSData,NetworkError>>()
+    let value = Observable<DataSourceValue<NSData>>()
     
     init(fetcher: HTTPFetcher, path: String) {
         self.fetcher = fetcher

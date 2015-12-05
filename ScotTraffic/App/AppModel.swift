@@ -47,7 +47,7 @@ public class AppModel: ScotTraffic {
         let trafficCameraLocations = trafficCamerasSource.value.map {
             return $0.map(Array<TrafficCameraLocation>.decodeJSON(trafficCamerasContext) <== JSONArrayFromData)
         }
-        self.trafficCameraLocations = valueFromEither(trafficCameraLocations).latest()
+        self.trafficCameraLocations = trafficCameraLocations.map({ $0.value ?? [] }).latest()
 
         self.favourites = Favourites(userDefaults: userDefaults, trafficCameraLocations: self.trafficCameraLocations)
 
@@ -59,7 +59,7 @@ public class AppModel: ScotTraffic {
         let safetyCameras = safetyCamerasSource.value.map {
             $0.map(Array<SafetyCamera>.decodeJSON(safetyCamerasContext) <== JSONArrayFromData)
         }
-        self.safetyCameras = valueFromEither(safetyCameras).latest()
+        self.safetyCameras = safetyCameras.map({ $0.value ?? [] }).latest()
  
         
         // -- Incidents / Roadworks --
@@ -68,9 +68,9 @@ public class AppModel: ScotTraffic {
         let incidents = incidentsSource.value.map {
             $0.map(Array<Incident>.decodeJSON(Void) <== JSONArrayFromData)
         }
-        let allIncidents = valueFromEither(incidents)
-        self.alerts = allIncidents.map { $0.filter { $0.type == IncidentType.Alert } }.latest()
-        self.roadworks = allIncidents.map { $0.filter { $0.type == IncidentType.Roadworks } }.latest()
+        let allIncidents = incidents.map({ $0.value ?? [] })
+        self.alerts = allIncidents.map({ $0.filter({ $0.type == IncidentType.Alert }) }).latest()
+        self.roadworks = allIncidents.map({ $0.filter({ $0.type == IncidentType.Roadworks }) }).latest()
         
         
         // -- Weather --
@@ -79,7 +79,7 @@ public class AppModel: ScotTraffic {
         let weather = weatherSource.value.map {
             $0.map(Array<Weather>.decodeJSON(Void) <== JSONArrayFromData)
         }
-        self.weather = valueFromEither(weather).latest().map() { (weather: [Weather]) -> WeatherFinder in
+        self.weather = weather.map({ $0.value ?? [] }).latest().map() { (weather: [Weather]) -> WeatherFinder in
             return { (mapItem: MapItem) -> Weather? in
                 let distanceSq = { (w: Weather) -> Double in w.mapPoint.distanceSqToMapPoint(mapItem.mapPoint) }
                 return weather.minElement( { distanceSq($0) < distanceSq($1) })

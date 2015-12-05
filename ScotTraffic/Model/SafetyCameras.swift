@@ -20,7 +20,7 @@ public enum SpeedLimit {
     case National
 }
 
-public final class SafetyCamera : MapItem, ImageSupplier {
+public final class SafetyCamera : MapItem, ImageDataSource {
     public let name: String
     public let road: String
     public let url: NSURL?
@@ -29,7 +29,7 @@ public final class SafetyCamera : MapItem, ImageSupplier {
     public let images: [String]
     public let count: Int = 1
     public let iconName = "safetycamera"
-    public let dataSource: DataSource?
+    public let dataSource: DataSource
     
     public init(name: String, road: String, url: NSURL?, speedLimit: SpeedLimit, mapPoint: MKMapPoint, images: [String], dataSourceFactory: String->DataSource) {
         self.name = name
@@ -38,7 +38,12 @@ public final class SafetyCamera : MapItem, ImageSupplier {
         self.speedLimit = speedLimit
         self.mapPoint = mapPoint
         self.images = images
-        self.dataSource = images.first.map { dataSourceFactory($0) }
+        
+        if let image = images.first {
+            self.dataSource = dataSourceFactory(image)
+        } else {
+            self.dataSource = EmptyDataSource()
+        }
     }
 }
 

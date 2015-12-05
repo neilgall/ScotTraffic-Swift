@@ -30,7 +30,6 @@
 		2831B68C1BED52DC005B4933 /* AsyncSequence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2831B68B1BED52DC005B4933 /* AsyncSequence.swift */; };
 		283A90561BF4035B00BB5C46 /* WeatherViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 283A90551BF4035B00BB5C46 /* WeatherViewController.swift */; };
 		2841A0F01BCD9B3900D22A8E /* EitherTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2841A0EF1BCD9B3900D22A8E /* EitherTests.swift */; };
-		284DE0961BBDCD4200E6A678 /* Either.swift in Sources */ = {isa = PBXBuildFile; fileRef = 284DE0951BBDCD4200E6A678 /* Either.swift */; };
 		284DE0981BBDD0D800E6A678 /* AppModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 284DE0971BBDD0D800E6A678 /* AppModel.swift */; };
 		285E17031BF760B000E13129 /* Sunrise.swift in Sources */ = {isa = PBXBuildFile; fileRef = 285E17021BF760B000E13129 /* Sunrise.swift */; };
 		285E17051BF768E900E13129 /* WeatherViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 285E17041BF768E900E13129 /* WeatherViewModel.swift */; };
@@ -63,12 +62,11 @@
 		287F753E1C00C7B90040EE8A /* JSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28875EA61BBC739100E67A16 /* JSON.swift */; };
 		287F753F1C00C7BC0040EE8A /* Functions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28DB3BF21BC025D0001AAC2A /* Functions.swift */; };
 		287F75401C00C7C00040EE8A /* FRP.swift in Sources */ = {isa = PBXBuildFile; fileRef = 289201D31BBC5AEB00DA4A9A /* FRP.swift */; };
-		287F75411C00C7C30040EE8A /* Either.swift in Sources */ = {isa = PBXBuildFile; fileRef = 284DE0951BBDCD4200E6A678 /* Either.swift */; };
 		287F75421C00C7C60040EE8A /* UserDefaultsProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 710535641BCC141C00FDB70C /* UserDefaultsProtocol.swift */; };
 		287F75431C00C7CD0040EE8A /* TrafficCameras.swift in Sources */ = {isa = PBXBuildFile; fileRef = 289201D11BBC580300DA4A9A /* TrafficCameras.swift */; };
 		287F75441C00C7D00040EE8A /* Favourites.swift in Sources */ = {isa = PBXBuildFile; fileRef = 286559141BC1DCB70058A35A /* Favourites.swift */; };
 		287F75451C00C7D80040EE8A /* MapItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 280486581BC0917B003BA360 /* MapItem.swift */; };
-		287F75461C00C7DA0040EE8A /* ImageSupplier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 718F00CA1BCF070500D51B43 /* ImageSupplier.swift */; };
+		287F75461C00C7DA0040EE8A /* ImageDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 718F00CA1BCF070500D51B43 /* ImageDataSource.swift */; };
 		287F754A1C00C8DE0040EE8A /* TodaySettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 287F75491C00C8DE0040EE8A /* TodaySettings.swift */; };
 		287F754C1C00C9110040EE8A /* PersistentSetting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 287F754B1C00C9110040EE8A /* PersistentSetting.swift */; };
 		287F754D1C00CD050040EE8A /* PersistentSetting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 287F754B1C00C9110040EE8A /* PersistentSetting.swift */; };
@@ -116,7 +114,7 @@
 		718F00C41BCEFC8000D51B43 /* IncidentCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 718F00C01BCEFC8000D51B43 /* IncidentCell.xib */; };
 		718F00C51BCEFC8000D51B43 /* SafetyCameraCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 718F00C11BCEFC8000D51B43 /* SafetyCameraCell.xib */; };
 		718F00C91BCEFF8800D51B43 /* TrafficCameraCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 718F00C81BCEFF8800D51B43 /* TrafficCameraCell.swift */; };
-		718F00CB1BCF070500D51B43 /* ImageSupplier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 718F00CA1BCF070500D51B43 /* ImageSupplier.swift */; };
+		718F00CB1BCF070500D51B43 /* ImageDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 718F00CA1BCF070500D51B43 /* ImageDataSource.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -187,7 +185,6 @@
 		2831B68B1BED52DC005B4933 /* AsyncSequence.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AsyncSequence.swift; sourceTree = "<group>"; };
 		283A90551BF4035B00BB5C46 /* WeatherViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WeatherViewController.swift; sourceTree = "<group>"; };
 		2841A0EF1BCD9B3900D22A8E /* EitherTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EitherTests.swift; sourceTree = "<group>"; };
-		284DE0951BBDCD4200E6A678 /* Either.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Either.swift; sourceTree = "<group>"; };
 		284DE0971BBDD0D800E6A678 /* AppModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppModel.swift; sourceTree = "<group>"; };
 		285E17021BF760B000E13129 /* Sunrise.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Sunrise.swift; sourceTree = "<group>"; };
 		285E17041BF768E900E13129 /* WeatherViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WeatherViewModel.swift; sourceTree = "<group>"; };
@@ -254,7 +251,7 @@
 		718F00C01BCEFC8000D51B43 /* IncidentCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = IncidentCell.xib; sourceTree = "<group>"; };
 		718F00C11BCEFC8000D51B43 /* SafetyCameraCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SafetyCameraCell.xib; sourceTree = "<group>"; };
 		718F00C81BCEFF8800D51B43 /* TrafficCameraCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TrafficCameraCell.swift; sourceTree = "<group>"; };
-		718F00CA1BCF070500D51B43 /* ImageSupplier.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageSupplier.swift; sourceTree = "<group>"; };
+		718F00CA1BCF070500D51B43 /* ImageDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageDataSource.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -370,11 +367,11 @@
 			isa = PBXGroup;
 			children = (
 				710535641BCC141C00FDB70C /* UserDefaultsProtocol.swift */,
-				284DE0951BBDCD4200E6A678 /* Either.swift */,
 				289201D31BBC5AEB00DA4A9A /* FRP.swift */,
 				28875EA61BBC739100E67A16 /* JSON.swift */,
 				28DB3BF21BC025D0001AAC2A /* Functions.swift */,
 				2813B2DC1BE655020017F847 /* DataSource.swift */,
+				718F00CA1BCF070500D51B43 /* ImageDataSource.swift */,
 				28875EA31BBC72FB00E67A16 /* Network.swift */,
 				280486501BC08216003BA360 /* PeriodicStarter.swift */,
 				2813B2D81BE647550017F847 /* DiskCache.swift */,
@@ -495,7 +492,6 @@
 			children = (
 				284DE0991BBDDEB800E6A678 /* Core */,
 				280486581BC0917B003BA360 /* MapItem.swift */,
-				718F00CA1BCF070500D51B43 /* ImageSupplier.swift */,
 				289201D11BBC580300DA4A9A /* TrafficCameras.swift */,
 				28DB3BF41BC02892001AAC2A /* SafetyCameras.swift */,
 				28DB3BF91BC02C88001AAC2A /* Incidents.swift */,
@@ -731,7 +727,6 @@
 			files = (
 				288AC8911BCFABE2004EA6A0 /* SafetyCameraCell.swift in Sources */,
 				283A90561BF4035B00BB5C46 /* WeatherViewController.swift in Sources */,
-				284DE0961BBDCD4200E6A678 /* Either.swift in Sources */,
 				2804864F1BC074E4003BA360 /* AppErrors.swift in Sources */,
 				2865591A1BC2A7200058A35A /* FRP-UI-Extensions.swift in Sources */,
 				28875EA41BBC72FB00E67A16 /* Network.swift in Sources */,
@@ -757,7 +752,7 @@
 				288AC88F1BCFA43B004EA6A0 /* SharableItem.swift in Sources */,
 				280486551BC087B6003BA360 /* SearchViewModel.swift in Sources */,
 				288AC8931BCFB954004EA6A0 /* IncidentCell.swift in Sources */,
-				718F00CB1BCF070500D51B43 /* ImageSupplier.swift in Sources */,
+				718F00CB1BCF070500D51B43 /* ImageDataSource.swift in Sources */,
 				286559151BC1DCB70058A35A /* Favourites.swift in Sources */,
 				716D9E951BCA5EA1005A6B49 /* MapItemCollectionViewController.swift in Sources */,
 				28DB3BF81BC02968001AAC2A /* Weather.swift in Sources */,
@@ -828,7 +823,7 @@
 				287F754F1C00CEA20040EE8A /* PeriodicStarter.swift in Sources */,
 				287F753F1C00C7BC0040EE8A /* Functions.swift in Sources */,
 				287F75381C00C6CD0040EE8A /* TodayViewModel.swift in Sources */,
-				287F75461C00C7DA0040EE8A /* ImageSupplier.swift in Sources */,
+				287F75461C00C7DA0040EE8A /* ImageDataSource.swift in Sources */,
 				287F75451C00C7D80040EE8A /* MapItem.swift in Sources */,
 				287F754D1C00CD050040EE8A /* PersistentSetting.swift in Sources */,
 				287F75561C00DA080040EE8A /* Configuration.swift in Sources */,
@@ -836,7 +831,6 @@
 				287F753A1C00C7AB0040EE8A /* Network.swift in Sources */,
 				287F75501C00D0A50040EE8A /* AppErrors.swift in Sources */,
 				287F75271C00C59A0040EE8A /* TodayViewController.swift in Sources */,
-				287F75411C00C7C30040EE8A /* Either.swift in Sources */,
 				287F753B1C00C7AE0040EE8A /* DiskCache.swift in Sources */,
 				287F75431C00C7CD0040EE8A /* TrafficCameras.swift in Sources */,
 				71737F691C12DDF400DAC5E1 /* WeatherViewModel.swift in Sources */,

@@ -8,18 +8,22 @@
 
 import UIKit
 
+private let spinnerAppearanceDelay = 0.75
+
 class TrafficCameraCell: MapItemCollectionViewCell {
     
     @IBOutlet var imageView: UIImageView?
     @IBOutlet var errorLabel: UILabel?
+    @IBOutlet var spinner: UIActivityIndicatorView?
     @IBOutlet var titleLabel: UILabel?
     @IBOutlet var favouriteButton: UIButton?
     @IBOutlet var shareButton: UIButton?
     
     private var locationName: String?
     private var favouriteItem: FavouriteTrafficCamera?
-    private var image: Observable<UIImage?>?
+    private var image: Observable<DataSourceImage>?
     private var observations = [Observation]()
+    private weak var spinnerTimer: NSTimer?
     
     override func configure(item: Item) {
         if case .TrafficCameraItem(let location, let camera) = item {
@@ -28,23 +32,50 @@ class TrafficCameraCell: MapItemCollectionViewCell {
 
             errorLabel?.hidden = true
             titleLabel?.text = locationName
+
             updateFavouriteButton()
+            startSpinnerDeferred()
         
-            let image = camera.image
+            let imageValue = camera.imageValue
             
-            observations.append(image.output { [weak self] image in
-                self?.errorLabel?.hidden = (image != nil)
-                self?.imageView?.image = image
+            observations.append(imageValue.output { [weak self] image in
+                switch image {
+                case .Cached(let image):
+                    self?.errorLabel?.hidden = true
+                    self?.imageView?.image = image
+                case .Fresh(let image):
+                    self?.errorLabel?.hidden = true
+                    self?.imageView?.image = image
+                    self?.stopSpinner()
+                case .Error, .Empty:
+                    self?.errorLabel?.hidden = false
+                    self?.imageView?.image = nil
+                    self?.stopSpinner()
+                }
             })
         
-            observations.append(not(isNil(image)).output { [weak self] enabled in
+            observations.append(not(isNil(camera.image)).output { [weak self] enabled in
                 self?.shareButton?.enabled = enabled
                 self?.favouriteButton?.enabled = enabled
             })
         
-            self.image = image.latest()
+            self.image = imageValue.latest()
             camera.updateImage()
         }
+    }
+    
+    private func startSpinnerDeferred() {
+        self.spinnerTimer = NSTimer(timeInterval: spinnerAppearanceDelay, target: self, selector: Selector("startSpinner:"), userInfo: nil, repeats: false)
+    }
+    
+    private func startSpinner(timer: NSTimer) {
+        self.spinner?.startAnimating()
+        self.spinnerTimer?.invalidate()
+    }
+    
+    private func stopSpinner() {
+        self.spinner?.stopAnimating()
+        self.spinnerTimer?.invalidate()
     }
     
     private func updateFavouriteButton() {
@@ -53,7 +84,7 @@ class TrafficCameraCell: MapItemCollectionViewCell {
     
     @IBAction func share() {
         if let name = locationName, let image = image?.pullValue {
-            let item = SharableTrafficCamera(name: name, image: image)
+            let item = SharableTrafficCamera(name: name, image: image.value)
             let rect = convertRect(shareButton!.bounds, fromView: shareButton!)
             delegate?.collectionViewCell(self, didRequestShareItem: item, fromRect: rect)
         }
@@ -77,6 +108,8 @@ class TrafficCameraCell: MapItemCollectionViewCell {
         errorLabel?.hidden = true
         titleLabel?.text = nil
         imageView?.image = nil
+        
+        stopSpinner()
     }
 }
 

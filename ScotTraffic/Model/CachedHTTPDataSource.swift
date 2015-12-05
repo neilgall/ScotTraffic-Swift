@@ -11,7 +11,7 @@ import Foundation
 public class CachedHTTPDataSource: DataSource {
 
     // Output
-    public let value = Observable<Either<NSData, NetworkError>>()
+    public let value = Observable<DataSourceValue<NSData>>()
     
     private let diskCache: DiskCache
     private let fetcher: HTTPFetcher
@@ -52,7 +52,7 @@ public class CachedHTTPDataSource: DataSource {
     }
     
     private func cacheHit(data: NSData, age: NSTimeInterval) {
-        value.pushValue(.Value(data))
+        value.pushValue(.Cached(data))
         if age < maximumCacheAge {
             inFlight = false
         } else {
@@ -66,7 +66,7 @@ public class CachedHTTPDataSource: DataSource {
         
         httpObservation = httpSource.value.output { dataOrError in
             switch dataOrError {
-            case .Value(let data):
+            case .Fresh(let data):
                 self.diskCache.storeData(data, forKey: self.key)
                 self.value.pushValue(dataOrError)
 
@@ -74,6 +74,9 @@ public class CachedHTTPDataSource: DataSource {
                 if !afterCacheHit {
                     self.value.pushValue(dataOrError)
                 }
+                
+            case .Cached, .Empty:
+                break
             }
             
             self.endHTTPSource()
