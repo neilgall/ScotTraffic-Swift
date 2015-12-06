@@ -15,6 +15,7 @@ class TestAppModel: ScotTraffic {
     let safetyCameras: Observable<[SafetyCamera]>
     let alerts: Observable<[Incident]>
     let roadworks: Observable<[Incident]>
+    let bridges: Observable<[BridgeStatus]>
     let weather: Observable<WeatherFinder>
     let settings: Settings
     let favourites: Favourites
@@ -35,6 +36,8 @@ class TestAppModel: ScotTraffic {
         let incidents = Input<[Incident]>(initial: loadTestData("incidents", context: ()))
         alerts = incidents.map { $0.filter { $0.type == .Alert } }
         roadworks = incidents.map { $0.filter { $0.type == .Roadworks } }
+        
+        bridges = Input<[BridgeStatus]>(initial: loadTestData("bridges", context: ()))
         
         userDefaults = TestUserDefaults()
         settings = Settings(userDefaults: userDefaults)
