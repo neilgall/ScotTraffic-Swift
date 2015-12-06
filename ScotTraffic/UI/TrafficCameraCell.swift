@@ -126,6 +126,7 @@ private func imageWithGrayColorspace(image: UIImage?) -> UIImage? {
         CGColorSpaceCreateDeviceGray(),
         CGImageAlphaInfo.None.rawValue)
 
+    CGContextSetAlpha(context, 0.5)
     CGContextDrawImage(context, CGRect(origin: CGPointZero, size: size), image.CGImage)
     let grayImage = CGBitmapContextCreateImage(context)
     
