@@ -8,6 +8,9 @@
 
 import UIKit
 
+private let getTimeout: NSTimeInterval = 30
+private let postTimeout: NSTimeInterval = 30
+
 public enum NetworkError : ErrorType {
     case MalformedURL
     case FetchError(NSError)
@@ -81,7 +84,27 @@ public class HTTPAccess: NSObject, NSURLSessionDelegate {
             return
         }
         
-        let task = session.dataTaskWithURL(url) { data, _, error in
+        let request = NSMutableURLRequest(URL: url, cachePolicy: .ReturnCacheDataElseLoad, timeoutInterval: getTimeout)
+        request.HTTPMethod = "GET"
+        
+        runTaskForRequest(request, completion: completion)
+        
+    }
+    
+    public func postData(data: NSData, toPath path: String, completion: DataSourceData -> Void) {
+        guard let url = NSURL(string: path, relativeToURL: baseURL) else {
+            completion(DataSourceValue.Error(.Network(.MalformedURL)))
+            return
+        }
+        let request = NSMutableURLRequest(URL: url, cachePolicy: .ReloadIgnoringLocalAndRemoteCacheData, timeoutInterval: postTimeout)
+        request.HTTPMethod = "POST"
+        request.HTTPBody = data
+        
+        runTaskForRequest(request, completion: completion)
+    }
+    
+    private func runTaskForRequest(request: NSURLRequest, completion: DataSourceData -> Void) {
+        let task = session.dataTaskWithRequest(request) { data, _, error in
             if let error = error {
                 completion(DataSourceValue.Error(.Network(.FetchError(error))))
                 
@@ -91,7 +114,7 @@ public class HTTPAccess: NSObject, NSURLSessionDelegate {
             
             self.indicator?.pop()
         }
-
+        
         indicator?.push()
         task.resume()
     }
@@ -116,6 +139,7 @@ class HTTPDataSource: DataSource {
         }
     }
 }
+
 
 public func JSONArrayFromData(data: NSData) throws -> ContextlessJSONArray {
     let json = try NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions())

@@ -13,6 +13,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var appWidgetManager: AppWidgetManager?
     var appCoordinator: AppCoordinator?
+    var appNotifications: AppNotifications?
     var window: UIWindow?
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
@@ -21,6 +22,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         let appModel = AppModel()
         appWidgetManager = AppWidgetManager(favourites: appModel.favourites)
+        appNotifications = AppNotifications(settings: appModel.settings, httpAccess: appModel.httpAccess)
         
         if let window = window {
             let appCoordinator = AppCoordinator(appModel: appModel, rootWindow: window)
@@ -52,6 +54,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func applicationWillTerminate(application: UIApplication) {
     }
 
+    // -- MARK: Notifications
+    
+    func application(application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: NSError) {
+        appNotifications?.didFailToRegisterWithError(error)
+    }
+    
+    func application(application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: NSData) {
+        appNotifications?.didRegisterWithDeviceToken(deviceToken)
+    }
+    
+    func application(application: UIApplication, didReceiveRemoteNotification userInfo: [NSObject : AnyObject]) {
+        
+    }
 
 }
 

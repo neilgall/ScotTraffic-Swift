@@ -114,7 +114,7 @@
 		718F00C51BCEFC8000D51B43 /* SafetyCameraCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 718F00C11BCEFC8000D51B43 /* SafetyCameraCell.xib */; };
 		718F00C91BCEFF8800D51B43 /* TrafficCameraCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 718F00C81BCEFF8800D51B43 /* TrafficCameraCell.swift */; };
 		718F00CB1BCF070500D51B43 /* ImageDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 718F00CA1BCF070500D51B43 /* ImageDataSource.swift */; };
-		71CFA4CA1C14E2E9006666A1 /* Notifications.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71CFA4C91C14E2E9006666A1 /* Notifications.swift */; };
+		71CFA4CA1C14E2E9006666A1 /* AppNotifications.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71CFA4C91C14E2E9006666A1 /* AppNotifications.swift */; };
 		71F4B0B51C1439050022B0AD /* DeferredStartSpinner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71F4B0B41C1439050022B0AD /* DeferredStartSpinner.swift */; };
 		71F4B0B71C1477C80022B0AD /* BridgeStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71F4B0B61C1477C80022B0AD /* BridgeStatus.swift */; };
 		71F4B0B91C147B220022B0AD /* BridgeStatusCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71F4B0B81C147B220022B0AD /* BridgeStatusCell.swift */; };
@@ -254,7 +254,7 @@
 		718F00C11BCEFC8000D51B43 /* SafetyCameraCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SafetyCameraCell.xib; sourceTree = "<group>"; };
 		718F00C81BCEFF8800D51B43 /* TrafficCameraCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TrafficCameraCell.swift; sourceTree = "<group>"; };
 		718F00CA1BCF070500D51B43 /* ImageDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageDataSource.swift; sourceTree = "<group>"; };
-		71CFA4C91C14E2E9006666A1 /* Notifications.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Notifications.swift; sourceTree = "<group>"; };
+		71CFA4C91C14E2E9006666A1 /* AppNotifications.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppNotifications.swift; sourceTree = "<group>"; };
 		71F4B0B41C1439050022B0AD /* DeferredStartSpinner.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeferredStartSpinner.swift; sourceTree = "<group>"; };
 		71F4B0B61C1477C80022B0AD /* BridgeStatus.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BridgeStatus.swift; sourceTree = "<group>"; };
 		71F4B0B81C147B220022B0AD /* BridgeStatusCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BridgeStatusCell.swift; sourceTree = "<group>"; };
@@ -476,7 +476,7 @@
 				28F6009E1BDB8E3E00ED71CA /* NGSplitViewController.swift */,
 				28AF4A0A1BD849C0009B0AE8 /* PopoverContentSize.swift */,
 				287F75591C00E75E0040EE8A /* UserDefaultsMigration.swift */,
-				71CFA4C91C14E2E9006666A1 /* Notifications.swift */,
+				71CFA4C91C14E2E9006666A1 /* AppNotifications.swift */,
 			);
 			path = App;
 			sourceTree = "<group>";
@@ -739,7 +739,7 @@
 				71F4B0B91C147B220022B0AD /* BridgeStatusCell.swift in Sources */,
 				2804864F1BC074E4003BA360 /* AppErrors.swift in Sources */,
 				2865591A1BC2A7200058A35A /* FRP-UI-Extensions.swift in Sources */,
-				71CFA4CA1C14E2E9006666A1 /* Notifications.swift in Sources */,
+				71CFA4CA1C14E2E9006666A1 /* AppNotifications.swift in Sources */,
 				28875EA41BBC72FB00E67A16 /* Network.swift in Sources */,
 				28AF4A051BD6ECD9009B0AE8 /* SearchResultCell.swift in Sources */,
 				286157C81BF29BD2000C11D4 /* SettingsTableViewController.swift in Sources */,
