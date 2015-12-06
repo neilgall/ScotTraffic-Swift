@@ -34,12 +34,14 @@ public class MapItemCollectionViewCell: UICollectionViewCell {
         case TrafficCameraItem(TrafficCameraLocation, TrafficCamera)
         case SafetyCameraItem(SafetyCamera)
         case IncidentItem(Incident)
+        case BridgeStatusItem(BridgeStatus)
         
         var type: Type {
             switch self {
             case .TrafficCameraItem: return .TrafficCameraCell
             case .SafetyCameraItem: return .SafetyCameraCell
             case .IncidentItem: return .IncidentCell
+            case .BridgeStatusItem: return .BridgeStatusCell
             }
         }
         
@@ -53,6 +55,9 @@ public class MapItemCollectionViewCell: UICollectionViewCell {
                 
             case .IncidentItem(let incident):
                 return incident == selection.mapItem
+                
+            case .BridgeStatusItem(let bridgeStatus):
+                return bridgeStatus == selection.mapItem
             }
         }
         
@@ -66,6 +71,9 @@ public class MapItemCollectionViewCell: UICollectionViewCell {
             } else if let incident = mapItem as? Incident {
                 return [ IncidentItem(incident) ]
                 
+            } else if let bridgeStatus = mapItem as? BridgeStatus {
+                return [ BridgeStatusItem(bridgeStatus) ]
+            
             } else {
                 fatalError("Unexpected mapItem \(mapItem)")
             }

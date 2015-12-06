@@ -98,11 +98,17 @@ public class MapViewModel {
             expandedVisibleMapRect,
             combine: mapItemsFromRect)
         
-        let mapItemGroups: Observable<[MapItemGroup]> = combine(trafficCameras, safetyCameras, alerts, roadworks, delegate) {
-            guard let delegate = $4 else {
+        let bridges = combine(
+            scotTraffic.bridges,
+            scotTraffic.settings.showBridgesOnMap,
+            expandedVisibleMapRect,
+            combine: mapItemsFromRect)
+        
+        let mapItemGroups: Observable<[MapItemGroup]> = combine(trafficCameras, safetyCameras, alerts, roadworks, bridges, delegate) {
+            guard let delegate = $5 else {
                 return []
             }
-            return groupMapItems([$0, $1, $2, $3].flatten(), delegate: delegate)
+            return groupMapItems([$0, $1, $2, $3, $4].flatten(), delegate: delegate)
         }
         
         annotations = mapItemGroups.map({

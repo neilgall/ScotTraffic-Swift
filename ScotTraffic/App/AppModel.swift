@@ -15,6 +15,7 @@ public class AppModel: ScotTraffic {
     public let safetyCameras: Observable<[SafetyCamera]>
     public let alerts: Observable<[Incident]>
     public let roadworks: Observable<[Incident]>
+    public let bridges: Observable<[BridgeStatus]>
     public let weather: Observable<WeatherFinder>
     public let settings: Settings
     public let favourites: Favourites
@@ -72,6 +73,14 @@ public class AppModel: ScotTraffic {
         self.alerts = allIncidents.map({ $0.filter({ $0.type == IncidentType.Alert }) }).latest()
         self.roadworks = allIncidents.map({ $0.filter({ $0.type == IncidentType.Roadworks }) }).latest()
         
+        // -- Bridge Status --
+        
+        let bridgeStatusSource = cachedDataSource(maximumCacheAge: 600)(path: "bridges.json")
+        let bridges = bridgeStatusSource.value.map {
+            $0.map(Array<BridgeStatus>.decodeJSON(Void) <== JSONArrayFromData)
+        }
+        self.bridges = bridges.map({ $0.value ?? [] }).latest()
+        
         
         // -- Weather --
         
@@ -89,7 +98,7 @@ public class AppModel: ScotTraffic {
         
         // -- Auto refresh --
         
-        let fiveMinuteRefresh = PeriodicStarter(startables: [trafficCamerasSource, incidentsSource], period: 300)
+        let fiveMinuteRefresh = PeriodicStarter(startables: [trafficCamerasSource, incidentsSource, bridgeStatusSource], period: 300)
         let halfHourlyRefresh = PeriodicStarter(startables: [safetyCamerasSource, weatherSource], period: 1800)
         self.fetchStarters = [fiveMinuteRefresh, halfHourlyRefresh]
         
@@ -103,3 +112,4 @@ public class AppModel: ScotTraffic {
         }))
     }
 }
+

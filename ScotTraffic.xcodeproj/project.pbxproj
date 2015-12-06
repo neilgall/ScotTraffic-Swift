@@ -115,6 +115,8 @@
 		718F00C91BCEFF8800D51B43 /* TrafficCameraCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 718F00C81BCEFF8800D51B43 /* TrafficCameraCell.swift */; };
 		718F00CB1BCF070500D51B43 /* ImageDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 718F00CA1BCF070500D51B43 /* ImageDataSource.swift */; };
 		71F4B0B51C1439050022B0AD /* DeferredStartSpinner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71F4B0B41C1439050022B0AD /* DeferredStartSpinner.swift */; };
+		71F4B0B71C1477C80022B0AD /* BridgeStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71F4B0B61C1477C80022B0AD /* BridgeStatus.swift */; };
+		71F4B0B91C147B220022B0AD /* BridgeStatusCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71F4B0B81C147B220022B0AD /* BridgeStatusCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -252,6 +254,8 @@
 		718F00C81BCEFF8800D51B43 /* TrafficCameraCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TrafficCameraCell.swift; sourceTree = "<group>"; };
 		718F00CA1BCF070500D51B43 /* ImageDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageDataSource.swift; sourceTree = "<group>"; };
 		71F4B0B41C1439050022B0AD /* DeferredStartSpinner.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeferredStartSpinner.swift; sourceTree = "<group>"; };
+		71F4B0B61C1477C80022B0AD /* BridgeStatus.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BridgeStatus.swift; sourceTree = "<group>"; };
+		71F4B0B81C147B220022B0AD /* BridgeStatusCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BridgeStatusCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -492,6 +496,7 @@
 			children = (
 				284DE0991BBDDEB800E6A678 /* Core */,
 				280486581BC0917B003BA360 /* MapItem.swift */,
+				71F4B0B61C1477C80022B0AD /* BridgeStatus.swift */,
 				289201D11BBC580300DA4A9A /* TrafficCameras.swift */,
 				28DB3BF41BC02892001AAC2A /* SafetyCameras.swift */,
 				28DB3BF91BC02C88001AAC2A /* Incidents.swift */,
@@ -538,6 +543,7 @@
 				718F00C01BCEFC8000D51B43 /* IncidentCell.xib */,
 				288AC8921BCFB954004EA6A0 /* IncidentCell.swift */,
 				718F00BE1BCEFC8000D51B43 /* BridgeStatusCell.xib */,
+				71F4B0B81C147B220022B0AD /* BridgeStatusCell.swift */,
 				71F4B0B41C1439050022B0AD /* DeferredStartSpinner.swift */,
 			);
 			name = CollectionView;
@@ -727,6 +733,7 @@
 			files = (
 				288AC8911BCFABE2004EA6A0 /* SafetyCameraCell.swift in Sources */,
 				283A90561BF4035B00BB5C46 /* WeatherViewController.swift in Sources */,
+				71F4B0B91C147B220022B0AD /* BridgeStatusCell.swift in Sources */,
 				2804864F1BC074E4003BA360 /* AppErrors.swift in Sources */,
 				2865591A1BC2A7200058A35A /* FRP-UI-Extensions.swift in Sources */,
 				28875EA41BBC72FB00E67A16 /* Network.swift in Sources */,
@@ -763,6 +770,7 @@
 				2813B2D91BE647550017F847 /* DiskCache.swift in Sources */,
 				710535651BCC141C00FDB70C /* UserDefaultsProtocol.swift in Sources */,
 				28DB3BF31BC025D0001AAC2A /* Functions.swift in Sources */,
+				71F4B0B71C1477C80022B0AD /* BridgeStatus.swift in Sources */,
 				286157CF1BF2A3C3000C11D4 /* SettingsEnumTableViewCell.swift in Sources */,
 				280486531BC08711003BA360 /* SearchViewController.swift in Sources */,
 				280486571BC087F4003BA360 /* Settings.swift in Sources */,

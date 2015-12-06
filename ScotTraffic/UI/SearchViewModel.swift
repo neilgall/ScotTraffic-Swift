@@ -62,8 +62,14 @@ public class SearchViewModel {
             searchTerm,
             combine: applyFilterToMapItems)
         
-        let combinedResults: Observable<[MapItem]> = combine(trafficCameras, safetyCameras, alerts, roadworks) {
-            return $0 + $1 + $2 + $3
+        let bridges = combine(
+            scotTraffic.bridges,
+            scotTraffic.settings.showBridgesOnMap,
+            searchTerm,
+            combine: applyFilterToMapItems)
+        
+        let combinedResults: Observable<[MapItem]> = combine(trafficCameras, safetyCameras, alerts, roadworks, bridges) {
+            return Array([$0, $1, $2, $3, $4].flatten())
         }
             
         let searchResults = combinedResults.map { $0.sortGeographically() }.latest()

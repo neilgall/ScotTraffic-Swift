@@ -15,6 +15,7 @@ public protocol ScotTraffic {
     var safetyCameras: Observable<[SafetyCamera]> { get }
     var alerts: Observable<[Incident]> { get }
     var roadworks: Observable<[Incident]> { get }
+    var bridges: Observable<[BridgeStatus]> { get }
     var weather: Observable<WeatherFinder> { get }
     var settings: Settings { get }
     var favourites: Favourites { get }

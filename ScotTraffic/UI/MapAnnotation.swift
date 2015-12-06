@@ -38,8 +38,9 @@ public class MapAnnotation: NSObject, MKAnnotation {
         let safetyCameraCount = mapItems.filter(isSafetyCamera).count
         let alertCount = mapItems.filter(isAlert).count
         let roadworksCount = mapItems.filter(isRoadworks).count
+        let bridgeCount = mapItems.filter(isBridgeStatus).count
 
-        reuseIdentifier = "\(trafficCameraCount > 0).\(availableTrafficCameraCount > 0).\(safetyCameraCount > 0).\(alertCount > 0).\(roadworksCount > 0)"
+        reuseIdentifier = "\(trafficCameraCount > 0).\(availableTrafficCameraCount > 0).\(safetyCameraCount > 0).\(alertCount > 0).\(roadworksCount > 0).\(bridgeCount > 0)"
         
         var imageComponents = [String]()
  
@@ -58,6 +59,9 @@ public class MapAnnotation: NSObject, MKAnnotation {
         
         } else if roadworksCount > 0 {
             imageComponents.append("roadworks")
+
+        } else if bridgeCount > 0 {
+            imageComponents.append("bridge")
         }
         
         image = compositeImagesNamed(imageComponents)
@@ -108,4 +112,8 @@ private func isRoadworks(mapItem: MapItem) -> Bool {
         return false
     }
     return incident.type == IncidentType.Roadworks
+}
+
+private func isBridgeStatus(mapItem: MapItem) -> Bool {
+    return mapItem as? BridgeStatus != nil
 }
