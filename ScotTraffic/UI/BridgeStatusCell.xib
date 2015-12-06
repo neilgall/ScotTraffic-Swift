@@ -85,6 +85,9 @@
                         <state key="normal" image="702-share">
                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                         </state>
+                        <connections>
+                            <action selector="share" destination="gTV-IL-0wX" eventType="touchUpInside" id="Ltn-iP-Q4o"/>
+                        </connections>
                     </button>
                 </subviews>
                 <animations/>
