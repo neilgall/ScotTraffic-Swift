@@ -15,14 +15,14 @@ class IncidentCell: MapItemCollectionViewCellWithMap {
     @IBOutlet var iconImageView: UIImageView?
     @IBOutlet var dateLabel: UILabel?
     @IBOutlet var titleLabel: UILabel?
-    @IBOutlet var textLabel: UILabel?
+    @IBOutlet var textView: UITextView?
     @IBOutlet var shareButton: UIButton?
 
     private var item: SharableIncident?
     private var observations = [Observation]()
     
     override func configure(item: Item) {
-        textLabel?.text = nil
+        textView?.text = nil
         
         if case .IncidentItem(let incident) = item {
             iconImageView?.image = iconForIncidentType(incident.type)
@@ -43,7 +43,7 @@ class IncidentCell: MapItemCollectionViewCellWithMap {
             // view controller, defer setting the text to avoid a stutter in the animation.
             dispatch_async(dispatch_get_main_queue()) {
                 let text = formatIncidentHTMLText(incident.text)
-                self.textLabel?.text = text
+                self.textView?.text = text
                 self.setNeedsLayout()
                 
                 self.item = SharableIncident(name: text, type: incident.type, link: incident.url, mapImage: self.mapImage.latest())
@@ -52,8 +52,8 @@ class IncidentCell: MapItemCollectionViewCellWithMap {
     }
     
     @IBAction func share() {
-        if let item = item {
-            let rect = convertRect(shareButton!.bounds, fromView: shareButton!)
+        if let item = item, shareButton = shareButton {
+            let rect = convertRect(shareButton.bounds, fromView: shareButton)
             delegate?.collectionViewCell(self, didRequestShareItem: item, fromRect: rect)
         }
     }
