@@ -114,6 +114,7 @@
 		718F00C51BCEFC8000D51B43 /* SafetyCameraCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 718F00C11BCEFC8000D51B43 /* SafetyCameraCell.xib */; };
 		718F00C91BCEFF8800D51B43 /* TrafficCameraCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 718F00C81BCEFF8800D51B43 /* TrafficCameraCell.swift */; };
 		718F00CB1BCF070500D51B43 /* ImageDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 718F00CA1BCF070500D51B43 /* ImageDataSource.swift */; };
+		71F4B0B51C1439050022B0AD /* DeferredStartSpinner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71F4B0B41C1439050022B0AD /* DeferredStartSpinner.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -250,6 +251,7 @@
 		718F00C11BCEFC8000D51B43 /* SafetyCameraCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SafetyCameraCell.xib; sourceTree = "<group>"; };
 		718F00C81BCEFF8800D51B43 /* TrafficCameraCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TrafficCameraCell.swift; sourceTree = "<group>"; };
 		718F00CA1BCF070500D51B43 /* ImageDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageDataSource.swift; sourceTree = "<group>"; };
+		71F4B0B41C1439050022B0AD /* DeferredStartSpinner.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeferredStartSpinner.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -536,6 +538,7 @@
 				718F00C01BCEFC8000D51B43 /* IncidentCell.xib */,
 				288AC8921BCFB954004EA6A0 /* IncidentCell.swift */,
 				718F00BE1BCEFC8000D51B43 /* BridgeStatusCell.xib */,
+				71F4B0B41C1439050022B0AD /* DeferredStartSpinner.swift */,
 			);
 			name = CollectionView;
 			sourceTree = "<group>";
@@ -743,6 +746,7 @@
 				287F75581C00DC200040EE8A /* AppWidgetManager.swift in Sources */,
 				2865591E1BC316590058A35A /* AppCoordinator.swift in Sources */,
 				280388021C0F9AC300F8C149 /* WebViewController.swift in Sources */,
+				71F4B0B51C1439050022B0AD /* DeferredStartSpinner.swift in Sources */,
 				2879A9741BEE5DA900923FFE /* CalloutContainerView.swift in Sources */,
 				286559271BC32D880058A35A /* ImageCompositor.swift in Sources */,
 				28DB3BFA1BC02C88001AAC2A /* Incidents.swift in Sources */,

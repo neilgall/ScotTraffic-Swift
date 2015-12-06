@@ -14,10 +14,11 @@ class SafetyCameraCell: MapItemCollectionViewCellWithMap {
     @IBOutlet var roadLabel: UILabel?
     @IBOutlet var descriptionLabel: UILabel?
     @IBOutlet var imageView: UIImageView?
+    @IBOutlet var spinner: DeferredStartSpinner?
     @IBOutlet var shareButton: UIButton?
 
     private var item: Item?
-    private var image: Observable<UIImage?>?
+    private var image: Observable<DataSourceImage>?
     private var observations = [Observation]()
     
     override func configure(item: Item) {
@@ -35,19 +36,34 @@ class SafetyCameraCell: MapItemCollectionViewCellWithMap {
                 descriptionLabel?.text = safetyCamera.name
             }
 
-            configureMap(safetyCamera)
+            spinner?.startAnimatingDeferred()
 
             // image from server if available, otherwise map image
-            let serverImage = safetyCamera.imageValue.map({ (dsv: DataSourceValue<UIImage>) -> UIImage? in dsv.value })
-            let imageSelector = union(serverImage, isNil(serverImage).gate(mapImage))
+            let serverImage = safetyCamera.imageValue
+            let serverImageIsNil = serverImage.map({
+                $0.value == nil
+            })
+
+            // wrap a map image in a DataSourceImage so we can union the two
+            let mapImage = self.mapImage.map(DataSourceValue.fromOptional)
+            
+            let imageSelector = union(serverImage, serverImageIsNil.gate(mapImage))
             
             observations.append(imageSelector.output { [weak self] image in
-                if let image = image {
+                switch image {
+                case .Cached(let image, let expired):
                     self?.imageView?.image = applyGradientMask(image)
-                    self?.mapView?.hidden = true
-                } else {
+                    if !expired {
+                        self?.spinner?.stopAnimating()
+                    }
+                    
+                case .Fresh(let image):
+                    self?.imageView?.image = applyGradientMask(image)
+                    self?.spinner?.stopAnimating()
+
+                case .Empty, .Error:
                     self?.imageView?.image = nil
-                    self?.mapView?.hidden = false
+                    self?.spinner?.stopAnimating()
                 }
             })
             
@@ -58,13 +74,18 @@ class SafetyCameraCell: MapItemCollectionViewCellWithMap {
             // keep the original image for sharing
             self.image = imageSelector.latest()
             safetyCamera.updateImage()
+
+            if let bg = imageView {
+                // start rendering the map
+                configureMap(safetyCamera, forReferenceView: bg)
+            }
         }
     }
     
     @IBAction func share() {
         if let item = item, case .SafetyCameraItem(let safetyCamera) = item {
             let coordinate = MKCoordinateForMapPoint(safetyCamera.mapPoint)
-            let image = self.image?.pullValue?.flatMap { $0 }
+            let image = self.image?.pullValue?.value
             let shareItem = SharableSafetyCamera(name: safetyCamera.name, image: image, coordinate: coordinate, link: safetyCamera.url)
             let rect = convertRect(shareButton!.bounds, fromView: shareButton!)
             delegate?.collectionViewCell(self, didRequestShareItem: shareItem, fromRect: rect)

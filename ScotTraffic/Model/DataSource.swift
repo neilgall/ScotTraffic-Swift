@@ -22,6 +22,16 @@ public protocol DataSource: Startable {
 }
 
 public extension DataSourceValue {
+    
+    // Construct a DataSourceValue from an optional of the same ValueType
+    public static func fromOptional(optional: ValueType?) -> DataSourceValue {
+        if let value = optional {
+            return .Fresh(value)
+        } else {
+            return .Empty
+        }
+    }
+    
     public func map<TargetValueType>(transform: ValueType throws -> TargetValueType) -> DataSourceValue<TargetValueType> {
         do {
             switch self {

@@ -29,7 +29,9 @@ class IncidentCell: MapItemCollectionViewCellWithMap {
             titleLabel?.text = incident.name
             dateLabel?.text = formatIncidentDate(incident.date)
 
-            configureMap(incident)
+            if let bg = backgroundImageView {
+                configureMap(incident, forReferenceView: bg)
+            }
             
             observations.append(mapImage.map(applyGradientMask) => { [weak self] image in
                 self?.backgroundImageView?.image = image

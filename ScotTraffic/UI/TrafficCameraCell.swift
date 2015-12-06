@@ -8,13 +8,11 @@
 
 import UIKit
 
-private let spinnerAppearanceDelay = 1.5
-
 class TrafficCameraCell: MapItemCollectionViewCell {
     
     @IBOutlet var imageView: UIImageView?
     @IBOutlet var errorLabel: UILabel?
-    @IBOutlet var spinner: UIActivityIndicatorView?
+    @IBOutlet var spinner: DeferredStartSpinner?
     @IBOutlet var titleLabel: UILabel?
     @IBOutlet var favouriteButton: UIButton?
     @IBOutlet var shareButton: UIButton?
@@ -23,7 +21,6 @@ class TrafficCameraCell: MapItemCollectionViewCell {
     private var favouriteItem: FavouriteTrafficCamera?
     private var image: Observable<DataSourceImage>?
     private var observations = [Observation]()
-    private weak var spinnerTimer: NSTimer?
     
     override func configure(item: Item) {
         if case .TrafficCameraItem(let location, let camera) = item {
@@ -34,7 +31,7 @@ class TrafficCameraCell: MapItemCollectionViewCell {
             titleLabel?.text = locationName
 
             updateFavouriteButton()
-            startSpinnerDeferred()
+            spinner?.startAnimatingDeferred()
         
             let imageValue = camera.imageValue
             
@@ -44,18 +41,18 @@ class TrafficCameraCell: MapItemCollectionViewCell {
                     self?.errorLabel?.hidden = true
                     self?.imageView?.image = image
                     if !expired {
-                        self?.stopSpinner()
+                        self?.spinner?.stopAnimating()
                     }
                     
                 case .Fresh(let image):
                     self?.errorLabel?.hidden = true
                     self?.imageView?.image = image
-                    self?.stopSpinner()
+                    self?.spinner?.stopAnimating()
                     
                 case .Error, .Empty:
                     self?.errorLabel?.hidden = false
                     self?.imageView?.image = nil
-                    self?.stopSpinner()
+                    self?.spinner?.stopAnimating()
                 }
             })
         
@@ -67,20 +64,6 @@ class TrafficCameraCell: MapItemCollectionViewCell {
             self.image = imageValue.latest()
             camera.updateImage()
         }
-    }
-    
-    private func startSpinnerDeferred() {
-        self.spinnerTimer = NSTimer.scheduledTimerWithTimeInterval(spinnerAppearanceDelay, target: self, selector: Selector("startSpinner"), userInfo: nil, repeats: false)
-    }
-    
-    func startSpinner() {
-        self.spinner?.startAnimating()
-        self.spinnerTimer?.invalidate()
-    }
-    
-    private func stopSpinner() {
-        self.spinner?.stopAnimating()
-        self.spinnerTimer?.invalidate()
     }
     
     private func updateFavouriteButton() {
@@ -113,8 +96,7 @@ class TrafficCameraCell: MapItemCollectionViewCell {
         errorLabel?.hidden = true
         titleLabel?.text = nil
         imageView?.image = nil
-        
-        stopSpinner()
+        spinner?.stopAnimating()
     }
 }
 

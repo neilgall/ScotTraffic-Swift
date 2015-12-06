@@ -9,39 +9,55 @@
 import MapKit
 
 private let mapRectSize: Double = 4000
+private let renderStartTimeout: NSTimeInterval = 1.0
 
 class MapItemCollectionViewCellWithMap : MapItemCollectionViewCell, MKMapViewDelegate {
     
-    @IBOutlet var mapView: MKMapView?
+    private var mapView: MKMapView?
 
     var mapImage: Input<UIImage?> = Input(initial: nil)
 
-    func configureMap(mapItem: MapItem) {
-        if let mapView = mapView {
-            let origin = MKMapPoint(x: mapItem.mapPoint.x - mapRectSize * 0.5, y: mapItem.mapPoint.y - mapRectSize * 0.65)
-            let mapRect = MKMapRect(origin: origin, size: MKMapSize(width: mapRectSize, height: mapRectSize))
-            
-            mapView.alpha = 0
-            mapView.visibleMapRect = mapView.mapRectThatFits(mapRect)
-            mapView.addAnnotation(MapAnnotation(mapItems: [mapItem]))
+    func configureMap(mapItem: MapItem, forReferenceView view: UIView) {
+        let mapView = MKMapView(frame: view.frame)
+        mapView.delegate = self
+        mapView.translatesAutoresizingMaskIntoConstraints = false
+        view.superview!.insertSubview(mapView, atIndex: 0)
+        for attr: NSLayoutAttribute in [.Top, .Bottom, .Left, .Right] {
+            view.superview!.addConstraint(NSLayoutConstraint(item: mapView, attribute: attr, relatedBy: .Equal, toItem: view, attribute: attr, multiplier: 1.0, constant: 0))
         }
+        
+        let origin = MKMapPoint(x: mapItem.mapPoint.x - mapRectSize * 0.5, y: mapItem.mapPoint.y - mapRectSize * 0.65)
+        let mapRect = MKMapRect(origin: origin, size: MKMapSize(width: mapRectSize, height: mapRectSize))
+        
+        mapView.alpha = 0
+        mapView.visibleMapRect = mapView.mapRectThatFits(mapRect)
+        mapView.addAnnotation(MapAnnotation(mapItems: [mapItem]))
+        
+        self.mapView = mapView
     }
     
     override func prepareForReuse() {
+        mapView?.removeFromSuperview()
         mapImage.value = nil
-        if let mapView = mapView {
-            mapView.removeAnnotations(mapView.annotations)
-            mapView.visibleMapRect = MKMapRect(origin: MKMapPoint(x: 0, y: 0), size: MKMapSize(width: 0, height: 0))
-        }
+        mapView = nil
     }
 
+    private func takeSnapshotOfRenderedMap() {
+        if let mapView = mapView {
+            mapView.alpha = 1
+            mapImage.value = mapView.snapshotImage()
+            mapView.alpha = 0
+            
+            mapView.removeFromSuperview()
+            self.mapView = nil
+        }
+    }
+    
     // -- MARK: MKMapViewDelegate
     
     func mapViewDidFinishRenderingMap(mapView: MKMapView, fullyRendered: Bool) {
         if fullyRendered {
-            mapView.alpha = 1
-            mapImage.value = mapView.snapshotImage()
-            mapView.alpha = 0
+            takeSnapshotOfRenderedMap()
         }
     }
 }
