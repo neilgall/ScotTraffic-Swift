@@ -39,8 +39,10 @@ class TrafficCameraCell: MapItemCollectionViewCell {
                 switch image {
                 case .Cached(let image, let expired):
                     self?.errorLabel?.hidden = true
-                    self?.imageView?.image = image
-                    if !expired {
+                    if expired {
+                        self?.imageView?.image = imageWithGrayColorspace(image)
+                    } else {
+                        self?.imageView?.image = image
                         self?.spinner?.stopAnimating()
                     }
                     
@@ -51,7 +53,6 @@ class TrafficCameraCell: MapItemCollectionViewCell {
                     
                 case .Error, .Empty:
                     self?.errorLabel?.hidden = false
-                    self?.imageView?.image = nil
                     self?.spinner?.stopAnimating()
                 }
             })
@@ -71,9 +72,9 @@ class TrafficCameraCell: MapItemCollectionViewCell {
     }
     
     @IBAction func share() {
-        if let name = locationName, let image = image?.pullValue {
+        if let shareButton = shareButton, name = locationName, let image = image?.pullValue {
             let item = SharableTrafficCamera(name: name, image: image.value)
-            let rect = convertRect(shareButton!.bounds, fromView: shareButton!)
+            let rect = convertRect(shareButton.bounds, fromView: shareButton)
             delegate?.collectionViewCell(self, didRequestShareItem: item, fromRect: rect)
         }
     }
@@ -108,4 +109,25 @@ private struct SharableTrafficCamera: SharableItem {
     var text: String {
         return "Traffic Camera Image: \(name)\n\nShared using ScotTraffic"
     }
+}
+
+private func imageWithGrayColorspace(image: UIImage?) -> UIImage? {
+    guard let image = image else {
+        return nil
+    }
+    
+    let size = image.size
+    
+    let context = CGBitmapContextCreate(nil,
+        Int(size.width),
+        Int(size.height),
+        8,
+        Int(size.width),
+        CGColorSpaceCreateDeviceGray(),
+        CGImageAlphaInfo.None.rawValue)
+
+    CGContextDrawImage(context, CGRect(origin: CGPointZero, size: size), image.CGImage)
+    let grayImage = CGBitmapContextCreateImage(context)
+    
+    return grayImage.map { UIImage(CGImage: $0) }
 }
