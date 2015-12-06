@@ -59,8 +59,6 @@ class IncidentCell: MapItemCollectionViewCellWithMap {
     }
     
     override func prepareForReuse() {
-        super.prepareForReuse()
-        
         observations.removeAll()
         item = nil
         
@@ -68,6 +66,8 @@ class IncidentCell: MapItemCollectionViewCellWithMap {
         titleLabel?.text = nil
         dateLabel?.text = nil
         backgroundImageView?.image = nil
+
+        super.prepareForReuse()
     }
 }
 

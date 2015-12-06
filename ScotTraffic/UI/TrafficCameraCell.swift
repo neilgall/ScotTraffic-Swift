@@ -86,8 +86,6 @@ class TrafficCameraCell: MapItemCollectionViewCell {
     }
     
     override func prepareForReuse() {
-        super.prepareForReuse()
-        
         observations.removeAll()
         image = nil
         locationName = nil
@@ -97,6 +95,8 @@ class TrafficCameraCell: MapItemCollectionViewCell {
         titleLabel?.text = nil
         imageView?.image = nil
         spinner?.stopAnimating()
+
+        super.prepareForReuse()
     }
 }
 

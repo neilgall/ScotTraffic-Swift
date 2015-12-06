@@ -93,8 +93,6 @@ class SafetyCameraCell: MapItemCollectionViewCellWithMap {
     }
     
     override func prepareForReuse() {
-        super.prepareForReuse()
-        
         observations.removeAll()
         image = nil
         mapImage.value = nil
@@ -103,7 +101,9 @@ class SafetyCameraCell: MapItemCollectionViewCellWithMap {
         roadLabel?.text = nil
         descriptionLabel?.text = nil
         imageView?.image = nil
-    }    
+
+        super.prepareForReuse()
+    }
 }
 
 private func iconForSpeedLimit(speedLimit: SpeedLimit) -> UIImage? {
