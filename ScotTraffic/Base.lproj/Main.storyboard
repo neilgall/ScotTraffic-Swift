@@ -80,14 +80,14 @@
                                             </constraints>
                                         </imageView>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Nmi-pt-Lev">
-                                            <rect key="frame" x="60" y="11" width="42" height="21"/>
+                                            <rect key="frame" x="60" y="11.5" width="42" height="20.5"/>
                                             <animations/>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" horizontalCompressionResistancePriority="1000" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="dWu-1O-8b1">
-                                            <rect key="frame" x="543" y="6" width="51" height="31"/>
+                                            <rect key="frame" x="539" y="6" width="51" height="31"/>
                                             <animations/>
                                             <connections>
                                                 <action selector="toggleSwitchChangedValue:" destination="hJa-Qv-D1I" eventType="valueChanged" id="2km-FO-Ngb"/>
@@ -102,7 +102,7 @@
                                         <constraint firstItem="Uxs-iF-RLL" firstAttribute="leading" secondItem="Dos-yT-Bg7" secondAttribute="leadingMargin" id="dOv-OD-eWQ"/>
                                         <constraint firstItem="Nmi-pt-Lev" firstAttribute="leading" secondItem="Uxs-iF-RLL" secondAttribute="trailing" constant="8" id="gTR-wi-QZP"/>
                                         <constraint firstAttribute="bottomMargin" secondItem="Uxs-iF-RLL" secondAttribute="bottom" constant="-9" id="mRR-y4-5kw"/>
-                                        <constraint firstAttribute="trailingMargin" secondItem="dWu-1O-8b1" secondAttribute="trailing" id="oyI-0H-Apr"/>
+                                        <constraint firstAttribute="trailingMargin" secondItem="dWu-1O-8b1" secondAttribute="trailing" constant="4" id="oyI-0H-Apr"/>
                                         <constraint firstItem="Nmi-pt-Lev" firstAttribute="centerY" secondItem="dWu-1O-8b1" secondAttribute="centerY" id="tol-5P-Mab"/>
                                     </constraints>
                                 </tableViewCellContentView>
@@ -136,14 +136,14 @@
                                             </constraints>
                                         </imageView>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="sqm-VN-pSk">
-                                            <rect key="frame" x="60" y="11" width="42" height="21"/>
+                                            <rect key="frame" x="60" y="11.5" width="42" height="20.5"/>
                                             <animations/>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <segmentedControl opaque="NO" contentMode="scaleToFill" horizontalCompressionResistancePriority="740" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="fh5-Kb-sBH">
-                                            <rect key="frame" x="471" y="8" width="121" height="29"/>
+                                            <rect key="frame" x="467" y="8" width="121" height="29"/>
                                             <animations/>
                                             <segments>
                                                 <segment title="First"/>
@@ -163,7 +163,7 @@
                                         <constraint firstItem="sqm-VN-pSk" firstAttribute="leading" secondItem="afO-nc-Gf0" secondAttribute="trailing" constant="8" id="ngd-4Z-e5w"/>
                                         <constraint firstAttribute="bottomMargin" secondItem="afO-nc-Gf0" secondAttribute="bottom" constant="-9" id="piI-Pr-8Bh"/>
                                         <constraint firstItem="afO-nc-Gf0" firstAttribute="centerY" secondItem="fh5-Kb-sBH" secondAttribute="centerY" id="vQd-Am-i3w"/>
-                                        <constraint firstAttribute="trailingMargin" secondItem="fh5-Kb-sBH" secondAttribute="trailing" id="zZT-h6-Jc2"/>
+                                        <constraint firstAttribute="trailingMargin" secondItem="fh5-Kb-sBH" secondAttribute="trailing" constant="4" id="zZT-h6-Jc2"/>
                                     </constraints>
                                 </tableViewCellContentView>
                                 <animations/>
@@ -184,7 +184,7 @@
                                             <rect key="frame" x="15" y="12" width="31.5" height="19.5"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="16"/>
-                                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                            <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Detail" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="r5L-tl-1MI">

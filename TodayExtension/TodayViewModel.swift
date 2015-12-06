@@ -18,7 +18,7 @@ class TodayViewModel {
     let canMoveToNext: Observable<Bool>
     
     let diskCache: DiskCache
-    let fetcher: HTTPFetcher
+    let httpAccess: HTTPAccess
     let trafficCamerasSource: DataSource
     let weatherSource: DataSource
     let favourites: Favourites
@@ -29,16 +29,16 @@ class TodayViewModel {
     
     init() {
         let diskCache = DiskCache(withPath: "scottraffic")
-        let fetcher = HTTPFetcher(baseURL: ScotTrafficBaseURL, indicator: nil)
+        let httpAccess = HTTPAccess(baseURL: ScotTrafficBaseURL, indicator: nil)
         
-        let cachedDataSource = CachedHTTPDataSource.dataSourceWithFetcher(fetcher, cache: diskCache)
+        let cachedDataSource = CachedHTTPDataSource.dataSourceWithHTTPAccess(httpAccess, cache: diskCache)
         
         guard let userDefaults = NSUserDefaults(suiteName: ScotTrafficAppGroup) else {
             fatalError("cannot create NSUserDefaults with suiteName \(ScotTrafficAppGroup)")
         }
         
         self.diskCache = diskCache
-        self.fetcher = fetcher
+        self.httpAccess = httpAccess
         self.settings = TodaySettings(userDefaults: userDefaults)
         
         // -- traffic cameras

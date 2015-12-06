@@ -20,6 +20,8 @@ public class Settings {
     public let showCurrentLocationOnMap: PersistentSetting<Bool>
     public let temperatureUnit: PersistentSetting<TemperatureUnit>
     public let visibleMapRect: PersistentSetting<MKMapRect>
+    public let tayBridgeNotifications: PersistentSetting<Bool>
+    public let forthBridgeNotifications: PersistentSetting<Bool>
     
     public init(userDefaults: UserDefaultsProtocol) {
         showTrafficOnMap = userDefaults.boolSetting("showTrafficOnMap", false)
@@ -32,6 +34,8 @@ public class Settings {
         temperatureUnit = userDefaults.enumSetting("temperatureUnit", TemperatureUnit.Celcius)
         visibleMapRect = userDefaults.setting("visibleMapRect", scotlandMapRect,
             to: { stringFromMapRect($0) }, from: { ($0 as? String).flatMap(mapRectFromString) })
+        tayBridgeNotifications = userDefaults.boolSetting("tayBridgeNotifications", false)
+        forthBridgeNotifications = userDefaults.boolSetting("forthBridgeNotifications", false)
         
         reload()
     }
@@ -46,6 +50,8 @@ public class Settings {
         showCurrentLocationOnMap.start()
         temperatureUnit.start()
         visibleMapRect.start()
+        tayBridgeNotifications.start()
+        forthBridgeNotifications.start()
     }
 }
 

@@ -20,7 +20,7 @@ public class AppModel: ScotTraffic {
     public let settings: Settings
     public let favourites: Favourites
     
-    public let fetcher: HTTPFetcher
+    public let httpAccess: HTTPAccess
 
     private let diskCache: DiskCache
     private let fetchStarters: [PeriodicStarter]
@@ -28,16 +28,16 @@ public class AppModel: ScotTraffic {
     
     public init() {
         let diskCache = DiskCache(withPath: "scottraffic")
-        let fetcher = HTTPFetcher(baseURL: ScotTrafficBaseURL, indicator: AppNetworkActivityIndicator())
+        let httpAccess = HTTPAccess(baseURL: ScotTrafficBaseURL, indicator: AppNetworkActivityIndicator())
         
-        let cachedDataSource = CachedHTTPDataSource.dataSourceWithFetcher(fetcher, cache: diskCache)
+        let cachedDataSource = CachedHTTPDataSource.dataSourceWithHTTPAccess(httpAccess, cache: diskCache)
         
         guard let userDefaults = NSUserDefaults(suiteName: ScotTrafficAppGroup) else {
             fatalError("unable to create NSUserDefaults with suite name \(ScotTrafficAppGroup)")
         }
 
         self.diskCache = diskCache
-        self.fetcher = fetcher
+        self.httpAccess = httpAccess
         self.settings = Settings(userDefaults: userDefaults)
         
         
@@ -75,7 +75,7 @@ public class AppModel: ScotTraffic {
         
         // -- Bridge Status --
         
-        let bridgeStatusSource = cachedDataSource(maximumCacheAge: 600)(path: "bridges.json")
+        let bridgeStatusSource = cachedDataSource(maximumCacheAge: 1)(path: "bridges.json")
         let bridges = bridgeStatusSource.value.map {
             $0.map(Array<BridgeStatus>.decodeJSON(Void) <== JSONArrayFromData)
         }
@@ -105,7 +105,7 @@ public class AppModel: ScotTraffic {
         
         // -- Refresh on restoring internet connection
         
-        self.observers.append(fetcher.serverIsReachable.onRisingEdge({
+        self.observers.append(httpAccess.serverIsReachable.onRisingEdge({
             for starter in self.fetchStarters {
                 starter.restart(fireImmediately: true)
             }

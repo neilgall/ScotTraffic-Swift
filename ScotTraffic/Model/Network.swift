@@ -8,8 +8,6 @@
 
 import UIKit
 
-let HTTPFetcherErrorDomain = "HTTPFetcherErrorDomain"
-
 public enum NetworkError : ErrorType {
     case MalformedURL
     case FetchError(NSError)
@@ -24,7 +22,7 @@ public enum NetworkError : ErrorType {
     }
 }
 
-public class HTTPFetcher: NSObject, NSURLSessionDelegate {
+public class HTTPAccess: NSObject, NSURLSessionDelegate {
     private let indicator: NetworkActivityIndicator?
     private let baseURL: NSURL
     private let reachability: Reachability?
@@ -100,18 +98,18 @@ public class HTTPFetcher: NSObject, NSURLSessionDelegate {
 }
 
 class HTTPDataSource: DataSource {
-    let fetcher: HTTPFetcher
+    let httpAccess: HTTPAccess
     let path: String
     let value = Observable<DataSourceData>()
     
-    init(fetcher: HTTPFetcher, path: String) {
-        self.fetcher = fetcher
+    init(httpAccess: HTTPAccess, path: String) {
+        self.httpAccess = httpAccess
         self.path = path
     }
     
     func start() {
         print ("GET \(path)")
-        self.fetcher.fetchDataAtPath(path) { data in
+        self.httpAccess.fetchDataAtPath(path) { data in
             dispatch_async(dispatch_get_main_queue()) {
                 self.value.pushValue(data)
             }

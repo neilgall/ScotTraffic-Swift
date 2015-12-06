@@ -10,6 +10,7 @@ import UIKit
 
 private enum TableSections: Int {
     case ContentSection = 0
+    case NotificationsSection
     case SettingsSection
     case AboutSection
     case Count
@@ -38,7 +39,8 @@ class SettingsTableViewController: UITableViewController {
     var delegate: SettingsTableViewControllerDelegate?
     var serverIsReachable: Observable<Bool>?
     
-    private var toggleConfigurations = [SettingsToggleConfiguration]()
+    private var contentConfigurations = [SettingsToggleConfiguration]()
+    private var notificationConfigurations = [SettingsToggleConfiguration]()
     private var showCurrentLocationConfiguration: SettingsToggleConfiguration?
     private var temperatureUnitConfiguration: SettingsEnumConfiguration<TemperatureUnit>?
     private var infoConfigurations = [SettingsInfoConfiguration]()
@@ -46,37 +48,52 @@ class SettingsTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        toggleConfigurations.removeAll()
+        contentConfigurations.removeAll()
         infoConfigurations.removeAll()
 
         if let settings = settings {
             
-            toggleConfigurations.append(SettingsToggleConfiguration(
+            contentConfigurations.append(SettingsToggleConfiguration(
                 iconImageName: "camera",
                 title: "Traffic Cameras",
                 toggle: settings.showTrafficCamerasOnMap))
 
-            toggleConfigurations.append(SettingsToggleConfiguration(
+            contentConfigurations.append(SettingsToggleConfiguration(
                 iconImageName: "safetycamera",
                 title: "Safety Cameras",
                 toggle: settings.showSafetyCamerasOnMap))
             
-            toggleConfigurations.append(SettingsToggleConfiguration(
+            contentConfigurations.append(SettingsToggleConfiguration(
                 iconImageName: "incident",
                 title: "Alerts",
                 toggle: settings.showAlertsOnMap))
             
-            toggleConfigurations.append(SettingsToggleConfiguration(
+            contentConfigurations.append(SettingsToggleConfiguration(
                 iconImageName: "roadworks",
                 title: "Roadworks",
                 toggle: settings.showRoadworksOnMap))
             
+            contentConfigurations.append(SettingsToggleConfiguration(
+                iconImageName: "bridge",
+                title: "Bridges",
+                toggle: settings.showBridgesOnMap))
+            
             if #available(iOS 9.0, *) {
-                toggleConfigurations.append(SettingsToggleConfiguration(
+                contentConfigurations.append(SettingsToggleConfiguration(
                     iconImageName: "warning-traffic",
                     title: "Traffic",
                     toggle: settings.showTrafficOnMap))
             }
+            
+            notificationConfigurations.append(SettingsToggleConfiguration(
+                iconImageName: "bridge",
+                title: "Forth Road Bridge",
+                toggle: settings.forthBridgeNotifications))
+
+            notificationConfigurations.append(SettingsToggleConfiguration(
+                iconImageName: "bridge",
+                title: "Tay Road Bridge",
+                toggle: settings.tayBridgeNotifications))
 
             showCurrentLocationConfiguration = SettingsToggleConfiguration(
                 iconImageName: "07-map-marker",
@@ -125,11 +142,13 @@ class SettingsTableViewController: UITableViewController {
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch TableSections(rawValue: section)! {
         case .ContentSection:
-            return toggleConfigurations.count
+            return contentConfigurations.count
+        case .NotificationsSection:
+            return notificationConfigurations.count
         case .SettingsSection:
             return SettingsItems.Count.rawValue
         case .AboutSection:
-            return AboutItems.Count.rawValue
+            return infoConfigurations.count
         default:
             return 0
         }
@@ -139,6 +158,8 @@ class SettingsTableViewController: UITableViewController {
         switch TableSections(rawValue: section)! {
         case .ContentSection:
             return "Content"
+        case .NotificationsSection:
+            return "Notifications"
         case .SettingsSection:
             return "Settings"
         case .AboutSection:
@@ -152,7 +173,12 @@ class SettingsTableViewController: UITableViewController {
         switch TableSections(rawValue: indexPath.section)! {
         case .ContentSection:
             let cell = tableView.dequeueReusableCellWithIdentifier("SettingsToggleTableViewCell", forIndexPath: indexPath) as! SettingsToggleTableViewCell
-            cell.configure(toggleConfigurations[indexPath.row])
+            cell.configure(contentConfigurations[indexPath.row])
+            return cell
+            
+        case .NotificationsSection:
+            let cell = tableView.dequeueReusableCellWithIdentifier("SettingsToggleTableViewCell", forIndexPath: indexPath) as! SettingsToggleTableViewCell
+            cell.configure(notificationConfigurations[indexPath.row])
             return cell
 
         case .SettingsSection:

@@ -66,7 +66,7 @@ public class AppCoordinator: NSObject, NGSplitViewControllerDelegate, SettingsTa
         mapViewController.navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named:"740-gear"), style: .Plain, target: self, action: Selector("settingsButtonTapped:"))
 
         // network reachability
-        observations.append(appModel.fetcher.serverIsReachable.onFallingEdge(notifyNoNetworkReachability))
+        observations.append(appModel.httpAccess.serverIsReachable.onFallingEdge(notifyNoNetworkReachability))
         
         // show map when search cancelled
         observations.append(searchViewModel.searchActive.onFallingEdge(showMap))
@@ -82,7 +82,7 @@ public class AppCoordinator: NSObject, NGSplitViewControllerDelegate, SettingsTa
     
         // defer any initial reachability notification until the view has appeared
         dispatch_async(dispatch_get_main_queue()) {
-            self.appModel.fetcher.startReachabilityNotifier()
+            self.appModel.httpAccess.startReachabilityNotifier()
         }
     }
 
@@ -204,7 +204,7 @@ public class AppCoordinator: NSObject, NGSplitViewControllerDelegate, SettingsTa
         }
 
         settingsViewController.settings = appModel.settings
-        settingsViewController.serverIsReachable = appModel.fetcher.serverIsReachable
+        settingsViewController.serverIsReachable = appModel.httpAccess.serverIsReachable
         settingsViewController.preferredContentSize = CGSize(width: 320, height: 650)
         settingsViewController.delegate = self
 

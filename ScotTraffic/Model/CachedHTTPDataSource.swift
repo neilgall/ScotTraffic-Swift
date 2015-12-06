@@ -14,7 +14,7 @@ public class CachedHTTPDataSource: DataSource {
     public let value = Observable<DataSourceData>()
     
     private let diskCache: DiskCache
-    private let fetcher: HTTPFetcher
+    private let httpAccess: HTTPAccess
     private let maximumCacheAge: NSTimeInterval
     private let key: String
 
@@ -22,8 +22,8 @@ public class CachedHTTPDataSource: DataSource {
     private var httpObservation: Observation?
     private var inFlight = false
     
-    init(fetcher: HTTPFetcher, cache: DiskCache, maximumCacheAge: NSTimeInterval, path: String) {
-        self.fetcher = fetcher
+    init(httpAccess: HTTPAccess, cache: DiskCache, maximumCacheAge: NSTimeInterval, path: String) {
+        self.httpAccess = httpAccess
         self.diskCache = cache
         self.maximumCacheAge = maximumCacheAge
         self.key = path
@@ -64,7 +64,7 @@ public class CachedHTTPDataSource: DataSource {
     }
     
     private func startHTTPSource(afterCacheHit: Bool) {
-        let httpSource = HTTPDataSource(fetcher: self.fetcher, path: self.key)
+        let httpSource = HTTPDataSource(httpAccess: httpAccess, path: self.key)
         
         httpObservation = httpSource.value.output { dataOrError in
             switch dataOrError {
@@ -94,7 +94,7 @@ public class CachedHTTPDataSource: DataSource {
         inFlight = false
     }
 
-    public static func dataSourceWithFetcher(fetcher: HTTPFetcher, cache: DiskCache)(maximumCacheAge: NSTimeInterval)(path: String) -> DataSource {
-        return CachedHTTPDataSource(fetcher: fetcher, cache: cache, maximumCacheAge: maximumCacheAge, path: path)
+    public static func dataSourceWithHTTPAccess(httpAccess: HTTPAccess, cache: DiskCache)(maximumCacheAge: NSTimeInterval)(path: String) -> DataSource {
+        return CachedHTTPDataSource(httpAccess: httpAccess, cache: cache, maximumCacheAge: maximumCacheAge, path: path)
     }
 }
