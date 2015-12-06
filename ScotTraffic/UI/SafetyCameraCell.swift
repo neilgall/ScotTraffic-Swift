@@ -83,11 +83,11 @@ class SafetyCameraCell: MapItemCollectionViewCellWithMap {
     }
     
     @IBAction func share() {
-        if let item = item, case .SafetyCameraItem(let safetyCamera) = item {
+        if let shareButton = shareButton, item = item, case .SafetyCameraItem(let safetyCamera) = item {
             let coordinate = MKCoordinateForMapPoint(safetyCamera.mapPoint)
             let image = self.image?.pullValue?.value
             let shareItem = SharableSafetyCamera(name: safetyCamera.name, image: image, coordinate: coordinate, link: safetyCamera.url)
-            let rect = convertRect(shareButton!.bounds, fromView: shareButton!)
+            let rect = convertRect(shareButton.bounds, fromView: shareButton)
             delegate?.collectionViewCell(self, didRequestShareItem: shareItem, fromRect: rect)
         }
     }
