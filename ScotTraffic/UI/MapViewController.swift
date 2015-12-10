@@ -24,7 +24,6 @@ class MapViewController: UIViewController, MKMapViewDelegate, MapViewModelDelega
     
     var viewModel: MapViewModel?
     var observations = [Observation]()
-    var updatingAnnotations: Bool = false
     var calloutConstructor: ([MapItem] -> UIViewController)?
     var calloutViewControllerByAnnotation = ViewKeyedMap<UIViewController>()
     var animationSequence = AsyncSequence()
@@ -51,14 +50,12 @@ class MapViewController: UIViewController, MKMapViewDelegate, MapViewModelDelega
     }
     
     func updateAnnotations(newAnnotations: [MapAnnotation]) {
-        with(&updatingAnnotations) {
-            let oldAnnotations = self.currentAnnotations
-            let annotationsToRemove = oldAnnotations.subtract(newAnnotations)
-            let annotationsToAdd = Set(newAnnotations).subtract(oldAnnotations)
-            
-            self.mapView.removeAnnotations(Array(annotationsToRemove))
-            self.mapView.addAnnotations(Array(annotationsToAdd))
-        }
+        let oldAnnotations = self.currentAnnotations
+        let annotationsToRemove = oldAnnotations.subtract(newAnnotations)
+        let annotationsToAdd = Set(newAnnotations).subtract(oldAnnotations)
+        
+        self.mapView.removeAnnotations(Array(annotationsToRemove))
+        self.mapView.addAnnotations(Array(annotationsToAdd))
     }
     
     func updateShowsCurrentLocation(enable: Bool) {
@@ -224,7 +221,6 @@ class MapViewController: UIViewController, MKMapViewDelegate, MapViewModelDelega
     }
     
     func mapView(mapView: MKMapView, didSelectAnnotationView view: MKAnnotationView) {
-        // views which show the
         guard !view.canShowCallout, let annotation = view.annotation as? MapAnnotation else {
             return
         }
