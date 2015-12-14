@@ -91,7 +91,7 @@ public class HTTPAccess: NSObject, NSURLSessionDelegate {
         
     }
     
-    public func postData(data: NSData, toPath path: String, completion: DataSourceData -> Void) {
+    public func postData(data: NSData?, toPath path: String, completion: DataSourceData -> Void) {
         guard let url = NSURL(string: path, relativeToURL: baseURL) else {
             completion(DataSourceValue.Error(.Network(.MalformedURL)))
             return

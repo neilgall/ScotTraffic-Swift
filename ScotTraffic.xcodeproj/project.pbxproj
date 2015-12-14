@@ -73,7 +73,6 @@
 		287F754F1C00CEA20040EE8A /* PeriodicStarter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 280486501BC08216003BA360 /* PeriodicStarter.swift */; };
 		287F75501C00D0A50040EE8A /* AppErrors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2804864E1BC074E4003BA360 /* AppErrors.swift */; };
 		287F75521C00D1130040EE8A /* AppNetworkActivityIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 287F75511C00D1130040EE8A /* AppNetworkActivityIndicator.swift */; };
-		287F75561C00DA080040EE8A /* Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 287F75541C00DA000040EE8A /* Configuration.swift */; };
 		287F75581C00DC200040EE8A /* AppWidgetManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 287F75571C00DC200040EE8A /* AppWidgetManager.swift */; };
 		287F755A1C00E75E0040EE8A /* UserDefaultsMigration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 287F75591C00E75E0040EE8A /* UserDefaultsMigration.swift */; };
 		28875EA41BBC72FB00E67A16 /* Network.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28875EA31BBC72FB00E67A16 /* Network.swift */; };
@@ -90,6 +89,7 @@
 		28AF4A051BD6ECD9009B0AE8 /* SearchResultCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28AF4A041BD6ECD9009B0AE8 /* SearchResultCell.swift */; };
 		28AF4A071BD82342009B0AE8 /* FadeTransition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28AF4A061BD82342009B0AE8 /* FadeTransition.swift */; };
 		28AF4A0B1BD849C0009B0AE8 /* PopoverContentSize.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28AF4A0A1BD849C0009B0AE8 /* PopoverContentSize.swift */; };
+		28B4F4881C1F57A500785C18 /* Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 280388031C0F9AF100F8C149 /* Configuration.swift */; };
 		28BFBC5B1BBC91AA00827069 /* FRPTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28BFBC5A1BBC91AA00827069 /* FRPTests.swift */; };
 		28D3928C1BEE942800924F16 /* MapItemCollectionViewCellWithMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28D3928B1BEE942800924F16 /* MapItemCollectionViewCellWithMap.swift */; };
 		28DB3BF31BC025D0001AAC2A /* Functions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28DB3BF21BC025D0001AAC2A /* Functions.swift */; };
@@ -217,7 +217,6 @@
 		287F75491C00C8DE0040EE8A /* TodaySettings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TodaySettings.swift; sourceTree = "<group>"; };
 		287F754B1C00C9110040EE8A /* PersistentSetting.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PersistentSetting.swift; sourceTree = "<group>"; };
 		287F75511C00D1130040EE8A /* AppNetworkActivityIndicator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppNetworkActivityIndicator.swift; sourceTree = "<group>"; };
-		287F75541C00DA000040EE8A /* Configuration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Configuration.swift; sourceTree = "<group>"; };
 		287F75571C00DC200040EE8A /* AppWidgetManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppWidgetManager.swift; sourceTree = "<group>"; };
 		287F75591C00E75E0040EE8A /* UserDefaultsMigration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserDefaultsMigration.swift; sourceTree = "<group>"; };
 		28875EA31BBC72FB00E67A16 /* Network.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Network.swift; sourceTree = "<group>"; };
@@ -465,7 +464,6 @@
 			isa = PBXGroup;
 			children = (
 				280388031C0F9AF100F8C149 /* Configuration.swift */,
-				287F75541C00DA000040EE8A /* Configuration.swift */,
 				716D9E981BCBC2F1005A6B49 /* ScotTraffic.swift */,
 				280493581BA8BB4800990BD1 /* AppDelegate.swift */,
 				2804864E1BC074E4003BA360 /* AppErrors.swift */,
@@ -642,6 +640,9 @@
 						DevelopmentTeam = TXVS4QM239;
 						SystemCapabilities = {
 							com.apple.ApplicationGroups.iOS = {
+								enabled = 1;
+							};
+							com.apple.Push = {
 								enabled = 1;
 							};
 						};
@@ -832,13 +833,13 @@
 				287F75441C00C7D00040EE8A /* Favourites.swift in Sources */,
 				287F754E1C00CD5F0040EE8A /* WithFlag.swift in Sources */,
 				287F75391C00C7A70040EE8A /* DataSource.swift in Sources */,
+				28B4F4881C1F57A500785C18 /* Configuration.swift in Sources */,
 				287F754F1C00CEA20040EE8A /* PeriodicStarter.swift in Sources */,
 				287F753F1C00C7BC0040EE8A /* Functions.swift in Sources */,
 				287F75381C00C6CD0040EE8A /* TodayViewModel.swift in Sources */,
 				287F75461C00C7DA0040EE8A /* ImageDataSource.swift in Sources */,
 				287F75451C00C7D80040EE8A /* MapItem.swift in Sources */,
 				287F754D1C00CD050040EE8A /* PersistentSetting.swift in Sources */,
-				287F75561C00DA080040EE8A /* Configuration.swift in Sources */,
 				287F753C1C00C7B00040EE8A /* CachedHTTPDataSource.swift in Sources */,
 				287F753A1C00C7AB0040EE8A /* Network.swift in Sources */,
 				287F75501C00D0A50040EE8A /* AppErrors.swift in Sources */,
