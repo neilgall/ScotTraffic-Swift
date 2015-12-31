@@ -48,7 +48,7 @@ public class HTTPAccess: NSObject, NSURLSessionDelegate {
         
         super.init()
         
-        let configuration = NSURLSessionConfiguration.defaultSessionConfiguration()
+        let configuration = NSURLSessionConfiguration.ephemeralSessionConfiguration()
         session = NSURLSession(configuration: configuration, delegate: self, delegateQueue: nil)
         
         reachability?.whenReachable = { _ in
