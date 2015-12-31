@@ -57,6 +57,8 @@ class TodayViewController: UIViewController, NCWidgetProviding {
         observations.append(model.weatherViewModel.weatherIconName => {
             self.weatherIconImageView?.image = UIImage(named: $0)
         })
+        
+        model.refresh()
     }
     
     override func viewWillDisappear(animated: Bool) {

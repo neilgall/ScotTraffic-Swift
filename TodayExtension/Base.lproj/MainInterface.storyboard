@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9060" systemVersion="14F1021" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" initialViewController="M4Y-Lb-cyx">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9531" systemVersion="15C50" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" initialViewController="M4Y-Lb-cyx">
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9051"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9529"/>
     </dependencies>
     <scenes>
         <!--Today View Controller-->
@@ -16,13 +16,11 @@
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="image-placeholder" id="oP0-yu-HhT">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="240"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <animations/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                             </imageView>
                             <button opaque="NO" contentMode="left" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="jue-44-Itj" userLabel="Left Button">
                                 <rect key="frame" x="0.0" y="0.0" width="160" height="240"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxX="YES"/>
-                                <animations/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxX="YES" heightSizable="YES"/>
                                 <inset key="imageEdgeInsets" minX="10" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 <state key="normal" image="765-arrow-left">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
@@ -33,8 +31,7 @@
                             </button>
                             <button opaque="NO" contentMode="right" contentHorizontalAlignment="right" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="kpK-7e-XGn" userLabel="Right Button">
                                 <rect key="frame" x="160" y="0.0" width="160" height="240"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES"/>
-                                <animations/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" heightSizable="YES"/>
                                 <inset key="contentEdgeInsets" minX="0.0" minY="0.0" maxX="10" maxY="0.0"/>
                                 <state key="normal" image="766-arrow-right">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
@@ -50,12 +47,10 @@
                                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Midnight-640x44" id="dMz-GB-mMw">
                                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                        <animations/>
                                     </imageView>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="FKd-od-lT1">
                                         <rect key="frame" x="8" y="0.0" width="208" height="44"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES"/>
-                                        <animations/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
                                         <nil key="highlightedColor"/>
@@ -72,19 +67,16 @@
                                         <nil key="highlightedColor"/>
                                     </label>
                                 </subviews>
-                                <animations/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             </view>
                             <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Unable to load image" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="Wzu-71-kuk">
                                 <rect key="frame" x="20" y="109" width="280" height="21"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
-                                <animations/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" red="0.54458306759999997" green="0.055343616239999997" blue="0.073076459869999999" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                         </subviews>
-                        <animations/>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                         <userDefinedRuntimeAttributes>
                             <userDefinedRuntimeAttribute type="boolean" keyPath="translatesAutoresizingMaskIntoConstraints" value="NO"/>
