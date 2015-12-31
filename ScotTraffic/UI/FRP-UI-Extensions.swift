@@ -27,7 +27,9 @@ public class TableViewDataSourceAdapter
     
     public func reloadTableViewOnChange(tableView: UITableView) {
         self.output = source.output { [weak tableView] _ in
-            tableView?.reloadData()
+            if let tableView = tableView where !tableView.editing {
+                tableView.reloadData()
+            }
         }
     }
     

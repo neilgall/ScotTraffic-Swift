@@ -43,12 +43,18 @@ public class Favourites {
     private let items : Input<[FavouriteIdentifier]>
     public let trafficCameras: Observable<[FavouriteTrafficCamera]>
     
+    private var observations = [Observation]()
+    
     public init(userDefaults: UserDefaultsProtocol, trafficCameraLocations: Observable<[TrafficCameraLocation]>) {
         self.userDefaults = userDefaults
         self.items = Input(initial: [])
         self.trafficCameras = combine(trafficCameraLocations, self.items, combine: favouriteTrafficCamerasFromLocations)
         
         reloadFromUserDefaults()
+        
+        observations.append(items => {
+            userDefaults.setObject($0, forKey: favouritesKey)
+        })
     }
     
     public func toggleItem(item: FavouriteTrafficCamera) {
@@ -61,7 +67,18 @@ public class Favourites {
             items.append(identifier)
         }
         self.items.value = items
-        userDefaults.setObject(self.items.value, forKey: favouritesKey)
+    }
+    
+    public func moveItemFromIndex(fromIndex: Int, toIndex: Int) {
+        var items = self.items.value
+        if fromIndex > toIndex {
+            items.insert(items[fromIndex], atIndex: toIndex)
+            items.removeAtIndex(fromIndex+1)
+        } else if fromIndex < toIndex {
+            items.insert(items[fromIndex], atIndex: toIndex+1)
+            items.removeAtIndex(fromIndex)
+        }
+        self.items.value = items
     }
     
     public func containsItem(item: FavouriteTrafficCamera) -> Bool {
@@ -69,7 +86,8 @@ public class Favourites {
     }
     
     public func reloadFromUserDefaults() {
-        guard let items = userDefaults.objectForKey(favouritesKey) as? [FavouriteIdentifier] else {
+        let object = userDefaults.objectForKey(favouritesKey)
+        guard let items = object as? [FavouriteIdentifier] else {
             return
         }
         self.items.value = items

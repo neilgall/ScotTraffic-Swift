@@ -28,6 +28,7 @@ public class SearchViewModel {
     public var sectionHeader: Latest<String>
     public var searchSelection: Observable<Selection?>
     
+    private var favourites: Favourites
     private var observations = [Observation]()
 
     
@@ -36,7 +37,8 @@ public class SearchViewModel {
         searchTerm = Input(initial: "")
         searchSelectionIndex = Input(initial: nil)
         
-        let favourites = scotTraffic.favourites.trafficCameras.latest()
+        favourites = scotTraffic.favourites
+        let latestFavourites = favourites.trafficCameras.latest()
 
         let trafficCameras = combine(
             scotTraffic.trafficCameraLocations,
@@ -82,7 +84,7 @@ public class SearchViewModel {
         dataSource = displayContent.onChange().map { contentType in
             switch contentType {
             case .Favourites:
-                return favourites
+                return latestFavourites
                     .map(toSearchResultItems)
                     .tableViewDataSource(SearchResultCell.cellIdentifier)
 
@@ -95,11 +97,11 @@ public class SearchViewModel {
         
         sectionHeader = combine(displayContent, searchResultsMajorAxis) {
             if $0 == DisplayContent.Favourites {
-                return "Favourites"
+                return "FavouritesHeadingView"
             } else {
                 switch $1 {
-                case .NorthSouth: return "North to South"
-                case .EastWest: return "West to East"
+                case .NorthSouth: return "NorthToSouthHeadingView"
+                case .EastWest: return "WestToEastHeadingView"
                 }
             }
         }.latest()
@@ -126,6 +128,16 @@ public class SearchViewModel {
     
     public func setSearchActive(active: Bool) {
         self.searchActive.value = active
+    }
+    
+    public func deleteFavouriteAtIndex(index: Int) {
+        favourites.trafficCameras.map({ $0[index] }) => { favouriteToDelete in
+            self.favourites.toggleItem(favouriteToDelete)
+        }
+    }
+    
+    public func moveFavouriteAtIndex(sourceIndex: Int, toIndex destinationIndex: Int) {
+        favourites.moveItemFromIndex(sourceIndex, toIndex: destinationIndex)
     }
 }
 
