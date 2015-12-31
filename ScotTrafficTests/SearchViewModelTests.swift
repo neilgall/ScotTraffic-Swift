@@ -40,7 +40,7 @@ class SearchViewModelTests: XCTestCase {
             return
         }
         
-        XCTAssertEqual(header, "Favourites")
+        XCTAssertEqual(header, "FavouritesHeadingView")
     }
     
     func testDataSourceIsSearchResultsWhenSearchTermIsNonEmpty() {
@@ -66,7 +66,7 @@ class SearchViewModelTests: XCTestCase {
             return
         }
         
-        XCTAssertEqual(header, "North to South")
+        XCTAssertEqual(header, "NorthToSouthHeadingView")
     }
 
     func testHeaderIsWestToEastForM8Search() {
@@ -79,7 +79,7 @@ class SearchViewModelTests: XCTestCase {
             return
         }
         
-        XCTAssertEqual(header, "West to East")
+        XCTAssertEqual(header, "WestToEastHeadingView")
     }
     
     func testDefaultSearchSelectionIsNil() {
