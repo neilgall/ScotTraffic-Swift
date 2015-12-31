@@ -8,7 +8,7 @@
 
 import UIKit
 
-struct Registration {
+struct Registration: Equatable {
     let identifier: String
     let deviceToken: String
     let enable: Bool
@@ -40,9 +40,10 @@ public class AppNotifications {
     }
 
     private func registrationForSetting(setting: Observable<Bool>, identifier: String) -> Observable<Registration> {
-        return combine(not(isNil(deviceToken)).gate(deviceToken), setting) {
+        let registration = combine(not(isNil(deviceToken)).gate(deviceToken), setting) {
             return Registration(identifier: identifier, deviceToken: $0!, enable: $1)
         }
+        return registration.onChange()
     }
     
     private func enableNotifications() {
@@ -90,4 +91,10 @@ public class AppNotifications {
         
         deviceToken.value = String(str)
     }
+}
+
+func == (lhs: Registration, rhs: Registration) -> Bool {
+    return lhs.deviceToken == rhs.deviceToken
+        && lhs.identifier == rhs.identifier
+        && lhs.enable == rhs.enable
 }
