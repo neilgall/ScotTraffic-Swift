@@ -229,7 +229,7 @@ class SettingsTableViewController: UITableViewController {
             return
         }
         webViewController.page = page
-        webViewController.loadFromWeb = serverIsReachable?.pullValue ?? false
+        webViewController.serverIsReachable = serverIsReachable
         navigationController?.pushViewController(webViewController, animated: true)
     }
 }

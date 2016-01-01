@@ -13,7 +13,8 @@ class WebViewController: UIViewController, UIWebViewDelegate {
     @IBOutlet var webView: UIWebView?
     @IBOutlet var spinner: UIActivityIndicatorView?
     
-    var loadFromWeb: Bool = false
+    var serverIsReachable: Observable<Bool>?
+    var forceLocalLoad: Bool = false
 
     var page: String? {
         didSet {
@@ -28,9 +29,13 @@ class WebViewController: UIViewController, UIWebViewDelegate {
         reload()
     }
     
+    var loadFromWeb: Bool {
+        return !forceLocalLoad && serverIsReachable?.pullValue == true
+    }
+    
     func reload() {
         var url: NSURL? = nil
-        if loadFromWeb, let page = page {
+        if let page = page where loadFromWeb {
             url = NSURL(string: "support/\(page).html", relativeToURL: ScotTrafficBaseURL)
         } else {
             if let path = NSBundle.mainBundle().pathForResource(page, ofType: "html", inDirectory: "www") {
@@ -51,9 +56,21 @@ class WebViewController: UIViewController, UIWebViewDelegate {
     }
 
     func webView(webView: UIWebView, didFailLoadWithError error: NSError?) {
-        if loadFromWeb {
-            loadFromWeb = false
+        guard let failingURL = error?.userInfo[NSURLErrorFailingURLErrorKey] as? NSURL else {
+            print("webView failed load but no failing URL: \(error)")
+            return
+        }
+        
+        if let host = failingURL.host where host == "platform.twitter.com" {
+            return
+        }
+        
+        if let host = failingURL.host where loadFromWeb && host.hasSuffix("scottraffic.co.uk") {
+            forceLocalLoad = true
             reload()
+
+        } else {
+            UIApplication.sharedApplication().openURL(failingURL)
         }
     }
 }
