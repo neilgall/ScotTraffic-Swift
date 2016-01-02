@@ -101,6 +101,7 @@ class SafetyCameraCell: MapItemCollectionViewCellWithMap {
         roadLabel?.text = nil
         descriptionLabel?.text = nil
         imageView?.image = nil
+        spinner?.stopAnimating()
 
         super.prepareForReuse()
     }
