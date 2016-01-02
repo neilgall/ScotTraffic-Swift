@@ -60,10 +60,10 @@ class SettingsTableViewController: UITableViewController {
         ]
         
         if #available(iOS 9.0, *) {
-            contentConfigurations.append(SettingsToggleConfiguration(
+            contentConfigurations.insert(SettingsToggleConfiguration(
                 iconImageName: "warning-traffic",
                 title: "Traffic",
-                toggle: settings.showTrafficOnMap))
+                toggle: settings.showTrafficOnMap), atIndex:contentConfigurations.count-2)
         }
 
         #if NotificationsEnabled
