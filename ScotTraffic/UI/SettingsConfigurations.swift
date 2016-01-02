@@ -28,7 +28,7 @@ struct SettingsIntConfiguration : SettingConfiguration {
 }
 
 struct SettingsInfoConfiguration : SettingConfiguration {
-    let cellIdentifier: String
+    let cellIdentifier = "SettingsInfoTableViewCell"
     let text: String
     let detailText: String?
     let pageTitle: String?

@@ -17,5 +17,11 @@ class SettingsInfoTableViewCell: UITableViewCell, SettingsTableViewCell {
 
         textLabel?.text = configuration.text
         detailTextLabel?.text = configuration.detailText
+        
+        if configuration.pageTitle == nil {
+            accessoryType = .None
+        } else {
+            accessoryType = .DisclosureIndicator
+        }
     }
 }

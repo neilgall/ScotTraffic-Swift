@@ -43,7 +43,8 @@ class WebViewController: UIViewController, UIWebViewDelegate {
             }
         }
         if let url = url {
-            let urlRequest = NSURLRequest(URL: url)
+            let urlRequest = NSMutableURLRequest(URL: url)
+            urlRequest.cachePolicy = .ReloadIgnoringLocalAndRemoteCacheData
             webView?.loadRequest(urlRequest)
             spinner?.startAnimating()
         } else {

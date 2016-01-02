@@ -37,18 +37,22 @@ class SettingsTableViewController: UITableViewController {
                 iconImageName: "camera",
                 title: "Traffic Cameras",
                 toggle: settings.showTrafficCamerasOnMap),
+
             SettingsToggleConfiguration(
                 iconImageName: "safetycamera",
                 title: "Safety Cameras",
                 toggle: settings.showSafetyCamerasOnMap),
+            
             SettingsToggleConfiguration(
                 iconImageName: "incident",
                 title: "Alerts",
                 toggle: settings.showAlertsOnMap),
+            
             SettingsToggleConfiguration(
                 iconImageName: "roadworks",
                 title: "Roadworks",
                 toggle: settings.showRoadworksOnMap),
+            
             SettingsToggleConfiguration(
                 iconImageName: "bridge",
                 title: "Bridges",
@@ -68,6 +72,7 @@ class SettingsTableViewController: UITableViewController {
                 iconImageName: "bridge",
                 title: "Forth Road Bridge",
                 toggle: settings.forthBridgeNotifications),
+
             SettingsToggleConfiguration(
                 iconImageName: "bridge",
                 title: "Tay Road Bridge",
@@ -82,6 +87,7 @@ class SettingsTableViewController: UITableViewController {
                 iconImageName: "07-map-marker",
                 title: "Show current location",
                 toggle: settings.showCurrentLocationOnMap),
+
             SettingsIntConfiguration(
                 iconImageName: "959-thermometer",
                 title: "Temperature Unit",
@@ -92,21 +98,18 @@ class SettingsTableViewController: UITableViewController {
                 ])
         ]
 
-        let informationCellIdentifier = "SettingsInformationTableViewCell"
-        let disclosureCellIdentifier = "SettingsDisclosureTableViewCell"
         let infoConfigurations: [SettingConfiguration] = [
             SettingsInfoConfiguration(
-                cellIdentifier: informationCellIdentifier,
                 text: "Version",
                 detailText: NSBundle.mainBundle().objectForInfoDictionaryKey("CFBundleShortVersionString") as? String,
                 pageTitle: nil),
+            
             SettingsInfoConfiguration(
-                cellIdentifier: disclosureCellIdentifier,
                 text: "About ScotTraffic",
                 detailText: nil,
                 pageTitle: "about"),
+            
             SettingsInfoConfiguration(
-                cellIdentifier: disclosureCellIdentifier,
                 text: "Support",
                 detailText: nil,
                 pageTitle: "index")
