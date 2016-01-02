@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="9060" systemVersion="14F1021" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="9531" systemVersion="15C50" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9051"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9529"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="ZBSIncidentCell"/>
@@ -15,15 +15,12 @@
                 <subviews>
                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Sunset" translatesAutoresizingMaskIntoConstraints="NO" id="oZL-Ie-8F8">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="284"/>
-                        <animations/>
                     </imageView>
                     <imageView userInteractionEnabled="NO" alpha="0.59999999999999998" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Ngo-q8-L8H">
                         <rect key="frame" x="0.0" y="44" width="320" height="240"/>
-                        <animations/>
                     </imageView>
                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="999" verticalCompressionResistancePriority="999" image="incident-large" translatesAutoresizingMaskIntoConstraints="NO" id="PMc-qd-2TC">
                         <rect key="frame" x="10" y="10" width="80" height="80"/>
-                        <animations/>
                         <constraints>
                             <constraint firstAttribute="width" constant="80" id="TXe-1W-qFC"/>
                             <constraint firstAttribute="width" constant="80" id="XEq-Fb-7lt"/>
@@ -39,7 +36,6 @@
                     </imageView>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="260" verticalCompressionResistancePriority="999" text="Label" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BqJ-0V-LEo" userLabel="Title">
                         <rect key="frame" x="100" y="16" width="49" height="24"/>
-                        <animations/>
                         <constraints>
                             <constraint firstAttribute="height" constant="62" id="7LQ-Dc-rCm"/>
                         </constraints>
@@ -60,16 +56,14 @@
                         <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                         <dataDetectorType key="dataDetectorTypes" link="YES"/>
                     </textView>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Date" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VEm-Am-XZP" userLabel="Date">
-                        <rect key="frame" x="283.5" y="260" width="28.5" height="16"/>
-                        <animations/>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Date" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VEm-Am-XZP" userLabel="Date">
+                        <rect key="frame" x="284" y="260" width="28" height="16"/>
                         <fontDescription key="fontDescription" type="system" pointSize="13"/>
                         <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <nil key="highlightedColor"/>
                     </label>
                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Dyw-ot-QPr" userLabel="Share">
                         <rect key="frame" x="268" y="6" width="44" height="44"/>
-                        <animations/>
                         <constraints>
                             <constraint firstAttribute="width" constant="44" id="N9q-oO-9Ki"/>
                             <constraint firstAttribute="height" constant="44" id="SyE-mD-GYU"/>
@@ -82,10 +76,8 @@
                         </connections>
                     </button>
                 </subviews>
-                <animations/>
                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
             </view>
-            <animations/>
             <constraints>
                 <constraint firstAttribute="bottom" secondItem="oZL-Ie-8F8" secondAttribute="bottom" id="0qO-vD-ZYi"/>
                 <constraint firstItem="qRP-Mi-obk" firstAttribute="top" relation="greaterThanOrEqual" secondItem="BqJ-0V-LEo" secondAttribute="bottom" constant="8" id="3Ft-Jq-fkw"/>
@@ -122,8 +114,8 @@
                     <exclude reference="gvV-5b-O53"/>
                     <exclude reference="42s-JQ-bC7"/>
                     <exclude reference="n5h-fR-VEj"/>
-                    <exclude reference="KbS-8a-SoM"/>
                     <exclude reference="XRj-XZ-vnB"/>
+                    <exclude reference="KbS-8a-SoM"/>
                 </mask>
             </variation>
             <connections>

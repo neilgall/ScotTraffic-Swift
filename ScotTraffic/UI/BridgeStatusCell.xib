@@ -19,23 +19,8 @@
                     <imageView userInteractionEnabled="NO" alpha="0.59999999999999998" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Ngo-q8-L8H">
                         <rect key="frame" x="0.0" y="44" width="320" height="240"/>
                     </imageView>
-                    <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="999" verticalCompressionResistancePriority="999" image="bridge-large" translatesAutoresizingMaskIntoConstraints="NO" id="PMc-qd-2TC">
-                        <rect key="frame" x="10" y="10" width="80" height="80"/>
-                        <constraints>
-                            <constraint firstAttribute="width" constant="80" id="TXe-1W-qFC"/>
-                            <constraint firstAttribute="width" constant="80" id="XEq-Fb-7lt"/>
-                            <constraint firstAttribute="height" constant="80" id="cey-Jh-WAP"/>
-                            <constraint firstAttribute="height" constant="80" id="y2R-Oa-MaF"/>
-                        </constraints>
-                        <variation key="default">
-                            <mask key="constraints">
-                                <exclude reference="TXe-1W-qFC"/>
-                                <exclude reference="y2R-Oa-MaF"/>
-                            </mask>
-                        </variation>
-                    </imageView>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="260" verticalCompressionResistancePriority="999" text="Label" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BqJ-0V-LEo" userLabel="Title">
-                        <rect key="frame" x="100" y="16" width="49" height="24"/>
+                        <rect key="frame" x="10" y="16" width="49" height="24"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="62" id="7LQ-Dc-rCm"/>
                         </constraints>
@@ -49,7 +34,7 @@
                         </variation>
                     </label>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5is-c3-A78" userLabel="Text">
-                        <rect key="frame" x="10" y="95" width="300" height="18"/>
+                        <rect key="frame" x="10" y="58" width="300" height="18"/>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="20" id="XpV-5m-4ce"/>
@@ -64,7 +49,7 @@
                         </variation>
                     </label>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Date" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VEm-Am-XZP" userLabel="Date">
-                        <rect key="frame" x="10" y="258" width="300" height="16"/>
+                        <rect key="frame" x="281" y="258" width="29" height="16"/>
                         <fontDescription key="fontDescription" type="system" pointSize="13"/>
                         <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <nil key="highlightedColor"/>
@@ -87,6 +72,7 @@
             </view>
             <constraints>
                 <constraint firstAttribute="bottom" secondItem="oZL-Ie-8F8" secondAttribute="bottom" id="0qO-vD-ZYi"/>
+                <constraint firstItem="BqJ-0V-LEo" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" constant="10" id="1jl-bf-dea"/>
                 <constraint firstAttribute="trailing" secondItem="BqJ-0V-LEo" secondAttribute="trailing" constant="20" id="42s-JQ-bC7"/>
                 <constraint firstItem="Ngo-q8-L8H" firstAttribute="trailing" secondItem="oZL-Ie-8F8" secondAttribute="trailing" id="4Hd-oZ-oRM"/>
                 <constraint firstItem="Ngo-q8-L8H" firstAttribute="top" secondItem="oZL-Ie-8F8" secondAttribute="top" constant="44" id="4x4-HU-dNN"/>
@@ -95,38 +81,39 @@
                 <constraint firstItem="BqJ-0V-LEo" firstAttribute="centerY" secondItem="Dyw-ot-QPr" secondAttribute="centerY" id="8oh-yE-mDo"/>
                 <constraint firstItem="VEm-Am-XZP" firstAttribute="top" relation="greaterThanOrEqual" secondItem="5is-c3-A78" secondAttribute="bottom" constant="8" id="AXC-aJ-djH"/>
                 <constraint firstItem="Ngo-q8-L8H" firstAttribute="bottom" secondItem="oZL-Ie-8F8" secondAttribute="bottom" id="CcQ-Qz-hjH"/>
-                <constraint firstItem="PMc-qd-2TC" firstAttribute="leading" secondItem="5is-c3-A78" secondAttribute="leading" id="Emj-I5-LdK"/>
+                <constraint firstItem="5is-c3-A78" firstAttribute="top" secondItem="Dyw-ot-QPr" secondAttribute="bottom" constant="8" id="Cgc-4H-ir0"/>
                 <constraint firstItem="Dyw-ot-QPr" firstAttribute="top" relation="greaterThanOrEqual" secondItem="gTV-IL-0wX" secondAttribute="top" id="EpB-VM-XgR"/>
-                <constraint firstItem="5is-c3-A78" firstAttribute="top" secondItem="PMc-qd-2TC" secondAttribute="bottom" priority="900" constant="5" id="Haf-YD-9V4"/>
                 <constraint firstAttribute="trailing" secondItem="oZL-Ie-8F8" secondAttribute="trailing" id="ISd-Gg-lip"/>
                 <constraint firstItem="VEm-Am-XZP" firstAttribute="trailing" secondItem="5is-c3-A78" secondAttribute="trailing" id="Jd8-ou-oJ7"/>
                 <constraint firstAttribute="bottom" secondItem="VEm-Am-XZP" secondAttribute="bottom" constant="20" id="KbS-8a-SoM"/>
+                <constraint firstItem="BqJ-0V-LEo" firstAttribute="leading" secondItem="5is-c3-A78" secondAttribute="leading" id="PQ3-5Y-Yh4"/>
                 <constraint firstItem="VEm-Am-XZP" firstAttribute="leading" secondItem="5is-c3-A78" secondAttribute="leading" id="R0q-5H-SlR"/>
-                <constraint firstItem="PMc-qd-2TC" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" constant="10" id="Sda-lS-D2x"/>
                 <constraint firstAttribute="trailing" secondItem="Dyw-ot-QPr" secondAttribute="trailing" constant="8" id="UkW-4B-c6U"/>
-                <constraint firstItem="BqJ-0V-LEo" firstAttribute="leading" secondItem="PMc-qd-2TC" secondAttribute="trailing" constant="10" id="Vm7-An-9X6"/>
                 <constraint firstItem="Dyw-ot-QPr" firstAttribute="centerY" secondItem="VEm-Am-XZP" secondAttribute="centerY" id="XRj-XZ-vnB"/>
                 <constraint firstItem="BqJ-0V-LEo" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" constant="16" id="aID-BV-Jns"/>
                 <constraint firstAttribute="trailing" secondItem="5is-c3-A78" secondAttribute="trailing" constant="20" id="cHe-s1-XGS"/>
                 <constraint firstItem="Dyw-ot-QPr" firstAttribute="trailing" secondItem="5is-c3-A78" secondAttribute="trailing" constant="2" id="eCR-wa-Vnq"/>
+                <constraint firstItem="Ngo-q8-L8H" firstAttribute="leading" secondItem="BqJ-0V-LEo" secondAttribute="leading" constant="-10" id="eiI-nD-p27"/>
                 <constraint firstItem="oZL-Ie-8F8" firstAttribute="bottom" secondItem="VEm-Am-XZP" secondAttribute="bottom" constant="10" id="fvb-9m-9We"/>
                 <constraint firstItem="BqJ-0V-LEo" firstAttribute="centerY" secondItem="Dyw-ot-QPr" secondAttribute="centerY" id="n5h-fR-VEj"/>
                 <constraint firstItem="5is-c3-A78" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" priority="250" constant="90" id="qgc-FD-a7J"/>
                 <constraint firstItem="Dyw-ot-QPr" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="BqJ-0V-LEo" secondAttribute="trailing" constant="8" id="rc5-NX-zro"/>
-                <constraint firstItem="5is-c3-A78" firstAttribute="top" relation="greaterThanOrEqual" secondItem="BqJ-0V-LEo" secondAttribute="bottom" constant="8" id="rgc-lI-Ta3"/>
-                <constraint firstItem="PMc-qd-2TC" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" constant="10" id="uSf-ak-yfq"/>
+                <constraint firstItem="5is-c3-A78" firstAttribute="top" secondItem="BqJ-0V-LEo" secondAttribute="bottom" constant="8" id="rgc-lI-Ta3"/>
                 <constraint firstItem="Ngo-q8-L8H" firstAttribute="leading" secondItem="oZL-Ie-8F8" secondAttribute="leading" id="x93-6s-gYQ"/>
                 <constraint firstItem="oZL-Ie-8F8" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" id="xd7-s6-tZM"/>
             </constraints>
             <variation key="default">
                 <mask key="constraints">
+                    <exclude reference="42s-JQ-bC7"/>
+                    <exclude reference="n5h-fR-VEj"/>
+                    <exclude reference="eiI-nD-p27"/>
                     <exclude reference="5Wd-Zw-DQ2"/>
                     <exclude reference="cHe-s1-XGS"/>
                     <exclude reference="qgc-FD-a7J"/>
-                    <exclude reference="42s-JQ-bC7"/>
-                    <exclude reference="n5h-fR-VEj"/>
-                    <exclude reference="KbS-8a-SoM"/>
+                    <exclude reference="rgc-lI-Ta3"/>
                     <exclude reference="XRj-XZ-vnB"/>
+                    <exclude reference="KbS-8a-SoM"/>
+                    <exclude reference="R0q-5H-SlR"/>
                 </mask>
             </variation>
             <connections>
@@ -142,6 +129,5 @@
     <resources>
         <image name="702-share" width="21" height="28"/>
         <image name="Sunset" width="320" height="284"/>
-        <image name="bridge-large" width="80" height="80"/>
     </resources>
 </document>

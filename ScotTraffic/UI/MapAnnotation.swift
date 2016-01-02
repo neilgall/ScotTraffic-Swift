@@ -61,7 +61,7 @@ public class MapAnnotation: NSObject, MKAnnotation {
             imageComponents.append("roadworks")
 
         } else if bridgeCount > 0 {
-            imageComponents.append("bridge")
+            imageComponents.append("blue-circle")
         }
         
         image = compositeImagesNamed(imageComponents)
