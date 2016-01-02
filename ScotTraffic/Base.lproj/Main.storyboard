@@ -154,6 +154,7 @@
                                     </constraints>
                                 </tableViewCellContentView>
                                 <connections>
+                                    <outlet property="control" destination="fh5-Kb-sBH" id="kgg-Fy-EsJ"/>
                                     <outlet property="iconImageView" destination="afO-nc-Gf0" id="9fX-7q-bJl"/>
                                     <outlet property="titleLabel" destination="sqm-VN-pSk" id="hiD-bP-ap4"/>
                                 </connections>
