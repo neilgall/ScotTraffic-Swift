@@ -8,7 +8,7 @@
 
 import UIKit
 
-class SettingsToggleTableViewCell: UITableViewCell {
+class SettingsToggleTableViewCell: UITableViewCell, SettingsTableViewCell {
 
     @IBOutlet var iconImageView: UIImageView?
     @IBOutlet var titleLabel: UILabel?
@@ -17,7 +17,11 @@ class SettingsToggleTableViewCell: UITableViewCell {
     private var toggle: Input<Bool>?
     private var observation: Observation?
     
-    func configure(configuration: SettingsToggleConfiguration) {
+    func configure(configuration: SettingConfiguration) {
+        guard let configuration = configuration as? SettingsToggleConfiguration else {
+            return
+        }
+        
         self.iconImageView?.image = UIImage(named: configuration.iconImageName)
         self.titleLabel?.text = configuration.title
         self.toggle = configuration.toggle

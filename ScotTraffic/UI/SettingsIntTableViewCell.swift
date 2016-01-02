@@ -1,5 +1,5 @@
 //
-//  SettingsEnumTableViewCell.swift
+//  SettingsIntTableViewCell.swift
 //  ScotTraffic
 //
 //  Created by Neil Gall on 10/11/2015.
@@ -8,30 +8,35 @@
 
 import UIKit
 
-class SettingsEnumTableViewCell: UITableViewCell {
+class SettingsIntTableViewCell: UITableViewCell, SettingsTableViewCell {
 
     @IBOutlet var iconImageView: UIImageView?
     @IBOutlet var titleLabel: UILabel?
-    @IBOutlet var enumControl: UISegmentedControl?
+    @IBOutlet var control: UISegmentedControl?
 
     private var observation: Observation?
     private var updateValue: (Int -> Void)?
     
-    func configure<EnumType where EnumType: RawRepresentable, EnumType.RawValue == Int>(configuration: SettingsEnumConfiguration<EnumType>) {
+    func configure(configuration: SettingConfiguration) {
+
+        guard let configuration = configuration as? SettingsIntConfiguration else {
+            return
+        }
+        
         self.iconImageView?.image = UIImage(named: configuration.iconImageName)
         self.titleLabel?.text = configuration.title
 
-        self.enumControl?.removeAllSegments()
+        self.control?.removeAllSegments()
         for (value, title) in configuration.settingValueTitles {
-            self.enumControl?.insertSegmentWithTitle(title, atIndex: value.rawValue, animated: false)
+            self.control?.insertSegmentWithTitle(title, atIndex: value, animated: false)
         }
 
-        observation = configuration.setting => { value in
-            self.enumControl?.selectedSegmentIndex = value.rawValue
+        observation = configuration.setting => {
+            self.control?.selectedSegmentIndex = $0
         }
 
-        self.updateValue = { rawValue in
-            configuration.setting.value = EnumType(rawValue: rawValue)!
+        self.updateValue = {
+            configuration.setting.value = $0
         }
     }
     
@@ -41,7 +46,7 @@ class SettingsEnumTableViewCell: UITableViewCell {
         updateValue = nil
     }
     
-    @IBAction func enumValueChanged(sender: UISegmentedControl) {
+    @IBAction func intValueChanged(sender: UISegmentedControl) {
         if let update = self.updateValue {
             update(sender.selectedSegmentIndex)
         }

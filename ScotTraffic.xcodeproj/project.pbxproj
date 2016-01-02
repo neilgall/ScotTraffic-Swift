@@ -35,7 +35,7 @@
 		286157C81BF29BD2000C11D4 /* SettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 286157C71BF29BD2000C11D4 /* SettingsTableViewController.swift */; };
 		286157CA1BF29CF6000C11D4 /* SettingsToggleTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 286157C91BF29CF6000C11D4 /* SettingsToggleTableViewCell.swift */; };
 		286157CC1BF29E6B000C11D4 /* SettingsConfigurations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 286157CB1BF29E6B000C11D4 /* SettingsConfigurations.swift */; };
-		286157CF1BF2A3C3000C11D4 /* SettingsEnumTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 286157CE1BF2A3C3000C11D4 /* SettingsEnumTableViewCell.swift */; };
+		286157CF1BF2A3C3000C11D4 /* SettingsIntTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 286157CE1BF2A3C3000C11D4 /* SettingsIntTableViewCell.swift */; };
 		286157D11BF2AD60000C11D4 /* LocationServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 286157D01BF2AD60000C11D4 /* LocationServices.swift */; };
 		286559151BC1DCB70058A35A /* Favourites.swift in Sources */ = {isa = PBXBuildFile; fileRef = 286559141BC1DCB70058A35A /* Favourites.swift */; };
 		2865591A1BC2A7200058A35A /* FRP-UI-Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 286559191BC2A7200058A35A /* FRP-UI-Extensions.swift */; };
@@ -90,6 +90,7 @@
 		289B9AB11C3473F200C342F1 /* NorthToSouthHeadingView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 289B9AB01C3473F200C342F1 /* NorthToSouthHeadingView.xib */; };
 		289B9AB31C34745500C342F1 /* WestToEastHeadingView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 289B9AB21C34745500C342F1 /* WestToEastHeadingView.xib */; };
 		289B9AB71C348AC700C342F1 /* FavouritesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 289B9AB61C348AC700C342F1 /* FavouritesTests.swift */; };
+		289D27071C38631700543F3C /* SettingsInfoTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 289D27061C38631700543F3C /* SettingsInfoTableViewCell.swift */; };
 		28AF4A051BD6ECD9009B0AE8 /* SearchResultCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28AF4A041BD6ECD9009B0AE8 /* SearchResultCell.swift */; };
 		28AF4A071BD82342009B0AE8 /* FadeTransition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28AF4A061BD82342009B0AE8 /* FadeTransition.swift */; };
 		28AF4A0B1BD849C0009B0AE8 /* PopoverContentSize.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28AF4A0A1BD849C0009B0AE8 /* PopoverContentSize.swift */; };
@@ -197,7 +198,7 @@
 		286157C71BF29BD2000C11D4 /* SettingsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsTableViewController.swift; sourceTree = "<group>"; };
 		286157C91BF29CF6000C11D4 /* SettingsToggleTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsToggleTableViewCell.swift; sourceTree = "<group>"; };
 		286157CB1BF29E6B000C11D4 /* SettingsConfigurations.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsConfigurations.swift; sourceTree = "<group>"; };
-		286157CE1BF2A3C3000C11D4 /* SettingsEnumTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsEnumTableViewCell.swift; sourceTree = "<group>"; };
+		286157CE1BF2A3C3000C11D4 /* SettingsIntTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsIntTableViewCell.swift; sourceTree = "<group>"; };
 		286157D01BF2AD60000C11D4 /* LocationServices.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationServices.swift; sourceTree = "<group>"; };
 		286559141BC1DCB70058A35A /* Favourites.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Favourites.swift; sourceTree = "<group>"; };
 		286559191BC2A7200058A35A /* FRP-UI-Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "FRP-UI-Extensions.swift"; sourceTree = "<group>"; };
@@ -238,6 +239,7 @@
 		289B9AB01C3473F200C342F1 /* NorthToSouthHeadingView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = NorthToSouthHeadingView.xib; sourceTree = "<group>"; };
 		289B9AB21C34745500C342F1 /* WestToEastHeadingView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WestToEastHeadingView.xib; sourceTree = "<group>"; };
 		289B9AB61C348AC700C342F1 /* FavouritesTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FavouritesTests.swift; sourceTree = "<group>"; };
+		289D27061C38631700543F3C /* SettingsInfoTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsInfoTableViewCell.swift; sourceTree = "<group>"; };
 		28AF4A041BD6ECD9009B0AE8 /* SearchResultCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchResultCell.swift; sourceTree = "<group>"; };
 		28AF4A061BD82342009B0AE8 /* FadeTransition.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FadeTransition.swift; sourceTree = "<group>"; };
 		28AF4A0A1BD849C0009B0AE8 /* PopoverContentSize.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PopoverContentSize.swift; sourceTree = "<group>"; };
@@ -402,7 +404,8 @@
 				286157CB1BF29E6B000C11D4 /* SettingsConfigurations.swift */,
 				286157C71BF29BD2000C11D4 /* SettingsTableViewController.swift */,
 				286157C91BF29CF6000C11D4 /* SettingsToggleTableViewCell.swift */,
-				286157CE1BF2A3C3000C11D4 /* SettingsEnumTableViewCell.swift */,
+				286157CE1BF2A3C3000C11D4 /* SettingsIntTableViewCell.swift */,
+				289D27061C38631700543F3C /* SettingsInfoTableViewCell.swift */,
 				280388011C0F9AC300F8C149 /* WebViewController.swift */,
 			);
 			name = Settings;
@@ -770,6 +773,7 @@
 				2879A9761BEE648800923FFE /* ViewKeyedMap.swift in Sources */,
 				286157CC1BF29E6B000C11D4 /* SettingsConfigurations.swift in Sources */,
 				287F754C1C00C9110040EE8A /* PersistentSetting.swift in Sources */,
+				289D27071C38631700543F3C /* SettingsInfoTableViewCell.swift in Sources */,
 				287F75581C00DC200040EE8A /* AppWidgetManager.swift in Sources */,
 				2865591E1BC316590058A35A /* AppCoordinator.swift in Sources */,
 				280388021C0F9AC300F8C149 /* WebViewController.swift in Sources */,
@@ -791,7 +795,7 @@
 				710535651BCC141C00FDB70C /* UserDefaultsProtocol.swift in Sources */,
 				28DB3BF31BC025D0001AAC2A /* Functions.swift in Sources */,
 				71F4B0B71C1477C80022B0AD /* BridgeStatus.swift in Sources */,
-				286157CF1BF2A3C3000C11D4 /* SettingsEnumTableViewCell.swift in Sources */,
+				286157CF1BF2A3C3000C11D4 /* SettingsIntTableViewCell.swift in Sources */,
 				280486531BC08711003BA360 /* SearchViewController.swift in Sources */,
 				280486571BC087F4003BA360 /* Settings.swift in Sources */,
 				28D3928C1BEE942800924F16 /* MapItemCollectionViewCellWithMap.swift in Sources */,

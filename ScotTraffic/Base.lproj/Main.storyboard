@@ -112,7 +112,7 @@
                                     <outlet property="toggleSwitch" destination="dWu-1O-8b1" id="Q5p-YS-r4J"/>
                                 </connections>
                             </tableViewCell>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="SettingsEnumTableViewCell" id="v9o-Xc-eMA" customClass="SettingsEnumTableViewCell" customModule="ScotTraffic" customModuleProvider="target">
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="SettingsIntTableViewCell" id="v9o-Xc-eMA" customClass="SettingsIntTableViewCell" customModule="ScotTraffic" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="158" width="600" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="v9o-Xc-eMA" id="zae-xZ-9Fd">
@@ -138,7 +138,7 @@
                                                 <segment title="Second"/>
                                             </segments>
                                             <connections>
-                                                <action selector="enumValueChanged:" destination="v9o-Xc-eMA" eventType="valueChanged" id="xMB-2f-Sdj"/>
+                                                <action selector="intValueChanged:" destination="v9o-Xc-eMA" eventType="valueChanged" id="lm7-8R-vfE"/>
                                             </connections>
                                         </segmentedControl>
                                     </subviews>
@@ -154,7 +154,7 @@
                                     </constraints>
                                 </tableViewCellContentView>
                                 <connections>
-                                    <outlet property="enumControl" destination="fh5-Kb-sBH" id="xLA-YM-0K6"/>
+                                    <outlet property="control" destination="fh5-Kb-sBH" id="Tty-l4-fmR"/>
                                     <outlet property="iconImageView" destination="afO-nc-Gf0" id="9fX-7q-bJl"/>
                                     <outlet property="titleLabel" destination="sqm-VN-pSk" id="hiD-bP-ap4"/>
                                 </connections>

@@ -8,29 +8,12 @@
 
 import UIKit
 
-private enum TableSections: Int {
-    case ContentSection = 0
-    case NotificationsSection
-    case SettingsSection
-    case AboutSection
-    case Count
-}
-
-private enum SettingsItems: Int {
-    case ShowCurrentLocation = 0
-    case TemperatureUnit
-    case Count
-}
-
-private enum AboutItems: Int {
-    case Version = 0
-    case AboutScotTraffic
-    case SupportLink
-    case Count
-}
-
 protocol SettingsTableViewControllerDelegate {
     func settingsViewControllerDidDismiss(settingsViewController: SettingsTableViewController)
+}
+
+protocol SettingsTableViewCell {
+    func configure(configuration: SettingConfiguration)
 }
 
 class SettingsTableViewController: UITableViewController {
@@ -39,96 +22,103 @@ class SettingsTableViewController: UITableViewController {
     var delegate: SettingsTableViewControllerDelegate?
     var serverIsReachable: Observable<Bool>?
     
-    private var contentConfigurations = [SettingsToggleConfiguration]()
-    private var notificationConfigurations = [SettingsToggleConfiguration]()
-    private var showCurrentLocationConfiguration: SettingsToggleConfiguration?
-    private var temperatureUnitConfiguration: SettingsEnumConfiguration<TemperatureUnit>?
-    private var infoConfigurations = [SettingsInfoConfiguration]()
+    private var temperatureAdapter: BidirectionalMapToInt<TemperatureUnit>?
+    private var configurations = [(String,[SettingConfiguration])]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        contentConfigurations.removeAll()
-        infoConfigurations.removeAll()
+        guard let settings = settings else {
+            return
+        }
 
-        if let settings = settings {
-            
-            contentConfigurations.append(SettingsToggleConfiguration(
+        var contentConfigurations: [SettingConfiguration] = [
+            SettingsToggleConfiguration(
                 iconImageName: "camera",
                 title: "Traffic Cameras",
-                toggle: settings.showTrafficCamerasOnMap))
-
-            contentConfigurations.append(SettingsToggleConfiguration(
+                toggle: settings.showTrafficCamerasOnMap),
+            SettingsToggleConfiguration(
                 iconImageName: "safetycamera",
                 title: "Safety Cameras",
-                toggle: settings.showSafetyCamerasOnMap))
-            
-            contentConfigurations.append(SettingsToggleConfiguration(
+                toggle: settings.showSafetyCamerasOnMap),
+            SettingsToggleConfiguration(
                 iconImageName: "incident",
                 title: "Alerts",
-                toggle: settings.showAlertsOnMap))
-            
-            contentConfigurations.append(SettingsToggleConfiguration(
+                toggle: settings.showAlertsOnMap),
+            SettingsToggleConfiguration(
                 iconImageName: "roadworks",
                 title: "Roadworks",
-                toggle: settings.showRoadworksOnMap))
-            
-            contentConfigurations.append(SettingsToggleConfiguration(
+                toggle: settings.showRoadworksOnMap),
+            SettingsToggleConfiguration(
                 iconImageName: "bridge",
                 title: "Bridges",
-                toggle: settings.showBridgesOnMap))
-            
-            if #available(iOS 9.0, *) {
-                contentConfigurations.append(SettingsToggleConfiguration(
-                    iconImageName: "warning-traffic",
-                    title: "Traffic",
-                    toggle: settings.showTrafficOnMap))
-            }
-            
-            notificationConfigurations.append(SettingsToggleConfiguration(
+                toggle: settings.showBridgesOnMap)
+        ]
+        
+        if #available(iOS 9.0, *) {
+            contentConfigurations.append(SettingsToggleConfiguration(
+                iconImageName: "warning-traffic",
+                title: "Traffic",
+                toggle: settings.showTrafficOnMap))
+        }
+
+        #if NotificationsEnabled
+        let notificationConfigurations: [SettingConfiguration] = [
+            SettingsToggleConfiguration(
                 iconImageName: "bridge",
                 title: "Forth Road Bridge",
-                toggle: settings.forthBridgeNotifications))
-
-            notificationConfigurations.append(SettingsToggleConfiguration(
+                toggle: settings.forthBridgeNotifications),
+            SettingsToggleConfiguration(
                 iconImageName: "bridge",
                 title: "Tay Road Bridge",
-                toggle: settings.tayBridgeNotifications))
-
-            showCurrentLocationConfiguration = SettingsToggleConfiguration(
+                toggle: settings.tayBridgeNotifications)
+        ]
+        #endif
+        
+        temperatureAdapter = BidirectionalMapToInt(enumInput: settings.temperatureUnit)
+        
+        let settingConfigurations: [SettingConfiguration] = [
+            SettingsToggleConfiguration(
                 iconImageName: "07-map-marker",
                 title: "Show current location",
-                toggle: settings.showCurrentLocationOnMap)
-            
-            temperatureUnitConfiguration = SettingsEnumConfiguration(
+                toggle: settings.showCurrentLocationOnMap),
+            SettingsIntConfiguration(
                 iconImageName: "959-thermometer",
                 title: "Temperature Unit",
-                setting: settings.temperatureUnit,
+                setting: temperatureAdapter!.intInput,
                 settingValueTitles: [
-                    TemperatureUnit.Fahrenheit: "ºF",
-                    TemperatureUnit.Celcius: "ºC"
+                    TemperatureUnit.Fahrenheit.rawValue: "ºF",
+                    TemperatureUnit.Celcius.rawValue: "ºC"
                 ])
-            
-            let informationCellIdentifier = "SettingsInformationTableViewCell"
-            let disclosureCellIdentifier = "SettingsDisclosureTableViewCell"
-            
-            infoConfigurations.append(SettingsInfoConfiguration(
+        ]
+
+        let informationCellIdentifier = "SettingsInformationTableViewCell"
+        let disclosureCellIdentifier = "SettingsDisclosureTableViewCell"
+        let infoConfigurations: [SettingConfiguration] = [
+            SettingsInfoConfiguration(
                 cellIdentifier: informationCellIdentifier,
                 text: "Version",
-                detailText: NSBundle.mainBundle().objectForInfoDictionaryKey("CFBundleShortVersionString") as? String))
-            
-            infoConfigurations.append(SettingsInfoConfiguration(
+                detailText: NSBundle.mainBundle().objectForInfoDictionaryKey("CFBundleShortVersionString") as? String,
+                pageTitle: nil),
+            SettingsInfoConfiguration(
                 cellIdentifier: disclosureCellIdentifier,
                 text: "About ScotTraffic",
-                detailText: nil))
-            
-            infoConfigurations.append(SettingsInfoConfiguration(
+                detailText: nil,
+                pageTitle: "about"),
+            SettingsInfoConfiguration(
                 cellIdentifier: disclosureCellIdentifier,
                 text: "Support",
-                detailText: nil))
-        }
-    }
+                detailText: nil,
+                pageTitle: "index")
+        ]
     
+        configurations = [
+            ("Content",  contentConfigurations),
+            ("Settings", settingConfigurations),
+            ("Help",     infoConfigurations)
+        ]
+    }
+
     @IBAction func dismiss(sender: UIBarButtonItem) {
         delegate?.settingsViewControllerDidDismiss(self)
     }
@@ -136,92 +126,33 @@ class SettingsTableViewController: UITableViewController {
     // MARK: - Table view data source
 
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        return TableSections.Count.rawValue
+        return configurations.count
     }
 
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        switch TableSections(rawValue: section)! {
-        case .ContentSection:
-            return contentConfigurations.count
-        case .NotificationsSection:
-            return notificationConfigurations.count
-        case .SettingsSection:
-            return SettingsItems.Count.rawValue
-        case .AboutSection:
-            return infoConfigurations.count
-        default:
-            return 0
-        }
+        return configurations[section].1.count
     }
     
     override func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        switch TableSections(rawValue: section)! {
-        case .ContentSection:
-            return "Content"
-        case .NotificationsSection:
-            return "Notifications"
-        case .SettingsSection:
-            return "Settings"
-        case .AboutSection:
-            return "Help"
-        default:
-            return nil
-        }
+        return configurations[section].0
     }
 
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        switch TableSections(rawValue: indexPath.section)! {
-        case .ContentSection:
-            let cell = tableView.dequeueReusableCellWithIdentifier("SettingsToggleTableViewCell", forIndexPath: indexPath) as! SettingsToggleTableViewCell
-            cell.configure(contentConfigurations[indexPath.row])
-            return cell
-            
-        case .NotificationsSection:
-            let cell = tableView.dequeueReusableCellWithIdentifier("SettingsToggleTableViewCell", forIndexPath: indexPath) as! SettingsToggleTableViewCell
-            cell.configure(notificationConfigurations[indexPath.row])
-            return cell
-
-        case .SettingsSection:
-            switch SettingsItems(rawValue: indexPath.row)! {
-            case .ShowCurrentLocation:
-                let cell = tableView.dequeueReusableCellWithIdentifier("SettingsToggleTableViewCell", forIndexPath: indexPath) as! SettingsToggleTableViewCell
-                cell.configure(showCurrentLocationConfiguration!)
-                return cell
-                
-            case .TemperatureUnit:
-                let cell = tableView.dequeueReusableCellWithIdentifier("SettingsEnumTableViewCell", forIndexPath: indexPath) as! SettingsEnumTableViewCell
-                cell.configure(temperatureUnitConfiguration!)
-                return cell
-                
-            default:
-                break
-            }
-            
-        case .AboutSection:
-            let config = infoConfigurations[indexPath.row]
-            let cell = tableView.dequeueReusableCellWithIdentifier(config.cellIdentifier, forIndexPath: indexPath)
-            cell.textLabel?.text = config.text
-            cell.detailTextLabel?.text = config.detailText
-            return cell
-            
-        default:
-            break
+        let configuration = configurations[indexPath.section].1[indexPath.row]
+        let cell = tableView.dequeueReusableCellWithIdentifier(configuration.cellIdentifier, forIndexPath: indexPath)
+        if let cell = cell as? SettingsTableViewCell {
+            cell.configure(configuration)
         }
-
-        return tableView.dequeueReusableCellWithIdentifier("dummyCell", forIndexPath: indexPath)
+        return cell
     }
     
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        if indexPath.section == TableSections.AboutSection.rawValue {
-            switch AboutItems(rawValue: indexPath.row)! {
-            case .AboutScotTraffic:
-                pushWebView("about")
-            case .SupportLink:
-                pushWebView("index")
-            default:
-                break
-            }
+        let configuration = configurations[indexPath.section].1[indexPath.row]
+        guard let config = configuration as? SettingsInfoConfiguration, title = config.pageTitle else {
+            return
         }
+        
+        pushWebView(title)
     }
     
     private func pushWebView(page: String) {
