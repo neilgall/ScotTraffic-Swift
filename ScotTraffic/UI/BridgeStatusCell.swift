@@ -25,6 +25,7 @@ class BridgeStatusCell : MapItemCollectionViewCellWithMap {
         if case .BridgeStatusItem(let bridgeStatus) = item {
             titleLabel?.text = bridgeStatus.name
             messageLabel?.text = bridgeStatus.message
+            dateLabel?.text = nil
             
             if let bg = backgroundImageView {
                 configureMap(bridgeStatus, forReferenceView: bg)
