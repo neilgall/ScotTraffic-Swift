@@ -162,7 +162,7 @@ func groupMapItems<MapItems: CollectionType where MapItems.Generator.Element == 
         for i in 0..<groups.count {
             if delegate.annotationAtMapPoint(groups[i].point, wouldOverlapWithAnnotationAtMapPoint: item.mapPoint) {
                 groups[i].items.append(item)
-                groups[i].point = groups[i].items.weightedCentrePoint
+                groups[i].point = groups[i].items.centrePoint
                 return
             }
         }
