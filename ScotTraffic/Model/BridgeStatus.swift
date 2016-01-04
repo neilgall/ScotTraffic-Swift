@@ -10,7 +10,7 @@ import MapKit
 
 typealias KPH = Double
 
-public final class BridgeStatus : MapItem {
+public final class BridgeStatus : MapItem, Hashable {
     public let identifier: String
     public let name: String
     public let road: String
@@ -26,6 +26,14 @@ public final class BridgeStatus : MapItem {
         self.message = message
         self.mapPoint = mapPoint
     }
+    
+    public var hashValue: Int {
+        return identifier.hashValue
+    }
+}
+
+public func == (lhs: BridgeStatus, rhs: BridgeStatus) -> Bool {
+    return lhs.identifier == rhs.identifier
 }
 
 extension BridgeStatus: JSONObjectDecodable {

@@ -20,10 +20,11 @@ public class Settings {
     public let showCurrentLocationOnMap: PersistentSetting<Bool>
     public let temperatureUnit: PersistentSetting<TemperatureUnit>
     public let visibleMapRect: PersistentSetting<MKMapRect>
-    public let tayBridgeNotifications: PersistentSetting<Bool>
-    public let forthBridgeNotifications: PersistentSetting<Bool>
+    public let bridgeNotifications: Observable<[(BridgeStatus, PersistentSetting<Bool>)]>
     
-    public init(userDefaults: UserDefaultsProtocol) {
+    private var observations: [Observation] = []
+
+    public init(userDefaults: UserDefaultsProtocol, bridges: Observable<[BridgeStatus]>) {
         showTrafficOnMap = userDefaults.boolSetting("showTrafficOnMap", false)
         showTrafficCamerasOnMap = userDefaults.boolSetting("showTrafficCamerasOnMap", true)
         showSafetyCamerasOnMap = userDefaults.boolSetting("showSafetyCamerasOnMap", true)
@@ -32,10 +33,19 @@ public class Settings {
         showBridgesOnMap = userDefaults.boolSetting("showBridgesOnMap", true)
         showCurrentLocationOnMap = userDefaults.boolSetting("showCurrentLocationOnMap", false)
         temperatureUnit = userDefaults.enumSetting("temperatureUnit", TemperatureUnit.Celcius)
+        
         visibleMapRect = userDefaults.setting("visibleMapRect", scotlandMapRect,
             to: { stringFromMapRect($0) }, from: { ($0 as? String).flatMap(mapRectFromString) })
-        tayBridgeNotifications = userDefaults.boolSetting("tayBridgeNotifications", false)
-        forthBridgeNotifications = userDefaults.boolSetting("forthBridgeNotifications", false)
+
+        bridgeNotifications = bridges.map({ $0.map({ bridge in
+            (bridge, userDefaults.boolSetting("bridgeNotifications-\(bridge.identifier)", false))
+        }) }).latest()
+        
+        observations.append(bridgeNotifications => {
+            for (_, setting) in $0 {
+                setting.start()
+            }
+        })
         
         reload()
     }
@@ -50,8 +60,6 @@ public class Settings {
         showCurrentLocationOnMap.start()
         temperatureUnit.start()
         visibleMapRect.start()
-        tayBridgeNotifications.start()
-        forthBridgeNotifications.start()
     }
 }
 

@@ -23,7 +23,8 @@ class SettingsTableViewController: UITableViewController {
     var serverIsReachable: Observable<Bool>?
     
     private var temperatureAdapter: BidirectionalMapToInt<TemperatureUnit>?
-    private var configurations = [(String,[SettingConfiguration])]()
+    private var observations = [Observation]()
+    private var configurations = [(String, [SettingConfiguration])]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -66,19 +67,12 @@ class SettingsTableViewController: UITableViewController {
                 toggle: settings.showTrafficOnMap), atIndex:contentConfigurations.count-2)
         }
 
-        #if NotificationsEnabled
-        let notificationConfigurations: [SettingConfiguration] = [
+        let notificationConfigurations: Observable<[SettingConfiguration]> = settings.bridgeNotifications.map({ $0.map({ item in
             SettingsToggleConfiguration(
                 iconImageName: "bridge",
-                title: "Forth Road Bridge",
-                toggle: settings.forthBridgeNotifications),
-
-            SettingsToggleConfiguration(
-                iconImageName: "bridge",
-                title: "Tay Road Bridge",
-                toggle: settings.tayBridgeNotifications)
-        ]
-        #endif
+                title: item.0.name,
+                toggle: item.1)
+        }) })
         
         temperatureAdapter = BidirectionalMapToInt(enumInput: settings.temperatureUnit)
         
@@ -114,12 +108,16 @@ class SettingsTableViewController: UITableViewController {
                 detailText: nil,
                 pageTitle: "index")
         ]
-    
-        configurations = [
-            ("Content",  contentConfigurations),
-            ("Settings", settingConfigurations),
-            ("Help",     infoConfigurations)
-        ]
+        
+        observations.append(notificationConfigurations => { [weak self] notificationConfigurations in
+            self?.configurations = [
+                ("Content",       contentConfigurations),
+                ("Settings",      settingConfigurations),
+                ("Notifications", notificationConfigurations),
+                ("Help",          infoConfigurations)
+            ]
+            self?.tableView.reloadData()
+        })
     }
 
     @IBAction func dismiss(sender: UIBarButtonItem) {

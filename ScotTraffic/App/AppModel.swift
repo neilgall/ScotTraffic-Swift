@@ -38,7 +38,6 @@ public class AppModel: ScotTraffic {
 
         self.diskCache = diskCache
         self.httpAccess = httpAccess
-        self.settings = Settings(userDefaults: userDefaults)
         
         
         // -- Traffic Cameras --
@@ -94,6 +93,10 @@ public class AppModel: ScotTraffic {
                 return weather.minElement( { distanceSq($0) < distanceSq($1) })
             }
         }
+        
+        // -- Settings
+        
+        self.settings = Settings(userDefaults: userDefaults, bridges: self.bridges)
         
         
         // -- Auto refresh --

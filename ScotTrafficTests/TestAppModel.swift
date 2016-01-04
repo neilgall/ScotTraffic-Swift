@@ -40,7 +40,7 @@ class TestAppModel: ScotTraffic {
         bridges = Input<[BridgeStatus]>(initial: loadTestData("bridges", context: ()))
         
         userDefaults = TestUserDefaults()
-        settings = Settings(userDefaults: userDefaults)
+        settings = Settings(userDefaults: userDefaults, bridges: bridges)
         favourites = Favourites(userDefaults: userDefaults, trafficCameraLocations: trafficCameraLocations)
     }
     

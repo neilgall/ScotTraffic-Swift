@@ -72,7 +72,7 @@ public extension DataSourceValue {
 
 public class EmptyDataSource : DataSource {
     public var value: Observable<DataSourceData> {
-        return Const(value: .Empty)
+        return Const(.Empty)
     }
     
     public func start() {

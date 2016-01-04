@@ -19,14 +19,24 @@ public class AppNotifications {
     private let settings: Settings
     private let httpAccess: HTTPAccess
     private var observations: [Observation] = []
+    private var notificationObservations: [Observation] = []
     private var deviceToken: Input<String?> = Input(initial: nil)
     
     public init(settings: Settings, httpAccess: HTTPAccess) {
         self.settings = settings
         self.httpAccess = httpAccess
         
-        let notificationsEnabled = settings.forthBridgeNotifications || settings.tayBridgeNotifications
-        observations.append(notificationsEnabled => { [weak self] enabled in
+        let notificationsEnabled = settings.bridgeNotifications.map({ pair in
+            pair.map({ $0.1 }).reduce(Const(false), combine: ||)
+        })
+        
+        observations.append(settings.bridgeNotifications => {
+            $0.forEach({
+                print($0.1.key, $0.1.value)
+            })
+        })
+        
+        observations.append(notificationsEnabled.join() => { [weak self] enabled in
             if enabled {
                 self?.enableNotifications()
             } else {
@@ -34,18 +44,21 @@ public class AppNotifications {
             }
         })
         
-        observations.append(registrationForSetting(settings.forthBridgeNotifications, identifier: "forthRoadBridge") => updateRegistration)
-        observations.append(registrationForSetting(settings.tayBridgeNotifications, identifier: "tayBridge") => updateRegistration)
-        
+        let deviceTokenWhenNotNil = not(isNil(deviceToken)).gate(deviceToken)
+
+        observations.append(settings.bridgeNotifications => { [weak self] bridges in
+            self?.notificationObservations = bridges.flatMap({ [weak self] (bridge, setting) in
+                guard let self_ = self else {
+                    return nil
+                }
+                let registration = combine(deviceTokenWhenNotNil, setting) {
+                    return Registration(identifier: bridge.identifier, deviceToken: $0!, enable: $1)
+                }
+                return registration.onChange() => self_.updateRegistration
+            })
+        })
     }
 
-    private func registrationForSetting(setting: Observable<Bool>, identifier: String) -> Observable<Registration> {
-        let registration = combine(not(isNil(deviceToken)).gate(deviceToken), setting) {
-            return Registration(identifier: identifier, deviceToken: $0!, enable: $1)
-        }
-        return registration.onChange()
-    }
-    
     private func enableNotifications() {
         let settings = UIUserNotificationSettings(forTypes: [.Badge, .Sound, .Alert], categories: nil)
         UIApplication.sharedApplication().registerUserNotificationSettings(settings)
@@ -73,8 +86,6 @@ public class AppNotifications {
     
     public func didFailToRegisterWithError(error: NSError) {
         deviceToken.value = nil
-        settings.forthBridgeNotifications.value = false
-        settings.tayBridgeNotifications.value = false
     }
     
     public func didRegisterWithDeviceToken(token: NSData) {
@@ -98,3 +109,4 @@ func == (lhs: Registration, rhs: Registration) -> Bool {
         && lhs.identifier == rhs.identifier
         && lhs.enable == rhs.enable
 }
+
