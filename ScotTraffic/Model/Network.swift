@@ -8,18 +8,19 @@
 
 import UIKit
 
-private let getTimeout: NSTimeInterval = 30
-private let postTimeout: NSTimeInterval = 30
+private let requestTimeout: NSTimeInterval = 30
 
 public enum NetworkError : ErrorType {
     case MalformedURL
     case FetchError(NSError)
+    case HTTPError(Int)
     case CannotParseImage
     
     public var description: String {
         switch self {
         case .MalformedURL: return "malformed URL"
         case .FetchError(let error): return "URL fetch error: \(error)"
+        case .HTTPError(let code): return "HTTP status code \(code)"
         case .CannotParseImage: return "failed to parse image data"
         }
     }
@@ -32,6 +33,14 @@ public class HTTPAccess: NSObject, NSURLSessionDelegate {
     private var session: NSURLSession!
     
     public let serverIsReachable: Observable<Bool>
+    
+    public enum HTTPMethod: String {
+        case GET
+        case PUT
+        case POST
+        case DELETE
+        case HEAD
+    }
     
     public init(baseURL: NSURL, indicator: NetworkActivityIndicator?) {
         self.baseURL = baseURL
@@ -79,33 +88,28 @@ public class HTTPAccess: NSObject, NSURLSessionDelegate {
     }
     
     public func fetchDataAtPath(path: String, completion: DataSourceData -> Void) {
-        guard let url = NSURL(string: path, relativeToURL: baseURL) else {
-            completion(DataSourceValue.Error(.Network(.MalformedURL)))
-            return
-        }
-        
-        let request = NSMutableURLRequest(URL: url, cachePolicy: .ReturnCacheDataElseLoad, timeoutInterval: getTimeout)
-        request.HTTPMethod = "GET"
-        
-        runTaskForRequest(request, completion: completion)
+        return request(.GET, data: nil, path: path, completion: completion)
         
     }
     
-    public func postData(data: NSData?, toPath path: String, completion: DataSourceData -> Void) {
+    public func request(method: HTTPMethod, data: NSData?, path: String, completion: DataSourceData -> Void) {
         guard let url = NSURL(string: path, relativeToURL: baseURL) else {
             completion(DataSourceValue.Error(.Network(.MalformedURL)))
             return
         }
-        let request = NSMutableURLRequest(URL: url, cachePolicy: .ReloadIgnoringLocalAndRemoteCacheData, timeoutInterval: postTimeout)
-        request.HTTPMethod = "POST"
+        let request = NSMutableURLRequest(URL: url, cachePolicy: .ReloadIgnoringLocalCacheData, timeoutInterval: requestTimeout)
+        request.HTTPMethod = method.rawValue
         request.HTTPBody = data
         
         runTaskForRequest(request, completion: completion)
     }
     
     private func runTaskForRequest(request: NSURLRequest, completion: DataSourceData -> Void) {
-        let task = session.dataTaskWithRequest(request) { data, _, error in
-            if let error = error {
+        let task = session.dataTaskWithRequest(request) { data, response, error in
+            if let httpResponse = response as? NSHTTPURLResponse where httpResponse.statusCode != 200 {
+                completion(DataSourceValue.Error(.Network(.HTTPError(httpResponse.statusCode))))
+            
+            } else if let error = error {
                 completion(DataSourceValue.Error(.Network(.FetchError(error))))
                 
             } else if let data = data {
