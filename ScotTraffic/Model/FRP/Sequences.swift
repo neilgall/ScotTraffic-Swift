@@ -8,17 +8,17 @@
 
 import Foundation
 
-public extension Observable where Value: SequenceType {
+public extension Signal where Value: SequenceType {
 
-    public func mapSeq<TargetType>(transform: Value.Generator.Element -> TargetType) -> Observable<[TargetType]> {
+    public func mapSeq<TargetType>(transform: Value.Generator.Element -> TargetType) -> Signal<[TargetType]> {
         return map({ $0.map(transform) })
     }
     
-    public func filterSeq(predicate: Value.Generator.Element -> Bool) -> Observable<[Value.Generator.Element]> {
+    public func filterSeq(predicate: Value.Generator.Element -> Bool) -> Signal<[Value.Generator.Element]> {
         return map({ $0.filter(predicate) })
     }
     
-    public func reduceSeq<TargetType>(initial: TargetType, combine: (TargetType, Value.Generator.Element) -> TargetType) -> Observable<TargetType> {
+    public func reduceSeq<TargetType>(initial: TargetType, combine: (TargetType, Value.Generator.Element) -> TargetType) -> Signal<TargetType> {
         return map({ $0.reduce(initial, combine: combine) })
     }
 }

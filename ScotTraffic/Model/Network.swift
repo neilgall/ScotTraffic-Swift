@@ -32,7 +32,7 @@ public class HTTPAccess: NSObject, NSURLSessionDelegate {
     private let reachability: Reachability?
     private var session: NSURLSession!
     
-    public let serverIsReachable: Observable<Bool>
+    public let serverIsReachable: Signal<Bool>
     
     public enum HTTPMethod: String {
         case GET
@@ -127,7 +127,7 @@ public class HTTPAccess: NSObject, NSURLSessionDelegate {
 class HTTPDataSource: DataSource {
     let httpAccess: HTTPAccess
     let path: String
-    let value = Observable<DataSourceData>()
+    let value = Signal<DataSourceData>()
     
     init(httpAccess: HTTPAccess, path: String) {
         self.httpAccess = httpAccess

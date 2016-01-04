@@ -18,8 +18,8 @@ class SafetyCameraCell: MapItemCollectionViewCellWithMap {
     @IBOutlet var shareButton: UIButton?
 
     private var item: Item?
-    private var image: Observable<DataSourceImage>?
-    private var observations = [Observation]()
+    private var image: Signal<DataSourceImage>?
+    private var receivers = [ReceiverType]()
     
     override func configure(item: Item) {
         if case .SafetyCameraItem(let safetyCamera) = item {
@@ -49,7 +49,7 @@ class SafetyCameraCell: MapItemCollectionViewCellWithMap {
             
             let imageSelector = union(serverImage, serverImageIsNil.gate(mapImage))
             
-            observations.append(imageSelector.output { [weak self] image in
+            receivers.append(imageSelector --> { [weak self] image in
                 switch image {
                 case .Cached(let image, let expired):
                     self?.imageView?.image = applyGradientMask(image)
@@ -67,7 +67,7 @@ class SafetyCameraCell: MapItemCollectionViewCellWithMap {
                 }
             })
             
-            observations.append(imageSelector.output { [weak self] _ in
+            receivers.append(imageSelector --> { [weak self] _ in
                 self?.shareButton?.enabled = true
             })
 
@@ -85,7 +85,7 @@ class SafetyCameraCell: MapItemCollectionViewCellWithMap {
     @IBAction func share() {
         if let shareButton = shareButton, item = item, case .SafetyCameraItem(let safetyCamera) = item {
             let coordinate = MKCoordinateForMapPoint(safetyCamera.mapPoint)
-            let image = self.image?.pullValue?.value
+            let image = self.image?.latestValue.get?.value
             let shareItem = SharableSafetyCamera(name: safetyCamera.name, image: image, coordinate: coordinate, link: safetyCamera.url)
             let rect = convertRect(shareButton.bounds, fromView: shareButton)
             delegate?.collectionViewCell(self, didRequestShareItem: shareItem, fromRect: rect)
@@ -93,7 +93,7 @@ class SafetyCameraCell: MapItemCollectionViewCellWithMap {
     }
     
     override func prepareForReuse() {
-        observations.removeAll()
+        receivers.removeAll()
         image = nil
         mapImage.value = nil
         

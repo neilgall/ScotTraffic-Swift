@@ -8,7 +8,7 @@
 
 import Foundation
 
-public protocol Observation {}
+public protocol ReceiverType {}
 
 public enum Transaction<ValueType> {
     case Begin
@@ -16,7 +16,32 @@ public enum Transaction<ValueType> {
     case Cancel
 }
 
-public protocol ObservableType {
+public enum LatestValue<Value> {
+    case None
+    case Computed(Void -> Value)
+    case Stored(Value)
+    
+    public var has: Bool {
+        switch self {
+        case .None: return false
+        case .Stored: return true
+        case .Computed: return true
+        }
+    }
+    
+    public var get: Value? {
+        switch self {
+        case .None:
+            return nil
+        case .Stored(let value):
+            return value
+        case .Computed(let getValue):
+            return getValue()
+        }
+    }
+}
+
+public protocol SignalType {
     typealias ValueType
     
     func addObserver(observer: Transaction<ValueType> -> Void) -> Int
@@ -25,11 +50,16 @@ public protocol ObservableType {
     func pushTransaction(transaction: Transaction<ValueType>)
     func pushValue(value: ValueType)
     
-    var canPullValue: Bool { get }
-    var pullValue: ValueType? { get }
+    var latestValue: LatestValue<ValueType> { get }
 }
 
-public class Observable<Value> : ObservableType {
+public protocol InputType {
+    typealias ValueType
+    
+    var value: ValueType { get set }
+}
+
+public class Signal<Value> : SignalType {
     public typealias ValueType = Value
     
     private var observers: [Int : Transaction<ValueType> -> Void] = [:]
@@ -39,9 +69,15 @@ public class Observable<Value> : ObservableType {
     }
     
     public func addObserver(observer: Transaction<ValueType> -> Void) -> Int {
-        if canPullValue, let value = pullValue {
+        switch latestValue {
+        case .Stored(let value):
             observer(.Begin)
             observer(.End(value))
+        case .Computed(let getValue):
+            observer(.Begin)
+            observer(.End(getValue()))
+        case .None:
+            break
         }
         let id = nextObserverId++
         observers[id] = observer
@@ -64,17 +100,13 @@ public class Observable<Value> : ObservableType {
         }
     }
     
-    // Pull - by default pull is not enabled
-    public var canPullValue: Bool {
-        return false
-    }
-    public var pullValue: ValueType? {
-        return nil
+    public var latestValue: LatestValue<Value> {
+        return .None
     }
 }
 
-public class Input<Value> : Observable<Value> {
-    private var inTransaction: Bool = false
+public class Input<Value> : Signal<Value>, InputType {
+    public typealias ValueType = Value
     
     public var value: Value {
         willSet {
@@ -86,21 +118,19 @@ public class Input<Value> : Observable<Value> {
             inTransaction = false
         }
     }
+
+    override public var latestValue: LatestValue<Value> {
+        return .Stored(value)
+    }
+    
+    private var inTransaction: Bool = false
     
     public init(initial: Value) {
         value = initial
     }
-    
-    override public var canPullValue: Bool {
-        return true
-    }
-    
-    override public var pullValue: Value? {
-        return value
-    }
 }
 
-class Observer<Source: ObservableType>: Observation {
+class Receiver<Source: SignalType>: ReceiverType {
     let source: Source
     private let id: Int
     
@@ -114,7 +144,7 @@ class Observer<Source: ObservableType>: Observation {
     }
 }
 
-public class Output<Source: ObservableType>: Observer<Source> {
+public class Output<Source: SignalType>: Receiver<Source> {
     public init(_ source: Source, _ closure: Source.ValueType -> Void) {
         super.init(source) { transaction in
             if case .End(let value) = transaction {
@@ -124,7 +154,7 @@ public class Output<Source: ObservableType>: Observer<Source> {
     }
 }
 
-public class WillOutput<Source: ObservableType>: Observer<Source> {
+public class WillOutput<Source: SignalType>: Receiver<Source> {
     public init(_ source: Source, _ closure: Void -> Void) {
         super.init(source) { transaction in
             if case .Begin = transaction {

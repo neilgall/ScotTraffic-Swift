@@ -13,7 +13,7 @@ class WebViewController: UIViewController, UIWebViewDelegate {
     @IBOutlet var webView: UIWebView?
     @IBOutlet var spinner: UIActivityIndicatorView?
     
-    var serverIsReachable: Observable<Bool>?
+    var serverIsReachable: Signal<Bool>?
     var forceLocalLoad: Bool = false
 
     var page: String? {
@@ -30,7 +30,7 @@ class WebViewController: UIViewController, UIWebViewDelegate {
     }
     
     var loadFromWeb: Bool {
-        return !forceLocalLoad && serverIsReachable?.pullValue == true
+        return !forceLocalLoad && serverIsReachable?.latestValue.get == true
     }
     
     func reload() {

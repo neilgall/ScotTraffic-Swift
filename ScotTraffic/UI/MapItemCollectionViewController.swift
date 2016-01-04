@@ -15,7 +15,7 @@ public class MapItemCollectionViewController: UIViewController, UICollectionView
     @IBOutlet var pageControl: UIPageControl?
     @IBOutlet var weatherContainer: UIView?
     
-    var observations = [Observation]()
+    var receivers = [ReceiverType]()
     
     var viewModel: MapItemCollectionViewModel? {
         willSet {
@@ -65,11 +65,11 @@ public class MapItemCollectionViewController: UIViewController, UICollectionView
     private func connectToModel() {
         if let viewModel = viewModel where isViewLoaded() {
             
-            observations.append(viewModel.cellItems => { _ in
+            receivers.append(viewModel.cellItems --> { _ in
                 self.reload()
             })
             
-            observations.append(viewModel.selectedItemIndex => { index in
+            receivers.append(viewModel.selectedItemIndex --> { index in
                 if let index = index {
                     self.selectItemIndex(index)
                 }
@@ -78,11 +78,11 @@ public class MapItemCollectionViewController: UIViewController, UICollectionView
     }
     
     private func disconnectFromModel() {
-        observations.removeAll()
+        receivers.removeAll()
     }
     
     private func reload() {
-        pageControl?.numberOfPages = viewModel?.cellItems.pullValue?.count ?? 0
+        pageControl?.numberOfPages = viewModel?.cellItems.latestValue.get?.count ?? 0
         collectionView?.dataSource = viewModel
         collectionView?.reloadData()
     }

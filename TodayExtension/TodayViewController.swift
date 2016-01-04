@@ -25,36 +25,36 @@ class TodayViewController: UIViewController, NCWidgetProviding {
     @IBOutlet var rightButton: UIButton?
     
     let model = TodayViewModel()
-    var observations: [Observation] = []
+    var receivers: [ReceiverType] = []
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
 
         errorLabel?.hidden = true
         
-        observations.append(model.image => {
+        receivers.append(model.image --> {
             self.imageView?.image = $0
         })
-        observations.append(model.showError => {
+        receivers.append(model.showError --> {
             self.errorLabel?.hidden = !$0
         })
-        observations.append(model.title => {
+        receivers.append(model.title --> {
             self.titleLabel?.text = $0
         })
-        observations.append(model.canMoveToPrevious => {
+        receivers.append(model.canMoveToPrevious --> {
             self.leftButton?.hidden = !$0
         })
-        observations.append(model.canMoveToNext => {
+        receivers.append(model.canMoveToNext --> {
             self.rightButton?.hidden = !$0
         })
-        observations.append(model.weatherViewModel.weatherHidden => {
+        receivers.append(model.weatherViewModel.weatherHidden --> {
             self.temperatureLabel?.hidden = $0
             self.weatherIconImageView?.hidden = $0
         })
-        observations.append(model.weatherViewModel.temperatureText => {
+        receivers.append(model.weatherViewModel.temperatureText --> {
             self.temperatureLabel?.text = $0
         })
-        observations.append(model.weatherViewModel.weatherIconName => {
+        receivers.append(model.weatherViewModel.weatherIconName --> {
             self.weatherIconImageView?.image = UIImage(named: $0)
         })
         
@@ -64,7 +64,7 @@ class TodayViewController: UIViewController, NCWidgetProviding {
     override func viewWillDisappear(animated: Bool) {
         super.viewWillDisappear(animated)
         
-        observations.removeAll()
+        receivers.removeAll()
     }
     
     override func viewWillLayoutSubviews() {

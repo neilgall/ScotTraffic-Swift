@@ -11,12 +11,12 @@ import ScotTraffic
 
 class TestAppModel: ScotTraffic {
     
-    let trafficCameraLocations: Observable<[TrafficCameraLocation]>
-    let safetyCameras: Observable<[SafetyCamera]>
-    let alerts: Observable<[Incident]>
-    let roadworks: Observable<[Incident]>
-    let bridges: Observable<[BridgeStatus]>
-    let weather: Observable<WeatherFinder>
+    let trafficCameraLocations: Signal<[TrafficCameraLocation]>
+    let safetyCameras: Signal<[SafetyCamera]>
+    let alerts: Signal<[Incident]>
+    let roadworks: Signal<[Incident]>
+    let bridges: Signal<[BridgeStatus]>
+    let weather: Signal<WeatherFinder>
     let settings: Settings
     let favourites: Favourites
     let userDefaults: UserDefaultsProtocol
@@ -45,7 +45,7 @@ class TestAppModel: ScotTraffic {
     }
     
     func trafficCameraLocationNamed(name: String) -> TrafficCameraLocation? {
-        return trafficCameraLocations.pullValue?.filter({ $0.name == name }).first
+        return trafficCameraLocations.latestValue.get?.filter({ $0.name == name }).first
     }
 }
     
@@ -63,7 +63,7 @@ private func loadTestData<T, C where T: JSONObjectDecodable>(filename: String, c
 }
 
 private class DummyDataSource: DataSource {
-    var value: Observable<DataSourceData> = Input(initial: .Empty)
+    var value: Signal<DataSourceData> = Input(initial: .Empty)
     
     func start() {
     }

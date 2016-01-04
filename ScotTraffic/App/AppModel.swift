@@ -11,12 +11,12 @@ import Foundation
 public class AppModel: ScotTraffic {
     
     // ScotTraffic interface
-    public let trafficCameraLocations: Observable<[TrafficCameraLocation]>
-    public let safetyCameras: Observable<[SafetyCamera]>
-    public let alerts: Observable<[Incident]>
-    public let roadworks: Observable<[Incident]>
-    public let bridges: Observable<[BridgeStatus]>
-    public let weather: Observable<WeatherFinder>
+    public let trafficCameraLocations: Signal<[TrafficCameraLocation]>
+    public let safetyCameras: Signal<[SafetyCamera]>
+    public let alerts: Signal<[Incident]>
+    public let roadworks: Signal<[Incident]>
+    public let bridges: Signal<[BridgeStatus]>
+    public let weather: Signal<WeatherFinder>
     public let settings: Settings
     public let favourites: Favourites
     
@@ -24,7 +24,7 @@ public class AppModel: ScotTraffic {
 
     private let diskCache: DiskCache
     private let fetchStarters: [PeriodicStarter]
-    private var observers = [Observation]()
+    private var receivers = [ReceiverType]()
     
     public init() {
         let diskCache = DiskCache(withPath: "scottraffic")
@@ -108,7 +108,7 @@ public class AppModel: ScotTraffic {
         
         // -- Refresh on restoring internet connection
         
-        self.observers.append(httpAccess.serverIsReachable.onRisingEdge({ [weak self] in
+        self.receivers.append(httpAccess.serverIsReachable.onRisingEdge({ [weak self] in
             self?.fetchStarters.forEach {
                 $0.restart(fireImmediately: true)
             }

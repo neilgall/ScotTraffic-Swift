@@ -24,8 +24,8 @@ public class AppNotifications {
     
     private let settings: Settings
     private let httpAccess: HTTPAccess
-    private var observations: [Observation] = []
-    private var notificationObservations: [Observation] = []
+    private var receivers: [ReceiverType] = []
+    private var notificationreceivers: [ReceiverType] = []
     private var deviceToken: Input<String?> = Input(initial: nil)
     
     public init(settings: Settings, httpAccess: HTTPAccess) {
@@ -35,7 +35,7 @@ public class AppNotifications {
         let notificationsEnabled = settings.bridgeNotifications.map({ pair in
             pair.map(second).reduce(Const(false), combine: ||)
         })
-        observations.append(notificationsEnabled.join() => { [weak self] enabled in
+        receivers.append(notificationsEnabled.join() --> { [weak self] enabled in
             if enabled {
                 self?.enableNotifications()
             } else {
@@ -45,15 +45,15 @@ public class AppNotifications {
         
         let deviceTokenWhenNotNil = not(isNil(deviceToken)).gate(deviceToken)
 
-        observations.append(settings.bridgeNotifications => { [weak self] bridges in
-            self?.notificationObservations = bridges.flatMap({ [weak self] (bridge, setting) in
+        receivers.append(settings.bridgeNotifications --> { [weak self] bridges in
+            self?.notificationreceivers = bridges.flatMap({ [weak self] (bridge, setting) in
                 guard let self_ = self else {
                     return nil
                 }
                 let registration = combine(deviceTokenWhenNotNil, setting) {
                     return Registration(identifier: bridge.identifier, deviceToken: $0!, enable: $1)
                 }
-                return registration.onChange() => self_.updateRegistration
+                return registration.onChange() --> self_.updateRegistration
             })
         })
     }

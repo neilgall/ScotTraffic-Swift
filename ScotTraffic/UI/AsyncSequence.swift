@@ -13,7 +13,7 @@ public class AsyncSequence {
     public typealias AsyncCompletionBlock = Void -> Void
     public typealias AsyncBlock = AsyncCompletionBlock -> Void
 
-    public let busy: Observable<Bool>
+    public let busy: Signal<Bool>
 
     private var sequence: [AsyncBlock] = []
     private let _busy: Input<Bool> = Input(initial: false)

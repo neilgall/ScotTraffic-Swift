@@ -15,7 +15,7 @@ class SearchViewController: UITableViewController, UISearchBarDelegate {
     let editingFavourites: Input<Bool> = Input(initial: false)
     var searchBar: UISearchBar?
     var searchViewModel: SearchViewModel?
-    var observations = [Observation]()
+    var receivers = [ReceiverType]()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -31,7 +31,7 @@ class SearchViewController: UITableViewController, UISearchBarDelegate {
 
         if let dataSource = searchViewModel?.dataSource {
             // Reload on data source change or adapter updates
-            observations.append(dataSource => { [weak self] adapter in
+            receivers.append(dataSource --> { [weak self] adapter in
                 self?.editingFavourites.value = false
                 self?.tableView.reloadData()
                 if let tableView = self?.tableView {
@@ -40,7 +40,7 @@ class SearchViewController: UITableViewController, UISearchBarDelegate {
             })
         }
         
-        observations.append(editingFavourites => { [weak self] editing in
+        receivers.append(editingFavourites --> { [weak self] editing in
             self?.navigationItem.rightBarButtonItem?.enabled = !editing
             self?.tableView.setEditing(editing, animated: true)
             self?.editingFavouritesButton?.setTitle(editing ? "Done" : "Edit", forState: .Normal)
@@ -66,21 +66,21 @@ class SearchViewController: UITableViewController, UISearchBarDelegate {
     // -- MARK: UITableViewDataSource
     
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        return searchViewModel?.dataSource.pullValue?.numberOfSectionsInTableView(tableView) ?? 0
+        return searchViewModel?.dataSource.latestValue.get?.numberOfSectionsInTableView(tableView) ?? 0
     }
     
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return searchViewModel?.dataSource.pullValue?.tableView(tableView, numberOfRowsInSection: section) ?? 0
+        return searchViewModel?.dataSource.latestValue.get?.tableView(tableView, numberOfRowsInSection: section) ?? 0
     }
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        return searchViewModel!.dataSource.pullValue!.tableView(tableView, cellForRowAtIndexPath: indexPath)
+        return searchViewModel!.dataSource.latestValue.get!.tableView(tableView, cellForRowAtIndexPath: indexPath)
     }
     
     // -- MARK: UITableViewDelegate
     
     override func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        guard let nibName = searchViewModel!.sectionHeader.pullValue else {
+        guard let nibName = searchViewModel!.sectionHeader.latestValue.get else {
             return nil
         }
         let nib = UINib(nibName: nibName, bundle: nil)
@@ -88,7 +88,7 @@ class SearchViewController: UITableViewController, UISearchBarDelegate {
     }
     
     override func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        guard let title = searchViewModel?.sectionHeader.pullValue where !title.isEmpty else {
+        guard let title = searchViewModel?.sectionHeader.latestValue.get where !title.isEmpty else {
             return 0
         }
         return 34

@@ -14,10 +14,10 @@ private let scotlandMapRect = MKMapRectMake(129244330.1, 79649811.3, 3762380.0, 
 
 private class Capture<T> {
     var value: T?
-    var observation: Observation!
+    var observation: ReceiverType!
     
-    init(_ obs: Observable<T>) {
-        observation = (obs => { self.value = $0 })
+    init(_ obs: Signal<T>) {
+        observation = (obs --> { self.value = $0 })
     }
 }
 

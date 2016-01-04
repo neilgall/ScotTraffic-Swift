@@ -14,7 +14,7 @@ class WeatherViewController: UIViewController {
     @IBOutlet var weatherIconImageView: UIImageView?
     
     var weatherViewModel: WeatherViewModel?
-    var observations = [Observation]()
+    var receivers = [ReceiverType]()
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
@@ -23,16 +23,16 @@ class WeatherViewController: UIViewController {
             return
         }
         
-        observations.append(model.weatherHidden => { hide in
+        receivers.append(model.weatherHidden --> { hide in
             self.temperatureLabel?.hidden = hide
             self.weatherIconImageView?.hidden = hide
         })
         
-        observations.append(model.temperatureText => {
+        receivers.append(model.temperatureText --> {
             self.temperatureLabel?.text = $0
         })
         
-        observations.append(model.weatherIconName => {
+        receivers.append(model.weatherIconName --> {
             self.weatherIconImageView?.image = UIImage(named: $0)
         })
     }
@@ -40,6 +40,6 @@ class WeatherViewController: UIViewController {
     override func viewWillDisappear(animated: Bool) {
         super.viewWillDisappear(animated)
         
-        observations.removeAll()
+        receivers.removeAll()
     }
 }

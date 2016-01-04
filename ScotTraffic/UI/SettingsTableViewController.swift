@@ -20,10 +20,10 @@ class SettingsTableViewController: UITableViewController {
 
     var settings: Settings?
     var delegate: SettingsTableViewControllerDelegate?
-    var serverIsReachable: Observable<Bool>?
+    var serverIsReachable: Signal<Bool>?
     
     private var temperatureAdapter: BidirectionalMapToInt<TemperatureUnit>?
-    private var observations = [Observation]()
+    private var receivers = [ReceiverType]()
     private var configurations = [(String, [SettingConfiguration])]()
     
     override func viewDidLoad() {
@@ -67,7 +67,7 @@ class SettingsTableViewController: UITableViewController {
                 toggle: settings.showTrafficOnMap), atIndex:contentConfigurations.count-2)
         }
 
-        let notificationConfigurations: Observable<[SettingConfiguration]> = settings.bridgeNotifications.mapSeq({ (bridge, setting) in
+        let notificationConfigurations: Signal<[SettingConfiguration]> = settings.bridgeNotifications.mapSeq({ (bridge, setting) in
             SettingsToggleConfiguration(
                 iconImageName: "bridge",
                 title: bridge.name,
@@ -109,7 +109,7 @@ class SettingsTableViewController: UITableViewController {
                 pageTitle: "index")
         ]
         
-        observations.append(notificationConfigurations => { [weak self] notificationConfigurations in
+        receivers.append(notificationConfigurations --> { [weak self] notificationConfigurations in
             self?.configurations = [
                 ("Content",       contentConfigurations),
                 ("Settings",      settingConfigurations),

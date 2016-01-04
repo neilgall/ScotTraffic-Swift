@@ -11,18 +11,18 @@ import CoreLocation
 public class LocationServices: NSObject, CLLocationManagerDelegate {
     
     // Outputs
-    public let authorised = Observable<Bool>()
+    public let authorised = Signal<Bool>()
 
     private let locationManager = CLLocationManager()
     private let authorisationStatus = Input(initial: CLAuthorizationStatus.NotDetermined)
-    private var observations = [Observation]()
+    private var receivers = [ReceiverType]()
     
     public init(enabled: Input<Bool>) {
         super.init()
 
         locationManager.delegate = self
 
-        observations.append(enabled.onRisingEdge({
+        receivers.append(enabled.onRisingEdge({
             self.authorisationStatus.value = CLLocationManager.authorizationStatus()
             if self.authorisationStatus.value == .NotDetermined {
                 self.locationManager.requestWhenInUseAuthorization()
@@ -39,7 +39,7 @@ public class LocationServices: NSObject, CLLocationManagerDelegate {
             }
         }
 
-        observations.append((enabled && isAuthorised) => {
+        receivers.append((enabled && isAuthorised) --> {
             self.authorised.pushValue($0)
         })
     }

@@ -20,7 +20,7 @@ public typealias DataSourceImage = DataSourceValue<UIImage>
 
 extension ImageDataSource {
 
-    var imageValue: Observable<DataSourceImage> {
+    var imageValue: Signal<DataSourceImage> {
         return dataSource.value.map({
             $0.map({ (data: NSData) throws -> UIImage in
                 if let image = UIImage(data: data) {
@@ -32,7 +32,7 @@ extension ImageDataSource {
         })
     }
     
-    var image: Observable<UIImage?> {
+    var image: Signal<UIImage?> {
         return imageValue.map({
             switch $0 {
             case .Cached(let image, _):

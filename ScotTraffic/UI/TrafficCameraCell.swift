@@ -19,8 +19,8 @@ class TrafficCameraCell: MapItemCollectionViewCell {
     
     private var locationName: String?
     private var favouriteItem: FavouriteTrafficCamera?
-    private var image: Observable<DataSourceImage>?
-    private var observations = [Observation]()
+    private var image: Signal<DataSourceImage>?
+    private var receivers = [ReceiverType]()
     
     override func configure(item: Item) {
         if case .TrafficCameraItem(let location, let camera) = item {
@@ -35,7 +35,7 @@ class TrafficCameraCell: MapItemCollectionViewCell {
         
             let imageValue = camera.imageValue
             
-            observations.append(imageValue.output { [weak self] image in
+            receivers.append(imageValue --> { [weak self] image in
                 switch image {
                 case .Cached(let image, let expired):
                     self?.errorLabel?.hidden = true
@@ -57,7 +57,7 @@ class TrafficCameraCell: MapItemCollectionViewCell {
                 }
             })
         
-            observations.append(not(isNil(camera.image)).output { [weak self] enabled in
+            receivers.append(not(isNil(camera.image)) --> { [weak self] enabled in
                 self?.shareButton?.enabled = enabled
                 self?.favouriteButton?.enabled = enabled
             })
@@ -72,7 +72,7 @@ class TrafficCameraCell: MapItemCollectionViewCell {
     }
     
     @IBAction func share() {
-        if let shareButton = shareButton, name = locationName, let image = image?.pullValue {
+        if let shareButton = shareButton, name = locationName, let image = image?.latestValue.get {
             let item = SharableTrafficCamera(name: name, image: image.value)
             let rect = convertRect(shareButton.bounds, fromView: shareButton)
             delegate?.collectionViewCell(self, didRequestShareItem: item, fromRect: rect)
@@ -87,7 +87,7 @@ class TrafficCameraCell: MapItemCollectionViewCell {
     }
     
     override func prepareForReuse() {
-        observations.removeAll()
+        receivers.removeAll()
         image = nil
         locationName = nil
         favouriteItem = nil

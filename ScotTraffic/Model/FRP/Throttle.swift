@@ -9,21 +9,21 @@
 import Foundation
 
 
-class Throttle<ValueType> : Observable<ValueType> {
+class Throttle<ValueType> : Signal<ValueType> {
     private let timer: dispatch_source_t
     private let minimumInterval: NSTimeInterval
     private var lastPushTimestamp: CFAbsoluteTime = 0
-    private var observer: Observation!
+    private var receiver: ReceiverType!
     private var transactionCount: Int = 0
     private var timerActive: Bool = false
     
-    init(_ source: Observable<ValueType>, minimumInterval: NSTimeInterval, queue: dispatch_queue_t) {
+    init(_ source: Signal<ValueType>, minimumInterval: NSTimeInterval, queue: dispatch_queue_t) {
         self.timer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, queue)
         self.minimumInterval = minimumInterval
         
         super.init()
         
-        self.observer = Observer(source) { transaction in
+        self.receiver = Receiver(source) { transaction in
             switch transaction {
             case .Begin:
                 if self.transactionCount == 0 {
@@ -82,8 +82,8 @@ class Throttle<ValueType> : Observable<ValueType> {
 }
 
 
-extension Observable {
-    public func throttle(minimumInterval: NSTimeInterval, queue: dispatch_queue_t) -> Observable<ValueType> {
+extension Signal {
+    public func throttle(minimumInterval: NSTimeInterval, queue: dispatch_queue_t) -> Signal<ValueType> {
         return Throttle(self, minimumInterval: minimumInterval, queue: queue)
     }
 }

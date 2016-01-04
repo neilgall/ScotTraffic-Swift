@@ -15,7 +15,7 @@ class SettingsToggleTableViewCell: UITableViewCell, SettingsTableViewCell {
     @IBOutlet var toggleSwitch: UISwitch?
 
     private var toggle: Input<Bool>?
-    private var observation: Observation?
+    private var observation: ReceiverType?
     
     func configure(configuration: SettingConfiguration) {
         guard let configuration = configuration as? SettingsToggleConfiguration else {
@@ -26,7 +26,7 @@ class SettingsToggleTableViewCell: UITableViewCell, SettingsTableViewCell {
         self.titleLabel?.text = configuration.title
         self.toggle = configuration.toggle
         
-        self.observation = configuration.toggle => { on in
+        self.observation = configuration.toggle --> { on in
             self.toggleSwitch?.setOn(on, animated: true)
         }
     }

@@ -18,11 +18,11 @@ public class MapItemCollectionViewModel: NSObject, UICollectionViewDataSource, M
     
     // Outputs
     let weatherViewModel: WeatherViewModel
-    let cellItems: Observable<[MapItemCollectionViewCell.Item]>
-    let selectedItemIndex: Observable<Int?>
+    let cellItems: Signal<[MapItemCollectionViewCell.Item]>
+    let selectedItemIndex: Signal<Int?>
     let shareAction: Input<ShareAction?>
     
-    public init(scotTraffic: ScotTraffic, selection: Observable<SearchViewModel.Selection?>) {
+    public init(scotTraffic: ScotTraffic, selection: Signal<SearchViewModel.Selection?>) {
         self.favourites = scotTraffic.favourites
 
         mapItems = Input(initial: [])
@@ -57,11 +57,11 @@ public class MapItemCollectionViewModel: NSObject, UICollectionViewDataSource, M
     }
     
     public func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return cellItems.pullValue?.count ?? 0
+        return cellItems.latestValue.get?.count ?? 0
     }
     
     public func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
-        let cellItem = cellItems.pullValue![indexPath.item]
+        let cellItem = cellItems.latestValue.get![indexPath.item]
         let cell = collectionView.dequeueReusableCellWithReuseIdentifier(cellItem.type.reuseIdentifier, forIndexPath: indexPath)
         
         if let cell = cell as? MapItemCollectionViewCell {

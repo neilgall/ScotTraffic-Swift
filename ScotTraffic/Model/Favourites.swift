@@ -41,18 +41,18 @@ public struct FavouriteTrafficCamera {
 public class Favourites {
     private let userDefaults: UserDefaultsProtocol
     private let items : Input<[FavouriteIdentifier]>
-    public let trafficCameras: Observable<[FavouriteTrafficCamera]>
+    public let trafficCameras: Signal<[FavouriteTrafficCamera]>
     
-    private var observations = [Observation]()
+    private var receivers = [ReceiverType]()
     
-    public init(userDefaults: UserDefaultsProtocol, trafficCameraLocations: Observable<[TrafficCameraLocation]>) {
+    public init(userDefaults: UserDefaultsProtocol, trafficCameraLocations: Signal<[TrafficCameraLocation]>) {
         self.userDefaults = userDefaults
         self.items = Input(initial: [])
         self.trafficCameras = combine(trafficCameraLocations, self.items, combine: favouriteTrafficCamerasFromLocations)
         
         reloadFromUserDefaults()
         
-        observations.append(items => {
+        receivers.append(items --> {
             userDefaults.setObject($0, forKey: favouritesKey)
         })
     }

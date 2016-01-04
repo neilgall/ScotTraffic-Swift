@@ -10,10 +10,10 @@ import NotificationCenter
 
 class AppWidgetManager {
     
-    let observation: Observation
+    let observation: ReceiverType
     
     init(favourites: Favourites) {
-        observation = favourites.trafficCameras => {
+        observation = favourites.trafficCameras --> {
             let hasContent = $0.count > 0
             NCWidgetController.widgetController().setHasContent(hasContent, forWidgetWithBundleIdentifier: TodayExtensionBundleIdentifier)
         }

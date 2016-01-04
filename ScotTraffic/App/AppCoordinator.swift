@@ -23,7 +23,7 @@ public class AppCoordinator: NSObject, NGSplitViewControllerDelegate, SettingsTa
     let mapViewModel: MapViewModel
     let searchViewModel: SearchViewModel
     let collectionViewModel: MapItemCollectionViewModel
-    var observations = [Observation]()
+    var receivers = [ReceiverType]()
     
     public init(appModel: AppModel, rootWindow: UIWindow) {
         self.appModel = appModel
@@ -66,16 +66,16 @@ public class AppCoordinator: NSObject, NGSplitViewControllerDelegate, SettingsTa
         mapViewController.navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named:"740-gear"), style: .Plain, target: self, action: Selector("settingsButtonTapped:"))
 
         // network reachability
-        observations.append(appModel.httpAccess.serverIsReachable.onFallingEdge(notifyNoNetworkReachability))
+        receivers.append(appModel.httpAccess.serverIsReachable.onFallingEdge(notifyNoNetworkReachability))
         
         // show map when search cancelled
-        observations.append(searchViewModel.searchActive.onFallingEdge(showMap))
+        receivers.append(searchViewModel.searchActive.onFallingEdge(showMap))
         
         // show map when search selection changes
-        observations.append(searchViewModel.searchSelection => searchSelectionChanged)
+        receivers.append(searchViewModel.searchSelection --> searchSelectionChanged)
         
         // sharing
-        observations.append(collectionViewModel.shareAction => shareAction)
+        receivers.append(collectionViewModel.shareAction --> shareAction)
         
         updateShowSearchButton()
         updateCancelSearchButton()

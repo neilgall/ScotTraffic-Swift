@@ -20,7 +20,7 @@ class SearchViewModelTests: XCTestCase {
         let viewModel = SearchViewModel(scotTraffic: testData)
         viewModel.searchTerm.value = ""
         
-        guard let searchResults = viewModel.dataSource.pullValue?.source.pullValue else {
+        guard let searchResults = viewModel.dataSource.latestValue.get?.source.latestValue.get else {
             XCTFail()
             return
         }
@@ -35,7 +35,7 @@ class SearchViewModelTests: XCTestCase {
         let viewModel = SearchViewModel(scotTraffic: testData)
         viewModel.searchTerm.value = ""
 
-        guard let header = viewModel.sectionHeader.pullValue else {
+        guard let header = viewModel.sectionHeader.latestValue.get else {
             XCTFail()
             return
         }
@@ -48,7 +48,7 @@ class SearchViewModelTests: XCTestCase {
         let viewModel = SearchViewModel(scotTraffic: testData)
         viewModel.searchTerm.value = "M80"
         
-        guard let searchResults = viewModel.dataSource.pullValue?.source.pullValue else {
+        guard let searchResults = viewModel.dataSource.latestValue.get?.source.latestValue.get else {
             XCTFail()
             return
         }
@@ -61,7 +61,7 @@ class SearchViewModelTests: XCTestCase {
         let viewModel = SearchViewModel(scotTraffic: testData)
         viewModel.searchTerm.value = "A90"
         
-        guard let header = viewModel.sectionHeader.pullValue else {
+        guard let header = viewModel.sectionHeader.latestValue.get else {
             XCTFail()
             return
         }
@@ -74,7 +74,7 @@ class SearchViewModelTests: XCTestCase {
         let viewModel = SearchViewModel(scotTraffic: testData)
         viewModel.searchTerm.value = "M8"
         
-        guard let header = viewModel.sectionHeader.pullValue else {
+        guard let header = viewModel.sectionHeader.latestValue.get else {
             XCTFail()
             return
         }
@@ -87,7 +87,7 @@ class SearchViewModelTests: XCTestCase {
         let viewModel = SearchViewModel(scotTraffic: testData)
         viewModel.searchTerm.value = ""
 
-        guard let selection = viewModel.searchSelection.pullValue else {
+        guard let selection = viewModel.searchSelection.latestValue.get else {
             XCTFail()
             return
         }
@@ -101,7 +101,7 @@ class SearchViewModelTests: XCTestCase {
         viewModel.searchTerm.value = "M8"
         viewModel.searchSelectionIndex.value = 3
         
-        guard let selection = viewModel.searchSelection.pullValue else {
+        guard let selection = viewModel.searchSelection.latestValue.get else {
             XCTFail()
             return
         }
@@ -116,7 +116,7 @@ class SearchViewModelTests: XCTestCase {
         viewModel.searchSelectionIndex.value = 3
         viewModel.searchTerm.value = ""
         
-        guard let selection = viewModel.searchSelection.pullValue else {
+        guard let selection = viewModel.searchSelection.latestValue.get else {
             XCTFail()
             return
         }
@@ -131,7 +131,7 @@ class SearchViewModelTests: XCTestCase {
         viewModel.searchSelectionIndex.value = 3
         viewModel.searchTerm.value = "M80"
 
-        guard let selection = viewModel.searchSelection.pullValue else {
+        guard let selection = viewModel.searchSelection.latestValue.get else {
             XCTFail()
             return
         }
@@ -147,7 +147,7 @@ class SearchViewModelTests: XCTestCase {
         
         viewModel.searchActive.value = false
         
-        guard let term = viewModel.searchTerm.pullValue, selection = viewModel.searchSelection.pullValue else {
+        guard let term = viewModel.searchTerm.latestValue.get, selection = viewModel.searchSelection.latestValue.get else {
             XCTFail()
             return
         }

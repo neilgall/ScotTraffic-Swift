@@ -8,31 +8,28 @@
 
 import Foundation
 
-public class Never<ValueType> : Observable<ValueType> {
+public class Never<Value> : Signal<Value> {
 }
 
-public class Const<ValueType> : Observable<ValueType> {
-    let value: ValueType
+public class Const<Value> : Signal<Value> {
+    public typealias ValueType = Value
 
-    public init(_ value: ValueType) {
+    public let value: Value
+    override public var latestValue: LatestValue<Value> {
+        return .Stored(value)
+    }
+
+    public init(_ value: Value) {
         self.value = value
     }
-    
-    override public var canPullValue: Bool {
-        return true
-    }
-    
-    override public var pullValue: ValueType? {
-        return value
-    }
 }
 
-class Filter<Source: ObservableType> : Observable<Source.ValueType> {
-    private var observer: Observation!
+class Filter<Source: SignalType> : Signal<Source.ValueType> {
+    private var receiver: ReceiverType!
     
     init(_ source: Source, _ predicate: Source.ValueType -> Bool) {
         super.init()
-        observer = Observer(source) { transaction in
+        receiver = Receiver(source) { transaction in
             if case .End(let value) = transaction where !predicate(value) {
                 self.pushTransaction(.Cancel)
             } else {
@@ -42,16 +39,16 @@ class Filter<Source: ObservableType> : Observable<Source.ValueType> {
     }
 }
 
-class Mapped<Source: ObservableType, MappedType> : Observable<MappedType> {
+class Mapped<Source: SignalType, MappedType> : Signal<MappedType> {
     private let source: Source
     private let transform: Source.ValueType -> MappedType
-    private var observer: Observation!
+    private var receiver: ReceiverType!
     
     init(_ source: Source, _ transform: Source.ValueType -> MappedType) {
         self.source = source
         self.transform = transform
         super.init()
-        self.observer = Observer(source) { transaction in
+        self.receiver = Receiver(source) { transaction in
             switch transaction {
             case .Begin:
                 self.pushTransaction(.Begin)
@@ -63,44 +60,43 @@ class Mapped<Source: ObservableType, MappedType> : Observable<MappedType> {
         }
     }
     
-    override var canPullValue: Bool {
-        return source.canPullValue
-    }
-    
-    override var pullValue: MappedType? {
-        if canPullValue, let sourceValue = source.pullValue {
-            return transform(sourceValue)
-        } else {
-            return nil
+    override var latestValue: LatestValue<MappedType> {
+        switch source.latestValue {
+        case .None:
+            return .None
+        case .Stored(let sourceValue):
+            return .Computed({ self.transform(sourceValue) })
+        case .Computed(let getSourceValue):
+            return .Computed({ self.transform(getSourceValue()) })
         }
     }
 }
 
-class Union<Source: ObservableType> : Observable<Source.ValueType> {
-    private var sourceObservers: [Observation]!
+class Union<Source: SignalType> : Signal<Source.ValueType> {
+    private var receivers: [ReceiverType]!
     
     init(_ sources: [Source]) {
         super.init()
-        self.sourceObservers = sources.map {
-            Observer($0) {
+        self.receivers = sources.map {
+            Receiver($0) {
                 self.pushTransaction($0)
             }
         }
     }
 }
 
-public class Latest<Source: ObservableType> : Observable<Source.ValueType> {
+public class Latest<Source: SignalType> : Signal<Source.ValueType> {
     let source: Source
     var value: Source.ValueType?
-    private var observer: Observation!
+    private var receiver: ReceiverType!
     
     init(_ source: Source) {
         self.source = source
-        self.value = source.pullValue
+        self.value = source.latestValue.get
         
         super.init()
 
-        self.observer = Observer(source) { transaction in
+        self.receiver = Receiver(source) { transaction in
             if case .End(let value) = transaction {
                 self.value = value
             }
@@ -108,23 +104,23 @@ public class Latest<Source: ObservableType> : Observable<Source.ValueType> {
         }
     }
     
-    override public var canPullValue: Bool {
-        return value != nil
-    }
-    
-    override public var pullValue: ValueType? {
-        return value
+    override public var latestValue: LatestValue<Source.ValueType> {
+        if let value = value {
+            return .Stored(value)
+        } else {
+            return .None
+        }
     }
 }
 
-class OnChange<Source: ObservableType where Source.ValueType: Equatable> : Observable<Source.ValueType> {
-    private var observer: Observation!
+class OnChange<Source: SignalType where Source.ValueType: Equatable> : Signal<Source.ValueType> {
+    private var receiver: ReceiverType!
     private var value: Source.ValueType?
     
     init(_ source: Source) {
         super.init()
-        self.value = source.pullValue
-        self.observer = Observer(source) { transaction in
+        value = source.latestValue.get
+        receiver = Receiver(source) { transaction in
             if case .End(let newValue) = transaction {
                 if newValue == self.value {
                     self.pushTransaction(.Cancel)
@@ -138,55 +134,58 @@ class OnChange<Source: ObservableType where Source.ValueType: Equatable> : Obser
         }
     }
     
-    override var canPullValue: Bool {
-        return value != nil
-    }
-    
-    override var pullValue: ValueType? {
-        return value
+    override var latestValue: LatestValue<Source.ValueType> {
+        guard let value = value else {
+            return .None
+        }
+        return .Stored(value)
     }
 }
 
-infix operator => { associativity right precedence 100 }
+infix operator --> { associativity right precedence 100 }
 
-public func => <Source: ObservableType> (source: Source, closure: Source.ValueType -> Void) -> Observation {
+public func --> <Source: SignalType> (source: Source, closure: Source.ValueType -> Void) -> ReceiverType {
     return Output(source, closure)
 }
 
-extension ObservableType {
-    public func output(closure: ValueType -> Void) -> Output<Self> {
-        return Output(self, closure)
-    }
-    
+infix operator <- { associativity left precedence 100 }
+
+public func <- <Input: InputType, ValueType where Input.ValueType == ValueType> (inout input: Input, value: ValueType) {
+    input.value = value
+}
+
+extension SignalType {
     public func willOutput(closure: Void -> Void) -> WillOutput<Self> {
         return WillOutput(self, closure)
     }
     
-    public func latest() -> Latest<Self> {
-        if let latest = self as? Latest<Self> {
-            // no point re-wrapping what is already a Latest
-            return latest
-        } else {
-            return Latest(self)
+    public func latest() -> Signal<ValueType> {
+        if let signal = self as? Signal<ValueType> {
+            switch signal.latestValue {
+            case .Stored: return signal
+            default: break
+            }
         }
+        
+        return Latest(self)
     }
     
-    public func map<TargetType>(transform: ValueType -> TargetType) -> Observable<TargetType> {
+    public func map<TargetType>(transform: ValueType -> TargetType) -> Signal<TargetType> {
         return Mapped(self, transform)
     }
     
-    public func filter(predicate: ValueType -> Bool) -> Observable<ValueType> {
+    public func filter(predicate: ValueType -> Bool) -> Signal<ValueType> {
         return Filter(self, predicate)
     }
 }
 
-extension ObservableType where ValueType: Equatable {
-    public func onChange() -> Observable<ValueType> {
+extension SignalType where ValueType: Equatable {
+    public func onChange() -> Signal<ValueType> {
         return OnChange(self)
     }
 }
 
-public func union<Source: ObservableType>(sources: Source...) -> Observable<Source.ValueType> {
+public func union<Source: SignalType>(sources: Source...) -> Signal<Source.ValueType> {
     return Union(sources)
 }
 

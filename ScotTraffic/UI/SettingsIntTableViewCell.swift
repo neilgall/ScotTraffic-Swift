@@ -14,7 +14,7 @@ class SettingsIntTableViewCell: UITableViewCell, SettingsTableViewCell {
     @IBOutlet var titleLabel: UILabel?
     @IBOutlet var control: UISegmentedControl?
 
-    private var observation: Observation?
+    private var observation: ReceiverType?
     private var updateValue: (Int -> Void)?
     
     func configure(configuration: SettingConfiguration) {
@@ -31,7 +31,7 @@ class SettingsIntTableViewCell: UITableViewCell, SettingsTableViewCell {
             self.control?.insertSegmentWithTitle(title, atIndex: value, animated: false)
         }
 
-        observation = configuration.setting => {
+        observation = configuration.setting --> {
             self.control?.selectedSegmentIndex = $0
         }
 

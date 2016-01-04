@@ -16,7 +16,7 @@ class BridgeStatusCell : MapItemCollectionViewCellWithMap {
     @IBOutlet var messageLabel: UILabel?
     @IBOutlet var shareButton: UIButton?
 
-    private var observations = [Observation]()
+    private var receivers = [ReceiverType]()
     private var sharableItem: ShareableBridge?
     
     override func configure(item: Item) {
@@ -31,7 +31,7 @@ class BridgeStatusCell : MapItemCollectionViewCellWithMap {
                 configureMap(bridgeStatus, forReferenceView: bg)
             }
             
-            observations.append(mapImage.map(applyGradientMask) => { [weak self] image in
+            receivers.append(mapImage.map(applyGradientMask) --> { [weak self] image in
                 self?.backgroundImageView?.image = image
             })
             
@@ -47,7 +47,7 @@ class BridgeStatusCell : MapItemCollectionViewCellWithMap {
     }
 
     override func prepareForReuse() {
-        observations.removeAll()
+        receivers.removeAll()
         
         titleLabel?.text = nil
         messageLabel?.text = nil

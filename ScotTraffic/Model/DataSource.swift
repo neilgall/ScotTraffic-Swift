@@ -18,7 +18,7 @@ public enum DataSourceValue<ValueType> {
 public typealias DataSourceData = DataSourceValue<NSData>
 
 public protocol DataSource: Startable {
-    var value: Observable<DataSourceData> { get }
+    var value: Signal<DataSourceData> { get }
 }
 
 public extension DataSourceValue {
@@ -71,7 +71,7 @@ public extension DataSourceValue {
 }
 
 public class EmptyDataSource : DataSource {
-    public var value: Observable<DataSourceData> {
+    public var value: Signal<DataSourceData> {
         return Const(.Empty)
     }
     

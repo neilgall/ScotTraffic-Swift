@@ -19,7 +19,7 @@ class IncidentCell: MapItemCollectionViewCellWithMap {
     @IBOutlet var shareButton: UIButton?
 
     private var item: SharableIncident?
-    private var observations = [Observation]()
+    private var receivers = [ReceiverType]()
     
     override func configure(item: Item) {
         textView?.text = nil
@@ -33,7 +33,7 @@ class IncidentCell: MapItemCollectionViewCellWithMap {
                 configureMap(incident, forReferenceView: bg)
             }
             
-            observations.append(mapImage.map(applyGradientMask) => { [weak self] image in
+            receivers.append(mapImage.map(applyGradientMask) --> { [weak self] image in
                 self?.backgroundImageView?.image = image
             })
 
@@ -59,7 +59,7 @@ class IncidentCell: MapItemCollectionViewCellWithMap {
     }
     
     override func prepareForReuse() {
-        observations.removeAll()
+        receivers.removeAll()
         item = nil
         
         iconImageView?.image = nil
@@ -106,10 +106,10 @@ private struct SharableIncident: SharableItem {
     let name: String
     let type: IncidentType
     let link: NSURL?
-    let mapImage: Observable<UIImage?>
+    let mapImage: Signal<UIImage?>
     
     var image: UIImage? {
-        return mapImage.pullValue?.flatMap { $0 }
+        return mapImage.latestValue.get.flatMap { $0 }
     }
     
     var text: String {

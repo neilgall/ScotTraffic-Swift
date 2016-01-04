@@ -9,16 +9,16 @@
 import XCTest
 import ScotTraffic
 
-// Must be a class so it can be mutated inside the observer closure
+// Must be a class so it can be mutated inside the receiver closure
 private class Capture<T> {
-    var obs = [Observation]()
+    var receivers = [ReceiverType]()
     var vals: [T] = []
     
-    init(_ o: Observable<T>, previous: Capture<T>?) {
+    init(_ o: Signal<T>, previous: Capture<T>?) {
         if let previous = previous {
             vals.appendContentsOf(previous.vals)
         }
-        self.obs.append(o => {
+        self.receivers.append(o --> {
             self.vals.append($0)
         })
     }
@@ -28,7 +28,7 @@ class FRPJoinTests: XCTestCase {
 
     func testJoinOnInnerChange() {
         let inner = Input<Bool>(initial: false)
-        let outer = Input<Observable<Bool>>(initial: inner)
+        let outer = Input<Signal<Bool>>(initial: inner)
         let c = Capture(outer.join(), previous: nil)
         
         inner.value = true
@@ -37,9 +37,9 @@ class FRPJoinTests: XCTestCase {
     }
 
     func testJoinOnOuterChange() {
-        let outer = Input<Observable<Bool>?>(initial: nil)
+        let outer = Input<Signal<Bool>?>(initial: nil)
         var c: Capture<Bool>? = nil
-        let outerObs = outer => {
+        let outerObs = outer --> {
             if let inner = $0 {
                 c = Capture(inner, previous: c)
             } else {
@@ -59,9 +59,9 @@ class FRPJoinTests: XCTestCase {
     }
     
     func testJoinOnBothChange() {
-        let outer = Input<Observable<Bool>?>(initial: nil)
+        let outer = Input<Signal<Bool>?>(initial: nil)
         var c: Capture<Bool>? = nil
-        let outerObs = outer => {
+        let outerObs = outer --> {
             if let inner = $0 {
                 c = Capture(inner, previous: c)
             } else {

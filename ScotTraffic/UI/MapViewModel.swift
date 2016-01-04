@@ -39,22 +39,22 @@ public class MapViewModel {
     // -- MARK: Outputs
     
     // The set of annotations in the visible map rect
-    public let annotations: Observable<[MapAnnotation]>
+    public let annotations: Signal<[MapAnnotation]>
     
     // The selected annotation, if any
-    public let selectedAnnotation: Observable<MapAnnotation?>
+    public let selectedAnnotation: Signal<MapAnnotation?>
     
     // Indicates whether the user location should be shown on the map
-    public let showsUserLocationOnMap: Observable<Bool>
+    public let showsUserLocationOnMap: Signal<Bool>
     
     // Indicates whether traffic should be shown on the map
-    public let showTrafficOnMap: Observable<Bool>
+    public let showTrafficOnMap: Signal<Bool>
     
     
     // -- MARK: private data
     
     private let locationServices: LocationServices
-    private var observations = [Observation]()
+    private var receivers = [ReceiverType]()
 
     public init(scotTraffic: ScotTraffic) {
         
@@ -104,7 +104,7 @@ public class MapViewModel {
             expandedVisibleMapRect,
             combine: mapItemsFromRect)
         
-        let mapItemGroups: Observable<[MapItemGroup]> = combine(trafficCameras, safetyCameras, alerts, roadworks, bridges, delegate) {
+        let mapItemGroups: Signal<[MapItemGroup]> = combine(trafficCameras, safetyCameras, alerts, roadworks, bridges, delegate) {
             guard let delegate = $5 else {
                 return []
             }
@@ -127,7 +127,7 @@ public class MapViewModel {
     }
     
     public func annotationForMapItem(mapItem: MapItem) -> MapAnnotation? {
-        for annotation in annotations.pullValue ?? [] {
+        for annotation in annotations.latestValue.get ?? [] {
             if annotation.mapItems.contains({ $0 == mapItem }) {
                 return annotation
             }

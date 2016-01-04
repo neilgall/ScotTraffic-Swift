@@ -39,14 +39,14 @@ struct SettingsInfoConfiguration : SettingConfiguration {
 struct BidirectionalMapToInt<EnumType: RawRepresentable where EnumType.RawValue == Int> {
     let intInput: Input<Int>
     let enumInput: Input<EnumType>
-    let observations: [Observation]
+    let receivers: [ReceiverType]
     
     init(enumInput: Input<EnumType>) {
         let intInput = Input(initial: 0)
 
         var flag = false
         
-        let enumToInt = enumInput => { enumValue in
+        let enumToInt = enumInput --> { enumValue in
             if !flag {
                 with(&flag) {
                     intInput.value = enumValue.rawValue
@@ -54,7 +54,7 @@ struct BidirectionalMapToInt<EnumType: RawRepresentable where EnumType.RawValue 
             }
         }
         
-        let intToEnum = intInput => { intValue in
+        let intToEnum = intInput --> { intValue in
             if !flag {
                 with(&flag) {
                     if let value = EnumType(rawValue: intValue) {
@@ -66,6 +66,6 @@ struct BidirectionalMapToInt<EnumType: RawRepresentable where EnumType.RawValue 
 
         self.intInput = intInput
         self.enumInput = enumInput
-        self.observations = [enumToInt, intToEnum]
+        self.receivers = [enumToInt, intToEnum]
     }
 }

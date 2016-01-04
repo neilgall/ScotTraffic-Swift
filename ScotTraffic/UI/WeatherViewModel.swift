@@ -11,11 +11,11 @@ import MapKit
 class WeatherViewModel {
  
     // Outputs
-    let weatherHidden: Observable<Bool>
-    let temperatureText: Observable<String>
-    let weatherIconName: Observable<String>
+    let weatherHidden: Signal<Bool>
+    let temperatureText: Signal<String>
+    let weatherIconName: Signal<String>
 
-    init(weatherFinder: Observable<MapItem -> Weather?>, mapItem: Observable<MapItem?>, temperatureUnit: Observable<TemperatureUnit>) {
+    init(weatherFinder: Signal<MapItem -> Weather?>, mapItem: Signal<MapItem?>, temperatureUnit: Signal<TemperatureUnit>) {
         
         let weather = combine(weatherFinder, mapItem) { weatherFinder, mapItem in
             mapItem.flatMap({ weatherFinder($0) })
@@ -37,7 +37,7 @@ class WeatherViewModel {
             return unit.numberFormatter.stringFromNumber(temperatureValue)!
         }
         
-        let currentDate: Observable<NSDate> = CurrentDate()
+        let currentDate: Signal<NSDate> = CurrentDate()
         let isDaytime = combine(currentDate, weather) { (date: NSDate, weather: Weather?) -> Bool in
             guard let weather = weather else {
                 return false
@@ -87,13 +87,9 @@ extension TemperatureUnit {
     }
 }
 
-class CurrentDate: Observable<NSDate> {
-    override var canPullValue: Bool {
-        return true
-    }
-    
-    override var pullValue: NSDate {
-        return NSDate()
+class CurrentDate: Signal<NSDate> {
+    override var latestValue: LatestValue<NSDate> {
+        return .Computed({ NSDate() })
     }
 }
 

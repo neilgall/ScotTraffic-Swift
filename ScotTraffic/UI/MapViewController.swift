@@ -23,7 +23,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, MapViewModelDelega
     var maximumDetailItemsForCollectionCallout: Int = 1
     
     var viewModel: MapViewModel?
-    var observations = [Observation]()
+    var receivers = [ReceiverType]()
     var calloutConstructor: ([MapItem] -> UIViewController)?
     var calloutViewControllerByAnnotation = ViewKeyedMap<UIViewController>()
     var animationSequence = AsyncSequence()
@@ -35,11 +35,11 @@ class MapViewController: UIViewController, MKMapViewDelegate, MapViewModelDelega
             viewModel.delegate.value = self
             calloutContainerView.delegate = self
             
-            observations.append(viewModel.annotations => self.updateAnnotations)
-            observations.append(not(animationSequence.busy).gate(viewModel.selectedAnnotation) => self.autoSelectAnnotation)
-            observations.append(viewModel.selectedMapItem => self.zoomToSelectedMapItem)
-            observations.append(viewModel.showsUserLocationOnMap => self.updateShowsCurrentLocation)
-            observations.append(viewModel.showTrafficOnMap => self.updateShowsTraffic)
+            receivers.append(viewModel.annotations --> self.updateAnnotations)
+            receivers.append(not(animationSequence.busy).gate(viewModel.selectedAnnotation) --> self.autoSelectAnnotation)
+            receivers.append(viewModel.selectedMapItem --> self.zoomToSelectedMapItem)
+            receivers.append(viewModel.showsUserLocationOnMap --> self.updateShowsCurrentLocation)
+            receivers.append(viewModel.showTrafficOnMap --> self.updateShowsTraffic)
             
             mapView.setVisibleMapRect(viewModel.visibleMapRect.value, animated: false)
         }

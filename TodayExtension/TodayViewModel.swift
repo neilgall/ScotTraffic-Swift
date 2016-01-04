@@ -11,11 +11,11 @@ import UIKit
 class TodayViewModel {
  
     // Outputs
-    let image: Observable<UIImage>
-    let title: Observable<String>
-    let showError: Observable<Bool>
-    let canMoveToPrevious: Observable<Bool>
-    let canMoveToNext: Observable<Bool>
+    let image: Signal<UIImage>
+    let title: Signal<String>
+    let showError: Signal<Bool>
+    let canMoveToPrevious: Signal<Bool>
+    let canMoveToNext: Signal<Bool>
     
     let diskCache: DiskCache
     let httpAccess: HTTPAccess
@@ -24,8 +24,8 @@ class TodayViewModel {
     let favourites: Favourites
     let settings: TodaySettings
     let weatherViewModel: WeatherViewModel
-    var observations: [Observation] = []
-    var observeImageDataSource: Observation? = nil
+    var receivers: [ReceiverType] = []
+    var observeImageDataSource: ReceiverType? = nil
     
     init() {
         let diskCache = DiskCache(withPath: "scottraffic")
@@ -67,7 +67,7 @@ class TodayViewModel {
         self.favourites = Favourites(userDefaults: userDefaults,
             trafficCameraLocations: trafficCameraLocations.map({ $0.value ?? [] }).latest())
         
-        let selectedFavourite: Observable<FavouriteTrafficCamera> = combine(favourites.trafficCameras, settings.imageIndex) { favourites, imageIndex in
+        let selectedFavourite: Signal<FavouriteTrafficCamera> = combine(favourites.trafficCameras, settings.imageIndex) { favourites, imageIndex in
             let index = max(0, min(imageIndex, favourites.count))
             return favourites[index]
         }
@@ -92,15 +92,15 @@ class TodayViewModel {
             return index < favourites.count-1
         }
 
-        self.image = Observable()
-        self.showError = Observable()
+        self.image = Signal()
+        self.showError = Signal()
         
         let imageDataSource = selectedFavourite.map({ favourite in
             return favourite.location.cameras[favourite.cameraIndex]
         }).latest()
 
-        observations.append(imageDataSource => { dataSource in
-            self.observeImageDataSource = dataSource.imageValue.latest() => {
+        receivers.append(imageDataSource --> { dataSource in
+            self.observeImageDataSource = dataSource.imageValue.latest() --> {
                 switch $0 {
                 case .Fresh(let image):
                     self.image.pushValue(image)
@@ -124,13 +124,13 @@ class TodayViewModel {
     }
     
     func moveToPreviousImage() {
-        if let canMove = canMoveToPrevious.pullValue where canMove {
+        if let canMove = canMoveToPrevious.latestValue.get where canMove {
             settings.imageIndex.value = settings.imageIndex.value - 1
         }
     }
     
     func moveToNextImage() {
-        if let canMove = canMoveToNext.pullValue where canMove {
+        if let canMove = canMoveToNext.latestValue.get where canMove {
             settings.imageIndex.value = settings.imageIndex.value + 1
         }
     }

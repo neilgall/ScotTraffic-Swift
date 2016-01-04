@@ -8,10 +8,10 @@
 
 import Foundation
 
-class Gate<Source: ObservableType, Gate: ObservableType where Gate.ValueType: BooleanType> : Observable<Source.ValueType> {
-    let valueLatest: Latest<Source>
-    let gateLatest: Latest<Gate>
-    var sourceObservers: [Observation] = []
+class Gate<Source: SignalType, Gate: SignalType where Gate.ValueType: BooleanType> : Signal<Source.ValueType> {
+    let valueLatest: Signal<Source.ValueType>
+    let gateLatest: Signal<Gate.ValueType>
+    var receivers: [ReceiverType] = []
     var transactionCount = 0
     var needsUpdate = false
     
@@ -19,8 +19,8 @@ class Gate<Source: ObservableType, Gate: ObservableType where Gate.ValueType: Bo
         valueLatest = source.latest()
         gateLatest = gate.latest()
         super.init()
-        sourceObservers.append(Observer(valueLatest) { t in self.update(t) })
-        sourceObservers.append(Observer(gateLatest) { t in self.update(t) })
+        receivers.append(Receiver(valueLatest) { t in self.update(t) })
+        receivers.append(Receiver(gateLatest) { t in self.update(t) })
     }
     
     private func update<S>(transaction: Transaction<S>) {
@@ -39,7 +39,7 @@ class Gate<Source: ObservableType, Gate: ObservableType where Gate.ValueType: Bo
         case .Cancel:
             transactionCount -= 1
             if transactionCount == 0 {
-                if needsUpdate, let value = valueLatest.pullValue, let gate = gateLatest.pullValue where gate.boolValue == true {
+                if needsUpdate, let value = valueLatest.latestValue.get, let gate = gateLatest.latestValue.get where gate.boolValue == true {
                     pushTransaction(.End(value))
                     needsUpdate = false
                 } else {
@@ -50,33 +50,33 @@ class Gate<Source: ObservableType, Gate: ObservableType where Gate.ValueType: Bo
     }
 }
 
-extension Observable where Value: BooleanType, Value: Equatable {
-    public func onRisingEdge(closure: Void -> Void) -> Observation {
-        return onChange().filter({ $0.boolValue == true }) => { _ in closure() }
+extension Signal where Value: BooleanType, Value: Equatable {
+    public func onRisingEdge(closure: Void -> Void) -> ReceiverType {
+        return onChange().filter({ $0.boolValue == true }) --> { _ in closure() }
     }
     
-    public func onFallingEdge(closure: Void -> Void) -> Observation {
-        return onChange().filter({ $0.boolValue == false }) => { _ in closure() }
+    public func onFallingEdge(closure: Void -> Void) -> ReceiverType {
+        return onChange().filter({ $0.boolValue == false }) --> { _ in closure() }
     }
     
-    public func gate<SourceType>(source: Observable<SourceType>) -> Observable<SourceType> {
+    public func gate<SourceType>(source: Signal<SourceType>) -> Signal<SourceType> {
         return Gate(source, gate: self.map({ $0.boolValue }))
     }
 }
 
-public func not(observable: Observable<Bool>) -> Observable<Bool> {
-    return observable.map { b in !b }
+public func not<S: SignalType where S.ValueType: BooleanType>(signal: S) -> Signal<Bool> {
+    return signal.map { b in !b.boolValue }
 }
 
-public func isNil<ValueType>(observable: Observable<ValueType?>) -> Observable<Bool> {
-    return observable.map { $0 == nil }
+public func isNil<S: SignalType, T where S.ValueType == T?>(signal: S) -> Signal<Bool> {
+    return signal.map { $0 == nil }
 }
 
-public func && (lhs: Observable<Bool>, rhs: Observable<Bool>) -> Observable<Bool> {
-    return combine(lhs, rhs) { $0 && $1 }
+public func && <LHS: SignalType, RHS: SignalType where LHS.ValueType: BooleanType, RHS.ValueType: BooleanType>(lhs: LHS, rhs: RHS) -> Signal<Bool> {
+    return combine(lhs, rhs) { $0.boolValue && $1.boolValue }
 }
 
-public func || (lhs: Observable<Bool>, rhs: Observable<Bool>) -> Observable<Bool> {
-    return combine(lhs, rhs) { $0 || $1 }
+public func || <LHS: SignalType, RHS: SignalType where LHS.ValueType: BooleanType, RHS.ValueType: BooleanType>(lhs: LHS, rhs: RHS) -> Signal<Bool> {
+    return combine(lhs, rhs) { $0.boolValue || $1.boolValue }
 }
 

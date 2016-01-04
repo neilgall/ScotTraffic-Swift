@@ -40,7 +40,7 @@ class FavouritesTests: XCTestCase {
         
         favourites.moveItemFromIndex(1, toIndex: 3)
         
-        XCTAssertEqual(identifiers.pullValue!, [a, c, d, b, e])
+        XCTAssertEqual(identifiers.latestValue.get!, [a, c, d, b, e])
     }
 
     func testMoveUp() {
@@ -52,7 +52,7 @@ class FavouritesTests: XCTestCase {
         
         favourites.moveItemFromIndex(4, toIndex: 0)
         
-        XCTAssertEqual(identifiers.pullValue!, [e, a, b, c, d])
+        XCTAssertEqual(identifiers.latestValue.get!, [e, a, b, c, d])
     }
 
     func testMoveSame() {
@@ -64,7 +64,7 @@ class FavouritesTests: XCTestCase {
         
         favourites.moveItemFromIndex(2, toIndex: 2)
         
-        XCTAssertEqual(identifiers.pullValue!, [a, b, c, d, e])
+        XCTAssertEqual(identifiers.latestValue.get!, [a, b, c, d, e])
         
     }
 }

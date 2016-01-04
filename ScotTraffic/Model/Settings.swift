@@ -20,11 +20,11 @@ public class Settings {
     public let showCurrentLocationOnMap: PersistentSetting<Bool>
     public let temperatureUnit: PersistentSetting<TemperatureUnit>
     public let visibleMapRect: PersistentSetting<MKMapRect>
-    public let bridgeNotifications: Observable<[(BridgeStatus, PersistentSetting<Bool>)]>
+    public let bridgeNotifications: Signal<[(BridgeStatus, PersistentSetting<Bool>)]>
     
-    private var observations: [Observation] = []
+    private var receivers: [ReceiverType] = []
 
-    public init(userDefaults: UserDefaultsProtocol, bridges: Observable<[BridgeStatus]>) {
+    public init(userDefaults: UserDefaultsProtocol, bridges: Signal<[BridgeStatus]>) {
         showTrafficOnMap = userDefaults.boolSetting("showTrafficOnMap", false)
         showTrafficCamerasOnMap = userDefaults.boolSetting("showTrafficCamerasOnMap", true)
         showSafetyCamerasOnMap = userDefaults.boolSetting("showSafetyCamerasOnMap", true)
@@ -41,7 +41,7 @@ public class Settings {
             (bridge, userDefaults.boolSetting("bridgeNotifications-\(bridge.identifier)", false))
         }).latest()
         
-        observations.append(bridgeNotifications => {
+        receivers.append(bridgeNotifications --> {
             for (_, setting) in $0 {
                 setting.start()
             }

@@ -11,7 +11,7 @@ import Foundation
 public class CachedHTTPDataSource: DataSource {
 
     // Output
-    public let value = Observable<DataSourceData>()
+    public let value = Signal<DataSourceData>()
     
     private let diskCache: DiskCache
     private let httpAccess: HTTPAccess
@@ -19,7 +19,7 @@ public class CachedHTTPDataSource: DataSource {
     private let key: String
 
     private var httpSource: HTTPDataSource?
-    private var httpObservation: Observation?
+    private var httpReceiverType: ReceiverType?
     private var inFlight = false
     
     init(httpAccess: HTTPAccess, cache: DiskCache, maximumCacheAge: NSTimeInterval, path: String) {
@@ -66,7 +66,7 @@ public class CachedHTTPDataSource: DataSource {
     private func startHTTPSource(afterCacheHit: Bool) {
         let httpSource = HTTPDataSource(httpAccess: httpAccess, path: self.key)
         
-        httpObservation = httpSource.value.output { dataOrError in
+        httpReceiverType = httpSource.value --> { dataOrError in
             switch dataOrError {
             case .Fresh(let data):
                 self.diskCache.storeData(data, forKey: self.key)
@@ -90,7 +90,7 @@ public class CachedHTTPDataSource: DataSource {
     
     private func endHTTPSource() {
         httpSource = nil
-        httpObservation = nil
+        httpReceiverType = nil
         inFlight = false
     }
 

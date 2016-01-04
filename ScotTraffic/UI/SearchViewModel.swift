@@ -24,12 +24,12 @@ public class SearchViewModel {
     public let searchSelectionIndex: Input<Int?>
     
     // Outputs
-    public var dataSource: Observable<TableViewDataSourceAdapter<Observable<[SearchResultItem]>>>
-    public var sectionHeader: Observable<String>
-    public var searchSelection: Observable<Selection?>
+    public var dataSource: Signal<TableViewDataSourceAdapter<Signal<[SearchResultItem]>>>
+    public var sectionHeader: Signal<String>
+    public var searchSelection: Signal<Selection?>
     
     private var favourites: Favourites
-    private var observations = [Observation]()
+    private var receivers = [ReceiverType]()
 
     
     public init(scotTraffic: ScotTraffic) {
@@ -70,14 +70,14 @@ public class SearchViewModel {
             searchTerm,
             combine: applyFilterToMapItems)
         
-        let combinedResults: Observable<[MapItem]> = combine(trafficCameras, safetyCameras, alerts, roadworks, bridges) {
+        let combinedResults: Signal<[MapItem]> = combine(trafficCameras, safetyCameras, alerts, roadworks, bridges) {
             return Array([$0, $1, $2, $3, $4].flatten())
         }
             
         let searchResults = combinedResults.map { $0.sortGeographically() }.latest()
         let searchResultsMajorAxis = combinedResults.map { $0.majorAxis }
 
-        let displayContent: Observable<DisplayContent> = searchTerm.map { text in
+        let displayContent: Signal<DisplayContent> = searchTerm.map { text in
             text.isEmpty ? .Favourites : .SearchResults
         }
         
@@ -107,7 +107,7 @@ public class SearchViewModel {
         }.latest()
         
         searchSelection = combine(searchSelectionIndex, dataSource) { index, dataSource in
-            if let index = index, let searchResult = dataSource.source.pullValue?[index] {
+            if let index = index, let searchResult = dataSource.source.latestValue.get?[index] {
                 return (mapItem: searchResult.mapItem, index: searchResult.index)
             } else {
                 return nil
@@ -115,12 +115,12 @@ public class SearchViewModel {
         }
         
         // cancel selection before search term changes
-        observations.append(searchTerm.willOutput({
+        receivers.append(searchTerm.willOutput({
             self.searchSelectionIndex.value = nil
         }))
         
         // clear search term and selection on deactivating search
-        observations.append(searchActive.onFallingEdge {
+        receivers.append(searchActive.onFallingEdge {
             self.searchTerm.value = ""
             self.searchSelectionIndex.value = nil
         })
@@ -131,7 +131,7 @@ public class SearchViewModel {
     }
     
     public func deleteFavouriteAtIndex(index: Int) {
-        favourites.trafficCameras.map({ $0[index] }) => { favouriteToDelete in
+        favourites.trafficCameras.map({ $0[index] }) --> { favouriteToDelete in
             self.favourites.toggleItem(favouriteToDelete)
         }
     }

@@ -8,16 +8,16 @@
 
 import Foundation
 
-class JoinedObservable<Value>: Observable<Value> {
+class JoinedSignal<Value>: Signal<Value> {
     
-    private var outerObservation: Observation!
-    private var innerObservation: Observation?
+    private var outerReceiver: ReceiverType!
+    private var innerReceiver: ReceiverType?
     
-    init<Inner: ObservableType where Inner.ValueType == Value>(_ source: Observable<Inner>) {
+    init<Inner: SignalType where Inner.ValueType == Value>(_ source: Signal<Inner>) {
         super.init()
-        outerObservation = Observer(source) { [weak self] transaction in
+        outerReceiver = Receiver(source) { [weak self] transaction in
             if case .End(let inner) = transaction {
-                self?.innerObservation = Observer(inner) { [weak self] transaction in
+                self?.innerReceiver = Receiver(inner) { [weak self] transaction in
                     self?.pushTransaction(transaction)
                 }
             }
@@ -25,8 +25,8 @@ class JoinedObservable<Value>: Observable<Value> {
     }
 }
 
-public extension Observable where Value: ObservableType {
-    public func join() -> Observable<Value.ValueType> {
-        return JoinedObservable(self)
+public extension Signal where Value: SignalType {
+    public func join() -> Signal<Value.ValueType> {
+        return JoinedSignal(self)
     }
 }

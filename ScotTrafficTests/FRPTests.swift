@@ -11,11 +11,11 @@ import ScotTraffic
 
 // Must be a class so it can be mutated inside the observer closure
 private class Capture<T> {
-    var obs = [Observation]()
+    var obs = [ReceiverType]()
     var vals: [T] = []
     
-    init(_ o: Observable<T>) {
-        self.obs.append(o => {
+    init(_ o: Signal<T>) {
+        self.obs.append(o --> {
             self.vals.append($0)
         })
     }
@@ -32,7 +32,7 @@ class FRPTests: XCTestCase {
         XCTAssertEqual(c.vals, [0, 123, 234])
     }
     
-    func testDiscardingObservationCancelsOutput() {
+    func testDiscardingReceiverTypeCancelsOutput() {
         let s = Input<Int>(initial: 66)
         let c = Capture(s)
         
@@ -54,7 +54,7 @@ class FRPTests: XCTestCase {
     }
     
     func testMap_notPushable() {
-        let s = Observable<Int>()
+        let s = Signal<Int>()
         let m = s.map { $0 * 2 }
         let c = Capture(m)
         
@@ -75,7 +75,7 @@ class FRPTests: XCTestCase {
     }
     
     func testFilter_notPushable() {
-        let s = Observable<Int>()
+        let s = Signal<Int>()
         let f = s.filter { $0 < 5 }
         let c = Capture(f)
         
@@ -99,8 +99,8 @@ class FRPTests: XCTestCase {
     }
     
     func tetsUnion_notPushable() {
-        let s1 = Observable<Int>()
-        let s2 = Observable<Int>()
+        let s1 = Signal<Int>()
+        let s2 = Signal<Int>()
         let u = union(s1, s2)
         let c = Capture(u)
         
@@ -203,14 +203,13 @@ class FRPTests: XCTestCase {
         let s = Input<Int>(initial: 0)
         let t = s.map { $0 + 1 }
         let u = t.latest()
-
-        XCTAssertTrue(t.canPullValue)
-        XCTAssertTrue(u.canPullValue)
-        XCTAssertEqual(u.pullValue, 1)
+        
+        XCTAssertTrue(t.latestValue.has)
+        XCTAssertEqual(u.latestValue.get, 1)
 
         s.value = 6
         
-        XCTAssertEqual(u.pullValue, 7)
+        XCTAssertEqual(u.latestValue.get, 7)
     }
     
     func testLatest_filtered() {
@@ -218,15 +217,15 @@ class FRPTests: XCTestCase {
         let t = s.filter { $0 > 5 }
         let u = t.latest()
 
-        XCTAssertFalse(t.canPullValue)
-        XCTAssertFalse(u.canPullValue)
-        XCTAssertNil(u.pullValue)
+        XCTAssertFalse(t.latestValue.has)
+        XCTAssertFalse(u.latestValue.has)
+        XCTAssertNil(u.latestValue.get)
         
         s.value = 9
         
-        XCTAssertFalse(t.canPullValue)
-        XCTAssertTrue(u.canPullValue)
-        XCTAssertEqual(u.pullValue, 9)
+        XCTAssertFalse(t.latestValue.has)
+        XCTAssertTrue(u.latestValue.has)
+        XCTAssertEqual(u.latestValue.get, 9)
     }
     
     func testLatest_doesNotWrapLatest() {
