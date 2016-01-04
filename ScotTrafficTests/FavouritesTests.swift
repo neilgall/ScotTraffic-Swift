@@ -36,7 +36,7 @@ class FavouritesTests: XCTestCase {
         userDefaults.setObject([a,b,c,d,e], forKey: "favouriteItems")
         favourites.reloadFromUserDefaults()
         
-        let identifiers = favourites.trafficCameras.map({ $0.map({ $0.identifier }) }).latest()
+        let identifiers = favourites.trafficCameras.mapSeq({ $0.identifier }).latest()
         
         favourites.moveItemFromIndex(1, toIndex: 3)
         
@@ -48,7 +48,7 @@ class FavouritesTests: XCTestCase {
         userDefaults.setObject([a,b,c,d,e], forKey: "favouriteItems")
         favourites.reloadFromUserDefaults()
         
-        let identifiers = favourites.trafficCameras.map({ $0.map({ $0.identifier }) }).latest()
+        let identifiers = favourites.trafficCameras.mapSeq({ $0.identifier }).latest()
         
         favourites.moveItemFromIndex(4, toIndex: 0)
         
@@ -60,7 +60,7 @@ class FavouritesTests: XCTestCase {
         userDefaults.setObject([a,b,c,d,e], forKey: "favouriteItems")
         favourites.reloadFromUserDefaults()
         
-        let identifiers = favourites.trafficCameras.map({ $0.map({ $0.identifier }) }).latest()
+        let identifiers = favourites.trafficCameras.mapSeq({ $0.identifier }).latest()
         
         favourites.moveItemFromIndex(2, toIndex: 2)
         

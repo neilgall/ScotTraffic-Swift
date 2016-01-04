@@ -37,9 +37,9 @@ public class Settings {
         visibleMapRect = userDefaults.setting("visibleMapRect", scotlandMapRect,
             to: { stringFromMapRect($0) }, from: { ($0 as? String).flatMap(mapRectFromString) })
 
-        bridgeNotifications = bridges.map({ $0.map({ bridge in
+        bridgeNotifications = bridges.mapSeq({ bridge in
             (bridge, userDefaults.boolSetting("bridgeNotifications-\(bridge.identifier)", false))
-        }) }).latest()
+        }).latest()
         
         observations.append(bridgeNotifications => {
             for (_, setting) in $0 {

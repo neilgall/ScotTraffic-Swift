@@ -67,12 +67,12 @@ class SettingsTableViewController: UITableViewController {
                 toggle: settings.showTrafficOnMap), atIndex:contentConfigurations.count-2)
         }
 
-        let notificationConfigurations: Observable<[SettingConfiguration]> = settings.bridgeNotifications.map({ $0.map({ item in
+        let notificationConfigurations: Observable<[SettingConfiguration]> = settings.bridgeNotifications.mapSeq({ (bridge, setting) in
             SettingsToggleConfiguration(
                 iconImageName: "bridge",
-                title: item.0.name,
-                toggle: item.1)
-        }) })
+                title: bridge.name,
+                toggle: setting)
+        })
         
         temperatureAdapter = BidirectionalMapToInt(enumInput: settings.temperatureUnit)
         

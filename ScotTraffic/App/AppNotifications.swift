@@ -30,12 +30,6 @@ public class AppNotifications {
             pair.map({ $0.1 }).reduce(Const(false), combine: ||)
         })
         
-        observations.append(settings.bridgeNotifications => {
-            $0.forEach({
-                print($0.1.key, $0.1.value)
-            })
-        })
-        
         observations.append(notificationsEnabled.join() => { [weak self] enabled in
             if enabled {
                 self?.enableNotifications()
