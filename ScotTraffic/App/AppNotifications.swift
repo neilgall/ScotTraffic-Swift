@@ -14,6 +14,12 @@ struct Registration: Equatable {
     let enable: Bool
 }
 
+func == (lhs: Registration, rhs: Registration) -> Bool {
+    return lhs.deviceToken == rhs.deviceToken
+        && lhs.identifier == rhs.identifier
+        && lhs.enable == rhs.enable
+}
+
 public class AppNotifications {
     
     private let settings: Settings
@@ -64,14 +70,15 @@ public class AppNotifications {
     }
     
     private func updateRegistration(registration: Registration) {
-        let enable = registration.enable ? "on" : "off"
-        let path = "/notifications/\(registration.identifier)/\(registration.deviceToken)/\(enable)"
-        httpAccess.fetchDataAtPath(path) {
+        let method: HTTPAccess.HTTPMethod = registration.enable ? .PUT : .DELETE
+        let path = "/notifications/\(registration.identifier)/\(registration.deviceToken)"
+        httpAccess.request(method, data: nil, path: path) {
             switch $0 {
             case .Error(let error):
                 NSLog("registration failed for \(path): \(error)")
-            case .Fresh:
-                NSLog("registration success for \(path): \(registration.identifier)")
+            case .Fresh(let data):
+                let response = String(data: data, encoding: NSUTF8StringEncoding)
+                NSLog("registration success for \(path): \(registration.identifier): \(response)")
             default:
                 NSLog("unexpected result from \(path)")
             }
@@ -96,11 +103,5 @@ public class AppNotifications {
         
         deviceToken.value = String(str)
     }
-}
-
-func == (lhs: Registration, rhs: Registration) -> Bool {
-    return lhs.deviceToken == rhs.deviceToken
-        && lhs.identifier == rhs.identifier
-        && lhs.enable == rhs.enable
 }
 
