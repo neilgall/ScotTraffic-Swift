@@ -49,7 +49,7 @@ struct BidirectionalMapToInt<EnumType: RawRepresentable where EnumType.RawValue 
         let enumToInt = enumInput --> { enumValue in
             if !flag {
                 with(&flag) {
-                    intInput.value = enumValue.rawValue
+                    intInput <-- enumValue.rawValue
                 }
             }
         }
@@ -58,7 +58,7 @@ struct BidirectionalMapToInt<EnumType: RawRepresentable where EnumType.RawValue 
             if !flag {
                 with(&flag) {
                     if let value = EnumType(rawValue: intValue) {
-                        enumInput.value = value
+                        enumInput <-- value
                     }
                 }
             }

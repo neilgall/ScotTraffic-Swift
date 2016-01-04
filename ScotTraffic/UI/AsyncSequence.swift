@@ -26,7 +26,7 @@ public class AsyncSequence {
         sequence.append(block)
         if sequence.count == 1 {
             dispatch_async(dispatch_get_main_queue()) {
-                self._busy.value = true
+                self._busy <-- true
                 self.next()
             }
         }
@@ -34,7 +34,7 @@ public class AsyncSequence {
     
     private func next() {
         if sequence.isEmpty {
-            self._busy.value = false
+            self._busy <-- false
             return
         }
         sequence[0] {

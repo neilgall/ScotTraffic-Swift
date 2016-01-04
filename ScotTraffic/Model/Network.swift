@@ -62,12 +62,12 @@ public class HTTPAccess: NSObject, NSURLSessionDelegate {
         
         reachability?.whenReachable = { _ in
             dispatch_async(dispatch_get_main_queue()) {
-                serverIsReachable.value = true
+                serverIsReachable <-- true
             }
         }
         reachability?.whenUnreachable = { _ in
             dispatch_async(dispatch_get_main_queue()) {
-                serverIsReachable.value = false
+                serverIsReachable <-- false
             }
         }
     }
@@ -80,7 +80,7 @@ public class HTTPAccess: NSObject, NSURLSessionDelegate {
         }
 
         if let reachability = self.reachability, flag = serverIsReachable as? Input<Bool> {
-            flag.value = reachability.currentReachabilityStatus != .NotReachable
+            flag <-- reachability.currentReachabilityStatus != .NotReachable
         }
     }
 

@@ -38,14 +38,14 @@ class MapItemCollectionViewCellWithMap : MapItemCollectionViewCell, MKMapViewDel
     
     override func prepareForReuse() {
         mapView?.removeFromSuperview()
-        mapImage.value = nil
         mapView = nil
+        mapImage <-- nil
     }
 
     private func takeSnapshotOfRenderedMap() {
         if let mapView = mapView {
             mapView.alpha = 1
-            mapImage.value = mapView.snapshotImage()
+            mapImage <-- mapView.snapshotImage()
             mapView.alpha = 0
             
             mapView.removeFromSuperview()

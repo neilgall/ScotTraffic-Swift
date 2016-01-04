@@ -32,7 +32,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, MapViewModelDelega
         super.viewDidLoad()
         
         if let viewModel = viewModel {
-            viewModel.delegate.value = self
+            viewModel.delegate <-- self
             calloutContainerView.delegate = self
             
             receivers.append(viewModel.annotations --> self.updateAnnotations)
@@ -77,8 +77,10 @@ class MapViewController: UIViewController, MKMapViewDelegate, MapViewModelDelega
             if unselected == annotation {
                 mapView.selectAnnotation(unselected, animated: true)
 
-                dispatch_async(dispatch_get_main_queue()) {
-                    self.viewModel?.selectedMapItem.value = nil
+                if let selectedMapItem = viewModel?.selectedMapItem {
+                    dispatch_async(dispatch_get_main_queue()) {
+                        selectedMapItem <-- nil
+                    }
                 }
                 return
             }
@@ -179,12 +181,16 @@ class MapViewController: UIViewController, MKMapViewDelegate, MapViewModelDelega
     
     func mapView(mapView: MKMapView, regionWillChangeAnimated animated: Bool) {
         deselectAnnotationsAnimated(animated)
-        viewModel?.animatingMapRect.value = animated
+        if let viewModel = viewModel {
+            viewModel.animatingMapRect <-- animated
+        }
     }
     
     func mapView(mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
-        viewModel?.animatingMapRect.value = false
-        viewModel?.visibleMapRect.value = mapView.visibleMapRect
+        if let viewModel = viewModel {
+            viewModel.animatingMapRect <-- false
+            viewModel.visibleMapRect <-- mapView.visibleMapRect
+        }
     }
     
     func mapView(mapView: MKMapView, viewForAnnotation annotation: MKAnnotation) -> MKAnnotationView? {

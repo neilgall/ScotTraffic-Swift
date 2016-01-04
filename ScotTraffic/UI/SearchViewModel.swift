@@ -116,18 +116,18 @@ public class SearchViewModel {
         
         // cancel selection before search term changes
         receivers.append(searchTerm.willOutput({
-            self.searchSelectionIndex.value = nil
+            self.searchSelectionIndex <-- nil
         }))
         
         // clear search term and selection on deactivating search
         receivers.append(searchActive.onFallingEdge {
-            self.searchTerm.value = ""
-            self.searchSelectionIndex.value = nil
+            self.searchTerm <-- ""
+            self.searchSelectionIndex <-- nil
         })
     }
     
     public func setSearchActive(active: Bool) {
-        self.searchActive.value = active
+        self.searchActive <-- active
     }
     
     public func deleteFavouriteAtIndex(index: Int) {

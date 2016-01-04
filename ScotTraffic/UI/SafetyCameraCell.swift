@@ -95,7 +95,7 @@ class SafetyCameraCell: MapItemCollectionViewCellWithMap {
     override func prepareForReuse() {
         receivers.removeAll()
         image = nil
-        mapImage.value = nil
+        mapImage <-- nil
         
         iconImageView?.image = nil
         roadLabel?.text = nil

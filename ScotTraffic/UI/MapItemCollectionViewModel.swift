@@ -75,7 +75,7 @@ public class MapItemCollectionViewModel: NSObject, UICollectionViewDataSource, M
     // -- MARK: MapItemCollectionViewCellDelegate --
     
     public func collectionViewCell(cell: MapItemCollectionViewCell, didRequestShareItem item: SharableItem, fromRect rect: CGRect) {
-        shareAction.value = ShareAction(item: item, sourceView: cell, sourceRect: rect)
+        shareAction <-- ShareAction(item: item, sourceView: cell, sourceRect: rect)
     }
     
     public func collectionViewCellDidToggleFavourite(item: FavouriteTrafficCamera) {

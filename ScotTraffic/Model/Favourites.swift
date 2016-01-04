@@ -66,7 +66,7 @@ public class Favourites {
         } else {
             items.append(identifier)
         }
-        self.items.value = items
+        self.items <-- items
     }
     
     public func moveItemFromIndex(fromIndex: Int, toIndex: Int) {
@@ -78,7 +78,7 @@ public class Favourites {
             items.insert(items[fromIndex], atIndex: toIndex+1)
             items.removeAtIndex(fromIndex)
         }
-        self.items.value = items
+        self.items <-- items
     }
     
     public func containsItem(item: FavouriteTrafficCamera) -> Bool {
@@ -90,7 +90,7 @@ public class Favourites {
         guard let items = object as? [FavouriteIdentifier] else {
             return
         }
-        self.items.value = items
+        self.items <-- items
     }
 }
 

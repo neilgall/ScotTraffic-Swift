@@ -148,9 +148,9 @@ public func --> <Source: SignalType> (source: Source, closure: Source.ValueType 
     return Output(source, closure)
 }
 
-infix operator <- { associativity left precedence 100 }
+infix operator <-- { associativity left precedence 100 }
 
-public func <- <Input: InputType, ValueType where Input.ValueType == ValueType> (inout input: Input, value: ValueType) {
+public func <-- <Input: InputType, ValueType where Input.ValueType == ValueType> (var input: Input, value: ValueType) {
     input.value = value
 }
 

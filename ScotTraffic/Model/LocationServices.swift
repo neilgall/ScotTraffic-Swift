@@ -23,8 +23,8 @@ public class LocationServices: NSObject, CLLocationManagerDelegate {
         locationManager.delegate = self
 
         receivers.append(enabled.onRisingEdge({
-            self.authorisationStatus.value = CLLocationManager.authorizationStatus()
-            if self.authorisationStatus.value == .NotDetermined {
+            self.authorisationStatus <-- CLLocationManager.authorizationStatus()
+            if self.authorisationStatus.latestValue.get == .NotDetermined {
                 self.locationManager.requestWhenInUseAuthorization()
             }
         }))
@@ -45,6 +45,6 @@ public class LocationServices: NSObject, CLLocationManagerDelegate {
     }
     
     public func locationManager(manager: CLLocationManager, didChangeAuthorizationStatus status: CLAuthorizationStatus) {
-        self.authorisationStatus.value = status
+        self.authorisationStatus <-- status
     }
 }

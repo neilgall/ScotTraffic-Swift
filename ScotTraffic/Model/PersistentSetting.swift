@@ -27,7 +27,7 @@ public class PersistentSetting<Value>: Input<Value>, Startable {
     public func start() {
         if let value = userDefaults.objectForKey(key).flatMap(marshallFrom) {
             with(&updating) {
-                self.value = value
+                self <-- value
             }
         }
     }

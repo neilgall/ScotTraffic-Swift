@@ -85,7 +85,7 @@ public class AppNotifications {
     }
     
     public func didFailToRegisterWithError(error: NSError) {
-        deviceToken.value = nil
+        deviceToken <-- nil
     }
     
     public func didRegisterWithDeviceToken(token: NSData) {
@@ -100,7 +100,7 @@ public class AppNotifications {
             str.append(nibble[Int(byte & 0xF)])
         }
         
-        deviceToken.value = String(str)
+        deviceToken <-- String(str)
     }
 }
 

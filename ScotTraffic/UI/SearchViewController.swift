@@ -32,7 +32,9 @@ class SearchViewController: UITableViewController, UISearchBarDelegate {
         if let dataSource = searchViewModel?.dataSource {
             // Reload on data source change or adapter updates
             receivers.append(dataSource --> { [weak self] adapter in
-                self?.editingFavourites.value = false
+                if let editingFavourites = self?.editingFavourites {
+                    editingFavourites <-- false
+                }
                 self?.tableView.reloadData()
                 if let tableView = self?.tableView {
                     adapter.reloadTableViewOnChange(tableView)
@@ -49,18 +51,22 @@ class SearchViewController: UITableViewController, UISearchBarDelegate {
     
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
-        searchViewModel?.searchActive.value = true
+        if let searchActive = searchViewModel?.searchActive {
+            searchActive <-- true
+        }
         tableView.reloadData()
     }
     
     override func viewWillDisappear(animated: Bool) {
         super.viewWillDisappear(animated)
-        self.editingFavourites.value = false
+        self.editingFavourites <-- false
     }
     
     @IBAction func cancelSearch() {
         searchBar?.text = ""
-        searchViewModel?.searchActive.value = false
+        if let searchActive = searchViewModel?.searchActive {
+            searchActive <-- false
+        }
     }
 
     // -- MARK: UITableViewDataSource
@@ -123,17 +129,23 @@ class SearchViewController: UITableViewController, UISearchBarDelegate {
     }
     
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        searchViewModel?.searchSelectionIndex.value = indexPath.row
+        if let searchSelectionIndex = searchViewModel?.searchSelectionIndex {
+            searchSelectionIndex <-- indexPath.row
+        }
     }
     
     override func tableView(tableView: UITableView, didDeselectRowAtIndexPath indexPath: NSIndexPath) {
-        searchViewModel?.searchSelectionIndex.value = nil
+        if let searchSelectionIndex = searchViewModel?.searchSelectionIndex {
+            searchSelectionIndex <-- nil
+        }
     }
 
     // -- MARK: UISearchBarDelegate
     
     func searchBar(searchBar: UISearchBar, textDidChange searchText: String) {
-        searchViewModel?.searchTerm.value = searchText
+        if let searchTerm = searchViewModel?.searchTerm {
+            searchTerm <-- searchText
+        }
     }
     
     func searchBarSearchButtonClicked(searchBar: UISearchBar) {
@@ -143,7 +155,7 @@ class SearchViewController: UITableViewController, UISearchBarDelegate {
     // -- MARK: Actions
     
     @IBAction func editFavourites(sender: UIButton) {
-        editingFavourites.value = !editingFavourites.value
+        editingFavourites <-- !(editingFavourites.latestValue.get!)
     }
 }
 

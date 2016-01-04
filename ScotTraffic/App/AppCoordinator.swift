@@ -87,7 +87,7 @@ public class AppCoordinator: NSObject, NGSplitViewControllerDelegate, SettingsTa
     }
 
     private func viewControllerWithMapItems(mapItems: [MapItem]) -> UIViewController {
-        collectionViewModel.mapItems.value = mapItems
+        collectionViewModel.mapItems <-- mapItems
 
         guard let collectionController = self.storyboard.instantiateViewControllerWithIdentifier("mapItemCollectionViewController") as? MapItemCollectionViewController else {
             fatalError("Unable to instantiate mapItemCollectionViewController from storyboard")
@@ -113,7 +113,7 @@ public class AppCoordinator: NSObject, NGSplitViewControllerDelegate, SettingsTa
         // or cancel the imperative and latent consequences of earlier updates.
         
         if mapViewModel.selectedMapItem.value == nil {
-            mapViewModel.selectedMapItem.value = selection?.mapItem
+            mapViewModel.selectedMapItem <-- selection?.mapItem
         }
     }
     
@@ -156,7 +156,7 @@ public class AppCoordinator: NSObject, NGSplitViewControllerDelegate, SettingsTa
         controller.popoverPresentationController?.sourceRect = action.sourceRect
         
         splitViewController.presentViewController(controller, animated: true) {
-            self.collectionViewModel.shareAction.value = nil
+            self.collectionViewModel.shareAction <-- nil
         }
     }
     
