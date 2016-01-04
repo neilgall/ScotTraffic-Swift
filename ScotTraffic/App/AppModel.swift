@@ -108,9 +108,9 @@ public class AppModel: ScotTraffic {
         
         // -- Refresh on restoring internet connection
         
-        self.observers.append(httpAccess.serverIsReachable.onRisingEdge({
-            for starter in self.fetchStarters {
-                starter.restart(fireImmediately: true)
+        self.observers.append(httpAccess.serverIsReachable.onRisingEdge({ [weak self] in
+            self?.fetchStarters.forEach {
+                $0.restart(fireImmediately: true)
             }
         }))
     }

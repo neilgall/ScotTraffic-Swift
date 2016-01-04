@@ -27,10 +27,10 @@ public class Const<ValueType> : Observable<ValueType> {
     }
 }
 
-class Filter<ValueType> : Observable<ValueType> {
-    private var observer: Observer<ValueType>!
+class Filter<Source: ObservableType> : Observable<Source.ValueType> {
+    private var observer: Observation!
     
-    init(_ source: Observable<ValueType>, _ predicate: ValueType -> Bool) {
+    init(_ source: Source, _ predicate: Source.ValueType -> Bool) {
         super.init()
         observer = Observer(source) { transaction in
             if case .End(let value) = transaction where !predicate(value) {
@@ -42,11 +42,13 @@ class Filter<ValueType> : Observable<ValueType> {
     }
 }
 
-class Mapped<SourceType, MappedType> : Observable<MappedType> {
-    private let transform: SourceType -> MappedType
-    private var observer: Observer<SourceType>!
+class Mapped<Source: ObservableType, MappedType> : Observable<MappedType> {
+    private let source: Source
+    private let transform: Source.ValueType -> MappedType
+    private var observer: Observation!
     
-    init(_ source: Observable<SourceType>, _ transform: SourceType -> MappedType) {
+    init(_ source: Source, _ transform: Source.ValueType -> MappedType) {
+        self.source = source
         self.transform = transform
         super.init()
         self.observer = Observer(source) { transaction in
@@ -62,11 +64,11 @@ class Mapped<SourceType, MappedType> : Observable<MappedType> {
     }
     
     override var canPullValue: Bool {
-        return observer.source.canPullValue
+        return source.canPullValue
     }
     
     override var pullValue: MappedType? {
-        if canPullValue, let sourceValue = observer.source.pullValue {
+        if canPullValue, let sourceValue = source.pullValue {
             return transform(sourceValue)
         } else {
             return nil
@@ -74,10 +76,10 @@ class Mapped<SourceType, MappedType> : Observable<MappedType> {
     }
 }
 
-class Union<ValueType> : Observable<ValueType> {
-    private var sourceObservers: [Observer<ValueType>]!
+class Union<Source: ObservableType> : Observable<Source.ValueType> {
+    private var sourceObservers: [Observation]!
     
-    init(_ sources: [Observable<ValueType>]) {
+    init(_ sources: [Source]) {
         super.init()
         self.sourceObservers = sources.map {
             Observer($0) {
@@ -87,13 +89,17 @@ class Union<ValueType> : Observable<ValueType> {
     }
 }
 
-public class Latest<ValueType> : Observable<ValueType> {
-    private var observer: Observer<ValueType>!
-    var value: ValueType?
+public class Latest<Source: ObservableType> : Observable<Source.ValueType> {
+    let source: Source
+    var value: Source.ValueType?
+    private var observer: Observation!
     
-    init(_ source: Observable<ValueType>) {
-        super.init()
+    init(_ source: Source) {
+        self.source = source
         self.value = source.pullValue
+        
+        super.init()
+
         self.observer = Observer(source) { transaction in
             if case .End(let value) = transaction {
                 self.value = value
@@ -109,17 +115,13 @@ public class Latest<ValueType> : Observable<ValueType> {
     override public var pullValue: ValueType? {
         return value
     }
-    
-    var source: Observable<ValueType> {
-        return observer.source
-    }
 }
 
-class OnChange<ValueType: Equatable> : Observable<ValueType> {
-    private var observer: Observer<ValueType>?
-    private var value: ValueType?
+class OnChange<Source: ObservableType where Source.ValueType: Equatable> : Observable<Source.ValueType> {
+    private var observer: Observation!
+    private var value: Source.ValueType?
     
-    init(_ source: Observable<ValueType>) {
+    init(_ source: Source) {
         super.init()
         self.value = source.pullValue
         self.observer = Observer(source) { transaction in
@@ -147,21 +149,21 @@ class OnChange<ValueType: Equatable> : Observable<ValueType> {
 
 infix operator => { associativity right precedence 100 }
 
-public func => <ValueType> (observable: Observable<ValueType>, closure: ValueType -> Void) -> Observation {
-    return Output(observable, closure)
+public func => <Source: ObservableType> (source: Source, closure: Source.ValueType -> Void) -> Observation {
+    return Output(source, closure)
 }
 
-extension Observable {
-    public func output(closure: ValueType -> Void) -> Output<ValueType> {
+extension ObservableType {
+    public func output(closure: ValueType -> Void) -> Output<Self> {
         return Output(self, closure)
     }
     
-    public func willOutput(closure: Void -> Void) -> WillOutput<ValueType> {
+    public func willOutput(closure: Void -> Void) -> WillOutput<Self> {
         return WillOutput(self, closure)
     }
     
-    public func latest() -> Latest<ValueType> {
-        if let latest = self as? Latest<ValueType> {
+    public func latest() -> Latest<Self> {
+        if let latest = self as? Latest<Self> {
             // no point re-wrapping what is already a Latest
             return latest
         } else {
@@ -169,7 +171,7 @@ extension Observable {
         }
     }
     
-    public func map<U>(transform: ValueType -> U) -> Observable<U> {
+    public func map<TargetType>(transform: ValueType -> TargetType) -> Observable<TargetType> {
         return Mapped(self, transform)
     }
     
@@ -178,13 +180,13 @@ extension Observable {
     }
 }
 
-extension Observable where Value: Equatable {
+extension ObservableType where ValueType: Equatable {
     public func onChange() -> Observable<ValueType> {
         return OnChange(self)
     }
 }
 
-public func union<ValueType>(sources: Observable<ValueType>...) -> Observable<ValueType> {
+public func union<Source: ObservableType>(sources: Source...) -> Observable<Source.ValueType> {
     return Union(sources)
 }
 

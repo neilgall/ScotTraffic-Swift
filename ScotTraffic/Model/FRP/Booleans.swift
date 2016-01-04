@@ -8,14 +8,14 @@
 
 import Foundation
 
-class Gate<ValueType> : Observable<ValueType> {
-    let valueLatest: Latest<ValueType>
-    let gateLatest: Latest<Bool>
+class Gate<Source: ObservableType, Gate: ObservableType where Gate.ValueType: BooleanType> : Observable<Source.ValueType> {
+    let valueLatest: Latest<Source>
+    let gateLatest: Latest<Gate>
     var sourceObservers: [Observation] = []
     var transactionCount = 0
     var needsUpdate = false
     
-    init(_ source: Observable<ValueType>, gate: Observable<Bool>) {
+    init(_ source: Source, gate: Gate) {
         valueLatest = source.latest()
         gateLatest = gate.latest()
         super.init()
@@ -39,7 +39,7 @@ class Gate<ValueType> : Observable<ValueType> {
         case .Cancel:
             transactionCount -= 1
             if transactionCount == 0 {
-                if needsUpdate, let value = valueLatest.pullValue, let gate = gateLatest.pullValue where gate == true {
+                if needsUpdate, let value = valueLatest.pullValue, let gate = gateLatest.pullValue where gate.boolValue == true {
                     pushTransaction(.End(value))
                     needsUpdate = false
                 } else {

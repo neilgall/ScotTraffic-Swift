@@ -1,5 +1,5 @@
 //
-//  Core.swift
+//  Types.swift
 //  ScotTraffic
 //
 //  Created by Neil Gall on 04/01/2016.
@@ -100,12 +100,12 @@ public class Input<Value> : Observable<Value> {
     }
 }
 
-class Observer<ValueType>: Observation {
-    let source: Observable<ValueType>
+class Observer<Source: ObservableType>: Observation {
+    let source: Source
     private let id: Int
     
-    init<O: ObservableType where O.ValueType == ValueType>(_ source: O, _ closure: Transaction<ValueType> -> Void) {
-        self.source = source as! Observable<ValueType>
+    init(_ source: Source, _ closure: Transaction<Source.ValueType> -> Void) {
+        self.source = source
         self.id = source.addObserver(closure)
     }
     
@@ -114,8 +114,8 @@ class Observer<ValueType>: Observation {
     }
 }
 
-public class Output<ValueType>: Observer<ValueType> {
-    public init(_ source: Observable<ValueType>, _ closure: ValueType -> Void) {
+public class Output<Source: ObservableType>: Observer<Source> {
+    public init(_ source: Source, _ closure: Source.ValueType -> Void) {
         super.init(source) { transaction in
             if case .End(let value) = transaction {
                 closure(value)
@@ -124,8 +124,8 @@ public class Output<ValueType>: Observer<ValueType> {
     }
 }
 
-public class WillOutput<ValueType>: Observer<ValueType> {
-    public init(_ source: Observable<ValueType>, _ closure: Void -> Void) {
+public class WillOutput<Source: ObservableType>: Observer<Source> {
+    public init(_ source: Source, _ closure: Void -> Void) {
         super.init(source) { transaction in
             if case .Begin = transaction {
                 closure()

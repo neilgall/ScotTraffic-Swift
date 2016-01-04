@@ -96,9 +96,9 @@
 		289B9AB71C348AC700C342F1 /* FavouritesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 289B9AB61C348AC700C342F1 /* FavouritesTests.swift */; };
 		289D27071C38631700543F3C /* SettingsInfoTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 289D27061C38631700543F3C /* SettingsInfoTableViewCell.swift */; };
 		289D270A1C3A670100543F3C /* Combine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 289D27091C3A670100543F3C /* Combine.swift */; };
-		289D270C1C3A675300543F3C /* Core.swift in Sources */ = {isa = PBXBuildFile; fileRef = 289D270B1C3A675300543F3C /* Core.swift */; };
+		289D270C1C3A675300543F3C /* Types.swift in Sources */ = {isa = PBXBuildFile; fileRef = 289D270B1C3A675300543F3C /* Types.swift */; };
 		289D270E1C3A679E00543F3C /* Throttle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 289D270D1C3A679E00543F3C /* Throttle.swift */; };
-		289D270F1C3A684F00543F3C /* Core.swift in Sources */ = {isa = PBXBuildFile; fileRef = 289D270B1C3A675300543F3C /* Core.swift */; };
+		289D270F1C3A684F00543F3C /* Types.swift in Sources */ = {isa = PBXBuildFile; fileRef = 289D270B1C3A675300543F3C /* Types.swift */; };
 		289D27101C3A685300543F3C /* Combine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 289D27091C3A670100543F3C /* Combine.swift */; };
 		289D27121C3A68F300543F3C /* Booleans.swift in Sources */ = {isa = PBXBuildFile; fileRef = 289D27111C3A68F300543F3C /* Booleans.swift */; };
 		289D27141C3A694B00543F3C /* Join.swift in Sources */ = {isa = PBXBuildFile; fileRef = 289D27131C3A694B00543F3C /* Join.swift */; };
@@ -254,7 +254,7 @@
 		289B9AB61C348AC700C342F1 /* FavouritesTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FavouritesTests.swift; sourceTree = "<group>"; };
 		289D27061C38631700543F3C /* SettingsInfoTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsInfoTableViewCell.swift; sourceTree = "<group>"; };
 		289D27091C3A670100543F3C /* Combine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Combine.swift; sourceTree = "<group>"; };
-		289D270B1C3A675300543F3C /* Core.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Core.swift; sourceTree = "<group>"; };
+		289D270B1C3A675300543F3C /* Types.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Types.swift; sourceTree = "<group>"; };
 		289D270D1C3A679E00543F3C /* Throttle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Throttle.swift; sourceTree = "<group>"; };
 		289D27111C3A68F300543F3C /* Booleans.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Booleans.swift; sourceTree = "<group>"; };
 		289D27131C3A694B00543F3C /* Join.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Join.swift; sourceTree = "<group>"; };
@@ -555,7 +555,7 @@
 		289D27081C3A66BE00543F3C /* FRP */ = {
 			isa = PBXGroup;
 			children = (
-				289D270B1C3A675300543F3C /* Core.swift */,
+				289D270B1C3A675300543F3C /* Types.swift */,
 				289201D31BBC5AEB00DA4A9A /* Combinators.swift */,
 				289D27091C3A670100543F3C /* Combine.swift */,
 				289D270D1C3A679E00543F3C /* Throttle.swift */,
@@ -825,7 +825,7 @@
 				28DB3BFA1BC02C88001AAC2A /* Incidents.swift in Sources */,
 				289D270A1C3A670100543F3C /* Combine.swift in Sources */,
 				288AC88F1BCFA43B004EA6A0 /* SharableItem.swift in Sources */,
-				289D270C1C3A675300543F3C /* Core.swift in Sources */,
+				289D270C1C3A675300543F3C /* Types.swift in Sources */,
 				289D270E1C3A679E00543F3C /* Throttle.swift in Sources */,
 				280486551BC087B6003BA360 /* SearchViewModel.swift in Sources */,
 				288AC8931BCFB954004EA6A0 /* IncidentCell.swift in Sources */,
@@ -908,7 +908,7 @@
 				287F75461C00C7DA0040EE8A /* ImageDataSource.swift in Sources */,
 				287F75451C00C7D80040EE8A /* MapItem.swift in Sources */,
 				287F754D1C00CD050040EE8A /* PersistentSetting.swift in Sources */,
-				289D270F1C3A684F00543F3C /* Core.swift in Sources */,
+				289D270F1C3A684F00543F3C /* Types.swift in Sources */,
 				287F753C1C00C7B00040EE8A /* CachedHTTPDataSource.swift in Sources */,
 				287F753A1C00C7AB0040EE8A /* Network.swift in Sources */,
 				287F75501C00D0A50040EE8A /* AppErrors.swift in Sources */,

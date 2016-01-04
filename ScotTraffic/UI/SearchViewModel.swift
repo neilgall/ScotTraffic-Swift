@@ -24,8 +24,8 @@ public class SearchViewModel {
     public let searchSelectionIndex: Input<Int?>
     
     // Outputs
-    public var dataSource: Latest<TableViewDataSourceAdapter<[SearchResultItem]>>
-    public var sectionHeader: Latest<String>
+    public var dataSource: Observable<TableViewDataSourceAdapter<Observable<[SearchResultItem]>>>
+    public var sectionHeader: Observable<String>
     public var searchSelection: Observable<Selection?>
     
     private var favourites: Favourites
@@ -107,7 +107,7 @@ public class SearchViewModel {
         }.latest()
         
         searchSelection = combine(searchSelectionIndex, dataSource) { index, dataSource in
-            if let index = index, let searchResult = dataSource.source.value?[index] {
+            if let index = index, let searchResult = dataSource.source.pullValue?[index] {
                 return (mapItem: searchResult.mapItem, index: searchResult.index)
             } else {
                 return nil

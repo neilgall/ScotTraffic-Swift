@@ -66,21 +66,21 @@ class SearchViewController: UITableViewController, UISearchBarDelegate {
     // -- MARK: UITableViewDataSource
     
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        return searchViewModel?.dataSource.value?.numberOfSectionsInTableView(tableView) ?? 0
+        return searchViewModel?.dataSource.pullValue?.numberOfSectionsInTableView(tableView) ?? 0
     }
     
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return searchViewModel?.dataSource.value?.tableView(tableView, numberOfRowsInSection: section) ?? 0
+        return searchViewModel?.dataSource.pullValue?.tableView(tableView, numberOfRowsInSection: section) ?? 0
     }
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        return searchViewModel!.dataSource.value!.tableView(tableView, cellForRowAtIndexPath: indexPath)
+        return searchViewModel!.dataSource.pullValue!.tableView(tableView, cellForRowAtIndexPath: indexPath)
     }
     
     // -- MARK: UITableViewDelegate
     
     override func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        guard let nibName = searchViewModel!.sectionHeader.value else {
+        guard let nibName = searchViewModel!.sectionHeader.pullValue else {
             return nil
         }
         let nib = UINib(nibName: nibName, bundle: nil)
@@ -88,7 +88,7 @@ class SearchViewController: UITableViewController, UISearchBarDelegate {
     }
     
     override func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        guard let title = searchViewModel?.sectionHeader.value where !title.isEmpty else {
+        guard let title = searchViewModel?.sectionHeader.pullValue where !title.isEmpty else {
             return 0
         }
         return 34

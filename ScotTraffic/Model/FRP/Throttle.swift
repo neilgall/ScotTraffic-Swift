@@ -13,7 +13,7 @@ class Throttle<ValueType> : Observable<ValueType> {
     private let timer: dispatch_source_t
     private let minimumInterval: NSTimeInterval
     private var lastPushTimestamp: CFAbsoluteTime = 0
-    private var observer: Observer<ValueType>?
+    private var observer: Observation!
     private var transactionCount: Int = 0
     private var timerActive: Bool = false
     

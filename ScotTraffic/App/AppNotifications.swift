@@ -33,9 +33,8 @@ public class AppNotifications {
         self.httpAccess = httpAccess
         
         let notificationsEnabled = settings.bridgeNotifications.map({ pair in
-            pair.map({ $0.1 }).reduce(Const(false), combine: ||)
+            pair.map(second).reduce(Const(false), combine: ||)
         })
-        
         observations.append(notificationsEnabled.join() => { [weak self] enabled in
             if enabled {
                 self?.enableNotifications()

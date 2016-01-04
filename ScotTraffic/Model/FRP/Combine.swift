@@ -39,13 +39,15 @@ class Combiner<Value>: Observable<Value> {
     }
 }
 
-class Combine2<SourceType1, SourceType2, CombinedType> : Combiner<CombinedType> {
-    let combine: (SourceType1, SourceType2) -> CombinedType
-    let latest1: Latest<SourceType1>
-    let latest2: Latest<SourceType2>
+class Combine2<Source1: ObservableType, Source2: ObservableType, CombinedType> : Combiner<CombinedType> {
+    typealias CombineFunction = (Source1.ValueType, Source2.ValueType) -> CombinedType
+    
+    let combine: CombineFunction
+    let latest1: Latest<Source1>
+    let latest2: Latest<Source2>
     var sourceObservers: [Observation] = []
     
-    init(_ s1: Observable<SourceType1>, _ s2: Observable<SourceType2>, combine: (SourceType1, SourceType2) -> CombinedType) {
+    init(_ s1: Source1, _ s2: Source2, combine: CombineFunction) {
         self.combine = combine
         latest1 = s1.latest()
         latest2 = s2.latest()
@@ -66,16 +68,16 @@ class Combine2<SourceType1, SourceType2, CombinedType> : Combiner<CombinedType> 
     }
 }
 
-class Combine3<SourceType1, SourceType2, SourceType3, CombinedType> : Combiner<CombinedType> {
-    let combine: (SourceType1, SourceType2, SourceType3) -> CombinedType
-    let latest1: Latest<SourceType1>
-    let latest2: Latest<SourceType2>
-    let latest3: Latest<SourceType3>
+class Combine3<Source1: ObservableType, Source2: ObservableType, Source3: ObservableType, CombinedType> : Combiner<CombinedType> {
+    typealias CombineFunction = (Source1.ValueType, Source2.ValueType, Source3.ValueType) -> CombinedType
+
+    let combine: CombineFunction
+    let latest1: Latest<Source1>
+    let latest2: Latest<Source2>
+    let latest3: Latest<Source3>
     var sourceObservers: [Observation] = []
     
-    init(_ s1: Observable<SourceType1>, _ s2: Observable<SourceType2>, _ s3: Observable<SourceType3>,
-        combine: (SourceType1, SourceType2, SourceType3) -> CombinedType)
-    {
+    init(_ s1: Source1, _ s2: Source2, _ s3: Source3, combine: CombineFunction) {
         self.combine = combine
         latest1 = s1.latest()
         latest2 = s2.latest()
@@ -98,17 +100,17 @@ class Combine3<SourceType1, SourceType2, SourceType3, CombinedType> : Combiner<C
     }
 }
 
-class Combine4<SourceType1, SourceType2, SourceType3, SourceType4, CombinedType> : Combiner<CombinedType> {
-    let combine: (SourceType1, SourceType2, SourceType3, SourceType4) -> CombinedType
-    let latest1: Latest<SourceType1>
-    let latest2: Latest<SourceType2>
-    let latest3: Latest<SourceType3>
-    let latest4: Latest<SourceType4>
+class Combine4<Source1: ObservableType, Source2: ObservableType, Source3: ObservableType, Source4: ObservableType, CombinedType> : Combiner<CombinedType> {
+    typealias CombineFunction = (Source1.ValueType, Source2.ValueType, Source3.ValueType, Source4.ValueType) -> CombinedType
+
+    let combine: CombineFunction
+    let latest1: Latest<Source1>
+    let latest2: Latest<Source2>
+    let latest3: Latest<Source3>
+    let latest4: Latest<Source4>
     var sourceObservers: [Observation] = []
     
-    init(_ s1: Observable<SourceType1>, _ s2: Observable<SourceType2>, _ s3: Observable<SourceType3>, _ s4: Observable<SourceType4>,
-        combine: (SourceType1, SourceType2, SourceType3, SourceType4) -> CombinedType)
-    {
+    init(_ s1: Source1, _ s2: Source2, _ s3: Source3, _ s4: Source4, combine: CombineFunction) {
         self.combine = combine
         latest1 = s1.latest()
         latest2 = s2.latest()
@@ -133,19 +135,18 @@ class Combine4<SourceType1, SourceType2, SourceType3, SourceType4, CombinedType>
     }
 }
 
-class Combine5<SourceType1, SourceType2, SourceType3, SourceType4, SourceType5, CombinedType> : Combiner<CombinedType> {
-    let combine: (SourceType1, SourceType2, SourceType3, SourceType4, SourceType5) -> CombinedType
-    let latest1: Latest<SourceType1>
-    let latest2: Latest<SourceType2>
-    let latest3: Latest<SourceType3>
-    let latest4: Latest<SourceType4>
-    let latest5: Latest<SourceType5>
+class Combine5<Source1: ObservableType, Source2: ObservableType, Source3: ObservableType, Source4: ObservableType, Source5: ObservableType, CombinedType> : Combiner<CombinedType> {
+    typealias CombineFunction = (Source1.ValueType, Source2.ValueType, Source3.ValueType, Source4.ValueType, Source5.ValueType) -> CombinedType
+
+    let combine: CombineFunction
+    let latest1: Latest<Source1>
+    let latest2: Latest<Source2>
+    let latest3: Latest<Source3>
+    let latest4: Latest<Source4>
+    let latest5: Latest<Source5>
     var sourceObservers: [Observation] = []
     
-    init(_ s1: Observable<SourceType1>, _ s2: Observable<SourceType2>, _ s3: Observable<SourceType3>,
-        _ s4: Observable<SourceType4>, _ s5: Observable<SourceType5>,
-        combine: (SourceType1, SourceType2, SourceType3, SourceType4, SourceType5) -> CombinedType)
-    {
+    init(_ s1: Source1, _ s2: Source2, _ s3: Source3, _ s4: Source4, _ s5: Source5, combine: CombineFunction) {
         self.combine = combine
         latest1 = s1.latest()
         latest2 = s2.latest()
@@ -172,20 +173,18 @@ class Combine5<SourceType1, SourceType2, SourceType3, SourceType4, SourceType5, 
     }
 }
 
-class Combine6<SourceType1, SourceType2, SourceType3, SourceType4, SourceType5, SourceType6, CombinedType> : Combiner<CombinedType> {
-    let combine: (SourceType1, SourceType2, SourceType3, SourceType4, SourceType5, SourceType6) -> CombinedType
-    let latest1: Latest<SourceType1>
-    let latest2: Latest<SourceType2>
-    let latest3: Latest<SourceType3>
-    let latest4: Latest<SourceType4>
-    let latest5: Latest<SourceType5>
-    let latest6: Latest<SourceType6>
+class Combine6<Source1: ObservableType, Source2: ObservableType, Source3: ObservableType, Source4: ObservableType, Source5: ObservableType, Source6: ObservableType, CombinedType> : Combiner<CombinedType> {
+    typealias CombineFunction = (Source1.ValueType, Source2.ValueType, Source3.ValueType, Source4.ValueType, Source5.ValueType, Source6.ValueType) -> CombinedType
+    let combine: CombineFunction
+    let latest1: Latest<Source1>
+    let latest2: Latest<Source2>
+    let latest3: Latest<Source3>
+    let latest4: Latest<Source4>
+    let latest5: Latest<Source5>
+    let latest6: Latest<Source6>
     var sourceObservers: [Observation] = []
     
-    init(_ s1: Observable<SourceType1>, _ s2: Observable<SourceType2>, _ s3: Observable<SourceType3>,
-        _ s4: Observable<SourceType4>, _ s5: Observable<SourceType5>, _ s6: Observable<SourceType6>,
-        combine: (SourceType1, SourceType2, SourceType3, SourceType4, SourceType5, SourceType6) -> CombinedType)
-    {
+    init(_ s1: Source1, _ s2: Source2, _ s3: Source3, _ s4: Source4, _ s5: Source5, _ s6: Source6, combine: CombineFunction) {
         self.combine = combine
         latest1 = s1.latest()
         latest2 = s2.latest()

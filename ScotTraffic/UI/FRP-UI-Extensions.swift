@@ -13,20 +13,22 @@ public protocol TableViewCellConfigurator {
 }
 
 public class TableViewDataSourceAdapter
-    <ValueType: CollectionType where ValueType.Generator.Element: TableViewCellConfigurator, ValueType.Index: IntegerType>
+    <Source: ObservableType where Source.ValueType: CollectionType,
+        Source.ValueType.Generator.Element: TableViewCellConfigurator,
+        Source.ValueType.Index: IntegerType>
     : NSObject, UITableViewDataSource
 {
     public let cellIdentifier: String
-    public let source: Latest<ValueType>
-    var output: Output<ValueType>?
+    public let source: Observable<Source.ValueType>
+    private var observation: Observation!
     
-    init(source: Observable<ValueType>, cellIdentifier: String) {
+    init(source: Source, cellIdentifier: String) {
         self.cellIdentifier = cellIdentifier
         self.source = source.latest()
     }
     
     public func reloadTableViewOnChange(tableView: UITableView) {
-        self.output = source.output { [weak tableView] _ in
+        observation = source => { [weak tableView] _ in
             if let tableView = tableView where !tableView.editing {
                 tableView.reloadData()
             }
@@ -38,23 +40,23 @@ public class TableViewDataSourceAdapter
     }
     
     public func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return (source.value?.count as? Int) ?? 0
+        return (source.pullValue?.count as? Int) ?? 0
     }
     
     public func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier(cellIdentifier, forIndexPath: indexPath)
-        source.value?[indexPath.row as! ValueType.Index].configureCell(cell)
+        source.pullValue?[indexPath.row as! Source.ValueType.Index].configureCell(cell)
         return cell
     }
 }
 
-extension Observable where Value: CollectionType, Value.Generator.Element: TableViewCellConfigurator, Value.Index: IntegerType {
+extension ObservableType where ValueType: CollectionType, ValueType.Generator.Element: TableViewCellConfigurator, ValueType.Index: IntegerType {
     
     // Where an Observable's value is a collection of TableViewCellConfigurators, we can automatically
     // create a table view data source drawing from this observable, and refreshing the table when the
     // contents update
     
-    public func tableViewDataSource(cellIdentifier: String) -> TableViewDataSourceAdapter<ValueType> {
+    public func tableViewDataSource(cellIdentifier: String) -> TableViewDataSourceAdapter<Self> {
         return TableViewDataSourceAdapter(source: self, cellIdentifier: cellIdentifier)
     }
 }

@@ -18,7 +18,7 @@ public class MapItemCollectionViewModel: NSObject, UICollectionViewDataSource, M
     
     // Outputs
     let weatherViewModel: WeatherViewModel
-    let cellItems: Latest<[MapItemCollectionViewCell.Item]>
+    let cellItems: Observable<[MapItemCollectionViewCell.Item]>
     let selectedItemIndex: Observable<Int?>
     let shareAction: Input<ShareAction?>
     
@@ -57,11 +57,11 @@ public class MapItemCollectionViewModel: NSObject, UICollectionViewDataSource, M
     }
     
     public func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return cellItems.value?.count ?? 0
+        return cellItems.pullValue?.count ?? 0
     }
     
     public func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
-        let cellItem = cellItems.value![indexPath.item]
+        let cellItem = cellItems.pullValue![indexPath.item]
         let cell = collectionView.dequeueReusableCellWithReuseIdentifier(cellItem.type.reuseIdentifier, forIndexPath: indexPath)
         
         if let cell = cell as? MapItemCollectionViewCell {

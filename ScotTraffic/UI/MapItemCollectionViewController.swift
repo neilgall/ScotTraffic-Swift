@@ -82,7 +82,7 @@ public class MapItemCollectionViewController: UIViewController, UICollectionView
     }
     
     private func reload() {
-        pageControl?.numberOfPages = viewModel?.cellItems.value?.count ?? 0
+        pageControl?.numberOfPages = viewModel?.cellItems.pullValue?.count ?? 0
         collectionView?.dataSource = viewModel
         collectionView?.reloadData()
     }

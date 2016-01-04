@@ -23,3 +23,13 @@ public func <== <A,B,C> (g: B->C, f: A->B) -> A->C {
 public func <== <A,B,C> (g: B throws -> C, f: A throws -> B) -> A throws -> C {
     return { a in try g(try f(a)) }
 }
+
+// Tuple selectors
+//
+public func first<A,B>(tuple: (A,B)) -> A {
+    return tuple.0
+}
+
+public func second<A,B>(tuple: (A,B)) -> B {
+    return tuple.1
+}
