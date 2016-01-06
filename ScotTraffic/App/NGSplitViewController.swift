@@ -275,12 +275,12 @@ public class NGSplitViewController: UIViewController {
             detailFrame = frames.right
             
         case .MasterOverlay:
-            masterFrame = CGRectMake(0, 0, 320, view.bounds.size.height)
+            masterFrame = CGRect(origin: CGPointZero, size: CGSize(width: 320, height: view.bounds.size.height))
             
         case .DetailOnly:
             // fudge to fix a strange unexpected call to viewWillLayoutSubviews() on the animate-out transition
             if animatingMasterOverlay {
-                masterFrame = CGRectMake(-320, 0, 320, view.bounds.size.height)
+                masterFrame = CGRect(origin: CGPoint(x: -320, y: 0), size: CGSize(width: 320, height: view.bounds.size.height))
             }
             break
 
@@ -506,7 +506,7 @@ private extension CGRect {
     }
     
     var integral: CGRect {
-        return CGRectMake(round(origin.x), round(origin.y), round(size.width), round(size.height))
+        return CGRect(origin: CGPoint(x: round(origin.x), y: round(origin.y)), size: CGSize(width: round(size.width), height: round(size.height)))
     }
 }
 

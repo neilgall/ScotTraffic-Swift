@@ -25,11 +25,11 @@ public func popoverContentSize(traitCollection: UITraitCollection, viewBounds: C
 }
 
 private func preferredCollectionContentSizeForWidth(width: CGFloat) -> CGSize {
-    return CGSizeMake(width, width * 0.75 + collectionViewChromeHeight)
+    return CGSize(width: width, height: width * 0.75 + collectionViewChromeHeight)
 }
 
 private func preferredCollectionContentSizeForHeight(height: CGFloat) -> CGSize {
-    return CGSizeMake((height - collectionViewChromeHeight) / 0.75, height)
+    return CGSize(width: (height - collectionViewChromeHeight) / 0.75, height: height)
 }
 
 private func aspectIsPortrait(viewBounds: CGRect) -> Bool {

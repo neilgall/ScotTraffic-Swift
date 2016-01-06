@@ -12,15 +12,14 @@ public class Never<Value> : Signal<Value> {
 }
 
 public class Const<Value> : Signal<Value> {
-    public typealias ValueType = Value
-
     public let value: Value
-    override public var latestValue: LatestValue<Value> {
-        return .Stored(value)
-    }
 
     public init(_ value: Value) {
         self.value = value
+    }
+    
+    override public var latestValue: LatestValue<Value> {
+        return .Stored(value)
     }
 }
 
@@ -160,11 +159,8 @@ extension SignalType {
     }
     
     public func latest() -> Signal<ValueType> {
-        if let signal = self as? Signal<ValueType> {
-            switch signal.latestValue {
-            case .Stored: return signal
-            default: break
-            }
+        if let signal = self as? Signal<ValueType>, case .Stored = signal.latestValue {
+            return signal
         }
         
         return Latest(self)

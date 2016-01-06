@@ -35,9 +35,9 @@ enum ReachabilityError: ErrorType {
     case UnableToSetDispatchQueue
 }
 
-public let ReachabilityChangedNotification = "ReachabilityChangedNotification"
+public let reachabilityChangedNotification = "ReachabilityChangedNotification"
 
-func callback(reachability:SCNetworkReachability, flags: SCNetworkReachabilityFlags, info: UnsafeMutablePointer<Void>) {
+func callback(reachability: SCNetworkReachability, flags: SCNetworkReachabilityFlags, info: UnsafeMutablePointer<Void>) {
     let reachability = Unmanaged<Reachability>.fromOpaque(COpaquePointer(info)).takeUnretainedValue()
     
     dispatch_async(dispatch_get_main_queue()) {
@@ -235,7 +235,7 @@ public class Reachability: NSObject {
             }
         }
         
-        notificationCenter.postNotificationName(ReachabilityChangedNotification, object:self)
+        notificationCenter.postNotificationName(reachabilityChangedNotification, object:self)
     }
     
     private func isReachableWithFlags(flags: SCNetworkReachabilityFlags) -> Bool {
@@ -338,7 +338,7 @@ public class Reachability: NSObject {
         return flags.contains(.IsDirect)
     }
     private func isConnectionRequiredOrTransient(flags: SCNetworkReachabilityFlags) -> Bool {
-        let testcase:SCNetworkReachabilityFlags = [.ConnectionRequired, .TransientConnection]
+        let testcase: SCNetworkReachabilityFlags = [.ConnectionRequired, .TransientConnection]
         return flags.intersect(testcase) == testcase
     }
     

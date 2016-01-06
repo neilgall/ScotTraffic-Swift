@@ -210,7 +210,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, MapViewModelDelega
         if mapAnnotation.mapItems.count > 1 {
             if let zoomInImage = UIImage(named: "736-zoom-in") {
                 let button = UIButton(type: .Custom)
-                button.frame = CGRectMake(0, 0, zoomInImage.size.width, zoomInImage.size.height)
+                button.frame = CGRect(origin: CGPointZero, size: zoomInImage.size)
                 button.setImage(zoomInImage, forState: .Normal)
                 annotationView.rightCalloutAccessoryView = button
             }

@@ -44,7 +44,7 @@ public struct JSONObject {
     }
 }
 
-public enum JSONError : ErrorType, CustomStringConvertible {
+public enum JSONError: ErrorType, CustomStringConvertible {
     case ExpectedDictionary(key: JSONKey)
     case ExpectedArray(key: JSONKey)
     case ExpectedValue(key: JSONKey, type: Any.Type)

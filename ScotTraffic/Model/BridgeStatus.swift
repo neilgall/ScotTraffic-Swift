@@ -10,7 +10,7 @@ import MapKit
 
 typealias KPH = Double
 
-public final class BridgeStatus : MapItem, Hashable {
+public final class BridgeStatus: MapItem, Hashable {
     public let identifier: String
     public let name: String
     public let road: String

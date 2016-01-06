@@ -9,10 +9,10 @@
 import Foundation
 
 #if DEBUG
-    public let ScotTrafficBaseURL = NSURL(string: "https://dev.scottraffic.co.uk")!
+    public let scotTrafficBaseURL = NSURL(string: "https://dev.scottraffic.co.uk")!
 #else
-    public let ScotTrafficBaseURL = NSURL(string: "https://scottraffic.co.uk")!
+    public let scotTrafficBaseURL = NSURL(string: "https://scottraffic.co.uk")!
 #endif
 
-public let ScotTrafficAppGroup = "group.uk.co.scottraffic.ios.favourites"
-public let TodayExtensionBundleIdentifier = "uk.co.ScotTraffic.iOS.TodayExtension"
+public let scotTrafficAppGroup = "group.uk.co.scottraffic.ios.favourites"
+public let todayExtensionBundleIdentifier = "uk.co.ScotTraffic.iOS.TodayExtension"

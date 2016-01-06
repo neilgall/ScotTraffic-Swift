@@ -108,7 +108,7 @@ public class AppCoordinator: NSObject, NGSplitViewControllerDelegate, SettingsTa
             showMap()
         }
         
-        // FIXME: This is to guard against rapid taps in the search view controller racing with the
+        // This is to guard against rapid taps in the search view controller racing with the
         // map view and callout animations. Need a better, more general solution to queue requests
         // or cancel the imperative and latent consequences of earlier updates.
         

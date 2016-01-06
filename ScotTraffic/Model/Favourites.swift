@@ -40,7 +40,7 @@ public struct FavouriteTrafficCamera {
 
 public class Favourites {
     private let userDefaults: UserDefaultsProtocol
-    private let items : Input<[FavouriteIdentifier]>
+    private let items: Input<[FavouriteIdentifier]>
     public let trafficCameras: Signal<[FavouriteTrafficCamera]>
     
     private var receivers = [ReceiverType]()

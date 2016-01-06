@@ -16,7 +16,7 @@ public enum TrafficCameraDirection: String {
     case West
 }
 
-public final class TrafficCameraLocation : MapItem {
+public final class TrafficCameraLocation: MapItem {
     public let name: String
     public let road: String
     public let mapPoint: MKMapPoint
@@ -39,7 +39,7 @@ public final class TrafficCameraLocation : MapItem {
     }
 }
 
-public final class TrafficCamera : ImageDataSource {
+public final class TrafficCamera: ImageDataSource {
     public let identifier: String
     public let direction: TrafficCameraDirection?
     public let isAvailable: Bool

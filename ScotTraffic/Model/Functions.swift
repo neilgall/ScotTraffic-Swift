@@ -12,24 +12,24 @@ infix operator <== { associativity right precedence 90 }
 
 // Function composition
 //
-//  f <== g  means  \x -> g(f(x))
+//  g <== f  means  \x -> g(f(x))
 //
-public func <== <A,B,C> (g: B->C, f: A->B) -> A->C {
+public func <== <A, B, C> (g: B->C, f: A->B) -> A->C {
     return { a in g(f(a)) }
 }
 
 // Function composition for functions that throw
 //
-public func <== <A,B,C> (g: B throws -> C, f: A throws -> B) -> A throws -> C {
+public func <== <A, B, C> (g: B throws -> C, f: A throws -> B) -> A throws -> C {
     return { a in try g(try f(a)) }
 }
 
 // Tuple selectors
 //
-public func first<A,B>(tuple: (A,B)) -> A {
+public func first<A, B>(tuple: (A, B)) -> A {
     return tuple.0
 }
 
-public func second<A,B>(tuple: (A,B)) -> B {
+public func second<A, B>(tuple: (A, B)) -> B {
     return tuple.1
 }

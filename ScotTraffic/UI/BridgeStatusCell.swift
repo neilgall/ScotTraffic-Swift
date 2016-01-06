@@ -8,7 +8,7 @@
 
 import UIKit
 
-class BridgeStatusCell : MapItemCollectionViewCellWithMap {
+class BridgeStatusCell: MapItemCollectionViewCellWithMap {
 
     @IBOutlet var backgroundImageView: UIImageView?
     @IBOutlet var dateLabel: UILabel?

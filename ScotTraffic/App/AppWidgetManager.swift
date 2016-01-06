@@ -15,7 +15,7 @@ class AppWidgetManager {
     init(favourites: Favourites) {
         observation = favourites.trafficCameras --> {
             let hasContent = $0.count > 0
-            NCWidgetController.widgetController().setHasContent(hasContent, forWidgetWithBundleIdentifier: TodayExtensionBundleIdentifier)
+            NCWidgetController.widgetController().setHasContent(hasContent, forWidgetWithBundleIdentifier: todayExtensionBundleIdentifier)
         }
     }
 }

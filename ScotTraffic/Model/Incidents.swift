@@ -14,7 +14,7 @@ public enum IncidentType {
     case Roadworks
 }
 
-public final class Incident : MapItem {
+public final class Incident: MapItem {
     public let type: IncidentType
     public let name: String
     public let road: String = ""

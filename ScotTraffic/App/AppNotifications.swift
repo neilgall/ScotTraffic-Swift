@@ -89,7 +89,7 @@ public class AppNotifications {
     }
     
     public func didRegisterWithDeviceToken(token: NSData) {
-        let nibble : [Character] = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "A", "B", "C", "D", "E", "F" ]
+        let nibble: [Character] = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "A", "B", "C", "D", "E", "F" ]
         
         var bytes = [UInt8](count: token.length, repeatedValue: 0)
         token.getBytes(&bytes, length: token.length)

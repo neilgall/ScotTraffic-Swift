@@ -32,10 +32,6 @@ public class MapViewModel {
     // A flag indicating whether the map is currently animating its visible rect
     public let animatingMapRect: Input<Bool>
     
-    // A general purpose animation sequence. Dispatch animations via this sequence to (a) serialise
-    // them and (b) defer annotation selection until the map is stable
-    public let animationSequence = AsyncSequence()
-
     // -- MARK: Outputs
     
     // The set of annotations in the visible map rect
@@ -115,7 +111,7 @@ public class MapViewModel {
             $0.map { group in MapAnnotation(mapItems: group) }
         }).latest()
 
-        let selectionInputWhenNotAnimating = not(animatingMapRect || animationSequence.busy).gate(selectedMapItem)
+        let selectionInputWhenNotAnimating = not(animatingMapRect).gate(selectedMapItem)
         
         let selectedMapItemGroup = combine(mapItemGroups, selectionInputWhenNotAnimating) { groups, item in
             return mapItemGroupFromGroups(groups, containingItem: item)

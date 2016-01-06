@@ -11,7 +11,7 @@ import MapKit
 private let mapRectSize: Double = 4000
 private let renderStartTimeout: NSTimeInterval = 1.0
 
-class MapItemCollectionViewCellWithMap : MapItemCollectionViewCell, MKMapViewDelegate {
+class MapItemCollectionViewCellWithMap: MapItemCollectionViewCell, MKMapViewDelegate {
     
     private var mapView: MKMapView?
 
@@ -90,8 +90,8 @@ func applyGradientMask(image: UIImage?) -> UIImage? {
     let gradient = CGGradientCreateWithColors(colorSpace, colors, colorLocations)
     CGContextDrawLinearGradient(context,
         gradient,
-        CGPointMake(size.width/2, 0),
-        CGPointMake(size.width/2, size.height),
+        CGPoint(x: size.width/2, y: 0),
+        CGPoint(x: size.width/2, y: size.height),
         CGGradientDrawingOptions.DrawsBeforeStartLocation)
     
     let mask = CGBitmapContextCreateImage(context)

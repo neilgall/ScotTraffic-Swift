@@ -20,7 +20,7 @@ class SearchViewController: UITableViewController, UISearchBarDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let searchBar = UISearchBar(frame: CGRectMake(0, 0, 0, 44))
+        let searchBar = UISearchBar(frame: CGRect(origin: CGPointZero, size: CGSize(width: 0, height: 44)))
         searchBar.translatesAutoresizingMaskIntoConstraints = true
         searchBar.autoresizingMask = .FlexibleWidth
         searchBar.delegate = self

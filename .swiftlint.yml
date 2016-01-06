@@ -1,0 +1,14 @@
+disabled_rules:
+  - statement_position
+  - trailing_whitespace
+  - trailing_newline
+  - file_length
+  - line_length
+  - type_body_length
+  - function_body_length
+  - variable_name_min_length
+  - opening_brace
+
+excluded:
+  - ScotTrafficTests
+  - ScotTrafficUITests

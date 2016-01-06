@@ -29,12 +29,12 @@ class TodayViewModel {
     
     init() {
         let diskCache = DiskCache(withPath: "scottraffic")
-        let httpAccess = HTTPAccess(baseURL: ScotTrafficBaseURL, indicator: nil)
+        let httpAccess = HTTPAccess(baseURL: scotTrafficBaseURL, indicator: nil)
         
         let cachedDataSource = CachedHTTPDataSource.dataSourceWithHTTPAccess(httpAccess, cache: diskCache)
         
-        guard let userDefaults = NSUserDefaults(suiteName: ScotTrafficAppGroup) else {
-            fatalError("cannot create NSUserDefaults with suiteName \(ScotTrafficAppGroup)")
+        guard let userDefaults = NSUserDefaults(suiteName: scotTrafficAppGroup) else {
+            fatalError("cannot create NSUserDefaults with suiteName \(scotTrafficAppGroup)")
         }
         
         self.diskCache = diskCache
@@ -58,7 +58,7 @@ class TodayViewModel {
         let weatherFinder = weather.map({ $0.value ?? [] }).latest().map() { (weather: [Weather]) -> (MapItem -> Weather?) in
             return { (mapItem: MapItem) -> Weather? in
                 let distanceSq = { (w: Weather) -> Double in w.mapPoint.distanceSqToMapPoint(mapItem.mapPoint) }
-                return weather.minElement( { distanceSq($0) < distanceSq($1) })
+                return weather.minElement({ distanceSq($0) < distanceSq($1) })
             }
         }
 

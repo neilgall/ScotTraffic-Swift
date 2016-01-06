@@ -112,6 +112,7 @@
 		28DB3BF51BC02892001AAC2A /* SafetyCameras.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28DB3BF41BC02892001AAC2A /* SafetyCameras.swift */; };
 		28DB3BF81BC02968001AAC2A /* Weather.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28DB3BF71BC02968001AAC2A /* Weather.swift */; };
 		28DB3BFA1BC02C88001AAC2A /* Incidents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28DB3BF91BC02C88001AAC2A /* Incidents.swift */; };
+		28F4BF721C3BE4E400C257D5 /* AppErrorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28F4BF711C3BE4E400C257D5 /* AppErrorTests.swift */; };
 		28F6009F1BDB8E3E00ED71CA /* NGSplitViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28F6009E1BDB8E3E00ED71CA /* NGSplitViewController.swift */; };
 		710535651BCC141C00FDB70C /* UserDefaultsProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 710535641BCC141C00FDB70C /* UserDefaultsProtocol.swift */; };
 		7105356C1BCDA83A00FDB70C /* SearchViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7105356A1BCDA83A00FDB70C /* SearchViewModelTests.swift */; };
@@ -267,6 +268,7 @@
 		28DB3BF41BC02892001AAC2A /* SafetyCameras.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SafetyCameras.swift; sourceTree = "<group>"; };
 		28DB3BF71BC02968001AAC2A /* Weather.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Weather.swift; sourceTree = "<group>"; };
 		28DB3BF91BC02C88001AAC2A /* Incidents.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Incidents.swift; sourceTree = "<group>"; };
+		28F4BF711C3BE4E400C257D5 /* AppErrorTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppErrorTests.swift; sourceTree = "<group>"; };
 		28F6009E1BDB8E3E00ED71CA /* NGSplitViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NGSplitViewController.swift; sourceTree = "<group>"; };
 		710535641BCC141C00FDB70C /* UserDefaultsProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserDefaultsProtocol.swift; sourceTree = "<group>"; };
 		710535661BCDA81E00FDB70C /* Data */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Data; sourceTree = "<group>"; };
@@ -571,6 +573,7 @@
 			children = (
 				282BFE5C1C3A9E8F00E531BC /* FRP */,
 				28875EA81BBC7A2F00E67A16 /* JSONTests.swift */,
+				28F4BF711C3BE4E400C257D5 /* AppErrorTests.swift */,
 			);
 			name = Core;
 			sourceTree = "<group>";
@@ -613,6 +616,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 2804937D1BA8BB4800990BD1 /* Build configuration list for PBXNativeTarget "ScotTraffic" */;
 			buildPhases = (
+				28F4BF6E1C3BDD5000C257D5 /* Swift Lint */,
 				280493511BA8BB4800990BD1 /* Sources */,
 				280493521BA8BB4800990BD1 /* Frameworks */,
 				280493531BA8BB4800990BD1 /* Resources */,
@@ -789,6 +793,24 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		28F4BF6E1C3BDD5000C257D5 /* Swift Lint */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Swift Lint";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "if which swiftlint >/dev/null; then\n  swiftlint\nelse\n  echo \"SwiftLint does not exist, download from https://github.com/realm/SwiftLint\"\nfi";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		280493511BA8BB4800990BD1 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -877,6 +899,7 @@
 				28BFBC5B1BBC91AA00827069 /* FRPTests.swift in Sources */,
 				7105356C1BCDA83A00FDB70C /* SearchViewModelTests.swift in Sources */,
 				289B9AB71C348AC700C342F1 /* FavouritesTests.swift in Sources */,
+				28F4BF721C3BE4E400C257D5 /* AppErrorTests.swift in Sources */,
 				28875EA91BBC7A2F00E67A16 /* JSONTests.swift in Sources */,
 				282BFE5E1C3A9EA500E531BC /* FRPJoinTests.swift in Sources */,
 				7105356D1BCDA83A00FDB70C /* TestAppModel.swift in Sources */,

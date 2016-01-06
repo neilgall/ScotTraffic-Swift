@@ -9,8 +9,8 @@
 import UIKit
 import NotificationCenter
 
-private let maxImageWidth:  CGFloat = 414
-private let bottomMargin:   CGFloat = 10
+private let maxImageWidth: CGFloat = 414
+private let bottomMargin: CGFloat = 10
 private let controlsHeight: CGFloat = 44
 
 class TodayViewController: UIViewController, NCWidgetProviding {

@@ -8,7 +8,7 @@
 
 import Foundation
 
-public enum AppError : ErrorType {
+public enum AppError: ErrorType {
     case Network(NetworkError)
     case Image(ImageError)
     case JSON(JSONError)
@@ -16,18 +16,18 @@ public enum AppError : ErrorType {
     case Unknown(ErrorType)
     
     public static func wrap(e: ErrorType) -> AppError {
-        if e.dynamicType == AppError.self {
-            return e as! AppError
-        } else if e.dynamicType == NetworkError.self {
-            return AppError.Network(e as! NetworkError)
-        } else if e.dynamicType == ImageError.self {
-            return AppError.Image(e as! ImageError)
-        } else if e.dynamicType == JSONError.self {
-            return AppError.JSON(e as! JSONError)
+        if let ae = e as? AppError {
+            return ae
+        } else if let ne = e as? NetworkError {
+            return .Network(ne)
+        } else if let ie = e as? ImageError {
+            return .Image(ie)
+        } else if let je = e as? JSONError {
+            return .JSON(je)
         } else if e.dynamicType == NSError.self {
-            return AppError.System(e as NSError)
+            return .System(e as NSError)
         } else {
-            return AppError.Unknown(e)
+            return .Unknown(e)
         }
     }
 }

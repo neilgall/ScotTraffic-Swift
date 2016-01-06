@@ -28,12 +28,12 @@ public class AppModel: ScotTraffic {
     
     public init() {
         let diskCache = DiskCache(withPath: "scottraffic")
-        let httpAccess = HTTPAccess(baseURL: ScotTrafficBaseURL, indicator: AppNetworkActivityIndicator())
+        let httpAccess = HTTPAccess(baseURL: scotTrafficBaseURL, indicator: AppNetworkActivityIndicator())
         
         let cachedDataSource = CachedHTTPDataSource.dataSourceWithHTTPAccess(httpAccess, cache: diskCache)
         
-        guard let userDefaults = NSUserDefaults(suiteName: ScotTrafficAppGroup) else {
-            fatalError("unable to create NSUserDefaults with suite name \(ScotTrafficAppGroup)")
+        guard let userDefaults = NSUserDefaults(suiteName: scotTrafficAppGroup) else {
+            fatalError("unable to create NSUserDefaults with suite name \(scotTrafficAppGroup)")
         }
 
         self.diskCache = diskCache
@@ -90,7 +90,7 @@ public class AppModel: ScotTraffic {
         self.weather = weather.map({ $0.value ?? [] }).latest().map() { (weather: [Weather]) -> WeatherFinder in
             return { (mapItem: MapItem) -> Weather? in
                 let distanceSq = { (w: Weather) -> Double in w.mapPoint.distanceSqToMapPoint(mapItem.mapPoint) }
-                return weather.minElement( { distanceSq($0) < distanceSq($1) })
+                return weather.minElement({ distanceSq($0) < distanceSq($1) })
             }
         }
         
@@ -115,4 +115,3 @@ public class AppModel: ScotTraffic {
         }))
     }
 }
-

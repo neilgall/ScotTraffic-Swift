@@ -34,10 +34,13 @@ public func compositeImagesNamed(imageComponents: [String]) -> UIImage? {
     
     imageComponents.forEach { imageName in
         if let image = UIImage(named: imageName) {
-            let rect = CGRectMake((draw.size.width - draw.scale*image.size.width) / 2,
-                (draw.size.height - draw.scale*image.size.height) / 2,
-                draw.scale * image.size.width,
-                draw.scale * image.size.height)
+            let rect = CGRect(
+                origin: CGPoint(
+                    x: (draw.size.width - draw.scale*image.size.width) / 2,
+                    y: (draw.size.height - draw.scale*image.size.height) / 2),
+                size: CGSize(
+                    width: draw.scale * image.size.width,
+                    height: draw.scale * image.size.height))
             CGContextDrawImage(context, rect, image.CGImage)
         }
     }
@@ -66,7 +69,7 @@ private func compositedSize(imageComponents: [String]) -> (size: CGSize, scale: 
         )
     }
     return (
-        size: CGSizeMake(result.width * result.scale, result.height * result.scale),
+        size: CGSize(width: result.width * result.scale, height: result.height * result.scale),
         scale: result.scale
     )
 }

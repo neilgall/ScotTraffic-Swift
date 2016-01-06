@@ -16,8 +16,8 @@ public class TableViewDataSourceAdapter
     <Source: SignalType where Source.ValueType: CollectionType,
         Source.ValueType.Generator.Element: TableViewCellConfigurator,
         Source.ValueType.Index: IntegerType>
-    : NSObject, UITableViewDataSource
-{
+    : NSObject, UITableViewDataSource {
+
     public let cellIdentifier: String
     public let source: Signal<Source.ValueType>
     private var observation: ReceiverType!
@@ -45,7 +45,7 @@ public class TableViewDataSourceAdapter
     
     public func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier(cellIdentifier, forIndexPath: indexPath)
-        source.latestValue.get?[indexPath.row as! Source.ValueType.Index].configureCell(cell)
+        source.latestValue.get?[indexPath.row as! Source.ValueType.Index].configureCell(cell) // swiftlint:disable:this force_cast
         return cell
     }
 }

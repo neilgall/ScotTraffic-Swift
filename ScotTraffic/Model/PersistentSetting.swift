@@ -46,8 +46,7 @@ extension UserDefaultsProtocol {
             key: key,
             defaultValue: defaultValue,
             to: { $0 },
-            from: { $0 as? Bool }
-        )
+            from: { $0 as? Bool })
     }
     
     func intSetting(key: String, _ defaultValue: Int) -> PersistentSetting<Int> {
@@ -55,8 +54,7 @@ extension UserDefaultsProtocol {
             key: key,
             defaultValue: defaultValue,
             to: { $0 },
-            from: { $0 as? Int }
-        )
+            from: { $0 as? Int })
     }
     
     func enumSetting<T where T:RawRepresentable, T.RawValue == Int>(key: String, _ defaultValue: T) -> PersistentSetting<T> {
@@ -64,11 +62,10 @@ extension UserDefaultsProtocol {
             key: key,
             defaultValue: defaultValue,
             to: { $0.rawValue },
-            from: { ($0 as? T.RawValue).flatMap { T(rawValue: $0) } }
-        )
+            from: { ($0 as? T.RawValue).flatMap { T(rawValue: $0) } })
     }
     
-    func setting<T>(key: String, _ defaultValue: T, to:(T -> AnyObject?), from:(AnyObject -> T?)) -> PersistentSetting<T> {
+    func setting<T>(key: String, _ defaultValue: T, to: (T -> AnyObject?), from: (AnyObject -> T?)) -> PersistentSetting<T> {
         return PersistentSetting(self, key: key, defaultValue: defaultValue, to: to, from: from)
     }
 }

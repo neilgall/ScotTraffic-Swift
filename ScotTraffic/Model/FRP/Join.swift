@@ -13,7 +13,7 @@ class JoinedSignal<Value>: Signal<Value> {
     private var outerReceiver: ReceiverType!
     private var innerReceiver: ReceiverType?
     
-    init<Inner: SignalType where Inner.ValueType == Value>(_ source: Signal<Inner>) {
+    init<Outer: SignalType, Inner: SignalType where Outer.ValueType == Inner, Inner.ValueType == Value>(_ source: Outer) {
         super.init()
         outerReceiver = Receiver(source) { [weak self] transaction in
             if case .End(let inner) = transaction {
@@ -25,8 +25,8 @@ class JoinedSignal<Value>: Signal<Value> {
     }
 }
 
-public extension Signal where Value: SignalType {
-    public func join() -> Signal<Value.ValueType> {
+public extension SignalType where ValueType: SignalType {
+    public func join() -> Signal<ValueType.ValueType> {
         return JoinedSignal(self)
     }
 }

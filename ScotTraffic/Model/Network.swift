@@ -10,7 +10,7 @@ import UIKit
 
 private let requestTimeout: NSTimeInterval = 30
 
-public enum NetworkError : ErrorType {
+public enum NetworkError: ErrorType {
     case MalformedURL
     case FetchError(NSError)
     case HTTPError(Int)

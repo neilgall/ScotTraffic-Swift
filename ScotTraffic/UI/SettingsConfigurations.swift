@@ -12,14 +12,14 @@ protocol SettingConfiguration {
     var cellIdentifier: String { get }
 }
 
-struct SettingsToggleConfiguration : SettingConfiguration {
+struct SettingsToggleConfiguration: SettingConfiguration {
     let cellIdentifier = "SettingsToggleTableViewCell"
     let iconImageName: String
     let title: String
     let toggle: Input<Bool>
 }
 
-struct SettingsIntConfiguration : SettingConfiguration {
+struct SettingsIntConfiguration: SettingConfiguration {
     let cellIdentifier = "SettingsIntTableViewCell"
     let iconImageName: String
     let title: String
@@ -27,7 +27,7 @@ struct SettingsIntConfiguration : SettingConfiguration {
     let settingValueTitles: [Int : String]
 }
 
-struct SettingsInfoConfiguration : SettingConfiguration {
+struct SettingsInfoConfiguration: SettingConfiguration {
     let cellIdentifier = "SettingsInfoTableViewCell"
     let text: String
     let detailText: String?

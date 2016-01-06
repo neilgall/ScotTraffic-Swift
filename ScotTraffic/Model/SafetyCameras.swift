@@ -20,7 +20,7 @@ public enum SpeedLimit {
     case National
 }
 
-public final class SafetyCamera : MapItem, ImageDataSource {
+public final class SafetyCamera: MapItem, ImageDataSource {
     public let name: String
     public let road: String
     public let url: NSURL?

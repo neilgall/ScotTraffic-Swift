@@ -70,7 +70,7 @@ public extension DataSourceValue {
     }
 }
 
-public class EmptyDataSource : DataSource {
+public class EmptyDataSource: DataSource {
     public var value: Signal<DataSourceData> {
         return Const(.Empty)
     }
