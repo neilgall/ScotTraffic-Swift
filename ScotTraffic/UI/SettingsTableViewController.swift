@@ -33,7 +33,7 @@ class SettingsTableViewController: UITableViewController {
             return
         }
 
-        var contentConfigurations: [SettingConfiguration] = [
+        var fixedContentConfigurations: [SettingConfiguration] = [
             SettingsToggleConfiguration(
                 iconImageName: "camera",
                 title: "Traffic Cameras",
@@ -53,20 +53,28 @@ class SettingsTableViewController: UITableViewController {
                 iconImageName: "roadworks",
                 title: "Roadworks",
                 toggle: settings.showRoadworksOnMap),
-            
-            SettingsToggleConfiguration(
-                iconImageName: "bridge",
-                title: "Bridges",
-                toggle: settings.showBridgesOnMap)
         ]
         
         if #available(iOS 9.0, *) {
-            contentConfigurations.insert(SettingsToggleConfiguration(
+            fixedContentConfigurations.append(SettingsToggleConfiguration(
                 iconImageName: "warning-traffic",
                 title: "Traffic",
-                toggle: settings.showTrafficOnMap), atIndex:contentConfigurations.count-2)
+                toggle: settings.showTrafficOnMap))
         }
+        
+        // make a dynamic content configuration set which includes a bridges switch if there are any bridges
+        let contentConfigurations: Signal<[SettingConfiguration]> = settings.bridgeNotifications.map({
+            var configurations = fixedContentConfigurations
+            if !$0.isEmpty {
+                configurations.append(SettingsToggleConfiguration(
+                    iconImageName: "bridge",
+                    title: "Bridges",
+                    toggle: settings.showBridgesOnMap))
+            }
+            return configurations
+        })
 
+        // make a notification configuration switch for each bridge
         let notificationConfigurations: Signal<[SettingConfiguration]> = settings.bridgeNotifications.mapSeq({ (bridge, setting) in
             SettingsToggleConfiguration(
                 iconImageName: "bridge",
@@ -109,7 +117,8 @@ class SettingsTableViewController: UITableViewController {
                 pageTitle: "index")
         ]
         
-        receivers.append(notificationConfigurations --> { [weak self] notificationConfigurations in
+        receivers.append(combine(contentConfigurations, notificationConfigurations, combine:{ ($0,$1) }) --> {
+            [weak self] contentConfigurations, notificationConfigurations in
             self?.configurations = [
                 ("Content",       contentConfigurations),
                 ("Settings",      settingConfigurations),
