@@ -146,11 +146,19 @@ class HTTPDataSource: DataSource {
 
 
 public func JSONArrayFromData(data: NSData) throws -> ContextlessJSONArray {
-    let json = try NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions())
+    let json = try NSJSONSerialization.JSONObjectWithData(data, options: [])
     guard let array = json as? ContextlessJSONArray else {
         throw JSONError.ExpectedArray(key: "")
     }
     return array
+}
+
+public func JSONObjectFromData(data: NSData) throws -> ContextlessJSONObject {
+    let json = try NSJSONSerialization.JSONObjectWithData(data, options: [])
+    guard let object = json as? ContextlessJSONObject else {
+        throw JSONError.ExpectedDictionary(key: "")
+    }
+    return object
 }
 
 public func UIImageFromData(data: NSData) throws -> UIImage {

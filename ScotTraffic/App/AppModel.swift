@@ -17,6 +17,7 @@ public class AppModel: ScotTraffic {
     public let roadworks: Signal<[Incident]>
     public let bridges: Signal<[BridgeStatus]>
     public let weather: Signal<WeatherFinder>
+    public let messageOfTheDay: Signal<MessageOfTheDay?>
     public let settings: Settings
     public let favourites: Favourites
     
@@ -56,18 +57,18 @@ public class AppModel: ScotTraffic {
         
         let safetyCamerasSource = cachedDataSource(maximumCacheAge: 900)(path: "safetycameras.json")
         let safetyCamerasContext = SafetyCameraDecodeContext(makeImageDataSource: cachedDataSource(maximumCacheAge: 86400))
-        let safetyCameras = safetyCamerasSource.value.map {
+        let safetyCameras = safetyCamerasSource.value.map({
             $0.map(Array<SafetyCamera>.decodeJSON(safetyCamerasContext) <== JSONArrayFromData)
-        }
+        })
         self.safetyCameras = safetyCameras.map({ $0.value ?? [] }).latest()
  
         
         // -- Incidents / Roadworks --
         
         let incidentsSource = cachedDataSource(maximumCacheAge: 300)(path: "incidents.json")
-        let incidents = incidentsSource.value.map {
+        let incidents = incidentsSource.value.map({
             $0.map(Array<Incident>.decodeJSON(Void) <== JSONArrayFromData)
-        }
+        })
         let allIncidents = incidents.map({ $0.value ?? [] })
         self.alerts = allIncidents.map({ $0.filter({ $0.type == IncidentType.Alert }) }).latest()
         self.roadworks = allIncidents.map({ $0.filter({ $0.type == IncidentType.Roadworks }) }).latest()
@@ -75,18 +76,18 @@ public class AppModel: ScotTraffic {
         // -- Bridge Status --
         
         let bridgeStatusSource = cachedDataSource(maximumCacheAge: 1)(path: "bridges.json")
-        let bridges = bridgeStatusSource.value.map {
+        let bridges = bridgeStatusSource.value.map({
             $0.map(Array<BridgeStatus>.decodeJSON(Void) <== JSONArrayFromData)
-        }
+        })
         self.bridges = bridges.map({ $0.value ?? [] }).latest()
         
         
         // -- Weather --
         
         let weatherSource = cachedDataSource(maximumCacheAge: 900)(path: "weather.json")
-        let weather = weatherSource.value.map {
+        let weather = weatherSource.value.map({
             $0.map(Array<Weather>.decodeJSON(Void) <== JSONArrayFromData)
-        }
+        })
         self.weather = weather.map({ $0.value ?? [] }).latest().map() { (weather: [Weather]) -> WeatherFinder in
             return { (mapItem: MapItem) -> Weather? in
                 let distanceSq = { (w: Weather) -> Double in w.mapPoint.distanceSqToMapPoint(mapItem.mapPoint) }
@@ -94,7 +95,24 @@ public class AppModel: ScotTraffic {
             }
         }
         
-        // -- Settings
+        // -- Message of the day --
+        
+        let messageOfTheDaySource = HTTPDataSource(httpAccess: httpAccess, path: "message.json")
+        let messageOfTheDay = messageOfTheDaySource.value.map({
+            $0.map(MessageOfTheDay.decodeJSON(Void) <== JSONObjectFromData)
+        })
+        self.messageOfTheDay = messageOfTheDay
+            .map({ $0.value })
+            .filter({ $0 != nil && !userDefaults.messageOfTheDaySeenBefore($0!) })
+            .latest()
+        
+        self.receivers.append(self.messageOfTheDay --> {
+            if let message = $0 {
+                userDefaults.noteMessageOfTheDaySeen(message)
+            }
+        })
+        
+        // -- Settings --
         
         self.settings = Settings(userDefaults: userDefaults, bridges: self.bridges)
         
@@ -102,7 +120,7 @@ public class AppModel: ScotTraffic {
         // -- Auto refresh --
         
         let fiveMinuteRefresh = PeriodicStarter(startables: [trafficCamerasSource, incidentsSource, bridgeStatusSource], period: 300)
-        let halfHourlyRefresh = PeriodicStarter(startables: [safetyCamerasSource, weatherSource], period: 1800)
+        let halfHourlyRefresh = PeriodicStarter(startables: [safetyCamerasSource, weatherSource, messageOfTheDaySource], period: 1800)
         self.fetchStarters = [fiveMinuteRefresh, halfHourlyRefresh]
         
         

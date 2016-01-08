@@ -113,6 +113,8 @@
 		28DB3BF81BC02968001AAC2A /* Weather.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28DB3BF71BC02968001AAC2A /* Weather.swift */; };
 		28DB3BFA1BC02C88001AAC2A /* Incidents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28DB3BF91BC02C88001AAC2A /* Incidents.swift */; };
 		28F4BF721C3BE4E400C257D5 /* AppErrorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28F4BF711C3BE4E400C257D5 /* AppErrorTests.swift */; };
+		28F4BF741C403F4E00C257D5 /* MessageOfTheDay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28F4BF731C403F4E00C257D5 /* MessageOfTheDay.swift */; };
+		28F4BF771C40685300C257D5 /* ISO8601.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28F4BF761C40685300C257D5 /* ISO8601.swift */; };
 		28F6009F1BDB8E3E00ED71CA /* NGSplitViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28F6009E1BDB8E3E00ED71CA /* NGSplitViewController.swift */; };
 		710535651BCC141C00FDB70C /* UserDefaultsProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 710535641BCC141C00FDB70C /* UserDefaultsProtocol.swift */; };
 		7105356C1BCDA83A00FDB70C /* SearchViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7105356A1BCDA83A00FDB70C /* SearchViewModelTests.swift */; };
@@ -269,6 +271,9 @@
 		28DB3BF71BC02968001AAC2A /* Weather.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Weather.swift; sourceTree = "<group>"; };
 		28DB3BF91BC02C88001AAC2A /* Incidents.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Incidents.swift; sourceTree = "<group>"; };
 		28F4BF711C3BE4E400C257D5 /* AppErrorTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppErrorTests.swift; sourceTree = "<group>"; };
+		28F4BF731C403F4E00C257D5 /* MessageOfTheDay.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageOfTheDay.swift; sourceTree = "<group>"; };
+		28F4BF751C40420A00C257D5 /* ScotTraffic_Bridging_Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ScotTraffic_Bridging_Header.h; sourceTree = "<group>"; };
+		28F4BF761C40685300C257D5 /* ISO8601.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ISO8601.swift; sourceTree = "<group>"; };
 		28F6009E1BDB8E3E00ED71CA /* NGSplitViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NGSplitViewController.swift; sourceTree = "<group>"; };
 		710535641BCC141C00FDB70C /* UserDefaultsProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserDefaultsProtocol.swift; sourceTree = "<group>"; };
 		710535661BCDA81E00FDB70C /* Data */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Data; sourceTree = "<group>"; };
@@ -361,6 +366,7 @@
 			isa = PBXGroup;
 			children = (
 				287F75471C00C8850040EE8A /* ScotTraffic.entitlements */,
+				28F4BF751C40420A00C257D5 /* ScotTraffic_Bridging_Header.h */,
 				289201CE1BBC570300DA4A9A /* App */,
 				289201D01BBC570C00DA4A9A /* Model */,
 				289201CF1BBC570800DA4A9A /* UI */,
@@ -410,6 +416,7 @@
 		284DE0991BBDDEB800E6A678 /* Core */ = {
 			isa = PBXGroup;
 			children = (
+				28F4BF761C40685300C257D5 /* ISO8601.swift */,
 				710535641BCC141C00FDB70C /* UserDefaultsProtocol.swift */,
 				28875EA61BBC739100E67A16 /* JSON.swift */,
 				28DB3BF21BC025D0001AAC2A /* Functions.swift */,
@@ -545,6 +552,7 @@
 				28DB3BF41BC02892001AAC2A /* SafetyCameras.swift */,
 				28DB3BF91BC02C88001AAC2A /* Incidents.swift */,
 				28DB3BF71BC02968001AAC2A /* Weather.swift */,
+				28F4BF731C403F4E00C257D5 /* MessageOfTheDay.swift */,
 				280486561BC087F4003BA360 /* Settings.swift */,
 				286559141BC1DCB70058A35A /* Favourites.swift */,
 				288AC88E1BCFA43B004EA6A0 /* SharableItem.swift */,
@@ -827,6 +835,7 @@
 				286157C81BF29BD2000C11D4 /* SettingsTableViewController.swift in Sources */,
 				2831B68C1BED52DC005B4933 /* AsyncSequence.swift in Sources */,
 				287F755A1C00E75E0040EE8A /* UserDefaultsMigration.swift in Sources */,
+				28F4BF741C403F4E00C257D5 /* MessageOfTheDay.swift in Sources */,
 				2897319B1BEE8B3B002C02EB /* UIViewSnapshot.swift in Sources */,
 				280388041C0F9AF100F8C149 /* Configuration.swift in Sources */,
 				718F00C91BCEFF8800D51B43 /* TrafficCameraCell.swift in Sources */,
@@ -873,6 +882,7 @@
 				287F75521C00D1130040EE8A /* AppNetworkActivityIndicator.swift in Sources */,
 				28AF4A071BD82342009B0AE8 /* FadeTransition.swift in Sources */,
 				716D9E971BCA614D005A6B49 /* MapItemCollectionViewModel.swift in Sources */,
+				28F4BF771C40685300C257D5 /* ISO8601.swift in Sources */,
 				285E17031BF760B000E13129 /* Sunrise.swift in Sources */,
 				28903ABE1BE62E2500EC8054 /* Reachability.swift in Sources */,
 				28AF4A0B1BD849C0009B0AE8 /* PopoverContentSize.swift in Sources */,
@@ -1038,6 +1048,7 @@
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_SWIFT_FLAGS = "-DDEBUG";
 				SDKROOT = iphoneos;
+				SWIFT_OBJC_BRIDGING_HEADER = ScotTraffic/ScotTraffic_Bridging_Header.h;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
@@ -1075,6 +1086,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
+				SWIFT_OBJC_BRIDGING_HEADER = ScotTraffic/ScotTraffic_Bridging_Header.h;
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
@@ -1180,6 +1192,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = uk.co.ScotTraffic.iOS.TodayExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				SKIP_INSTALL = YES;
 			};
 			name = Debug;
@@ -1195,6 +1208,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = uk.co.ScotTraffic.iOS.TodayExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				SKIP_INSTALL = YES;
 			};
 			name = Release;

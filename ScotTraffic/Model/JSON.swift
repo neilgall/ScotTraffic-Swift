@@ -174,6 +174,10 @@ extension JSONObjectDecodable {
         }
         return try decodeJSON(value, forKey: key)
     }
+    
+    public static func decodeJSON(context: JSONContext)(json: ContextlessJSONObject) throws -> Self {
+        return try decodeJSON(JSONObject(value: json, context: context), forKey: "")
+    }
 }
 
 infix operator <~ { associativity left precedence 150 }

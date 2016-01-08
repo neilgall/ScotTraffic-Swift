@@ -10,7 +10,7 @@ import UIKit
 
 let maximumItemsInDetailView = 10
 
-public class AppCoordinator: NSObject, NGSplitViewControllerDelegate, SettingsTableViewControllerDelegate {
+public class AppCoordinator: NSObject {
     let appModel: AppModel
     let rootWindow: UIWindow
     
@@ -67,6 +67,9 @@ public class AppCoordinator: NSObject, NGSplitViewControllerDelegate, SettingsTa
 
         // network reachability
         receivers.append(appModel.httpAccess.serverIsReachable.onFallingEdge(notifyNoNetworkReachability))
+
+        // message of the day
+        receivers.append(appModel.messageOfTheDay --> showMessageOfTheDay)
         
         // show map when search cancelled
         receivers.append(searchViewModel.searchActive.onFallingEdge(showMap))
@@ -166,20 +169,26 @@ public class AppCoordinator: NSObject, NGSplitViewControllerDelegate, SettingsTa
         splitViewController.presentViewController(alert, animated: true, completion: nil)
     }
     
-    // -- MARK: NGSplitViewControllerDelegate --
+    private func showMessageOfTheDay(message: MessageOfTheDay?) {
+        guard let message = message else {
+            return
+        }
+        let alert = UIAlertController(title: message.title, message: message.body, preferredStyle: .Alert)
     
-    public func splitViewController(splitViewController: NGSplitViewController, shouldShowMasterViewControllerForHorizontalSizeClass horizontalSizeClass: UIUserInterfaceSizeClass, viewWidth: CGFloat) -> Bool {
-        return horizontalSizeClass == .Regular && viewWidth > 768
+        alert.addAction(UIAlertAction(title: "Close", style: .Default) { _ in
+            self.splitViewController.dismissViewControllerAnimated(true, completion: nil)
+        })
+        
+        if let url = message.url {
+            alert.addAction(UIAlertAction(title: "More...", style: .Default) { _ in
+                self.splitViewController.dismissViewControllerAnimated(true, completion: nil)
+                UIApplication.sharedApplication().openURL(url)
+            })
+        }
+    
+        splitViewController.presentViewController(alert, animated: true, completion: nil)
     }
-    
-    public func splitViewController(splitViewController: NGSplitViewController, didChangeMasterViewControllerVisibility viewController: UIViewController) {
-        updateShowSearchButton()
-    }
-    
-    public func splitViewController(splitViewController: NGSplitViewController, didChangeDetailViewControllerVisibility viewController: UIViewController) {
-        updateCancelSearchButton()
-    }
-    
+
     // -- MARK: UI Actions --
     
     func searchButtonTapped(button: UIBarButtonItem) {
@@ -202,17 +211,34 @@ public class AppCoordinator: NSObject, NGSplitViewControllerDelegate, SettingsTa
             popover.barButtonItem = button
             popover.permittedArrowDirections = .Any
         }
-
+        
         settingsViewController.settings = appModel.settings
         settingsViewController.serverIsReachable = appModel.httpAccess.serverIsReachable
         settingsViewController.preferredContentSize = CGSize(width: 320, height: 650)
         settingsViewController.delegate = self
-
+        
         splitViewController.presentViewController(navigationController, animated: true, completion: nil)
     }
+
+}
+
+extension AppCoordinator: NGSplitViewControllerDelegate {
+
+    public func splitViewController(splitViewController: NGSplitViewController, shouldShowMasterViewControllerForHorizontalSizeClass horizontalSizeClass: UIUserInterfaceSizeClass, viewWidth: CGFloat) -> Bool {
+        return horizontalSizeClass == .Regular && viewWidth > 768
+    }
     
-    // -- MARK: SettingsTableViewControllerDelegate
+    public func splitViewController(splitViewController: NGSplitViewController, didChangeMasterViewControllerVisibility viewController: UIViewController) {
+        updateShowSearchButton()
+    }
     
+    public func splitViewController(splitViewController: NGSplitViewController, didChangeDetailViewControllerVisibility viewController: UIViewController) {
+        updateCancelSearchButton()
+    }
+}
+
+extension AppCoordinator : SettingsTableViewControllerDelegate {
+
     func settingsViewControllerDidDismiss(settingsViewController: SettingsTableViewController) {
         splitViewController.dismissViewControllerAnimated(true, completion: nil)
     }
