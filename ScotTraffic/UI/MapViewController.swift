@@ -15,7 +15,7 @@ private let zoomEdgePadding = UIEdgeInsetsMake(60, 40, 60, 40)
 private let zoomToMapItemInsetX: Double = -40000
 private let zoomToMapItemInsetY: Double = -40000
 
-class MapViewController: UIViewController, MKMapViewDelegate, MapViewModelDelegate, CalloutContainerViewDelegate {
+class MapViewController: UIViewController {
 
     @IBOutlet var mapView: MKMapView!
     @IBOutlet var calloutContainerView: CalloutContainerView!
@@ -176,7 +176,9 @@ class MapViewController: UIViewController, MKMapViewDelegate, MapViewModelDelega
         }
         return false
     }
-    
+}
+
+extension MapViewController: MKMapViewDelegate {
     // -- MARK: MKMapViewDelegete --
     
     func mapView(mapView: MKMapView, regionWillChangeAnimated animated: Bool) {
@@ -236,7 +238,9 @@ class MapViewController: UIViewController, MKMapViewDelegate, MapViewModelDelega
     func mapView(mapView: MKMapView, didDeselectAnnotationView view: MKAnnotationView) {
         hideMapItemsPresentedFromAnnotationView(view)
     }
+}
 
+extension MapViewController: MapViewModelDelegate {
     // -- MARK: MapViewModelDelegate
     
     func annotationAtMapPoint(mapPoint1: MKMapPoint, wouldOverlapWithAnnotationAtMapPoint mapPoint2: MKMapPoint) -> Bool {
@@ -246,9 +250,11 @@ class MapViewController: UIViewController, MKMapViewDelegate, MapViewModelDelega
         let dy = fabs(screenPoint1.y - screenPoint2.y)
         return dx < minimumAnnotationSpacingX && dy < minimumAnnotationSpacingY
     }
-    
+}
+
+extension MapViewController: CalloutContainerViewDelegate {
     // -- MARK: CalloutContainerViewDelegate
-    
+
     func calloutContainerView(calloutContainerView: CalloutContainerView, didDismissCalloutForAnnotationView annotationView: MKAnnotationView) {
         mapView.deselectAnnotation(annotationView.annotation, animated: true)
     }

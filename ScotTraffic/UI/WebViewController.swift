@@ -8,7 +8,7 @@
 
 import UIKit
 
-class WebViewController: UIViewController, UIWebViewDelegate {
+class WebViewController: UIViewController {
 
     @IBOutlet var webView: UIWebView?
     @IBOutlet var spinner: UIActivityIndicatorView?
@@ -51,7 +51,11 @@ class WebViewController: UIViewController, UIWebViewDelegate {
             spinner?.stopAnimating()
         }
     }
-    
+}
+
+extension WebViewController: UIWebViewDelegate {
+    // -- MARK: UIWebViewDelegate
+
     func webViewDidFinishLoad(webView: UIWebView) {
         spinner?.stopAnimating()
     }

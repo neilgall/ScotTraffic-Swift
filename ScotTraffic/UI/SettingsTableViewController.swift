@@ -124,6 +124,17 @@ class SettingsTableViewController: UITableViewController {
         delegate?.settingsViewControllerDidDismiss(self)
     }
 
+    private func pushWebView(page: String) {
+        guard let webViewController = storyboard?.instantiateViewControllerWithIdentifier("webViewController") as? WebViewController else {
+            return
+        }
+        webViewController.page = page
+        webViewController.serverIsReachable = serverIsReachable
+        navigationController?.pushViewController(webViewController, animated: true)
+    }
+}
+
+extension SettingsTableViewController {
     // MARK: - Table view data source
 
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
@@ -154,14 +165,5 @@ class SettingsTableViewController: UITableViewController {
         }
         
         pushWebView(title)
-    }
-    
-    private func pushWebView(page: String) {
-        guard let webViewController = storyboard?.instantiateViewControllerWithIdentifier("webViewController") as? WebViewController else {
-            return
-        }
-        webViewController.page = page
-        webViewController.serverIsReachable = serverIsReachable
-        navigationController?.pushViewController(webViewController, animated: true)
     }
 }

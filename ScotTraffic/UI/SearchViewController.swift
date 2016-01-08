@@ -9,7 +9,7 @@
 import UIKit
 import MapKit
 
-class SearchViewController: UITableViewController, UISearchBarDelegate {
+class SearchViewController: UITableViewController {
 
     @IBOutlet var editingFavouritesButton: UIButton?
     let editingFavourites: Input<Bool> = Input(initial: false)
@@ -62,13 +62,21 @@ class SearchViewController: UITableViewController, UISearchBarDelegate {
         self.editingFavourites <-- false
     }
     
+    // -- MARK: Actions
+    
+    @IBAction func editFavourites(sender: UIButton) {
+        editingFavourites <-- !(editingFavourites.latestValue.get!)
+    }
+
     @IBAction func cancelSearch() {
         searchBar?.text = ""
         if let searchActive = searchViewModel?.searchActive {
             searchActive <-- false
         }
     }
+}
 
+extension SearchViewController {
     // -- MARK: UITableViewDataSource
     
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
@@ -82,7 +90,9 @@ class SearchViewController: UITableViewController, UISearchBarDelegate {
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         return searchViewModel!.dataSource.latestValue.get!.tableView(tableView, cellForRowAtIndexPath: indexPath)
     }
-    
+}
+
+extension SearchViewController {
     // -- MARK: UITableViewDelegate
     
     override func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
@@ -125,7 +135,6 @@ class SearchViewController: UITableViewController, UISearchBarDelegate {
             return
         }
         model.moveFavouriteAtIndex(sourceIndexPath.row, toIndex: destinationIndexPath.row)
-//        tableView.moveRowAtIndexPath(sourceIndexPath, toIndexPath: destinationIndexPath)
     }
     
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
@@ -139,7 +148,9 @@ class SearchViewController: UITableViewController, UISearchBarDelegate {
             searchSelectionIndex <-- nil
         }
     }
+}
 
+extension SearchViewController: UISearchBarDelegate {
     // -- MARK: UISearchBarDelegate
     
     func searchBar(searchBar: UISearchBar, textDidChange searchText: String) {
@@ -150,12 +161,6 @@ class SearchViewController: UITableViewController, UISearchBarDelegate {
     
     func searchBarSearchButtonClicked(searchBar: UISearchBar) {
         searchBar.resignFirstResponder()
-    }
-    
-    // -- MARK: Actions
-    
-    @IBAction func editFavourites(sender: UIButton) {
-        editingFavourites <-- !(editingFavourites.latestValue.get!)
     }
 }
 

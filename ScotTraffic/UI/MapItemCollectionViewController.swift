@@ -8,7 +8,7 @@
 
 import UIKit
 
-public class MapItemCollectionViewController: UIViewController, UICollectionViewDelegate {
+public class MapItemCollectionViewController: UIViewController {
 
     @IBOutlet var collectionView: UICollectionView?
     @IBOutlet var collectionViewLayout: UICollectionViewFlowLayout?
@@ -127,7 +127,9 @@ public class MapItemCollectionViewController: UIViewController, UICollectionView
         let indexPath = NSIndexPath(forItem: currentPage, inSection: 0)
         collectionView?.scrollToItemAtIndexPath(indexPath, atScrollPosition: .CenteredHorizontally, animated: true)
     }
-    
+}
+
+extension MapItemCollectionViewController: UIScrollViewDelegate {
     // -- MARK: UIScrollViewDelegate --
     
     public func scrollViewDidEndDragging(scrollView: UIScrollView, willDecelerate decelerate: Bool) {

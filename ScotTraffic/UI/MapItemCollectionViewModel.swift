@@ -8,7 +8,7 @@
 
 import UIKit
 
-public class MapItemCollectionViewModel: NSObject, UICollectionViewDataSource, MapItemCollectionViewCellDelegate {
+public class MapItemCollectionViewModel: NSObject {
 
     // Sources
     let favourites: Favourites
@@ -49,7 +49,9 @@ public class MapItemCollectionViewModel: NSObject, UICollectionViewDataSource, M
             }
         }
     }
+}
 
+extension MapItemCollectionViewModel: UICollectionViewDataSource {
     // -- MARK: UICollectionViewDataSource --
     
     public func numberOfSectionsInCollectionView(collectionView: UICollectionView) -> Int {
@@ -71,7 +73,9 @@ public class MapItemCollectionViewModel: NSObject, UICollectionViewDataSource, M
         
         return cell
     }
-    
+}
+
+extension MapItemCollectionViewModel: MapItemCollectionViewCellDelegate {
     // -- MARK: MapItemCollectionViewCellDelegate --
     
     public func collectionViewCell(cell: MapItemCollectionViewCell, didRequestShareItem item: SharableItem, fromRect rect: CGRect) {
