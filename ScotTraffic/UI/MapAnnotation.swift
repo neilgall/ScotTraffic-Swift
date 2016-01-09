@@ -59,8 +59,9 @@ public class MapAnnotation: NSObject, MKAnnotation {
         
         } else if roadworksCount > 0 {
             imageComponents.append("roadworks")
+        }
 
-        } else if bridgeCount > 0 {
+        if bridgeCount > 0 && imageComponents.isEmpty {
             imageComponents.append("blue-circle")
         }
         
