@@ -36,6 +36,13 @@ public func == (lhs: BridgeStatus, rhs: BridgeStatus) -> Bool {
     return lhs.identifier == rhs.identifier
 }
 
+extension BridgeStatus {
+    func notificationSettingSignalFromSettings(settings: Settings) -> Signal<Input<Bool>>? {
+        let pair = settings.bridgeNotifications.filterSeq({ $0.0 == self })
+        return pair.map({ $0.first!.1 })
+    }
+}
+
 extension BridgeStatus: JSONObjectDecodable {
     public static func decodeJSON(json: JSONObject, forKey key: JSONKey) throws -> BridgeStatus {
         return try BridgeStatus(

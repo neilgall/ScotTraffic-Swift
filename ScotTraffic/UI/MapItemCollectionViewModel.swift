@@ -36,7 +36,7 @@ public class MapItemCollectionViewModel: NSObject {
         // Each MapItem can have multiple items to show in the collection view. Flat map into a cell item list.
         cellItems = mapItems.map { mapItems in
             mapItems.flatMap {
-                MapItemCollectionViewItem.forMapItem($0)
+                MapItemCollectionViewItem.forMapItem($0, settings: scotTraffic.settings)
             }
         }.latest()
         

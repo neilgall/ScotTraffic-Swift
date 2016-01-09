@@ -24,14 +24,26 @@ class BridgeStatusCell: UICollectionViewCell, MapItemCollectionViewCell, Backgro
     
     private var receivers = [ReceiverType]()
     private var sharableItem: ShareableBridge?
+    private var notificationSettingSignal: Signal<Input<Bool>>?
+    private var notificationSetting: Input<Bool>?
     
     func configure(item: MapItemCollectionViewItem) {
         messageLabel?.text = nil
 
-        if case .BridgeStatusItem(let bridgeStatus) = item {
+        if case .BridgeStatusItem(let bridgeStatus, let settings) = item {
             titleLabel?.text = bridgeStatus.name
             messageLabel?.text = bridgeStatus.message
             dateLabel?.text = nil
+            
+            notificationSettingSignal = bridgeStatus.notificationSettingSignalFromSettings(settings)
+            if let signal = notificationSettingSignal {
+                receivers.append(signal --> { [weak self] in
+                    self?.notificationSetting = $0
+                })
+                receivers.append(signal.join() --> { [weak self] in
+                    self?.notificationEnableSwitch?.on = $0
+                })
+            }
             
             if let bg = backgroundImageView {
                 mapView = configureMap(bridgeStatus, forReferenceView: bg)
@@ -42,6 +54,12 @@ class BridgeStatusCell: UICollectionViewCell, MapItemCollectionViewCell, Backgro
             })
             
             sharableItem = ShareableBridge(name: bridgeStatus.name, message: bridgeStatus.message)
+        }
+    }
+    
+    @IBAction func notificationsChanged() {
+        if let notificationSetting = notificationSetting, enableSwitch = notificationEnableSwitch {
+            notificationSetting <-- enableSwitch.on
         }
     }
     

@@ -35,7 +35,7 @@ public enum MapItemCollectionViewItem {
     case TrafficCameraItem(TrafficCameraLocation, TrafficCamera)
     case SafetyCameraItem(SafetyCamera)
     case IncidentItem(Incident)
-    case BridgeStatusItem(BridgeStatus)
+    case BridgeStatusItem(BridgeStatus, Settings)
     
     var type: MapItemCollectionViewItemType {
         switch self {
@@ -57,12 +57,12 @@ public enum MapItemCollectionViewItem {
         case .IncidentItem(let incident):
             return incident == selection.mapItem
             
-        case .BridgeStatusItem(let bridgeStatus):
+        case .BridgeStatusItem(let bridgeStatus, _):
             return bridgeStatus == selection.mapItem
         }
     }
     
-    static func forMapItem(mapItem: MapItem) -> [MapItemCollectionViewItem] {
+    static func forMapItem(mapItem: MapItem, settings: Settings) -> [MapItemCollectionViewItem] {
         if let trafficCameraLocation = mapItem as? TrafficCameraLocation {
             return trafficCameraLocation.cameras.map { TrafficCameraItem(trafficCameraLocation, $0) }
             
@@ -73,7 +73,7 @@ public enum MapItemCollectionViewItem {
             return [ IncidentItem(incident) ]
             
         } else if let bridgeStatus = mapItem as? BridgeStatus {
-            return [ BridgeStatusItem(bridgeStatus) ]
+            return [ BridgeStatusItem(bridgeStatus, settings) ]
             
         } else {
             fatalError("Unexpected mapItem \(mapItem)")

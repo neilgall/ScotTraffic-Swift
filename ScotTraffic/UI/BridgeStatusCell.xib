@@ -84,6 +84,9 @@
                     </label>
                     <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Pc7-lL-DEw">
                         <rect key="frame" x="263" y="245" width="51" height="31"/>
+                        <connections>
+                            <action selector="notificationsChanged" destination="gTV-IL-0wX" eventType="valueChanged" id="Kw6-TA-qiO"/>
+                        </connections>
                     </switch>
                 </subviews>
                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
