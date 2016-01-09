@@ -67,13 +67,13 @@
                         <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <nil key="highlightedColor"/>
                     </label>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Notify me when this changes" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aO9-gh-rXg" userLabel="Notify me">
-                        <rect key="frame" x="10" y="252" width="302" height="18"/>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Notify me when this changes" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="aO9-gh-rXg" userLabel="Notify me">
+                        <rect key="frame" x="33" y="251" width="220" height="20"/>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="20" id="9ok-h4-hxO"/>
                         </constraints>
-                        <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="15"/>
+                        <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="17"/>
                         <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <nil key="highlightedColor"/>
                         <variation key="default">
@@ -83,7 +83,7 @@
                         </variation>
                     </label>
                     <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Pc7-lL-DEw">
-                        <rect key="frame" x="263" y="245" width="51" height="31"/>
+                        <rect key="frame" x="261" y="245" width="51" height="31"/>
                         <connections>
                             <action selector="notificationsChanged" destination="gTV-IL-0wX" eventType="valueChanged" id="Kw6-TA-qiO"/>
                         </connections>
@@ -101,6 +101,7 @@
                 <constraint firstItem="oZL-Ie-8F8" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" id="684-Nd-DhM"/>
                 <constraint firstItem="BqJ-0V-LEo" firstAttribute="centerY" secondItem="Dyw-ot-QPr" secondAttribute="centerY" id="8oh-yE-mDo"/>
                 <constraint firstItem="VEm-Am-XZP" firstAttribute="top" secondItem="5is-c3-A78" secondAttribute="bottom" constant="8" id="AXC-aJ-djH"/>
+                <constraint firstItem="Pc7-lL-DEw" firstAttribute="trailing" secondItem="5is-c3-A78" secondAttribute="trailing" id="CZV-sT-aKb"/>
                 <constraint firstItem="Ngo-q8-L8H" firstAttribute="bottom" secondItem="oZL-Ie-8F8" secondAttribute="bottom" id="CcQ-Qz-hjH"/>
                 <constraint firstItem="5is-c3-A78" firstAttribute="top" secondItem="Dyw-ot-QPr" secondAttribute="bottom" constant="8" id="Cgc-4H-ir0"/>
                 <constraint firstItem="Pc7-lL-DEw" firstAttribute="bottom" secondItem="Ngo-q8-L8H" secondAttribute="bottom" constant="-8" id="E89-0c-RJH"/>
@@ -109,8 +110,10 @@
                 <constraint firstAttribute="trailing" secondItem="oZL-Ie-8F8" secondAttribute="trailing" id="ISd-Gg-lip"/>
                 <constraint firstItem="5is-c3-A78" firstAttribute="leading" secondItem="VEm-Am-XZP" secondAttribute="leading" id="JQA-LM-421"/>
                 <constraint firstItem="VEm-Am-XZP" firstAttribute="trailing" secondItem="5is-c3-A78" secondAttribute="trailing" id="Jd8-ou-oJ7"/>
+                <constraint firstItem="aO9-gh-rXg" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="5is-c3-A78" secondAttribute="leading" id="KBI-fE-xkz"/>
                 <constraint firstAttribute="bottom" secondItem="VEm-Am-XZP" secondAttribute="bottom" constant="20" id="KbS-8a-SoM"/>
                 <constraint firstItem="BqJ-0V-LEo" firstAttribute="leading" secondItem="5is-c3-A78" secondAttribute="leading" id="PQ3-5Y-Yh4"/>
+                <constraint firstItem="Pc7-lL-DEw" firstAttribute="leading" secondItem="aO9-gh-rXg" secondAttribute="trailing" constant="8" id="QzX-Fo-M4B"/>
                 <constraint firstItem="VEm-Am-XZP" firstAttribute="leading" secondItem="5is-c3-A78" secondAttribute="leading" id="R0q-5H-SlR"/>
                 <constraint firstItem="aO9-gh-rXg" firstAttribute="top" relation="greaterThanOrEqual" secondItem="VEm-Am-XZP" secondAttribute="bottom" constant="8" id="U2M-Mg-RD6"/>
                 <constraint firstAttribute="trailing" secondItem="Dyw-ot-QPr" secondAttribute="trailing" constant="8" id="UkW-4B-c6U"/>
@@ -147,15 +150,19 @@
                     <exclude reference="Jd8-ou-oJ7"/>
                     <exclude reference="KbS-8a-SoM"/>
                     <exclude reference="R0q-5H-SlR"/>
+                    <exclude reference="iaF-5u-Eo0"/>
+                    <exclude reference="mlV-RB-Bvi"/>
                     <exclude reference="zhd-0i-LIT"/>
                     <exclude reference="XRj-XZ-vnB"/>
                     <exclude reference="gXC-qm-y9u"/>
+                    <exclude reference="Hxa-ra-dZy"/>
                 </mask>
             </variation>
             <connections>
                 <outlet property="backgroundImageView" destination="Ngo-q8-L8H" id="LrG-wq-p7T"/>
                 <outlet property="dateLabel" destination="VEm-Am-XZP" id="fmA-IX-FMx"/>
                 <outlet property="messageLabel" destination="5is-c3-A78" id="5VZ-fd-pcJ"/>
+                <outlet property="notificationEnableLabel" destination="aO9-gh-rXg" id="r5v-mU-496"/>
                 <outlet property="notificationEnableSwitch" destination="Pc7-lL-DEw" id="nej-rB-58w"/>
                 <outlet property="shareButton" destination="Dyw-ot-QPr" id="OB8-ge-cFM"/>
                 <outlet property="titleLabel" destination="BqJ-0V-LEo" id="03l-XK-Qw7"/>

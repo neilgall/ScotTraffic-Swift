@@ -16,6 +16,7 @@ class BridgeStatusCell: UICollectionViewCell, MapItemCollectionViewCell, Backgro
     @IBOutlet var titleLabel: UILabel?
     @IBOutlet var messageLabel: UILabel?
     @IBOutlet var shareButton: UIButton?
+    @IBOutlet var notificationEnableLabel: UILabel?
     @IBOutlet var notificationEnableSwitch: UISwitch?
 
     weak var delegate: MapItemCollectionViewCellDelegate?
@@ -41,8 +42,11 @@ class BridgeStatusCell: UICollectionViewCell, MapItemCollectionViewCell, Backgro
                     self?.notificationSetting = $0
                 })
                 receivers.append(signal.join() --> { [weak self] in
-                    self?.notificationEnableSwitch?.on = $0
+                    self?.notificationEnableSwitch?.setOn($0, animated: true)
                 })
+            } else {
+                notificationEnableLabel?.hidden = true
+                notificationEnableSwitch?.hidden = true
             }
             
             if let bg = backgroundImageView {
@@ -84,6 +88,9 @@ class BridgeStatusCell: UICollectionViewCell, MapItemCollectionViewCell, Backgro
         dateLabel?.text = nil
         backgroundImageView?.image = nil
         
+        notificationEnableLabel?.hidden = false
+        notificationEnableSwitch?.hidden = false
+
         super.prepareForReuse()
     }
 }
