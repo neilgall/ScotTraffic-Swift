@@ -23,33 +23,37 @@ class Throttle<ValueType> : Signal<ValueType> {
         
         super.init()
         
-        self.receiver = Receiver(source) { transaction in
-            switch transaction {
-            case .Begin:
-                if self.transactionCount == 0 {
-                    self.pushTransaction(transaction)
-                }
-                self.transactionCount += 1
-                
-            case .End:
-                dispatch_suspend(self.timer)
-                if self.timerActive {
-                    self.endTransaction(.Cancel)
-                    self.timerActive = false
-                }
-                
-                let now = CFAbsoluteTimeGetCurrent()
-                if now - self.lastPushTimestamp > self.minimumInterval {
-                    self.endTransaction(transaction)
-                    self.lastPushTimestamp = now
-                    
-                } else {
-                    self.deferEndTransaction(transaction)
-                }
-                
-            case .Cancel:
-                self.endTransaction(transaction)
+        self.receiver = Receiver(source) { [weak self] transaction in
+            self?.transact(transaction)
+        }
+    }
+    
+    private func transact(transaction: Transaction<ValueType>) {
+        switch transaction {
+        case .Begin:
+            if transactionCount == 0 {
+                pushTransaction(transaction)
             }
+            transactionCount += 1
+            
+        case .End:
+            dispatch_suspend(self.timer)
+            if timerActive {
+                endTransaction(.Cancel)
+                timerActive = false
+            }
+            
+            let now = CFAbsoluteTimeGetCurrent()
+            if now - lastPushTimestamp > minimumInterval {
+                endTransaction(transaction)
+                lastPushTimestamp = now
+                
+            } else {
+                deferEndTransaction(transaction)
+            }
+            
+        case .Cancel:
+            endTransaction(transaction)
         }
     }
     
@@ -58,17 +62,17 @@ class Throttle<ValueType> : Signal<ValueType> {
     }
     
     private func endTransaction(transaction: Transaction<ValueType>) {
-        self.transactionCount -= 1
-        if self.transactionCount == 0 {
-            self.pushTransaction(transaction)
+        transactionCount -= 1
+        if transactionCount == 0 {
+            pushTransaction(transaction)
         }
     }
     
     private func deferEndTransaction(transaction: Transaction<ValueType>) {
-        dispatch_source_set_event_handler(timer) {
-            self.endTransaction(transaction)
-            self.lastPushTimestamp = CFAbsoluteTimeGetCurrent()
-            self.timerActive = false
+        dispatch_source_set_event_handler(timer) { [weak self] in
+            self?.endTransaction(transaction)
+            self?.lastPushTimestamp = CFAbsoluteTimeGetCurrent()
+            self?.timerActive = false
         }
         
         dispatch_source_set_timer(timer,
@@ -76,7 +80,7 @@ class Throttle<ValueType> : Signal<ValueType> {
             nanosecondsFromSeconds(minimumInterval),
             nanosecondsFromSeconds(minimumInterval * 0.2))
         
-        self.timerActive = true
+        timerActive = true
         dispatch_resume(timer)
     }
 }

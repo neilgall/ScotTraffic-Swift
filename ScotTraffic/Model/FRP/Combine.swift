@@ -52,8 +52,8 @@ class Combine2<Source1: SignalType, Source2: SignalType, CombinedType> : Combine
         latest1 = s1.latest()
         latest2 = s2.latest()
         super.init()
-        receivers.append(Receiver(latest1) { t in self.update(t) })
-        receivers.append(Receiver(latest2) { t in self.update(t) })
+        receivers.append(Receiver(latest1) { [weak self] t in self?.update(t) })
+        receivers.append(Receiver(latest2) { [weak self] t in self?.update(t) })
     }
     
     override var latestValue: LatestValue<CombinedType> {
@@ -78,9 +78,9 @@ class Combine3<Source1: SignalType, Source2: SignalType, Source3: SignalType, Co
         latest2 = s2.latest()
         latest3 = s3.latest()
         super.init()
-        receivers.append(Receiver(latest1) { t in self.update(t) })
-        receivers.append(Receiver(latest2) { t in self.update(t) })
-        receivers.append(Receiver(latest3) { t in self.update(t) })
+        receivers.append(Receiver(latest1) { [weak self] t in self?.update(t) })
+        receivers.append(Receiver(latest2) { [weak self] t in self?.update(t) })
+        receivers.append(Receiver(latest3) { [weak self] t in self?.update(t) })
     }
     
     override var latestValue: LatestValue<CombinedType> {
@@ -107,10 +107,10 @@ class Combine4<Source1: SignalType, Source2: SignalType, Source3: SignalType, So
         latest3 = s3.latest()
         latest4 = s4.latest()
         super.init()
-        receivers.append(Receiver(latest1) { t in self.update(t) })
-        receivers.append(Receiver(latest2) { t in self.update(t) })
-        receivers.append(Receiver(latest3) { t in self.update(t) })
-        receivers.append(Receiver(latest4) { t in self.update(t) })
+        receivers.append(Receiver(latest1) { [weak self] t in self?.update(t) })
+        receivers.append(Receiver(latest2) { [weak self] t in self?.update(t) })
+        receivers.append(Receiver(latest3) { [weak self] t in self?.update(t) })
+        receivers.append(Receiver(latest4) { [weak self] t in self?.update(t) })
     }
     
     override var latestValue: LatestValue<CombinedType> {
@@ -139,11 +139,11 @@ class Combine5<Source1: SignalType, Source2: SignalType, Source3: SignalType, So
         latest4 = s4.latest()
         latest5 = s5.latest()
         super.init()
-        receivers.append(Receiver(latest1) { t in self.update(t) })
-        receivers.append(Receiver(latest2) { t in self.update(t) })
-        receivers.append(Receiver(latest3) { t in self.update(t) })
-        receivers.append(Receiver(latest4) { t in self.update(t) })
-        receivers.append(Receiver(latest5) { t in self.update(t) })
+        receivers.append(Receiver(latest1) { [weak self] t in self?.update(t) })
+        receivers.append(Receiver(latest2) { [weak self] t in self?.update(t) })
+        receivers.append(Receiver(latest3) { [weak self] t in self?.update(t) })
+        receivers.append(Receiver(latest4) { [weak self] t in self?.update(t) })
+        receivers.append(Receiver(latest5) { [weak self] t in self?.update(t) })
     }
     
     override var latestValue: LatestValue<CombinedType> {
@@ -173,12 +173,12 @@ class Combine6<Source1: SignalType, Source2: SignalType, Source3: SignalType, So
         latest5 = s5.latest()
         latest6 = s6.latest()
         super.init()
-        receivers.append(Receiver(latest1) { t in self.update(t) })
-        receivers.append(Receiver(latest2) { t in self.update(t) })
-        receivers.append(Receiver(latest3) { t in self.update(t) })
-        receivers.append(Receiver(latest4) { t in self.update(t) })
-        receivers.append(Receiver(latest5) { t in self.update(t) })
-        receivers.append(Receiver(latest6) { t in self.update(t) })
+        receivers.append(Receiver(latest1) { [weak self] t in self?.update(t) })
+        receivers.append(Receiver(latest2) { [weak self] t in self?.update(t) })
+        receivers.append(Receiver(latest3) { [weak self] t in self?.update(t) })
+        receivers.append(Receiver(latest4) { [weak self] t in self?.update(t) })
+        receivers.append(Receiver(latest5) { [weak self] t in self?.update(t) })
+        receivers.append(Receiver(latest6) { [weak self] t in self?.update(t) })
     }
     
     override var latestValue: LatestValue<CombinedType> {

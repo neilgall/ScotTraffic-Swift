@@ -28,11 +28,11 @@ class Filter<Source: SignalType> : Signal<Source.ValueType> {
     
     init(_ source: Source, _ predicate: Source.ValueType -> Bool) {
         super.init()
-        receiver = Receiver(source) { transaction in
+        receiver = Receiver(source) { [weak self] transaction in
             if case .End(let value) = transaction where !predicate(value) {
-                self.pushTransaction(.Cancel)
+                self?.pushTransaction(.Cancel)
             } else {
-                self.pushTransaction(transaction)
+                self?.pushTransaction(transaction)
             }
         }
     }
@@ -46,15 +46,17 @@ class Mapped<Source: SignalType, MappedType> : Signal<MappedType> {
     init(_ source: Source, _ transform: Source.ValueType -> MappedType) {
         self.source = source
         self.transform = transform
+        
         super.init()
-        self.receiver = Receiver(source) { transaction in
+        
+        self.receiver = Receiver(source) { [weak self] transaction in
             switch transaction {
             case .Begin:
-                self.pushTransaction(.Begin)
+                self?.pushTransaction(.Begin)
             case .End(let sourceValue):
-                self.pushTransaction(.End(transform(sourceValue)))
+                self?.pushTransaction(.End(transform(sourceValue)))
             case .Cancel:
-                self.pushTransaction(.Cancel)
+                self?.pushTransaction(.Cancel)
             }
         }
     }
@@ -76,15 +78,36 @@ class Union<Source: SignalType> : Signal<Source.ValueType> {
     
     init(_ sources: [Source]) {
         super.init()
-        self.receivers = sources.map {
+        self.receivers = sources.map { [weak self] in
             Receiver($0) {
-                self.pushTransaction($0)
+                self?.pushTransaction($0)
             }
         }
     }
 }
 
-public class Latest<Source: SignalType> : Signal<Source.ValueType> {
+// Basic signal wrapper for when we only have a SignalType
+//
+class WrappedSignal<Source: SignalType>: Signal<Source.ValueType> {
+    private let source: Source
+    private var receiver: ReceiverType!
+    
+    init(_ source: Source) {
+        self.source = source
+        
+        super.init()
+        
+        self.receiver = Receiver(source) { [weak self] in
+            self?.pushTransaction($0)
+        }
+    }
+    
+    override var latestValue: LatestValue<Source.ValueType> {
+        return source.latestValue
+    }
+}
+
+public class Latest<Source: SignalType>: Signal<Source.ValueType> {
     let source: Source
     var value: Source.ValueType?
     private var receiver: ReceiverType!
@@ -95,11 +118,11 @@ public class Latest<Source: SignalType> : Signal<Source.ValueType> {
         
         super.init()
 
-        self.receiver = Receiver(source) { transaction in
+        self.receiver = Receiver(source) { [weak self] transaction in
             if case .End(let value) = transaction {
-                self.value = value
+                self?.value = value
             }
-            self.pushTransaction(transaction)
+            self?.pushTransaction(transaction)
         }
     }
     
@@ -119,16 +142,16 @@ class OnChange<Source: SignalType where Source.ValueType: Equatable> : Signal<So
     init(_ source: Source) {
         super.init()
         value = source.latestValue.get
-        receiver = Receiver(source) { transaction in
+        receiver = Receiver(source) { [weak self] transaction in
             if case .End(let newValue) = transaction {
-                if newValue == self.value {
-                    self.pushTransaction(.Cancel)
+                if newValue == self?.value {
+                    self?.pushTransaction(.Cancel)
                 } else {
-                    self.value = newValue
-                    self.pushTransaction(transaction)
+                    self?.value = newValue
+                    self?.pushTransaction(transaction)
                 }
             } else {
-                self.pushTransaction(transaction)
+                self?.pushTransaction(transaction)
             }
         }
     }
@@ -156,6 +179,10 @@ public func <-- <Input: InputType, ValueType where Input.ValueType == ValueType>
 extension SignalType {
     public func willOutput(closure: Void -> Void) -> WillOutput<Self> {
         return WillOutput(self, closure)
+    }
+    
+    public func signal() -> Signal<ValueType> {
+        return WrappedSignal(self)
     }
     
     public func latest() -> Signal<ValueType> {

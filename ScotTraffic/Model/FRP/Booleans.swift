@@ -19,15 +19,15 @@ class Gate<Source: SignalType, Gate: SignalType where Gate.ValueType: BooleanTyp
         valueLatest = source.latest()
         gateLatest = gate.latest()
         super.init()
-        receivers.append(Receiver(valueLatest) { t in self.update(t) })
-        receivers.append(Receiver(gateLatest) { t in self.update(t) })
+        receivers.append(Receiver(valueLatest) { [weak self] t in self?.update(t) })
+        receivers.append(Receiver(gateLatest) { [weak self] t in self?.update(t) })
     }
     
     private func update<S>(transaction: Transaction<S>) {
         switch transaction {
         case .Begin:
             if transactionCount == 0 {
-                self.pushTransaction(.Begin)
+                pushTransaction(.Begin)
                 needsUpdate = false
             }
             transactionCount += 1

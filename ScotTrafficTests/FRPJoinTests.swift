@@ -26,6 +26,14 @@ private class Capture<T> {
 
 class FRPJoinTests: XCTestCase {
 
+    func testJoinHasInnerLatestValue() {
+        let inner = Input<Int>(initial: 234)
+        let outer = Input<Signal<Int>>(initial: inner)
+        let c = Capture(outer.join(), previous: nil)
+        
+        XCTAssertEqual(c.vals, [234])
+    }
+    
     func testJoinOnInnerChange() {
         let inner = Input<Bool>(initial: false)
         let outer = Input<Signal<Bool>>(initial: inner)
@@ -33,7 +41,7 @@ class FRPJoinTests: XCTestCase {
         
         inner.value = true
         inner.value = false
-        XCTAssertEqual(c.vals, [true, false])
+        XCTAssertEqual(c.vals, [false, true, false])
     }
 
     func testJoinOnOuterChange() {
