@@ -19,6 +19,19 @@
                     <imageView userInteractionEnabled="NO" alpha="0.59999999999999998" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Ngo-q8-L8H">
                         <rect key="frame" x="0.0" y="44" width="320" height="240"/>
                     </imageView>
+                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Dyw-ot-QPr" userLabel="Share">
+                        <rect key="frame" x="268" y="6" width="44" height="44"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="44" id="N9q-oO-9Ki"/>
+                            <constraint firstAttribute="height" constant="44" id="SyE-mD-GYU"/>
+                        </constraints>
+                        <state key="normal" image="702-share">
+                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                        </state>
+                        <connections>
+                            <action selector="share" destination="gTV-IL-0wX" eventType="touchUpInside" id="Ltn-iP-Q4o"/>
+                        </connections>
+                    </button>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="260" verticalCompressionResistancePriority="999" text="Label" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BqJ-0V-LEo" userLabel="Title">
                         <rect key="frame" x="10" y="16" width="49" height="24"/>
                         <constraints>
@@ -48,25 +61,30 @@
                             </mask>
                         </variation>
                     </label>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Date" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VEm-Am-XZP" userLabel="Date">
-                        <rect key="frame" x="281" y="258" width="29" height="16"/>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Date" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VEm-Am-XZP" userLabel="Date">
+                        <rect key="frame" x="10" y="84" width="29" height="16"/>
                         <fontDescription key="fontDescription" type="system" pointSize="13"/>
                         <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <nil key="highlightedColor"/>
                     </label>
-                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Dyw-ot-QPr" userLabel="Share">
-                        <rect key="frame" x="268" y="6" width="44" height="44"/>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Notify me when this changes" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aO9-gh-rXg" userLabel="Notify me">
+                        <rect key="frame" x="10" y="252" width="302" height="18"/>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstAttribute="width" constant="44" id="N9q-oO-9Ki"/>
-                            <constraint firstAttribute="height" constant="44" id="SyE-mD-GYU"/>
+                            <constraint firstAttribute="height" constant="20" id="9ok-h4-hxO"/>
                         </constraints>
-                        <state key="normal" image="702-share">
-                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                        </state>
-                        <connections>
-                            <action selector="share" destination="gTV-IL-0wX" eventType="touchUpInside" id="Ltn-iP-Q4o"/>
-                        </connections>
-                    </button>
+                        <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="15"/>
+                        <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <nil key="highlightedColor"/>
+                        <variation key="default">
+                            <mask key="constraints">
+                                <exclude reference="9ok-h4-hxO"/>
+                            </mask>
+                        </variation>
+                    </label>
+                    <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Pc7-lL-DEw">
+                        <rect key="frame" x="263" y="245" width="51" height="31"/>
+                    </switch>
                 </subviews>
                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
             </view>
@@ -79,15 +97,19 @@
                 <constraint firstItem="5is-c3-A78" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" constant="20" id="5Wd-Zw-DQ2"/>
                 <constraint firstItem="oZL-Ie-8F8" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" id="684-Nd-DhM"/>
                 <constraint firstItem="BqJ-0V-LEo" firstAttribute="centerY" secondItem="Dyw-ot-QPr" secondAttribute="centerY" id="8oh-yE-mDo"/>
-                <constraint firstItem="VEm-Am-XZP" firstAttribute="top" relation="greaterThanOrEqual" secondItem="5is-c3-A78" secondAttribute="bottom" constant="8" id="AXC-aJ-djH"/>
+                <constraint firstItem="VEm-Am-XZP" firstAttribute="top" secondItem="5is-c3-A78" secondAttribute="bottom" constant="8" id="AXC-aJ-djH"/>
                 <constraint firstItem="Ngo-q8-L8H" firstAttribute="bottom" secondItem="oZL-Ie-8F8" secondAttribute="bottom" id="CcQ-Qz-hjH"/>
                 <constraint firstItem="5is-c3-A78" firstAttribute="top" secondItem="Dyw-ot-QPr" secondAttribute="bottom" constant="8" id="Cgc-4H-ir0"/>
+                <constraint firstItem="Pc7-lL-DEw" firstAttribute="bottom" secondItem="Ngo-q8-L8H" secondAttribute="bottom" constant="-8" id="E89-0c-RJH"/>
                 <constraint firstItem="Dyw-ot-QPr" firstAttribute="top" relation="greaterThanOrEqual" secondItem="gTV-IL-0wX" secondAttribute="top" id="EpB-VM-XgR"/>
+                <constraint firstItem="Pc7-lL-DEw" firstAttribute="trailing" secondItem="Ngo-q8-L8H" secondAttribute="trailing" constant="-8" id="Hxa-ra-dZy"/>
                 <constraint firstAttribute="trailing" secondItem="oZL-Ie-8F8" secondAttribute="trailing" id="ISd-Gg-lip"/>
+                <constraint firstItem="5is-c3-A78" firstAttribute="leading" secondItem="VEm-Am-XZP" secondAttribute="leading" id="JQA-LM-421"/>
                 <constraint firstItem="VEm-Am-XZP" firstAttribute="trailing" secondItem="5is-c3-A78" secondAttribute="trailing" id="Jd8-ou-oJ7"/>
                 <constraint firstAttribute="bottom" secondItem="VEm-Am-XZP" secondAttribute="bottom" constant="20" id="KbS-8a-SoM"/>
                 <constraint firstItem="BqJ-0V-LEo" firstAttribute="leading" secondItem="5is-c3-A78" secondAttribute="leading" id="PQ3-5Y-Yh4"/>
                 <constraint firstItem="VEm-Am-XZP" firstAttribute="leading" secondItem="5is-c3-A78" secondAttribute="leading" id="R0q-5H-SlR"/>
+                <constraint firstItem="aO9-gh-rXg" firstAttribute="top" relation="greaterThanOrEqual" secondItem="VEm-Am-XZP" secondAttribute="bottom" constant="8" id="U2M-Mg-RD6"/>
                 <constraint firstAttribute="trailing" secondItem="Dyw-ot-QPr" secondAttribute="trailing" constant="8" id="UkW-4B-c6U"/>
                 <constraint firstItem="Dyw-ot-QPr" firstAttribute="centerY" secondItem="VEm-Am-XZP" secondAttribute="centerY" id="XRj-XZ-vnB"/>
                 <constraint firstItem="BqJ-0V-LEo" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" constant="16" id="aID-BV-Jns"/>
@@ -95,31 +117,43 @@
                 <constraint firstItem="Dyw-ot-QPr" firstAttribute="trailing" secondItem="5is-c3-A78" secondAttribute="trailing" constant="2" id="eCR-wa-Vnq"/>
                 <constraint firstItem="Ngo-q8-L8H" firstAttribute="leading" secondItem="BqJ-0V-LEo" secondAttribute="leading" constant="-10" id="eiI-nD-p27"/>
                 <constraint firstItem="oZL-Ie-8F8" firstAttribute="bottom" secondItem="VEm-Am-XZP" secondAttribute="bottom" constant="10" id="fvb-9m-9We"/>
+                <constraint firstItem="Dyw-ot-QPr" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="aO9-gh-rXg" secondAttribute="trailing" constant="8" id="gXC-qm-y9u"/>
+                <constraint firstItem="aO9-gh-rXg" firstAttribute="trailing" secondItem="Pc7-lL-DEw" secondAttribute="trailing" id="iaF-5u-Eo0"/>
+                <constraint firstItem="Ngo-q8-L8H" firstAttribute="leading" secondItem="aO9-gh-rXg" secondAttribute="leading" constant="-8" id="lUx-Vk-UT4"/>
+                <constraint firstItem="aO9-gh-rXg" firstAttribute="leading" secondItem="BqJ-0V-LEo" secondAttribute="leading" id="mlV-RB-Bvi"/>
                 <constraint firstItem="BqJ-0V-LEo" firstAttribute="centerY" secondItem="Dyw-ot-QPr" secondAttribute="centerY" id="n5h-fR-VEj"/>
                 <constraint firstItem="5is-c3-A78" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" priority="250" constant="90" id="qgc-FD-a7J"/>
                 <constraint firstItem="Dyw-ot-QPr" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="BqJ-0V-LEo" secondAttribute="trailing" constant="8" id="rc5-NX-zro"/>
                 <constraint firstItem="5is-c3-A78" firstAttribute="top" secondItem="BqJ-0V-LEo" secondAttribute="bottom" constant="8" id="rgc-lI-Ta3"/>
+                <constraint firstItem="aO9-gh-rXg" firstAttribute="centerY" secondItem="Pc7-lL-DEw" secondAttribute="centerY" id="v7i-8F-UBH"/>
                 <constraint firstItem="Ngo-q8-L8H" firstAttribute="leading" secondItem="oZL-Ie-8F8" secondAttribute="leading" id="x93-6s-gYQ"/>
                 <constraint firstItem="oZL-Ie-8F8" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" id="xd7-s6-tZM"/>
+                <constraint firstItem="aO9-gh-rXg" firstAttribute="baseline" secondItem="Dyw-ot-QPr" secondAttribute="baseline" id="zhd-0i-LIT"/>
             </constraints>
             <variation key="default">
                 <mask key="constraints">
+                    <exclude reference="fvb-9m-9We"/>
                     <exclude reference="42s-JQ-bC7"/>
                     <exclude reference="n5h-fR-VEj"/>
                     <exclude reference="eiI-nD-p27"/>
+                    <exclude reference="lUx-Vk-UT4"/>
                     <exclude reference="5Wd-Zw-DQ2"/>
                     <exclude reference="cHe-s1-XGS"/>
                     <exclude reference="qgc-FD-a7J"/>
                     <exclude reference="rgc-lI-Ta3"/>
-                    <exclude reference="XRj-XZ-vnB"/>
+                    <exclude reference="Jd8-ou-oJ7"/>
                     <exclude reference="KbS-8a-SoM"/>
                     <exclude reference="R0q-5H-SlR"/>
+                    <exclude reference="zhd-0i-LIT"/>
+                    <exclude reference="XRj-XZ-vnB"/>
+                    <exclude reference="gXC-qm-y9u"/>
                 </mask>
             </variation>
             <connections>
                 <outlet property="backgroundImageView" destination="Ngo-q8-L8H" id="LrG-wq-p7T"/>
                 <outlet property="dateLabel" destination="VEm-Am-XZP" id="fmA-IX-FMx"/>
                 <outlet property="messageLabel" destination="5is-c3-A78" id="5VZ-fd-pcJ"/>
+                <outlet property="notificationEnableSwitch" destination="Pc7-lL-DEw" id="nej-rB-58w"/>
                 <outlet property="shareButton" destination="Dyw-ot-QPr" id="OB8-ge-cFM"/>
                 <outlet property="titleLabel" destination="BqJ-0V-LEo" id="03l-XK-Qw7"/>
             </connections>

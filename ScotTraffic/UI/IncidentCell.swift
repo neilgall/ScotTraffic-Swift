@@ -9,7 +9,7 @@
 import UIKit
 import MapKit
 
-class IncidentCell: MapItemCollectionViewCellWithMap {
+class IncidentCell: UICollectionViewCell, MapItemCollectionViewCell, BackgroundMapImage {
     
     @IBOutlet var backgroundImageView: UIImageView?
     @IBOutlet var iconImageView: UIImageView?
@@ -18,10 +18,14 @@ class IncidentCell: MapItemCollectionViewCellWithMap {
     @IBOutlet var textView: UITextView?
     @IBOutlet var shareButton: UIButton?
 
+    weak var delegate: MapItemCollectionViewCellDelegate?
+    weak var mapView: MKMapView?
+    let mapImage: Input<UIImage?> = Input(initial: nil)
+    
     private var item: SharableIncident?
     private var receivers = [ReceiverType]()
     
-    override func configure(item: Item) {
+    func configure(item: MapItemCollectionViewItem) {
         textView?.text = nil
         
         if case .IncidentItem(let incident) = item {
@@ -30,7 +34,7 @@ class IncidentCell: MapItemCollectionViewCellWithMap {
             dateLabel?.text = formatIncidentDate(incident.date)
 
             if let bg = backgroundImageView {
-                configureMap(incident, forReferenceView: bg)
+                mapView = configureMap(incident, forReferenceView: bg)
             }
             
             receivers.append(mapImage.map(applyGradientMask) --> { [weak self] image in
@@ -58,9 +62,15 @@ class IncidentCell: MapItemCollectionViewCellWithMap {
         }
     }
     
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        fillCellWithFirstSubview()
+    }
+    
     override func prepareForReuse() {
         receivers.removeAll()
         item = nil
+        resetMap(mapView)
         
         iconImageView?.image = nil
         titleLabel?.text = nil
@@ -68,6 +78,14 @@ class IncidentCell: MapItemCollectionViewCellWithMap {
         backgroundImageView?.image = nil
 
         super.prepareForReuse()
+    }
+}
+
+extension IncidentCell: MKMapViewDelegate {
+    func mapViewDidFinishRenderingMap(mapView: MKMapView, fullyRendered: Bool) {
+        if fullyRendered {
+            takeSnapshotOfRenderedMap(mapView)
+        }
     }
 }
 

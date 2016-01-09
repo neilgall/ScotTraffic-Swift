@@ -30,7 +30,7 @@ public class MapItemCollectionViewController: UIViewController {
         super.viewDidLoad()
         
         if let collectionView = collectionView {
-            MapItemCollectionViewCell.registerTypesWith(collectionView)
+            MapItemCollectionViewItemType.registerTypesWith(collectionView)
         }
         
         reload()

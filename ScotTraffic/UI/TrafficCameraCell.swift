@@ -8,7 +8,7 @@
 
 import UIKit
 
-class TrafficCameraCell: MapItemCollectionViewCell {
+class TrafficCameraCell: UICollectionViewCell, MapItemCollectionViewCell {
     
     @IBOutlet var imageView: UIImageView?
     @IBOutlet var errorLabel: UILabel?
@@ -17,12 +17,13 @@ class TrafficCameraCell: MapItemCollectionViewCell {
     @IBOutlet var favouriteButton: UIButton?
     @IBOutlet var shareButton: UIButton?
     
+    weak var delegate: MapItemCollectionViewCellDelegate?
     private var locationName: String?
     private var favouriteItem: FavouriteTrafficCamera?
     private var image: Signal<DataSourceImage>?
     private var receivers = [ReceiverType]()
     
-    override func configure(item: Item) {
+    func configure(item: MapItemCollectionViewItem) {
         if case .TrafficCameraItem(let location, let camera) = item {
             locationName = trafficCameraName(camera, atLocation: location)
             favouriteItem = FavouriteTrafficCamera(location: location, camera: camera)
@@ -84,6 +85,11 @@ class TrafficCameraCell: MapItemCollectionViewCell {
             delegate?.collectionViewCellDidToggleFavourite(item)
             updateFavouriteButton()
         }
+    }
+    
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        fillCellWithFirstSubview()
     }
     
     override func prepareForReuse() {

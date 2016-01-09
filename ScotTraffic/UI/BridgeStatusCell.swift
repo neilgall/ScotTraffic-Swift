@@ -7,19 +7,25 @@
 //
 
 import UIKit
+import MapKit
 
-class BridgeStatusCell: MapItemCollectionViewCellWithMap {
+class BridgeStatusCell: UICollectionViewCell, MapItemCollectionViewCell, BackgroundMapImage {
 
     @IBOutlet var backgroundImageView: UIImageView?
     @IBOutlet var dateLabel: UILabel?
     @IBOutlet var titleLabel: UILabel?
     @IBOutlet var messageLabel: UILabel?
     @IBOutlet var shareButton: UIButton?
+    @IBOutlet var notificationEnableSwitch: UISwitch?
 
+    weak var delegate: MapItemCollectionViewCellDelegate?
+    weak var mapView: MKMapView?
+    let mapImage: Input<UIImage?> = Input(initial: nil)
+    
     private var receivers = [ReceiverType]()
     private var sharableItem: ShareableBridge?
     
-    override func configure(item: Item) {
+    func configure(item: MapItemCollectionViewItem) {
         messageLabel?.text = nil
 
         if case .BridgeStatusItem(let bridgeStatus) = item {
@@ -28,7 +34,7 @@ class BridgeStatusCell: MapItemCollectionViewCellWithMap {
             dateLabel?.text = nil
             
             if let bg = backgroundImageView {
-                configureMap(bridgeStatus, forReferenceView: bg)
+                mapView = configureMap(bridgeStatus, forReferenceView: bg)
             }
             
             receivers.append(mapImage.map(applyGradientMask) --> { [weak self] image in
@@ -46,8 +52,14 @@ class BridgeStatusCell: MapItemCollectionViewCellWithMap {
         }
     }
 
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        fillCellWithFirstSubview()
+    }
+    
     override func prepareForReuse() {
         receivers.removeAll()
+        resetMap(mapView)
         
         titleLabel?.text = nil
         messageLabel?.text = nil
@@ -55,6 +67,14 @@ class BridgeStatusCell: MapItemCollectionViewCellWithMap {
         backgroundImageView?.image = nil
         
         super.prepareForReuse()
+    }
+}
+
+extension BridgeStatusCell: MKMapViewDelegate {
+    func mapViewDidFinishRenderingMap(mapView: MKMapView, fullyRendered: Bool) {
+        if fullyRendered {
+            takeSnapshotOfRenderedMap(mapView)
+        }
     }
 }
 

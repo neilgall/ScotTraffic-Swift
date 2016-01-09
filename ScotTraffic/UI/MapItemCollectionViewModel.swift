@@ -18,7 +18,7 @@ public class MapItemCollectionViewModel: NSObject {
     
     // Outputs
     let weatherViewModel: WeatherViewModel
-    let cellItems: Signal<[MapItemCollectionViewCell.Item]>
+    let cellItems: Signal<[MapItemCollectionViewItem]>
     let selectedItemIndex: Signal<Int?>
     let shareAction: Input<ShareAction?>
     
@@ -36,7 +36,7 @@ public class MapItemCollectionViewModel: NSObject {
         // Each MapItem can have multiple items to show in the collection view. Flat map into a cell item list.
         cellItems = mapItems.map { mapItems in
             mapItems.flatMap {
-                MapItemCollectionViewCell.Item.forMapItem($0)
+                MapItemCollectionViewItem.forMapItem($0)
             }
         }.latest()
         
@@ -66,7 +66,7 @@ extension MapItemCollectionViewModel: UICollectionViewDataSource {
         let cellItem = cellItems.latestValue.get![indexPath.item]
         let cell = collectionView.dequeueReusableCellWithReuseIdentifier(cellItem.type.reuseIdentifier, forIndexPath: indexPath)
         
-        if let cell = cell as? MapItemCollectionViewCell {
+        if var cell = cell as? MapItemCollectionViewCell {
             cell.delegate = self
             cell.configure(cellItem)
         }
@@ -78,7 +78,7 @@ extension MapItemCollectionViewModel: UICollectionViewDataSource {
 extension MapItemCollectionViewModel: MapItemCollectionViewCellDelegate {
     // -- MARK: MapItemCollectionViewCellDelegate --
     
-    public func collectionViewCell(cell: MapItemCollectionViewCell, didRequestShareItem item: SharableItem, fromRect rect: CGRect) {
+    public func collectionViewCell(cell: UICollectionViewCell, didRequestShareItem item: SharableItem, fromRect rect: CGRect) {
         shareAction <-- ShareAction(item: item, sourceView: cell, sourceRect: rect)
     }
     

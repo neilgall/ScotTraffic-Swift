@@ -9,7 +9,7 @@
 import UIKit
 import MapKit
 
-class SafetyCameraCell: MapItemCollectionViewCellWithMap {
+class SafetyCameraCell: UICollectionViewCell, MapItemCollectionViewCell, BackgroundMapImage {
     @IBOutlet var iconImageView: UIImageView?
     @IBOutlet var roadLabel: UILabel?
     @IBOutlet var descriptionLabel: UILabel?
@@ -17,11 +17,15 @@ class SafetyCameraCell: MapItemCollectionViewCellWithMap {
     @IBOutlet var spinner: DeferredStartSpinner?
     @IBOutlet var shareButton: UIButton?
 
-    private var item: Item?
+    weak var delegate: MapItemCollectionViewCellDelegate?
+    weak var mapView: MKMapView?
+    let mapImage: Input<UIImage?> = Input(initial: nil)
+    
+    private var item: MapItemCollectionViewItem?
     private var image: Signal<DataSourceImage>?
     private var receivers = [ReceiverType]()
     
-    override func configure(item: Item) {
+    func configure(item: MapItemCollectionViewItem) {
         if case .SafetyCameraItem(let safetyCamera) = item {
             self.item = item
             iconImageView?.image = iconForSpeedLimit(safetyCamera.speedLimit)
@@ -77,7 +81,7 @@ class SafetyCameraCell: MapItemCollectionViewCellWithMap {
 
             if let bg = imageView {
                 // start rendering the map
-                configureMap(safetyCamera, forReferenceView: bg)
+                mapView = configureMap(safetyCamera, forReferenceView: bg)
             }
         }
     }
@@ -92,10 +96,15 @@ class SafetyCameraCell: MapItemCollectionViewCellWithMap {
         }
     }
     
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        fillCellWithFirstSubview()
+    }
+    
     override func prepareForReuse() {
         receivers.removeAll()
         image = nil
-        mapImage <-- nil
+        resetMap(mapView)
         
         iconImageView?.image = nil
         roadLabel?.text = nil
@@ -104,6 +113,17 @@ class SafetyCameraCell: MapItemCollectionViewCellWithMap {
         spinner?.stopAnimating()
 
         super.prepareForReuse()
+    }
+}
+
+// Would like to make this a BackgroundMapImage extension but the ObjC runtime can't
+// find the delegate call in that case
+
+extension SafetyCameraCell: MKMapViewDelegate {
+    func mapViewDidFinishRenderingMap(mapView: MKMapView, fullyRendered: Bool) {
+        if fullyRendered {
+            takeSnapshotOfRenderedMap(mapView)
+        }
     }
 }
 

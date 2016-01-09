@@ -1,5 +1,5 @@
 //
-//  MapItemCollectionViewCellWithMap.swift
+//  BackgroundMapImage.swift
 //  ScotTraffic
 //
 //  Created by Neil Gall on 07/11/2015.
@@ -11,13 +11,13 @@ import MapKit
 private let mapRectSize: Double = 4000
 private let renderStartTimeout: NSTimeInterval = 1.0
 
-class MapItemCollectionViewCellWithMap: MapItemCollectionViewCell, MKMapViewDelegate {
+protocol BackgroundMapImage: class {
+    var mapImage: Input<UIImage?> { get }
+}
+
+extension BackgroundMapImage where Self: UICollectionViewCell, Self: MKMapViewDelegate {
     
-    private var mapView: MKMapView?
-
-    var mapImage: Input<UIImage?> = Input(initial: nil)
-
-    func configureMap(mapItem: MapItem, forReferenceView view: UIView) {
+    func configureMap(mapItem: MapItem, forReferenceView view: UIView) -> MKMapView {
         let mapView = MKMapView(frame: view.frame)
         mapView.delegate = self
         mapView.translatesAutoresizingMaskIntoConstraints = false
@@ -29,36 +29,20 @@ class MapItemCollectionViewCellWithMap: MapItemCollectionViewCell, MKMapViewDele
         let origin = MKMapPoint(x: mapItem.mapPoint.x - mapRectSize * 0.5, y: mapItem.mapPoint.y - mapRectSize * 0.65)
         let mapRect = MKMapRect(origin: origin, size: MKMapSize(width: mapRectSize, height: mapRectSize))
         
-        mapView.alpha = 0
         mapView.visibleMapRect = mapView.mapRectThatFits(mapRect)
         mapView.addAnnotation(MapAnnotation(mapItems: [mapItem]))
         
-        self.mapView = mapView
+        return mapView
     }
     
-    override func prepareForReuse() {
-        mapView?.removeFromSuperview()
-        mapView = nil
-        mapImage <-- nil
+    func takeSnapshotOfRenderedMap(mapView: MKMapView) {
+        mapImage <-- mapView.snapshotImage()
+        mapView.removeFromSuperview()
     }
 
-    private func takeSnapshotOfRenderedMap() {
-        if let mapView = mapView {
-            mapView.alpha = 1
-            mapImage <-- mapView.snapshotImage()
-            mapView.alpha = 0
-            
-            mapView.removeFromSuperview()
-            self.mapView = nil
-        }
-    }
-    
-    // -- MARK: MKMapViewDelegate
-    
-    func mapViewDidFinishRenderingMap(mapView: MKMapView, fullyRendered: Bool) {
-        if fullyRendered {
-            takeSnapshotOfRenderedMap()
-        }
+    func resetMap(mapView: MKMapView?) {
+        mapImage <-- nil
+        mapView?.removeFromSuperview()
     }
 }
 
