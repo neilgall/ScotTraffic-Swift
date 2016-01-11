@@ -13,6 +13,7 @@ let maximumItemsInDetailView = 10
 public class AppCoordinator: NSObject {
     let appModel: AppModel
     let rootWindow: UIWindow
+    let userOptions = UserOptions()
     
     let storyboard: UIStoryboard
     let splitViewController: NGSplitViewController
@@ -79,6 +80,19 @@ public class AppCoordinator: NSObject {
         
         // sharing
         receivers.append(collectionViewModel.shareAction --> shareAction)
+        
+        // launch options
+        let zoomToBridge = combine(appModel.bridges, userOptions.bridgeIdentifier, combine: { bridges, identifier in
+            return bridges.filter({ $0.identifier == identifier }).first
+        })
+        receivers.append(zoomToBridge --> {
+            if let bridge = $0 {
+                dispatch_async(dispatch_get_main_queue()) {
+                    self.mapViewModel.selectedMapItem <-- bridge
+                    self.userOptions.bridgeIdentifier <-- nil
+                }
+            }
+        })
         
         updateShowSearchButton()
         updateCancelSearchButton()

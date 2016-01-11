@@ -117,7 +117,7 @@ class SettingsTableViewController: UITableViewController {
                 pageTitle: "index")
         ]
         
-        receivers.append(combine(contentConfigurations, notificationConfigurations, combine:{ ($0,$1) }) --> {
+        receivers.append(combine(contentConfigurations, notificationConfigurations, combine:{ ($0, $1) }) --> {
             [weak self] contentConfigurations, notificationConfigurations in
             self?.configurations = [
                 ("Content",       contentConfigurations),
