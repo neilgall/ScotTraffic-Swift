@@ -27,11 +27,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         if let window = window {
             let appCoordinator = AppCoordinator(appModel: appModel, rootWindow: window)
             appCoordinator.start()
-            appCoordinator.userOptions.parseLaunchOptions(launchOptions)
-
             self.appCoordinator = appCoordinator
         }
         
+        appModel.remoteNotifications.parseLaunchOptions(launchOptions)
+
         return true
     }
 
@@ -66,6 +66,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     func application(application: UIApplication, didReceiveRemoteNotification userInfo: [NSObject : AnyObject]) {
-        appCoordinator?.userOptions.parseRemoteNotificationOptions(userInfo)
+        appCoordinator?.appModel.remoteNotifications.parseRemoteNotificationOptions(userInfo, inApplicationState: application.applicationState)
     }
 }

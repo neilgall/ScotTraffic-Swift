@@ -20,6 +20,7 @@ public class AppModel: ScotTraffic {
     public let messageOfTheDay: Signal<MessageOfTheDay?>
     public let settings: Settings
     public let favourites: Favourites
+    public let remoteNotifications: RemoteNotifications
     
     public let httpAccess: HTTPAccess
 
@@ -111,6 +112,12 @@ public class AppModel: ScotTraffic {
                 userDefaults.noteMessageOfTheDaySeen(message)
             }
         })
+        
+        
+        // -- Remote notifications
+        
+        self.remoteNotifications = RemoteNotifications(bridges: self.bridges)
+
         
         // -- Settings --
         

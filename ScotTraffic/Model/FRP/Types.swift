@@ -105,7 +105,7 @@ public class Signal<Value> : SignalType {
     }
 }
 
-public class Input<Value> : Signal<Value>, InputType {
+public class Input<Value>: Signal<Value>, InputType {
     public typealias ValueType = Value
     
     public var value: Value {
@@ -127,6 +127,18 @@ public class Input<Value> : Signal<Value>, InputType {
     
     public init(initial: Value) {
         value = initial
+    }
+}
+
+public class ComputedSignal<Value>: Signal<Value> {
+    private let compute: () -> Value
+
+    public init(_ compute: () -> Value) {
+        self.compute = compute
+    }
+    
+    override public var latestValue: LatestValue<Value> {
+        return .Computed(compute)
     }
 }
 

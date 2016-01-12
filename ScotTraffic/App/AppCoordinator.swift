@@ -13,7 +13,6 @@ let maximumItemsInDetailView = 10
 public class AppCoordinator: NSObject {
     let appModel: AppModel
     let rootWindow: UIWindow
-    let userOptions = UserOptions()
     
     let storyboard: UIStoryboard
     let splitViewController: NGSplitViewController
@@ -81,15 +80,21 @@ public class AppCoordinator: NSObject {
         // sharing
         receivers.append(collectionViewModel.shareAction --> shareAction)
         
-        // launch options
-        let zoomToBridge = combine(appModel.bridges, userOptions.bridgeIdentifier, combine: { bridges, identifier in
-            return bridges.filter({ $0.identifier == identifier }).first
-        })
-        receivers.append(zoomToBridge --> {
-            if let bridge = $0 {
+        // remote notifications
+        receivers.append(appModel.remoteNotifications.zoomToBridge --> { [weak self] in
+            if let bridge = $0, my = self {
                 dispatch_async(dispatch_get_main_queue()) {
-                    self.mapViewModel.selectedMapItem <-- bridge
-                    self.userOptions.bridgeIdentifier <-- nil
+                    my.mapViewModel.selectedMapItem <-- bridge
+                    my.appModel.remoteNotifications.clear()
+                }
+            }
+        })
+        
+        receivers.append(appModel.remoteNotifications.showNotification --> { [weak self] in
+            if let message = $0, my = self {
+                dispatch_async(dispatch_get_main_queue()) {
+                    my.showNotificationMessage(message)
+                    my.appModel.remoteNotifications.clear()
                 }
             }
         })
@@ -201,6 +206,11 @@ public class AppCoordinator: NSObject {
         }
     
         splitViewController.presentViewController(alert, animated: true, completion: nil)
+    }
+    
+    private func showNotificationMessage(message: String) {
+        let view: NotificationView = NotificationView()
+        view.messageLabel?.text = message
     }
 
     // -- MARK: UI Actions --

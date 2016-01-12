@@ -35,11 +35,11 @@ class MapViewController: UIViewController {
             viewModel.delegate <-- self
             calloutContainerView.delegate = self
             
-            receivers.append(viewModel.annotations --> self.updateAnnotations)
-            receivers.append(not(animationSequence.busy).gate(viewModel.selectedAnnotation) --> self.autoSelectAnnotation)
-            receivers.append(viewModel.selectedMapItem --> self.zoomToSelectedMapItem)
-            receivers.append(viewModel.showsUserLocationOnMap --> self.updateShowsCurrentLocation)
-            receivers.append(viewModel.showTrafficOnMap --> self.updateShowsTraffic)
+            receivers.append(viewModel.annotations --> updateAnnotations)
+            receivers.append(viewModel.selectedMapItem --> zoomToSelectedMapItem)
+            receivers.append(not(animationSequence.busy).gate(viewModel.selectedAnnotation) --> autoSelectAnnotation)
+            receivers.append(viewModel.showsUserLocationOnMap --> updateShowsCurrentLocation)
+            receivers.append(viewModel.showTrafficOnMap --> updateShowsTraffic)
             
             mapView.setVisibleMapRect(viewModel.visibleMapRect.value, animated: false)
         }
@@ -50,12 +50,12 @@ class MapViewController: UIViewController {
     }
     
     func updateAnnotations(newAnnotations: [MapAnnotation]) {
-        let oldAnnotations = self.currentAnnotations
+        let oldAnnotations = currentAnnotations
         let annotationsToRemove = oldAnnotations.subtract(newAnnotations)
         let annotationsToAdd = Set(newAnnotations).subtract(oldAnnotations)
         
-        self.mapView.removeAnnotations(Array(annotationsToRemove))
-        self.mapView.addAnnotations(Array(annotationsToAdd))
+        mapView.removeAnnotations(Array(annotationsToRemove))
+        mapView.addAnnotations(Array(annotationsToAdd))
     }
     
     func updateShowsCurrentLocation(enable: Bool) {

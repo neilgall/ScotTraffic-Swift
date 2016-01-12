@@ -37,7 +37,7 @@ class WeatherViewModel {
             return unit.numberFormatter.stringFromNumber(temperatureValue)!
         }
         
-        let currentDate: Signal<NSDate> = CurrentDate()
+        let currentDate = ComputedSignal({ NSDate() })
         let isDaytime = combine(currentDate, weather) { (date: NSDate, weather: Weather?) -> Bool in
             guard let weather = weather else {
                 return false
