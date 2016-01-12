@@ -208,9 +208,10 @@ public class AppCoordinator: NSObject {
         splitViewController.presentViewController(alert, animated: true, completion: nil)
     }
     
-    private func showNotificationMessage(message: String) {
-        let view: NotificationView = NotificationView()
-        view.messageLabel?.text = message
+    private func showNotificationMessage(message: String?) {
+        if let message = message {
+            splitViewController.showNotificationMessage(message)
+        }
     }
 
     // -- MARK: UI Actions --

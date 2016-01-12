@@ -48,6 +48,8 @@
 		286559231BC3198D0058A35A /* MapViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 286559221BC3198D0058A35A /* MapViewModel.swift */; };
 		286559251BC31D020058A35A /* MapAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 286559241BC31D020058A35A /* MapAnnotation.swift */; };
 		286559271BC32D880058A35A /* ImageCompositor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 286559261BC32D880058A35A /* ImageCompositor.swift */; };
+		286BB43C1C45BC27008B5983 /* NotificationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 286BB43B1C45BC27008B5983 /* NotificationView.swift */; };
+		286BB43E1C45C35F008B5983 /* NotificationView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 286BB43D1C45C35F008B5983 /* NotificationView.xib */; };
 		2876E6181BFBEA9C00C8A020 /* MapViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2876E6171BFBEA9C00C8A020 /* MapViewModelTests.swift */; };
 		2879A9741BEE5DA900923FFE /* CalloutContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2879A9731BEE5DA900923FFE /* CalloutContainerView.swift */; };
 		2879A9761BEE648800923FFE /* ViewKeyedMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2879A9751BEE648800923FFE /* ViewKeyedMap.swift */; };
@@ -225,6 +227,8 @@
 		286559221BC3198D0058A35A /* MapViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapViewModel.swift; sourceTree = "<group>"; };
 		286559241BC31D020058A35A /* MapAnnotation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapAnnotation.swift; sourceTree = "<group>"; };
 		286559261BC32D880058A35A /* ImageCompositor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageCompositor.swift; sourceTree = "<group>"; };
+		286BB43B1C45BC27008B5983 /* NotificationView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotificationView.swift; sourceTree = "<group>"; };
+		286BB43D1C45C35F008B5983 /* NotificationView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = NotificationView.xib; sourceTree = "<group>"; };
 		2876E6171BFBEA9C00C8A020 /* MapViewModelTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapViewModelTests.swift; sourceTree = "<group>"; };
 		2879A9731BEE5DA900923FFE /* CalloutContainerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CalloutContainerView.swift; sourceTree = "<group>"; };
 		2879A9751BEE648800923FFE /* ViewKeyedMap.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewKeyedMap.swift; sourceTree = "<group>"; };
@@ -485,6 +489,15 @@
 			name = Map;
 			sourceTree = "<group>";
 		};
+		286BB43A1C45BC14008B5983 /* Notifications */ = {
+			isa = PBXGroup;
+			children = (
+				286BB43B1C45BC27008B5983 /* NotificationView.swift */,
+				286BB43D1C45C35F008B5983 /* NotificationView.xib */,
+			);
+			name = Notifications;
+			sourceTree = "<group>";
+		};
 		287F75251C00C59A0040EE8A /* TodayExtension */ = {
 			isa = PBXGroup;
 			children = (
@@ -533,6 +546,7 @@
 		289201CF1BBC570800DA4A9A /* UI */ = {
 			isa = PBXGroup;
 			children = (
+				286BB43A1C45BC14008B5983 /* Notifications */,
 				2865591C1BC3125E0058A35A /* Core */,
 				2865591B1BC312580058A35A /* Search */,
 				2865591F1BC3180E0058A35A /* Map */,
@@ -774,6 +788,7 @@
 				2804935E1BA8BB4800990BD1 /* Main.storyboard in Resources */,
 				718F00C31BCEFC8000D51B43 /* TrafficCameraCell.xib in Resources */,
 				289B9AB11C3473F200C342F1 /* NorthToSouthHeadingView.xib in Resources */,
+				286BB43E1C45C35F008B5983 /* NotificationView.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -882,6 +897,7 @@
 				28D3928C1BEE942800924F16 /* BackgroundMapImage.swift in Sources */,
 				289201D41BBC5AEB00DA4A9A /* Combinators.swift in Sources */,
 				2817D92D1BC5D2B70082F4A7 /* WithFlag.swift in Sources */,
+				286BB43C1C45BC27008B5983 /* NotificationView.swift in Sources */,
 				716D9E991BCBC2F1005A6B49 /* ScotTraffic.swift in Sources */,
 				287F75521C00D1130040EE8A /* AppNetworkActivityIndicator.swift in Sources */,
 				28AF4A071BD82342009B0AE8 /* FadeTransition.swift in Sources */,
