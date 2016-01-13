@@ -41,11 +41,9 @@ public class CachedHTTPDataSource: DataSource {
                 
             case .Hit(let data, let date):
                 let age = NSDate().timeIntervalSinceDate(date)
-                print ("cache hit \(self.key) age \(age)")
                 self.cacheHit(data, age: age)
                 
             case .Miss:
-                print ("cache miss \(self.key)")
                 self.startHTTPSource(false)
             }
         }

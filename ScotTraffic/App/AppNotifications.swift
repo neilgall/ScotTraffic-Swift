@@ -72,14 +72,8 @@ public class AppNotifications {
         let method: HTTPAccess.HTTPMethod = registration.enable ? .PUT : .DELETE
         let path = "/notifications/\(registration.identifier)/\(registration.deviceToken)"
         httpAccess.request(method, data: nil, path: path) {
-            switch $0 {
-            case .Error(let error):
-                NSLog("registration failed for \(path): \(error)")
-            case .Fresh(let data):
-                let response = String(data: data, encoding: NSUTF8StringEncoding)
-                NSLog("registration success for \(path): \(registration.identifier): \(response)")
-            default:
-                NSLog("unexpected result from \(path)")
+            if case .Error(let error) = $0 {
+                analyticsError(path, error: error)
             }
         }
         
