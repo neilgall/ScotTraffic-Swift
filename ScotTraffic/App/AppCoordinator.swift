@@ -180,6 +180,8 @@ public class AppCoordinator: NSObject {
         splitViewController.presentViewController(controller, animated: true) {
             self.collectionViewModel.shareAction <-- nil
         }
+        
+        analyticsEvent(.ShareItem, ["name": action.item.name])
     }
     
     private func notifyNoNetworkReachability() {
@@ -217,6 +219,7 @@ public class AppCoordinator: NSObject {
     // -- MARK: UI Actions --
     
     func searchButtonTapped(button: UIBarButtonItem) {
+        analyticsEvent(.Search)
         mapViewController.deselectAnnotationsAnimated(false)
         splitViewController.overlayMasterViewController()
     }
@@ -230,6 +233,8 @@ public class AppCoordinator: NSObject {
             let settingsViewController = navigationController.topViewController as? SettingsTableViewController else {
                 fatalError("unexpected storyboard structure")
         }
+        
+        analyticsEvent(.Settings)
         
         navigationController.modalPresentationStyle = .Popover
         if let popover = navigationController.popoverPresentationController {

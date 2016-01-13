@@ -82,6 +82,8 @@ public class AppNotifications {
                 NSLog("unexpected result from \(path)")
             }
         }
+        
+        analyticsEvent(registration.enable ? .EnableNotifications : .DisableNotifications, ["identifier": registration.identifier])
     }
     
     public func didFailToRegisterWithError(error: NSError) {

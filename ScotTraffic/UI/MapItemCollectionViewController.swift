@@ -129,8 +129,28 @@ public class MapItemCollectionViewController: UIViewController {
     }
 }
 
+extension MapItemCollectionViewController: UICollectionViewDelegate {
+    // -- MARK: UICollectionViewDelegate
+    
+    public func collectionView(collectionView: UICollectionView, willDisplayCell cell: UICollectionViewCell, forItemAtIndexPath indexPath: NSIndexPath) {
+        if let item = viewModel?.cellItems.latestValue.get?[indexPath.item] {
+            switch item {
+            case .TrafficCameraItem(let location, let camera):
+                let cameraId = location.indexOfCameraWithIdentifier(camera.identifier)
+                analyticsEvent(.ViewTrafficCamera, ["location": location.name, "camera": String(cameraId)])
+            case .SafetyCameraItem(let safetyCamera):
+                analyticsEvent(.ViewSafetyCamera, ["name": safetyCamera.name])
+            case .IncidentItem(let incident):
+                analyticsEvent(.ViewIncident, ["road": incident.road])
+            case .BridgeStatusItem(let bridgeStatus, _):
+                analyticsEvent(.ViewBridgeStatus, ["identifier": bridgeStatus.identifier])
+            }
+        }
+    }
+}
+
 extension MapItemCollectionViewController: UIScrollViewDelegate {
-    // -- MARK: UIScrollViewDelegate --
+    // -- MARK: UIScrollViewDelegate
     
     public func scrollViewDidEndDragging(scrollView: UIScrollView, willDecelerate decelerate: Bool) {
         pageControl?.currentPage = mostVisiblePageIndex()

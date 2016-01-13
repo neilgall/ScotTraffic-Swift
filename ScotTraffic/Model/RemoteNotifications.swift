@@ -40,8 +40,11 @@ public class RemoteNotifications {
     public func parseRemoteNotificationOptions(options: OptionsDict, inApplicationState state: UIApplicationState) {
         switch state {
         case .Inactive:
-            bridgeIdentifier <-- options["bridgeIdentifier"] as? String
-        
+            if let identifier = options["bridgeIdentifier"] as? String {
+                bridgeIdentifier <-- identifier
+                analyticsEvent(.OpenFromRemoteNotification, ["identifier": identifier])
+            }
+            
         case .Active:
             if let aps = options["aps"] as? OptionsDict, message = aps["alert"] as? String {
                 showNotification <-- message

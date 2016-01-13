@@ -63,8 +63,10 @@ public class Favourites {
         var items = self.items.value
         if let index = items.indexOf({ $0 == identifier }) {
             items.removeAtIndex(index)
+            analyticsEvent(.DeleteFavourite, ["identifier": identifier])
         } else {
             items.append(identifier)
+            analyticsEvent(.AddFavourite, ["identifier": identifier])
         }
         self.items <-- items
     }
@@ -78,6 +80,7 @@ public class Favourites {
             items.insert(items[fromIndex], atIndex: toIndex+1)
             items.removeAtIndex(fromIndex)
         }
+        analyticsEvent(.ReorderFavourites)
         self.items <-- items
     }
     
