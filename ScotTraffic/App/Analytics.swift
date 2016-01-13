@@ -37,8 +37,12 @@ func analyticsEvent(event: AnalyticsEvent, _ parameters: [String:String]) {
     Flurry.logEvent(event.rawValue, withParameters: parameters)
 }
 
-func analyticsError(name: String, error: NSError) {
-    Flurry.logError(name, message: "", error: error)
+func analyticsError(name: String, error: ErrorType) {
+    if let appError = error as? AppError {
+        Flurry.logError(name, message: "", error: appError.toNSError)
+    } else {
+        Flurry.logError(name, message: "", error: error as NSError)
+    }
 }
 
 

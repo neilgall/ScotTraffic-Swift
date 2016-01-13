@@ -30,4 +30,31 @@ public enum AppError: ErrorType {
             return .Unknown(e)
         }
     }
+    
+    public var name: String {
+        switch self {
+        case Network: return "Network"
+        case Image: return "Image"
+        case JSON: return "JSON"
+        case System: return "System"
+        case Unknown: return "Unknown"
+        }
+    }
+    
+    public var toNSError: NSError {
+        switch self {
+        case Network(let network): return network.toNSError
+        case Image(let image): return image.toNSError
+        case JSON(let json): return json.toNSError
+        case System(let error): return error
+        case Unknown(let error): return error as NSError
+        }
+    }
 }
+
+extension ErrorType where Self: CustomStringConvertible {
+    public var toNSError: NSError {
+        return NSError(domain: String(self.dynamicType), code: 0, userInfo: ["description": self.description])
+    }
+}
+

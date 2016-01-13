@@ -8,8 +8,12 @@
 
 import UIKit
 
-public enum ImageError: ErrorType {
+public enum ImageError: ErrorType, CustomStringConvertible {
     case CannotDecode
+    
+    public var description: String {
+        return "Cannot decode image"
+    }
 }
 
 public protocol ImageDataSource {

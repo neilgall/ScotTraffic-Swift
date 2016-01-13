@@ -107,7 +107,7 @@ public class AppModel: ScotTraffic {
             .filter({ $0 != nil && !userDefaults.messageOfTheDaySeenBefore($0!) })
             .latest()
         
-        self.receivers.append(self.messageOfTheDay --> {
+        receivers.append(self.messageOfTheDay --> {
             if let message = $0 {
                 userDefaults.noteMessageOfTheDaySeen(message)
             }
@@ -133,10 +133,26 @@ public class AppModel: ScotTraffic {
         
         // -- Refresh on restoring internet connection
         
-        self.receivers.append(httpAccess.serverIsReachable.onRisingEdge({ [weak self] in
+        receivers.append(httpAccess.serverIsReachable.onRisingEdge({ [weak self] in
             self?.fetchStarters.forEach {
                 $0.restart(fireImmediately: true)
             }
         }))
+        
+        // -- Error reporting
+        
+        let errors: Signal<AppError?> = union(
+            trafficCameraLocations.map({ $0.error }),
+            safetyCameras.map({ $0.error }),
+            incidents.map({ $0.error }),
+            weather.map({ $0.error }),
+            bridges.map({ $0.error }),
+            messageOfTheDay.map({ $0.error }))
+        
+        receivers.append(errors --> { error in
+            if let error = error {
+                analyticsError(error.name, error: error)
+            }
+        })
     }
 }
