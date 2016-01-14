@@ -9,10 +9,6 @@
 import UIKit
 import NotificationCenter
 
-private let maxImageWidth: CGFloat = 414
-private let bottomMargin: CGFloat = 10
-private let controlsHeight: CGFloat = 44
-
 class TodayViewController: UIViewController, NCWidgetProviding {
     
     @IBOutlet var imageView: UIImageView?
@@ -66,18 +62,7 @@ class TodayViewController: UIViewController, NCWidgetProviding {
         
         receivers.removeAll()
     }
-    
-    override func viewWillLayoutSubviews() {
-        super.viewWillLayoutSubviews()
         
-        let width = self.view.frame.width
-        imageView?.frame = imageViewFrameForWidth(width)
-        controls?.frame = controlsFrameForWidth(width)
-        view.frame = viewFrameForWidth(width)
-        
-        self.preferredContentSize = view.frame.size
-    }
-    
     func widgetMarginInsetsForProposedMarginInsets(defaultMarginInsets: UIEdgeInsets) -> UIEdgeInsets {
         return UIEdgeInsetsZero
     }
@@ -93,30 +78,5 @@ class TodayViewController: UIViewController, NCWidgetProviding {
     
     @IBAction func rightButtonTapped() {
         model.moveToNextImage()
-    }
-    
-    
-    private func imageViewFrameForWidth(width: CGFloat) -> CGRect {
-        let imageWidth = min(maxImageWidth, width)
-        let imageHeight = floor(imageWidth * 0.75)
-        let imageX = floor(width - imageWidth) / 2
-        return CGRect(
-            origin: CGPoint(x: imageX, y: 0),
-            size: CGSize(width: imageWidth, height: imageHeight))
-    }
-    
-    private func controlsFrameForWidth(width: CGFloat) -> CGRect {
-        let imageFrame = imageViewFrameForWidth(width)
-        return CGRect(
-            origin: CGPoint(x: imageFrame.minX, y: imageFrame.maxY),
-            size: CGSize(width: imageFrame.width, height: controlsHeight))
-    }
-    
-    private func viewFrameForWidth(width: CGFloat) -> CGRect {
-        let imageFrame = imageViewFrameForWidth(width)
-        let controlsFrame = controlsFrameForWidth(width)
-        return CGRect(
-            origin: CGPointZero,
-            size: CGSize(width: width, height: imageFrame.height + controlsFrame.height))
     }
 }
