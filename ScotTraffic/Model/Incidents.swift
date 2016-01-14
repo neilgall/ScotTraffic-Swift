@@ -72,8 +72,8 @@ extension Incident: JSONObjectDecodable {
         
         return try Incident(
             type: json <~ "type",
-            name: json <~ "title",
-            text: json <~ "desc",
+            name: json <~ "title" ?? "",
+            text: json <~ "desc" ?? "",
             mapPoint: MKMapPointForCoordinate(CLLocationCoordinate2DMake(json <~ "lat", json <~ "lon")),
             date: date,
             url: url)
