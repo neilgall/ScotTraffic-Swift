@@ -116,25 +116,3 @@ private struct SharableTrafficCamera: SharableItem {
         return "Traffic Camera Image: \(name)\n\nShared using ScotTraffic"
     }
 }
-
-private func imageWithGrayColorspace(image: UIImage?) -> UIImage? {
-    guard let image = image else {
-        return nil
-    }
-    
-    let size = image.size
-    
-    let context = CGBitmapContextCreate(nil,
-        Int(size.width),
-        Int(size.height),
-        8,
-        Int(size.width),
-        CGColorSpaceCreateDeviceGray(),
-        CGImageAlphaInfo.None.rawValue)
-
-    CGContextSetAlpha(context, 0.5)
-    CGContextDrawImage(context, CGRect(origin: CGPointZero, size: size), image.CGImage)
-    let grayImage = CGBitmapContextCreateImage(context)
-    
-    return grayImage.map { UIImage(CGImage: $0) }
-}

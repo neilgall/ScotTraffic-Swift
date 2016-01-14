@@ -105,8 +105,12 @@ class TodayViewModel {
                 case .Fresh(let image):
                     self.image.pushValue(image)
                     self.showError.pushValue(false)
-                case .Cached(let image, _):
-                    self.image.pushValue(image)
+                case .Cached(let image, let expired):
+                    if expired, let grayImage = imageWithGrayColorspace(image) {
+                        self.image.pushValue(grayImage)
+                    } else {
+                        self.image.pushValue(image)
+                    }
                     self.showError.pushValue(false)
                 case .Error, .Empty:
                     self.showError.pushValue(true)
@@ -125,13 +129,13 @@ class TodayViewModel {
     
     func moveToPreviousImage() {
         if let canMove = canMoveToPrevious.latestValue.get where canMove {
-            settings.imageIndex.value = settings.imageIndex.value - 1
+            settings.imageIndex <-- settings.imageIndex.value - 1
         }
     }
     
     func moveToNextImage() {
         if let canMove = canMoveToNext.latestValue.get where canMove {
-            settings.imageIndex.value = settings.imageIndex.value + 1
+            settings.imageIndex <-- settings.imageIndex.value + 1
         }
     }
 }
