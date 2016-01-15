@@ -25,7 +25,7 @@ public class AppNotifications {
     private let settings: Settings
     private let httpAccess: HTTPAccess
     private var receivers: [ReceiverType] = []
-    private var notificationreceivers: [ReceiverType] = []
+    private var notificationReceivers: [ReceiverType] = []
     private var deviceToken: Input<String?> = Input(initial: nil)
     
     public init(settings: Settings, httpAccess: HTTPAccess) {
@@ -46,14 +46,14 @@ public class AppNotifications {
         let deviceTokenWhenNotNil = not(isNil(deviceToken)).gate(deviceToken)
 
         receivers.append(settings.bridgeNotifications --> { [weak self] bridges in
-            self?.notificationreceivers = bridges.flatMap({ [weak self] (bridge, setting) in
-                guard let self_ = self else {
+            self?.notificationReceivers = bridges.flatMap({ [weak self] (bridge, setting) in
+                guard self != nil else {
                     return nil
                 }
                 let registration = combine(deviceTokenWhenNotNil, setting) {
                     return Registration(identifier: bridge.identifier, deviceToken: $0!, enable: $1)
                 }
-                return registration.onChange() --> self_.updateRegistration
+                return registration.onChange() --> self!.updateRegistration
             })
         })
     }
@@ -66,6 +66,7 @@ public class AppNotifications {
     
     private func disableNotifications() {
         UIApplication.sharedApplication().unregisterForRemoteNotifications()
+        deviceToken <-- nil
     }
     
     private func updateRegistration(registration: Registration) {
@@ -85,18 +86,22 @@ public class AppNotifications {
     }
     
     public func didRegisterWithDeviceToken(token: NSData) {
-        let nibble: [Character] = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "A", "B", "C", "D", "E", "F" ]
-        
-        var bytes = [UInt8](count: token.length, repeatedValue: 0)
-        token.getBytes(&bytes, length: token.length)
-
-        var str = [Character]()
-        for byte in bytes {
-            str.append(nibble[Int(byte >> 4)])
-            str.append(nibble[Int(byte & 0xF)])
-        }
-        
-        deviceToken <-- String(str)
+        deviceToken <-- hexStringFromData(token)
     }
+}
+
+private func hexStringFromData(data: NSData) -> String {
+    let nibble: [Character] = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "A", "B", "C", "D", "E", "F" ]
+    
+    var bytes = [UInt8](count: data.length, repeatedValue: 0)
+    data.getBytes(&bytes, length: data.length)
+    
+    var str = [Character]()
+    for byte in bytes {
+        str.append(nibble[Int(byte >> 4)])
+        str.append(nibble[Int(byte & 0xF)])
+    }
+    
+    return String(str)
 }
 
