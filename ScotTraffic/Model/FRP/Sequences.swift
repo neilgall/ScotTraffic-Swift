@@ -8,6 +8,8 @@
 
 import Foundation
 
+// Convenience map, filter and reduce operations on the values inside signals containing sequences
+//
 public extension Signal where Value: SequenceType {
 
     public func mapSeq<TargetType>(transform: Value.Generator.Element -> TargetType) -> Signal<[TargetType]> {

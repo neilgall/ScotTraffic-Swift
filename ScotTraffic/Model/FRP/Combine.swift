@@ -8,6 +8,11 @@
 
 import Foundation
 
+// Combiners take multiple signals and a reducing function to form a new signal
+// with the result of the reduction. If multiple sources change in the same
+// transaction the combiner only propagates a single change, at the end of the
+// transaction.
+
 class Combiner<Value>: Signal<Value> {
     private var transactionCount: Int = 0
     private var needsUpdate: Bool = false

@@ -8,9 +8,14 @@
 
 import Foundation
 
+// Never is a signal which never propagates any value. Useful as starting points for reduces, etc.
+//
 public class Never<Value> : Signal<Value> {
 }
 
+// Const is a signal which never propagates a new value but responds to latestValue with a constant.
+// Also useful as starting points for reduces, etc.
+//
 public class Const<Value> : Signal<Value> {
     public let value: Value
 
@@ -23,6 +28,9 @@ public class Const<Value> : Signal<Value> {
     }
 }
 
+// Filter only propagates values from a source signal which satisfy a predicate. Transactions
+// which fail the predicate are cancelled.
+//
 class Filter<Source: SignalType> : Signal<Source.ValueType> {
     private var receiver: ReceiverType!
     
@@ -38,6 +46,9 @@ class Filter<Source: SignalType> : Signal<Source.ValueType> {
     }
 }
 
+// Mapped transforms a source signal using a pure, total function. latestValue returns
+// a Computed using the same function.
+//
 class Mapped<Source: SignalType, MappedType> : Signal<MappedType> {
     private let source: Source
     private let transform: Source.ValueType -> MappedType
@@ -73,6 +84,8 @@ class Mapped<Source: SignalType, MappedType> : Signal<MappedType> {
     }
 }
 
+// Union combines values from multiple signals of the same type into a single stream.
+//
 class Union<Source: SignalType> : Signal<Source.ValueType> {
     private var receivers: [ReceiverType]!
     
@@ -86,7 +99,8 @@ class Union<Source: SignalType> : Signal<Source.ValueType> {
     }
 }
 
-// Basic signal wrapper for when we only have a SignalType
+// WrappedSignal just propagates the source signal. It is really a workaround for the
+// fact that SignalType cannot be used as a type in Swift.
 //
 class WrappedSignal<Source: SignalType>: Signal<Source.ValueType> {
     private let source: Source
@@ -107,6 +121,8 @@ class WrappedSignal<Source: SignalType>: Signal<Source.ValueType> {
     }
 }
 
+// Latest is like WrappedSignal but also stores the latest value of its source.
+//
 public class Latest<Source: SignalType>: Signal<Source.ValueType> {
     let source: Source
     var value: Source.ValueType?
@@ -135,6 +151,10 @@ public class Latest<Source: SignalType>: Signal<Source.ValueType> {
     }
 }
 
+// OnChange can be used with Equatable value types and only propagates changes which are not
+// equal to the previous value. Upstream notifications with the same value are cancelled. OnChange
+// is consequently also a Latest since the previous value must be stored.
+//
 class OnChange<Source: SignalType where Source.ValueType: Equatable> : Signal<Source.ValueType> {
     private var receiver: ReceiverType!
     private var value: Source.ValueType?
@@ -164,18 +184,25 @@ class OnChange<Source: SignalType where Source.ValueType: Equatable> : Signal<So
     }
 }
 
+// Syntactical sugar for creating an Output. With the core of the signal network purely
+// functional, it is useful to have distinctive syntax for the imperative inputs and outputs.
+//
 infix operator --> { associativity right precedence 100 }
 
 public func --> <Source: SignalType> (source: Source, closure: Source.ValueType -> Void) -> ReceiverType {
     return Output(source, closure)
 }
 
+// Syntactical sugar for assigning a value to an input
+//
 infix operator <-- { associativity left precedence 100 }
 
 public func <-- <Input: InputType, ValueType where Input.ValueType == ValueType> (var input: Input, value: ValueType) {
     input.value = value
 }
 
+// Helper methods for creating derived signals
+//
 extension SignalType {
     public func willOutput(closure: Void -> Void) -> WillOutput<Self> {
         return WillOutput(self, closure)
@@ -186,6 +213,7 @@ extension SignalType {
     }
     
     public func latest() -> Signal<ValueType> {
+        // if the source signal can already provide a stored value, there's no point wrapping it in a Latest
         if let signal = self as? Signal<ValueType>, case .Stored = signal.latestValue {
             return signal
         }

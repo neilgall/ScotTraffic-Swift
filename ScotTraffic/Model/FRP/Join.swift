@@ -8,6 +8,9 @@
 
 import Foundation
 
+// Monad join (flatten) operation on nested signals. Given a Signal<Signal<A>>, join()
+// yields a Signal<A> which propagates whenever either layer of signal changes.
+//
 class JoinedSignal<Value>: Signal<Value> {
     
     private var outerReceiver: ReceiverType!

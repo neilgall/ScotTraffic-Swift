@@ -8,14 +8,24 @@
 
 import Foundation
 
+// Marker protocol for objects which can receive values from signals.
+//
 public protocol ReceiverType {}
 
+// Signal changes are propagated using multi-phase transactions. A Begin is always
+// sent, followed by an End with a new Value or a Cancel.
+//
 public enum Transaction<ValueType> {
     case Begin
     case End(ValueType)
     case Cancel
 }
 
+// Some Signals can supply their latest value, which is always wrapped in this type.
+// None means there is no latest value. Computed means the signal can supply a value
+// but it is computed using the signal's function and possibly further upstream functions.
+// The value is therefore supplied lazily. Stored supplies the value directly.
+//
 public enum LatestValue<Value> {
     case None
     case Computed(Void -> Value)
@@ -41,6 +51,11 @@ public enum LatestValue<Value> {
     }
 }
 
+// Base interface for Signals. Observers are just closures which receive transactions
+// from the signal. Adding an observer returns a unique identifier which can be used
+// later to remove it. Changes are pushed directly with pushValue() or in phases with
+// pushTransaction()
+//
 public protocol SignalType {
     typealias ValueType
     
@@ -53,12 +68,16 @@ public protocol SignalType {
     var latestValue: LatestValue<ValueType> { get }
 }
 
+// An Input is a signal whose value can be mutated directly.
+//
 public protocol InputType {
     typealias ValueType
     
     var value: ValueType { get set }
 }
 
+// Standard SignalType implementation.
+//
 public class Signal<Value> : SignalType {
     public typealias ValueType = Value
     
@@ -105,6 +124,8 @@ public class Signal<Value> : SignalType {
     }
 }
 
+// Standard InputType implementation
+//
 public class Input<Value>: Signal<Value>, InputType {
     public typealias ValueType = Value
     
@@ -130,6 +151,9 @@ public class Input<Value>: Signal<Value>, InputType {
     }
 }
 
+// A ComputedSignal cannot propagate changes, but stores a closure which is returned
+// by latestValue. Implements a signal value which changes over time.
+//
 public class ComputedSignal<Value>: Signal<Value> {
     private let compute: () -> Value
 
@@ -142,6 +166,9 @@ public class ComputedSignal<Value>: Signal<Value> {
     }
 }
 
+// A Transaction receiver. Initialise with a source signal and a closure which is invoked
+// on transactions from that signal.
+//
 class Receiver<Source: SignalType>: ReceiverType {
     let source: Source
     private let id: Int
@@ -156,6 +183,9 @@ class Receiver<Source: SignalType>: ReceiverType {
     }
 }
 
+// An Output is the opposite of an Input. It is a receiver which only responds to the End
+// transaction, unwrapping the value and passing it to a closure.
+//
 public class Output<Source: SignalType>: Receiver<Source> {
     public init(_ source: Source, _ closure: Source.ValueType -> Void) {
         super.init(source) { transaction in
@@ -166,6 +196,8 @@ public class Output<Source: SignalType>: Receiver<Source> {
     }
 }
 
+// A WillOutput is like an Output but responds to the Begin phase of a signal change.
+//
 public class WillOutput<Source: SignalType>: Receiver<Source> {
     public init(_ source: Source, _ closure: Void -> Void) {
         super.init(source) { transaction in
