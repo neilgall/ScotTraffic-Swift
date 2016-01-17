@@ -69,6 +69,16 @@ func trafficCameraName(camera: TrafficCamera, atLocation location: TrafficCamera
     }
 }
 
+func trafficCameraFromLocations(locations: [TrafficCameraLocation], withIdentifier identifier: String) -> (location: TrafficCameraLocation, cameraIndex: Int)? {
+    let results = locations.flatMap { (location: TrafficCameraLocation) -> (location: TrafficCameraLocation, cameraIndex: Int)? in
+        guard let cameraIndex = location.indexOfCameraWithIdentifier(identifier) else {
+            return nil
+        }
+        return (location: location, cameraIndex: cameraIndex)
+    }
+    return results.first
+}
+
 extension TrafficCameraDirection: JSONValueDecodable {
     static func decodeJSON(json: JSONValue, forKey key: JSONKey) throws -> TrafficCameraDirection {
         guard let dir = json.value as? String else {

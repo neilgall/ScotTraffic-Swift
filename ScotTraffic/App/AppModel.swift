@@ -54,8 +54,6 @@ class AppModel: ScotTraffic {
         }
         self.trafficCameraLocations = trafficCameraLocations.map({ $0.value ?? [] }).latest()
 
-        self.favourites = Favourites(userDefaults: userDefaults, trafficCameraLocations: self.trafficCameraLocations)
-
         
         // -- Safety Cameras --
         
@@ -122,9 +120,10 @@ class AppModel: ScotTraffic {
         self.remoteNotifications = RemoteNotifications(bridges: self.bridges)
 
         
-        // -- Settings --
+        // -- Settings and Favourites --
         
         self.settings = Settings(userDefaults: userDefaults, bridges: self.bridges)
+        self.favourites = Favourites(userDefaults: userDefaults)
         
         
         // -- Auto refresh --

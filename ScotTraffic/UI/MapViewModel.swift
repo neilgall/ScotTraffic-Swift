@@ -71,7 +71,7 @@ class MapViewModel {
         
         let trafficCameras = combine(
             scotTraffic.trafficCameraLocations,
-            scotTraffic.favourites.trafficCameras,
+            trafficCamerasFromLocations(scotTraffic.trafficCameraLocations, forFavourites: scotTraffic.favourites),
             scotTraffic.settings.showTrafficCamerasOnMap,
             expandedVisibleMapRect,
             combine: trafficCamerasFromRectAndFavourites)

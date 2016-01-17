@@ -38,7 +38,6 @@ class SearchViewModel {
         searchSelectionIndex = Input(initial: nil)
         
         favourites = scotTraffic.favourites
-        let latestFavourites = favourites.trafficCameras.latest()
 
         let trafficCameras = combine(
             scotTraffic.trafficCameraLocations,
@@ -84,13 +83,13 @@ class SearchViewModel {
         dataSource = displayContent.onChange().map { contentType in
             switch contentType {
             case .Favourites:
-                return latestFavourites
-                    .map(toSearchResultItems)
+                return combine(scotTraffic.favourites.items, scotTraffic.trafficCameraLocations,
+                    combine: searchResultsForFavourites)
                     .tableViewDataSource(SearchResultCell.cellIdentifier)
 
             case .SearchResults:
                 return searchResults
-                    .map(toSearchResultItem)
+                    .map(toSearchResultItems)
                     .tableViewDataSource(SearchResultCell.cellIdentifier)
             }
         }.latest()
@@ -164,14 +163,23 @@ struct SearchResultItem: TableViewCellConfigurator {
     }
 }
 
-func toSearchResultItems(items: [FavouriteTrafficCamera]) -> [SearchResultItem] {
-    return items.map { favourite in
-        SearchResultItem(name: favourite.name, mapItem: favourite.location, index: favourite.cameraIndex)
-    }
+private func searchResultsForFavourites(favourites: [FavouriteItem], locations: [TrafficCameraLocation]) -> [SearchResultItem] {
+    return favourites.flatMap({ favourite in
+        switch favourite {
+        case .TrafficCamera(let identifier):
+            return trafficCameraFromLocations(locations, withIdentifier: identifier).map({ location, cameraIndex in
+                return SearchResultItem(name: location.name, mapItem: location, index: cameraIndex)
+            })
+            
+        case .SavedSearch(_):
+            // TODO
+            return nil
+        }
+    })
 }
 
-func toSearchResultItem(items: [MapItem]) -> [SearchResultItem] {
-    return items.map { item in
+func toSearchResultItems(items: [MapItem]) -> [SearchResultItem] {
+    return items.map({ item in
         SearchResultItem(name: item.name, mapItem: item, index: 0)
-    }
+    })
 }

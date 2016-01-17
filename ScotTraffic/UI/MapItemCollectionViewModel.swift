@@ -83,15 +83,16 @@ extension MapItemCollectionViewModel: MapItemCollectionViewCellDelegate {
     }
     
     func collectionViewCellDidToggleFavourite(item: FavouriteTrafficCamera) {
-        if favourites.containsTrafficCamera(item) {
-            favourites.deleteTrafficCamera(item)
+        let favouriteItem: FavouriteItem = .TrafficCamera(identifier: item.identifier)
+        if favourites.containsItem(favouriteItem) {
+            favourites.deleteItem(favouriteItem)
         } else {
-            favourites.addTrafficCamera(item)
+            favourites.addItem(favouriteItem)
         }
     }
     
     func collectionViewItemIsFavourite(item: FavouriteTrafficCamera) -> Bool {
-        return favourites.containsTrafficCamera(item)
+        return favourites.containsItem(.TrafficCamera(identifier: item.identifier))
     }
 }
 

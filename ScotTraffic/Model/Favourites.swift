@@ -22,43 +22,15 @@ enum FavouriteItem {
     case TrafficCamera(identifier: FavouriteIdentifier)
 }
 
-struct FavouriteTrafficCamera {
-    let location: TrafficCameraLocation
-    let cameraIndex: Int
-    
-    init?(location: TrafficCameraLocation, camera: TrafficCamera) {
-        guard let cameraIndex = location.cameras.indexOf({ $0.identifier == camera.identifier }) else {
-            return nil
-        }
-        self.init(location: location, cameraIndex: cameraIndex)
-    }
-    
-    init(location: TrafficCameraLocation, cameraIndex: Int) {
-        self.location = location
-        self.cameraIndex = cameraIndex
-    }
-    
-    var identifier: String {
-        return location.cameras[cameraIndex].identifier
-    }
-    
-    var name: String {
-        return trafficCameraName(location.cameras[cameraIndex], atLocation: location)
-    }
-}
-
-
 class Favourites {
     private let userDefaults: UserDefaultsProtocol
     let items: Input<[FavouriteItem]>
-    let trafficCameras: Signal<[FavouriteTrafficCamera]>
     
     private var receivers = [ReceiverType]()
     
-    init(userDefaults: UserDefaultsProtocol, trafficCameraLocations: Signal<[TrafficCameraLocation]>) {
+    init(userDefaults: UserDefaultsProtocol) {
         self.userDefaults = userDefaults
         self.items = Input(initial: [])
-        self.trafficCameras = combine(trafficCameraLocations, self.items, combine: favouriteTrafficCamerasFromLocations)
         
         reloadFromUserDefaults()
         
@@ -67,24 +39,24 @@ class Favourites {
         })
     }
     
-    func addTrafficCamera(item: FavouriteTrafficCamera) {
-        items.modify {
-            return $0 + [.TrafficCamera(identifier: item.identifier)]
-        }
-        analyticsEvent(.AddFavourite, ["identifier": item.identifier])
+    func containsItem(item: FavouriteItem) -> Bool {
+        return self.items.value.contains({ $0 == item })
     }
     
-    func deleteTrafficCamera(item: FavouriteTrafficCamera) {
+    func addItem(item: FavouriteItem) {
         items.modify {
-            return $0.filter(not(itemIsTrafficCameraIdentifier(item.identifier)))
+            return $0 + [item]
         }
-        analyticsEvent(.DeleteFavourite, ["identifier": item.identifier])
+        analyticsEvent(.AddFavourite, dictionaryFromFavouriteItem(item))
+    }
+    
+    func deleteItem(item: FavouriteItem) {
+        items.modify { items in
+            return items.filter({ $0 != item })
+        }
+        analyticsEvent(.DeleteFavourite, dictionaryFromFavouriteItem(item))
     }
 
-    func containsTrafficCamera(item: FavouriteTrafficCamera) -> Bool {
-        return self.items.value.contains(itemIsTrafficCameraIdentifier(item.identifier))
-    }
-    
     func deleteItemAtIndex(index: Int) {
         items.modify { items in
             let item = items[index]
@@ -112,6 +84,46 @@ class Favourites {
         }
         self.items <-- items.flatMap(favouriteItemFromObject)
     }
+}
+
+struct FavouriteTrafficCamera {
+    let location: TrafficCameraLocation
+    let cameraIndex: Int
+    
+    init?(location: TrafficCameraLocation, camera: TrafficCamera) {
+        guard let cameraIndex = location.cameras.indexOf({ $0.identifier == camera.identifier }) else {
+            return nil
+        }
+        self.init(location: location, cameraIndex: cameraIndex)
+    }
+    
+    init(location: TrafficCameraLocation, cameraIndex: Int) {
+        self.location = location
+        self.cameraIndex = cameraIndex
+    }
+    
+    var identifier: String {
+        return location.cameras[cameraIndex].identifier
+    }
+    
+    var name: String {
+        return trafficCameraName(location.cameras[cameraIndex], atLocation: location)
+    }
+}
+
+func trafficCamerasFromLocations(locations: Signal<[TrafficCameraLocation]>, forFavourites favourites: Favourites) -> Signal<[FavouriteTrafficCamera]> {
+    return combine(locations, favourites.items, combine: { locations, favourites in
+        favourites.flatMap { favourite in
+            switch favourite {
+            case .SavedSearch:
+                return nil
+            case .TrafficCamera(let identifier):
+                return trafficCameraFromLocations(locations, withIdentifier: identifier).map({ location, cameraIndex in
+                    return FavouriteTrafficCamera(location: location, cameraIndex: cameraIndex)
+                })
+            }
+        }
+    })
 }
 
 private func favouriteItemFromObject(object: AnyObject) -> FavouriteItem? {
@@ -154,24 +166,7 @@ private func dictionaryFromFavouriteItem(favourite: FavouriteItem) -> [String:St
         return [ typeKey: typeTrafficCamera, identifierKey: identifier ]
     }
 }
-
-private func favouriteTrafficCamerasFromLocations(locations: [TrafficCameraLocation], favourites: [FavouriteItem]) -> [FavouriteTrafficCamera] {
-    return favourites.flatMap { favourite in
-        switch favourite {
-        case .SavedSearch:
-            return nil
-        case .TrafficCamera(let identifier):
-            let locations = locations.flatMap { (location: TrafficCameraLocation) -> FavouriteTrafficCamera? in
-                guard let cameraIndex = location.indexOfCameraWithIdentifier(identifier) else {
-                    return nil
-                }
-                return FavouriteTrafficCamera(location: location, cameraIndex: cameraIndex)
-            }
-            return locations.first
-        }
-    }
-}
-
+    
 extension FavouriteItem: Equatable {}
 
 func == (lhs: FavouriteItem, rhs: FavouriteItem) -> Bool {

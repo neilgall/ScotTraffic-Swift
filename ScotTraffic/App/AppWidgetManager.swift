@@ -13,9 +13,17 @@ class AppWidgetManager {
     let observation: ReceiverType
     
     init(favourites: Favourites) {
-        observation = favourites.trafficCameras --> {
-            let hasContent = $0.count > 0
+        observation = favourites.items --> { items in
+            let hasContent = items.filter(isTrafficCamera).count > 0
             NCWidgetController.widgetController().setHasContent(hasContent, forWidgetWithBundleIdentifier: todayExtensionBundleIdentifier)
         }
+    }
+}
+
+private func isTrafficCamera(item: FavouriteItem) -> Bool {
+    if case .TrafficCamera = item {
+        return true
+    } else {
+        return false
     }
 }

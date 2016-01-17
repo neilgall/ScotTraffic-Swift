@@ -66,10 +66,12 @@ class TodayViewModel {
 
         // -- favourites
         
-        self.favourites = Favourites(userDefaults: userDefaults,
-            trafficCameraLocations: trafficCameraLocations.map({ $0.value ?? [] }).latest())
+        self.favourites = Favourites(userDefaults: userDefaults)
+    
+        let locations = trafficCameraLocations.map({ $0.value ?? [] }).latest()
+        let favouriteTrafficCameras = trafficCamerasFromLocations(locations, forFavourites: favourites)
         
-        let selectedFavourite: Signal<FavouriteTrafficCamera> = combine(favourites.trafficCameras, settings.imageIndex) { favourites, imageIndex in
+        let selectedFavourite: Signal<FavouriteTrafficCamera> = combine(favouriteTrafficCameras, settings.imageIndex) { favourites, imageIndex in
             let index = max(0, min(imageIndex, favourites.count))
             return favourites[index]
         }
@@ -90,7 +92,7 @@ class TodayViewModel {
             return index > 0
         }).latest()
         
-        self.canMoveToNext = combine(favourites.trafficCameras, settings.imageIndex) { favourites, index in
+        self.canMoveToNext = combine(favouriteTrafficCameras, settings.imageIndex) { favourites, index in
             return index < favourites.count-1
         }
 
