@@ -41,7 +41,7 @@ class TestAppModel: ScotTraffic {
         
         userDefaults = TestUserDefaults()
         settings = Settings(userDefaults: userDefaults, bridges: bridges)
-        favourites = Favourites(userDefaults: userDefaults, trafficCameraLocations: trafficCameraLocations)
+        favourites = Favourites(userDefaults: userDefaults)
     }
     
     func trafficCameraLocationNamed(name: String) -> TrafficCameraLocation? {

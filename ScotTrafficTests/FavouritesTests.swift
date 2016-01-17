@@ -11,32 +11,85 @@ import XCTest
 
 class FavouritesTests: XCTestCase {
 
-    var appModel: TestAppModel!
     var userDefaults: TestUserDefaults!
     var favourites: Favourites!
     
     override func setUp() {
         super.setUp()
         
-        appModel = TestAppModel()
         userDefaults = TestUserDefaults()
-        favourites = Favourites(userDefaults: userDefaults, trafficCameraLocations: appModel.trafficCameraLocations)
+        favourites = Favourites(userDefaults: userDefaults)
     }
     
     override func tearDown() {
-        appModel = nil
         userDefaults = nil
         favourites = nil
         
         super.tearDown()
     }
     
+    func testIsEmptyOnInit() {
+        XCTAssertTrue(favourites.items.value.isEmpty)
+    }
+    
+    func testAdd() {
+        favourites.addItem(.SavedSearch(term: "Foo"))
+        XCTAssertEqual(favourites.items.value, [.SavedSearch(term: "Foo")])
+    }
+    
+    func testDeleteSavedSearch() {
+        favourites.addItem(.SavedSearch(term: "Foo"))
+        favourites.addItem(.SavedSearch(term: "Bar"))
+        favourites.deleteItem(.SavedSearch(term: "Foo"))
+        XCTAssertEqual(favourites.items.value, [.SavedSearch(term: "Bar")])
+    }
+    
+    func testDeleteTrafficCamera() {
+        favourites.addItem(.TrafficCamera(identifier: "Foo"))
+        favourites.addItem(.SavedSearch(term: "Bar"))
+        favourites.deleteItem(.TrafficCamera(identifier: "Foo"))
+        XCTAssertEqual(favourites.items.value, [.SavedSearch(term: "Bar")])
+    }
+    
+    func testDeleteAtIndex() {
+        favourites.addItem(.SavedSearch(term: "Foo"))
+        favourites.addItem(.SavedSearch(term: "Bar"))
+        favourites.deleteItemAtIndex(1)
+        XCTAssertEqual(favourites.items.value, [.SavedSearch(term: "Foo")])
+    }
+    
     func testLoadFromUserDefaults_Pre1_2() {
         userDefaults.setObject(["4_1181_cam1.jpg", "4_1193_cam1.jpg"], forKey: "favouriteItems")
         favourites.reloadFromUserDefaults()
         
-        let identifiers = favourites.trafficCameras.mapSeq({ $0.identifier }).latest()
-        XCTAssertEqual(identifiers.latestValue.get!, ["4_1181_cam1.jpg", "4_1193_cam1.jpg"])
+        XCTAssertEqual(favourites.items.value, [
+            .TrafficCamera(identifier: "4_1181_cam1.jpg"),
+            .TrafficCamera(identifier: "4_1193_cam1.jpg")
+        ])
+    }
+    
+    func testLoadFromDefaults_Current() {
+        userDefaults.setObject([
+            ["type": "trafficCamera", "identifier": "4_1181_cam1.jpg"],
+            ["type": "savedSearch", "term": "M80"] ], forKey: "favouriteItems")
+        favourites.reloadFromUserDefaults()
+        
+        XCTAssertEqual(favourites.items.value, [
+            .TrafficCamera(identifier: "4_1181_cam1.jpg"),
+            .SavedSearch(term: "M80")
+        ])
+    }
+    
+    func testSaveToDefaults() {
+        favourites.addItem(.SavedSearch(term: "M9"))
+        favourites.addItem(.TrafficCamera(identifier: "4_1193_cam1.jpg"))
+        
+        let savedValue = userDefaults.objectForKey("favouriteItems") as? [[String: String]]
+        XCTAssertNotNil(savedValue)
+        XCTAssertEqual(savedValue!, [
+            [ "type": "savedSearch", "term": "M9"],
+            [ "type": "trafficCamera", "identifier": "4_1193_cam1.jpg"]
+        ])
     }
     
     func testMoveDown() {
@@ -44,11 +97,9 @@ class FavouritesTests: XCTestCase {
         userDefaults.setObject([a,b,c,d,e], forKey: "favouriteItems")
         favourites.reloadFromUserDefaults()
         
-        let identifiers = favourites.trafficCameras.mapSeq({ $0.identifier }).latest()
-        
         favourites.moveItemFromIndex(1, toIndex: 3)
         
-        XCTAssertEqual(identifiers.latestValue.get!, [a, c, d, b, e])
+        XCTAssertEqual(favourites.items.value, [a,c,d,b,e].map({ .TrafficCamera(identifier: $0) }))
     }
 
     func testMoveUp() {
@@ -56,11 +107,9 @@ class FavouritesTests: XCTestCase {
         userDefaults.setObject([a,b,c,d,e], forKey: "favouriteItems")
         favourites.reloadFromUserDefaults()
         
-        let identifiers = favourites.trafficCameras.mapSeq({ $0.identifier }).latest()
-        
         favourites.moveItemFromIndex(4, toIndex: 0)
         
-        XCTAssertEqual(identifiers.latestValue.get!, [e, a, b, c, d])
+        XCTAssertEqual(favourites.items.value, [e, a, b, c, d].map({ .TrafficCamera(identifier: $0) }))
     }
 
     func testMoveSame() {
@@ -68,11 +117,9 @@ class FavouritesTests: XCTestCase {
         userDefaults.setObject([a,b,c,d,e], forKey: "favouriteItems")
         favourites.reloadFromUserDefaults()
         
-        let identifiers = favourites.trafficCameras.mapSeq({ $0.identifier }).latest()
-        
         favourites.moveItemFromIndex(2, toIndex: 2)
         
-        XCTAssertEqual(identifiers.latestValue.get!, [a, b, c, d, e])
+        XCTAssertEqual(favourites.items.value, [a, b, c, d, e].map({ .TrafficCamera(identifier: $0) }))
         
     }
 }

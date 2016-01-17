@@ -166,7 +166,7 @@ private func dictionaryFromFavouriteItem(favourite: FavouriteItem) -> [String:St
         return [ typeKey: typeTrafficCamera, identifierKey: identifier ]
     }
 }
-    
+
 extension FavouriteItem: Equatable {}
 
 func == (lhs: FavouriteItem, rhs: FavouriteItem) -> Bool {
