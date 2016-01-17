@@ -32,7 +32,7 @@ enum MapItemCollectionViewItemType: String {
 }
 
 enum MapItemCollectionViewItem {
-    case TrafficCameraItem(TrafficCameraLocation, TrafficCamera)
+    case TrafficCameraItem(TrafficCameraLocation, TrafficCameraIndex)
     case SafetyCameraItem(SafetyCamera)
     case IncidentItem(Incident)
     case BridgeStatusItem(BridgeStatus, Settings)
@@ -48,8 +48,8 @@ enum MapItemCollectionViewItem {
     
     func matchesSelection(selection: SearchViewModel.Selection) -> Bool {
         switch self {
-        case .TrafficCameraItem(let location, let camera):
-            return location == selection.mapItem && camera == location.cameras[selection.index]
+        case .TrafficCameraItem(let location, let index):
+            return location == selection.mapItem && index == selection.index
             
         case .SafetyCameraItem(let safetyCamera):
             return safetyCamera == selection.mapItem
@@ -64,7 +64,7 @@ enum MapItemCollectionViewItem {
     
     static func forMapItem(mapItem: MapItem, settings: Settings) -> [MapItemCollectionViewItem] {
         if let trafficCameraLocation = mapItem as? TrafficCameraLocation {
-            return trafficCameraLocation.cameras.map { TrafficCameraItem(trafficCameraLocation, $0) }
+            return trafficCameraLocation.cameras.enumerate().map({ TrafficCameraItem(trafficCameraLocation, $0.0) })
             
         } else if let safetyCamera = mapItem as? SafetyCamera {
             return [ SafetyCameraItem(safetyCamera) ]

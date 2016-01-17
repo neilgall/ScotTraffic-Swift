@@ -16,6 +16,8 @@ enum TrafficCameraDirection: String {
     case West
 }
 
+typealias TrafficCameraIndex = Int
+
 final class TrafficCameraLocation: MapItem {
     let name: String
     let road: String
@@ -62,15 +64,7 @@ func == (a: TrafficCamera, b: TrafficCamera) -> Bool {
 }
 
 extension TrafficCameraLocation {
-    func nameAtCamera(camera: TrafficCamera) -> String {
-        // TODO remove this
-        guard let index = cameras.indexOf({ $0 == camera }) else {
-            return "BUG!"
-        }
-        return nameAtIndex(index)
-    }
-    
-    func nameAtIndex(index: Int) -> String {
+    func nameAtIndex(index: TrafficCameraIndex) -> String {
         if let direction = cameras[index].direction {
             return "\(name) \(direction.rawValue)"
         
@@ -84,8 +78,8 @@ extension TrafficCameraLocation {
 }
 
 extension SequenceType where Generator.Element: TrafficCameraLocation {
-    func findIdentifier(identifier: String) -> (location: TrafficCameraLocation, cameraIndex: Int)? {
-        return flatMap({ (location: TrafficCameraLocation) -> (location: TrafficCameraLocation, cameraIndex: Int)? in
+    func findIdentifier(identifier: String) -> (location: TrafficCameraLocation, cameraIndex: TrafficCameraIndex)? {
+        return flatMap({ (location: TrafficCameraLocation) -> (location: TrafficCameraLocation, cameraIndex: TrafficCameraIndex)? in
             guard let cameraIndex = location.indexOfCameraWithIdentifier(identifier) else {
                 return nil
             }

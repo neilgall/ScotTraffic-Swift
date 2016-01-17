@@ -24,8 +24,9 @@ class TrafficCameraCell: UICollectionViewCell, MapItemCollectionViewCell {
     private var receivers = [ReceiverType]()
     
     func configure(item: MapItemCollectionViewItem) {
-        if case .TrafficCameraItem(let location, let camera) = item {
-            locationName = location.nameAtCamera(camera)
+        if case .TrafficCameraItem(let location, let cameraIndex) = item {
+            let camera = location.cameras[cameraIndex]
+            locationName = location.nameAtIndex(cameraIndex)
             favouriteItem = .TrafficCamera(identifier: camera.identifier)
 
             errorLabel?.hidden = true
