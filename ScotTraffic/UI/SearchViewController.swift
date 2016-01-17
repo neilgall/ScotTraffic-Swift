@@ -12,9 +12,16 @@ import MapKit
 class SearchViewController: UITableViewController {
 
     @IBOutlet var editingFavouritesButton: UIButton?
+    @IBOutlet var saveSearchButton: UIButton? {
+        didSet {
+            saveSearchButtonSignal <-- saveSearchButton
+        }
+    }
+    
     let editingFavourites: Input<Bool> = Input(initial: false)
-    var searchBar: UISearchBar?
     var searchViewModel: SearchViewModel?
+    var dataSource: UITableViewDataSource?
+    var saveSearchButtonSignal: Input<UIButton?> = Input(initial: nil)
     var receivers = [ReceiverType]()
 
     override func viewDidLoad() {
@@ -29,19 +36,35 @@ class SearchViewController: UITableViewController {
         searchBar.showsCancelButton = false
         navigationItem.titleView = searchBar
 
-        if let dataSource = searchViewModel?.dataSource {
-            // Reload on data source change or adapter updates
-            receivers.append(dataSource --> { [weak self] adapter in
+        if let searchViewModel = searchViewModel {
+            receivers.append(searchViewModel.contentType --> { [weak self] _ in
                 if let editingFavourites = self?.editingFavourites {
                     editingFavourites <-- false
                 }
-                self?.tableView.reloadData()
-                if let tableView = self?.tableView {
-                    adapter.reloadTableViewOnChange(tableView)
+            })
+            
+            receivers.append(searchViewModel.savedSearchSelection --> { searchTerm in
+                if let searchTerm = searchTerm {
+                    dispatch_async(dispatch_get_main_queue()) {
+                        searchBar.text = searchTerm
+                        searchViewModel.searchTerm <-- searchTerm
+                    }
                 }
             })
+            
+            receivers.append(combine(saveSearchButtonSignal, searchViewModel.canSaveSearch, combine: { ($0, $1) }) --> { button, canSave in
+                button?.enabled = canSave
+            })
+            
+            receivers.append(searchViewModel.content --> { [weak self] _ in
+                if let tableView = self?.tableView where !tableView.editing {
+                    tableView.reloadData()
+                }
+            })
+
+            dataSource = searchViewModel.content.tableViewDataSource(SearchResultCell.cellIdentifier)
         }
-        
+
         receivers.append(editingFavourites --> { [weak self] editing in
             self?.navigationItem.rightBarButtonItem?.enabled = !editing
             self?.tableView.setEditing(editing, animated: true)
@@ -67,9 +90,12 @@ class SearchViewController: UITableViewController {
     @IBAction func editFavourites(sender: UIButton) {
         editingFavourites <-- !(editingFavourites.latestValue.get!)
     }
+    
+    @IBAction func saveSearch(sender: UIButton) {
+        searchViewModel?.saveSearch()
+    }
 
     @IBAction func cancelSearch() {
-        searchBar?.text = ""
         if let searchActive = searchViewModel?.searchActive {
             searchActive <-- false
         }
@@ -80,15 +106,38 @@ extension SearchViewController {
     // -- MARK: UITableViewDataSource
     
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        return searchViewModel?.dataSource.latestValue.get?.numberOfSectionsInTableView(tableView) ?? 0
+        return dataSource?.numberOfSectionsInTableView?(tableView) ?? 0
     }
     
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return searchViewModel?.dataSource.latestValue.get?.tableView(tableView, numberOfRowsInSection: section) ?? 0
+        return dataSource!.tableView(tableView, numberOfRowsInSection: section)
     }
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        return searchViewModel!.dataSource.latestValue.get!.tableView(tableView, cellForRowAtIndexPath: indexPath)
+        return dataSource!.tableView(tableView, cellForRowAtIndexPath: indexPath)
+    }
+
+    override func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
+        return true
+    }
+    
+    override func tableView(tableView: UITableView, canMoveRowAtIndexPath indexPath: NSIndexPath) -> Bool {
+        return true
+    }
+
+    override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
+        guard editingStyle == .Delete else {
+            return
+        }
+        searchViewModel?.deleteFavouriteAtIndex(indexPath.row)
+        tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Automatic)
+    }
+    
+    override func tableView(tableView: UITableView, moveRowAtIndexPath sourceIndexPath: NSIndexPath, toIndexPath destinationIndexPath: NSIndexPath) {
+        guard let model = searchViewModel else {
+            return
+        }
+        model.moveFavouriteAtIndex(sourceIndexPath.row, toIndex: destinationIndexPath.row)
     }
 }
 
@@ -110,31 +159,8 @@ extension SearchViewController {
         return 34
     }
     
-    override func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
-        return true
-    }
-    
-    override func tableView(tableView: UITableView, canMoveRowAtIndexPath indexPath: NSIndexPath) -> Bool {
-        return true
-    }
-    
     override func tableView(tableView: UITableView, editingStyleForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCellEditingStyle {
         return .Delete
-    }
-    
-    override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
-        guard let model = searchViewModel where editingStyle == .Delete else {
-            return
-        }
-        model.deleteFavouriteAtIndex(indexPath.row)
-        tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Automatic)
-    }
-    
-    override func tableView(tableView: UITableView, moveRowAtIndexPath sourceIndexPath: NSIndexPath, toIndexPath destinationIndexPath: NSIndexPath) {
-        guard let model = searchViewModel else {
-            return
-        }
-        model.moveFavouriteAtIndex(sourceIndexPath.row, toIndex: destinationIndexPath.row)
     }
     
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {

@@ -138,4 +138,14 @@ extension SequenceType where Generator.Element == FavouriteItem {
             }
         }))
     }
+    
+    var savedSearches: Set<String> {
+        return Set(flatMap({
+            if case .SavedSearch(let term) = $0 {
+                return term
+            } else {
+                return nil
+            }
+        }))
+    }
 }

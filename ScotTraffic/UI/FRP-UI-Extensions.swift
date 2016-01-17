@@ -20,19 +20,10 @@ class TableViewDataSourceAdapter
 
     let cellIdentifier: String
     let source: Signal<Source.ValueType>
-    private var observation: ReceiverType!
     
     init(source: Source, cellIdentifier: String) {
         self.cellIdentifier = cellIdentifier
         self.source = source.latest()
-    }
-    
-    func reloadTableViewOnChange(tableView: UITableView) {
-        observation = source --> { [weak tableView] _ in
-            if let tableView = tableView where !tableView.editing {
-                tableView.reloadData()
-            }
-        }
     }
     
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {

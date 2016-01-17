@@ -56,7 +56,7 @@ class AppCoordinator: NSObject {
         mapViewController.viewModel = mapViewModel
         mapViewController.maximumDetailItemsForCollectionCallout = maximumItemsInDetailView
         
-        collectionViewModel = MapItemCollectionViewModel(scotTraffic: appModel, selection: searchViewModel.searchSelection)
+        collectionViewModel = MapItemCollectionViewModel(scotTraffic: appModel, selection: searchViewModel.contentSelection)
     }
     
     func start() {
@@ -75,7 +75,7 @@ class AppCoordinator: NSObject {
         receivers.append(searchViewModel.searchActive.onFallingEdge(showMap))
         
         // show map when search selection changes
-        receivers.append(searchViewModel.searchSelection --> searchSelectionChanged)
+        receivers.append(searchViewModel.contentSelection --> contentSelectionChanged)
         
         // sharing
         receivers.append(collectionViewModel.shareAction --> shareAction)
@@ -125,7 +125,7 @@ class AppCoordinator: NSObject {
         collectionController = nil
     }
     
-    private func searchSelectionChanged(selection: SearchViewModel.Selection?) {
+    private func contentSelectionChanged(selection: SearchViewModel.Selection?) {
         if selection != nil {
             showMap()
         }

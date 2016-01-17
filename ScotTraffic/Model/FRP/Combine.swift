@@ -32,6 +32,7 @@ class Combiner<Value>: Signal<Value> {
             fallthrough
             
         case .Cancel:
+            assert(transactionCount > 0)
             transactionCount -= 1
             if transactionCount == 0 {
                 if needsUpdate, let value = latestValue.get {

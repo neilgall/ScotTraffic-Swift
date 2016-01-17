@@ -10,11 +10,17 @@ import UIKit
 import MapKit
 
 class SearchViewModel {
-    private enum DisplayContent {
+    enum ContentType {
         case Favourites
         case SearchResults
     }
-    
+
+    enum ContentItem {
+        case TrafficCameraItem(TrafficCameraLocation, TrafficCameraIndex)
+        case OtherMapItem(MapItem)
+        case SearchItem(String)
+    }
+
     // A selected search result is a MapItem and an index into its sub-items
     typealias Selection = (mapItem: MapItem, index: Int)
     
@@ -24,9 +30,12 @@ class SearchViewModel {
     let searchSelectionIndex: Input<Int?>
     
     // Outputs
-    var dataSource: Signal<TableViewDataSourceAdapter<Signal<[SearchResultItem]>>>
-    var sectionHeader: Signal<String>
-    var searchSelection: Signal<Selection?>
+    let contentType: Signal<ContentType>
+    let content: Signal<[ContentItem]>
+    let sectionHeader: Signal<String>
+    let canSaveSearch: Signal<Bool>
+    let contentSelection: Signal<Selection?>
+    let savedSearchSelection: Signal<String?>
     
     private var favourites: Favourites
     private var receivers = [ReceiverType]()
@@ -76,26 +85,24 @@ class SearchViewModel {
         let searchResults = combinedResults.map { $0.sortGeographically() }.latest()
         let searchResultsMajorAxis = combinedResults.map { $0.majorAxis }
 
-        let displayContent: Signal<DisplayContent> = searchTerm.map { text in
+        contentType = searchTerm.map { text in
             text.isEmpty ? .Favourites : .SearchResults
         }
         
-        dataSource = displayContent.onChange().map { contentType in
+        content = combine(contentType, searchResults, scotTraffic.favourites.items, scotTraffic.trafficCameraLocations, combine: {
+            contentType, searchResults, favourites, trafficCameraLocations in
+
             switch contentType {
             case .Favourites:
-                return combine(scotTraffic.favourites.items, scotTraffic.trafficCameraLocations,
-                    combine: searchResultsForFavourites)
-                    .tableViewDataSource(SearchResultCell.cellIdentifier)
-
+                return searchResultsForFavourites(favourites, locations: trafficCameraLocations)
+                
             case .SearchResults:
-                return searchResults
-                    .map(toSearchResultItems)
-                    .tableViewDataSource(SearchResultCell.cellIdentifier)
+                return searchResults.map({ .OtherMapItem($0) })
             }
-        }.latest()
-        
-        sectionHeader = combine(displayContent, searchResultsMajorAxis) {
-            if $0 == DisplayContent.Favourites {
+        }).latest()
+                
+        sectionHeader = combine(contentType, searchResultsMajorAxis) {
+            if case .Favourites = $0 {
                 return "FavouritesHeadingView"
             } else {
                 switch $1 {
@@ -105,13 +112,30 @@ class SearchViewModel {
             }
         }.latest()
         
-        searchSelection = combine(searchSelectionIndex, dataSource) { index, dataSource in
-            if let index = index, let searchResult = dataSource.source.latestValue.get?[index] {
-                return (mapItem: searchResult.mapItem, index: searchResult.index)
-            } else {
+        contentSelection = combine(searchSelectionIndex, content, combine: { index, content in
+            guard let index = index else {
                 return nil
             }
-        }
+            switch content[index] {
+            case .TrafficCameraItem(let location, let index):
+                return (mapItem: location, index: index)
+            case .OtherMapItem(let mapItem):
+                return (mapItem: mapItem, index: 0)
+            case .SearchItem:
+                return nil
+            }
+        })
+        
+        canSaveSearch = combine(favourites.items, searchTerm, combine: { favourites, searchTerm in
+            !favourites.savedSearches.contains(searchTerm)
+        })
+        
+        savedSearchSelection = combine(searchSelectionIndex, content, combine: { index, content in
+            guard let index = index, case .SearchItem(let term) = content[index] else {
+                return nil
+            }
+            return term
+        })
         
         // cancel selection before search term changes
         receivers.append(searchTerm.willOutput({
@@ -136,6 +160,12 @@ class SearchViewModel {
     func moveFavouriteAtIndex(sourceIndex: Int, toIndex destinationIndex: Int) {
         favourites.moveItemFromIndex(sourceIndex, toIndex: destinationIndex)
     }
+    
+    func saveSearch() {
+        if let searchTerm = searchTerm.latestValue.get {
+            favourites.addItem(.SavedSearch(term: searchTerm))
+        }
+    }
 }
 
 func applyFilterToMapItems<T: MapItem> (sourceList: [T], enabled: Bool, searchTerm: String) -> [MapItem] {
@@ -149,37 +179,36 @@ func applyFilterToMapItems<T: MapItem> (sourceList: [T], enabled: Bool, searchTe
     }
 }
 
-struct SearchResultItem: TableViewCellConfigurator {
-    let name: String
-    let mapItem: MapItem
-    let index: Int
-
+extension SearchViewModel.ContentItem: TableViewCellConfigurator {
     func configureCell(cell: UITableViewCell) {
-        if let resultCell = cell as? SearchResultCell {
-            resultCell.nameLabel?.text = name
+        guard let resultCell = cell as? SearchResultCell else {
+            return
+        }
+        switch self {
+        case .TrafficCameraItem(let location, let index):
+            resultCell.nameLabel?.text = location.nameAtIndex(index)
+            resultCell.roadLabel?.text = location.road
+            resultCell.iconImageView?.image = UIImage(named: location.iconName)
+        case .OtherMapItem(let mapItem):
+            resultCell.nameLabel?.text = mapItem.name
             resultCell.roadLabel?.text = mapItem.road
             resultCell.iconImageView?.image = UIImage(named: mapItem.iconName)
+        case .SearchItem(let term):
+            resultCell.nameLabel?.text = term
+            resultCell.roadLabel?.text = nil
+            resultCell.iconImageView?.image = UIImage(named: "708-search-gray")
         }
     }
 }
 
-private func searchResultsForFavourites(favourites: [FavouriteItem], locations: [TrafficCameraLocation]) -> [SearchResultItem] {
+private func searchResultsForFavourites(favourites: [FavouriteItem], locations: [TrafficCameraLocation]) -> [SearchViewModel.ContentItem] {
     return favourites.flatMap({ favourite in
         switch favourite {
         case .TrafficCamera(let identifier):
-            return locations.findIdentifier(identifier).map({ location, cameraIndex in
-                SearchResultItem(name: location.nameAtIndex(cameraIndex), mapItem: location, index: cameraIndex)
-            })
+            return locations.findIdentifier(identifier).map({ .TrafficCameraItem($0, $1) })
             
-        case .SavedSearch(_):
-            // TODO
-            return nil
+        case .SavedSearch(let term):
+            return .SearchItem(term)
         }
-    })
-}
-
-func toSearchResultItems(items: [MapItem]) -> [SearchResultItem] {
-    return items.map({ item in
-        SearchResultItem(name: item.name, mapItem: item, index: 0)
     })
 }
