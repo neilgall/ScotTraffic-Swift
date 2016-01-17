@@ -167,8 +167,8 @@ private func searchResultsForFavourites(favourites: [FavouriteItem], locations: 
     return favourites.flatMap({ favourite in
         switch favourite {
         case .TrafficCamera(let identifier):
-            return trafficCameraFromLocations(locations, withIdentifier: identifier).map({ location, cameraIndex in
-                return SearchResultItem(name: location.name, mapItem: location, index: cameraIndex)
+            return locations.findIdentifier(identifier).map({ location, cameraIndex in
+                SearchResultItem(name: location.nameAtIndex(cameraIndex), mapItem: location, index: cameraIndex)
             })
             
         case .SavedSearch(_):

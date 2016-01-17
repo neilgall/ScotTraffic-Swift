@@ -71,7 +71,7 @@ class MapViewModel {
         
         let trafficCameras = combine(
             scotTraffic.trafficCameraLocations,
-            trafficCamerasFromLocations(scotTraffic.trafficCameraLocations, forFavourites: scotTraffic.favourites),
+            scotTraffic.favourites.items,
             scotTraffic.settings.showTrafficCamerasOnMap,
             expandedVisibleMapRect,
             combine: trafficCamerasFromRectAndFavourites)
@@ -132,11 +132,18 @@ class MapViewModel {
     }
 }
 
-func trafficCamerasFromRectAndFavourites(mapItems: [TrafficCameraLocation], favourites: [FavouriteTrafficCamera], isEnabled: Bool, mapRect: MKMapRect) -> [MapItem] {
+func trafficCamerasFromRectAndFavourites(mapItems: [TrafficCameraLocation], favourites: [FavouriteItem], isEnabled: Bool, mapRect: MKMapRect) -> [MapItem] {
+    
     if isEnabled {
         return mapItemsFromRect(mapItems, isEnabled: true, mapRect: mapRect)
     } else {
-        return mapItemsFromRect(favourites.map { $0.location }, isEnabled: true, mapRect: mapRect)
+        let favouritesSet = favourites.trafficCameraIdentifiers
+        
+        let isMemberOfFavourites = { (location: TrafficCameraLocation) -> Bool in
+            !location.cameraIdentifiers.intersect(favouritesSet).isEmpty
+        }
+        
+        return mapItemsFromRect(mapItems.filter(isMemberOfFavourites), isEnabled: true, mapRect: mapRect)
     }
 }
 

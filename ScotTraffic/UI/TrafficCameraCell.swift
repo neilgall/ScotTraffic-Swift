@@ -19,14 +19,14 @@ class TrafficCameraCell: UICollectionViewCell, MapItemCollectionViewCell {
     
     weak var delegate: MapItemCollectionViewCellDelegate?
     private var locationName: String?
-    private var favouriteItem: FavouriteTrafficCamera?
+    private var favouriteItem: FavouriteItem?
     private var image: Signal<DataSourceImage>?
     private var receivers = [ReceiverType]()
     
     func configure(item: MapItemCollectionViewItem) {
         if case .TrafficCameraItem(let location, let camera) = item {
-            locationName = trafficCameraName(camera, atLocation: location)
-            favouriteItem = FavouriteTrafficCamera(location: location, camera: camera)
+            locationName = location.nameAtCamera(camera)
+            favouriteItem = .TrafficCamera(identifier: camera.identifier)
 
             errorLabel?.hidden = true
             titleLabel?.text = locationName

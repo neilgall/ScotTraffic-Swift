@@ -34,8 +34,12 @@ final class TrafficCameraLocation: MapItem {
         return cameras.count
     }
     
+    var cameraIdentifiers: Set<String> {
+        return Set(cameras.map({ $0.identifier }))
+    }
+    
     func indexOfCameraWithIdentifier(identifier: String) -> Int? {
-        return cameras.indexOf { $0.identifier == identifier }
+        return cameras.indexOf({ $0.identifier == identifier })
     }
 }
 
@@ -57,26 +61,37 @@ func == (a: TrafficCamera, b: TrafficCamera) -> Bool {
     return a.identifier == b.identifier
 }
 
-func trafficCameraName(camera: TrafficCamera, atLocation location: TrafficCameraLocation) -> String {
-    if let direction = camera.direction {
-        return "\(location.name) \(direction.rawValue)"
+extension TrafficCameraLocation {
+    func nameAtCamera(camera: TrafficCamera) -> String {
+        // TODO remove this
+        guard let index = cameras.indexOf({ $0 == camera }) else {
+            return "BUG!"
+        }
+        return nameAtIndex(index)
+    }
     
-    } else if let index = location.cameras.indexOf({ $0 === camera }) where location.cameras.count > 1 {
-        return "\(location.name) Camera \(index+1)"
+    func nameAtIndex(index: Int) -> String {
+        if let direction = cameras[index].direction {
+            return "\(name) \(direction.rawValue)"
+        
+        } else if cameras.count > 1 {
+            return "\(name) Camera \(index+1)"
 
-    } else {
-        return location.name
+        } else {
+            return name
+        }
     }
 }
 
-func trafficCameraFromLocations(locations: [TrafficCameraLocation], withIdentifier identifier: String) -> (location: TrafficCameraLocation, cameraIndex: Int)? {
-    let results = locations.flatMap { (location: TrafficCameraLocation) -> (location: TrafficCameraLocation, cameraIndex: Int)? in
-        guard let cameraIndex = location.indexOfCameraWithIdentifier(identifier) else {
-            return nil
-        }
-        return (location: location, cameraIndex: cameraIndex)
+extension SequenceType where Generator.Element: TrafficCameraLocation {
+    func findIdentifier(identifier: String) -> (location: TrafficCameraLocation, cameraIndex: Int)? {
+        return flatMap({ (location: TrafficCameraLocation) -> (location: TrafficCameraLocation, cameraIndex: Int)? in
+            guard let cameraIndex = location.indexOfCameraWithIdentifier(identifier) else {
+                return nil
+            }
+            return (location: location, cameraIndex: cameraIndex)
+        }).first
     }
-    return results.first
 }
 
 extension TrafficCameraDirection: JSONValueDecodable {

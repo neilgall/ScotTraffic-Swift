@@ -82,17 +82,16 @@ extension MapItemCollectionViewModel: MapItemCollectionViewCellDelegate {
         shareAction <-- ShareAction(item: item, sourceView: cell, sourceRect: rect)
     }
     
-    func collectionViewCellDidToggleFavourite(item: FavouriteTrafficCamera) {
-        let favouriteItem: FavouriteItem = .TrafficCamera(identifier: item.identifier)
-        if favourites.containsItem(favouriteItem) {
-            favourites.deleteItem(favouriteItem)
+    func collectionViewCellDidToggleFavourite(item: FavouriteItem) {
+        if favourites.containsItem(item) {
+            favourites.deleteItem(item)
         } else {
-            favourites.addItem(favouriteItem)
+            favourites.addItem(item)
         }
     }
     
-    func collectionViewItemIsFavourite(item: FavouriteTrafficCamera) -> Bool {
-        return favourites.containsItem(.TrafficCamera(identifier: item.identifier))
+    func collectionViewItemIsFavourite(item: FavouriteItem) -> Bool {
+        return favourites.containsItem(item)
     }
 }
 

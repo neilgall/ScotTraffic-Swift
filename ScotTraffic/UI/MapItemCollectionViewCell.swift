@@ -83,8 +83,8 @@ enum MapItemCollectionViewItem {
 
 protocol MapItemCollectionViewCellDelegate: class {
     func collectionViewCell(cell: UICollectionViewCell, didRequestShareItem item: SharableItem, fromRect rect: CGRect)
-    func collectionViewCellDidToggleFavourite(item: FavouriteTrafficCamera)
-    func collectionViewItemIsFavourite(item: FavouriteTrafficCamera) -> Bool
+    func collectionViewCellDidToggleFavourite(item: FavouriteItem)
+    func collectionViewItemIsFavourite(item: FavouriteItem) -> Bool
 }
 
 protocol MapItemCollectionViewCell {

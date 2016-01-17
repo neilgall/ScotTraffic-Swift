@@ -107,7 +107,7 @@ struct FavouriteTrafficCamera {
     }
     
     var name: String {
-        return trafficCameraName(location.cameras[cameraIndex], atLocation: location)
+        return location.nameAtIndex(cameraIndex)
     }
 }
 
@@ -118,7 +118,7 @@ func trafficCamerasFromLocations(locations: Signal<[TrafficCameraLocation]>, for
             case .SavedSearch:
                 return nil
             case .TrafficCamera(let identifier):
-                return trafficCameraFromLocations(locations, withIdentifier: identifier).map({ location, cameraIndex in
+                return locations.findIdentifier(identifier).map({ location, cameraIndex in
                     return FavouriteTrafficCamera(location: location, cameraIndex: cameraIndex)
                 })
             }
@@ -147,17 +147,6 @@ private func favouriteItemFromObject(object: AnyObject) -> FavouriteItem? {
     }
 }
 
-private func itemIsTrafficCameraIdentifier(identifier: FavouriteIdentifier) -> FavouriteItem -> Bool {
-    return { favourite in
-        switch favourite {
-        case .SavedSearch:
-            return false
-        case .TrafficCamera(let tcIdentifier):
-            return tcIdentifier == identifier
-        }
-    }
-}
-
 private func dictionaryFromFavouriteItem(favourite: FavouriteItem) -> [String:String] {
     switch favourite {
     case .SavedSearch(let term):
@@ -177,5 +166,17 @@ func == (lhs: FavouriteItem, rhs: FavouriteItem) -> Bool {
         return lhsId == rhsId
     default:
         return false
+    }
+}
+
+extension SequenceType where Generator.Element == FavouriteItem {
+    var trafficCameraIdentifiers: Set<String> {
+        return Set(flatMap({
+            if case .TrafficCamera(let identifier) = $0 {
+                return identifier
+            } else {
+                return nil
+            }
+        }))
     }
 }

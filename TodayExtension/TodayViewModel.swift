@@ -79,7 +79,7 @@ class TodayViewModel {
         // -- outputs
         
         self.title = selectedFavourite.map({ favourite in
-            return trafficCameraName(favourite.location.cameras[favourite.cameraIndex], atLocation: favourite.location)
+            return favourite.location.nameAtIndex(favourite.cameraIndex)
         }).latest()
         
         self.weatherViewModel = WeatherViewModel(
