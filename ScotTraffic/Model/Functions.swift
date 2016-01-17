@@ -33,3 +33,9 @@ func first<A, B>(tuple: (A, B)) -> A {
 func second<A, B>(tuple: (A, B)) -> B {
     return tuple.1
 }
+
+// Boolean transforms
+//
+func not<A>(f: A -> Bool) -> A -> Bool {
+    return { a in !f(a) }
+}

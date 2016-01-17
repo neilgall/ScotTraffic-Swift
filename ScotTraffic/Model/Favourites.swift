@@ -8,9 +8,19 @@
 
 import MapKit
 
-let favouritesKey = "favouriteItems"
+private let favouritesKey = "favouriteItems"
+private let typeKey = "type"
+private let typeSavedSearch = "savedSearch"
+private let typeTrafficCamera = "trafficCamera"
+private let termKey = "term"
+private let identifierKey = "identifier"
 
-private typealias FavouriteIdentifier = String
+typealias FavouriteIdentifier = String
+
+enum FavouriteItem {
+    case SavedSearch(term: String)
+    case TrafficCamera(identifier: FavouriteIdentifier)
+}
 
 struct FavouriteTrafficCamera {
     let location: TrafficCameraLocation
@@ -40,7 +50,7 @@ struct FavouriteTrafficCamera {
 
 class Favourites {
     private let userDefaults: UserDefaultsProtocol
-    private let items: Input<[FavouriteIdentifier]>
+    let items: Input<[FavouriteItem]>
     let trafficCameras: Signal<[FavouriteTrafficCamera]>
     
     private var receivers = [ReceiverType]()
@@ -53,22 +63,33 @@ class Favourites {
         reloadFromUserDefaults()
         
         receivers.append(items --> {
-            userDefaults.setObject($0, forKey: favouritesKey)
+            userDefaults.setObject($0.map(dictionaryFromFavouriteItem), forKey: favouritesKey)
         })
     }
     
-    func toggleItem(item: FavouriteTrafficCamera) {
-        let identifier = item.identifier
-        
-        var items = self.items.value
-        if let index = items.indexOf({ $0 == identifier }) {
-            items.removeAtIndex(index)
-            analyticsEvent(.DeleteFavourite, ["identifier": identifier])
-        } else {
-            items.append(identifier)
-            analyticsEvent(.AddFavourite, ["identifier": identifier])
+    func addTrafficCamera(item: FavouriteTrafficCamera) {
+        items.modify {
+            return $0 + [.TrafficCamera(identifier: item.identifier)]
         }
-        self.items <-- items
+        analyticsEvent(.AddFavourite, ["identifier": item.identifier])
+    }
+    
+    func deleteTrafficCamera(item: FavouriteTrafficCamera) {
+        items.modify {
+            return $0.filter(not(itemIsTrafficCameraIdentifier(item.identifier)))
+        }
+        analyticsEvent(.DeleteFavourite, ["identifier": item.identifier])
+    }
+
+    func containsTrafficCamera(item: FavouriteTrafficCamera) -> Bool {
+        return self.items.value.contains(itemIsTrafficCameraIdentifier(item.identifier))
+    }
+    
+    func deleteItemAtIndex(index: Int) {
+        items.modify { items in
+            let item = items[index]
+            return items.filter({ $0 != item })
+        }
     }
     
     func moveItemFromIndex(fromIndex: Int, toIndex: Int) {
@@ -84,27 +105,82 @@ class Favourites {
         self.items <-- items
     }
     
-    func containsItem(item: FavouriteTrafficCamera) -> Bool {
-        return self.items.value.contains(item.identifier)
-    }
-    
     func reloadFromUserDefaults() {
         let object = userDefaults.objectForKey(favouritesKey)
-        guard let items = object as? [FavouriteIdentifier] else {
+        guard let items = object as? [AnyObject] else {
             return
         }
-        self.items <-- items
+        self.items <-- items.flatMap(favouriteItemFromObject)
     }
 }
 
-private func favouriteTrafficCamerasFromLocations(locations: [TrafficCameraLocation], favourites: [FavouriteIdentifier]) -> [FavouriteTrafficCamera] {
-    return favourites.flatMap { identifier in
-        let locations = locations.flatMap { (location: TrafficCameraLocation) -> FavouriteTrafficCamera? in
-            guard let cameraIndex = location.indexOfCameraWithIdentifier(identifier) else {
-                return nil
-            }
-            return FavouriteTrafficCamera(location: location, cameraIndex: cameraIndex)
+private func favouriteItemFromObject(object: AnyObject) -> FavouriteItem? {
+    if let identifier = object as? String {
+        // pre-1.2 favourite which is always a traffic camera
+        return .TrafficCamera(identifier: identifier)
+    }
+    
+    guard let dictionary = object as? [String: String] else {
+        return nil
+    }
+    
+    if let term = dictionary[termKey] where dictionary[typeKey] == typeSavedSearch {
+        return .SavedSearch(term: term)
+        
+    } else if let identifier = dictionary[identifierKey] where dictionary[typeKey] == typeTrafficCamera {
+        return .TrafficCamera(identifier: identifier)
+        
+    } else {
+        return nil
+    }
+}
+
+private func itemIsTrafficCameraIdentifier(identifier: FavouriteIdentifier) -> FavouriteItem -> Bool {
+    return { favourite in
+        switch favourite {
+        case .SavedSearch:
+            return false
+        case .TrafficCamera(let tcIdentifier):
+            return tcIdentifier == identifier
         }
-        return locations.first
+    }
+}
+
+private func dictionaryFromFavouriteItem(favourite: FavouriteItem) -> [String:String] {
+    switch favourite {
+    case .SavedSearch(let term):
+        return [ typeKey: typeSavedSearch, termKey: term ]
+    case .TrafficCamera(let identifier):
+        return [ typeKey: typeTrafficCamera, identifierKey: identifier ]
+    }
+}
+
+private func favouriteTrafficCamerasFromLocations(locations: [TrafficCameraLocation], favourites: [FavouriteItem]) -> [FavouriteTrafficCamera] {
+    return favourites.flatMap { favourite in
+        switch favourite {
+        case .SavedSearch:
+            return nil
+        case .TrafficCamera(let identifier):
+            let locations = locations.flatMap { (location: TrafficCameraLocation) -> FavouriteTrafficCamera? in
+                guard let cameraIndex = location.indexOfCameraWithIdentifier(identifier) else {
+                    return nil
+                }
+                return FavouriteTrafficCamera(location: location, cameraIndex: cameraIndex)
+            }
+            return locations.first
+        }
+    }
+}
+
+extension FavouriteItem: Equatable {}
+
+func == (lhs: FavouriteItem, rhs: FavouriteItem) -> Bool {
+    switch (lhs, rhs) {
+    case (.SavedSearch(let lhsTerm), .SavedSearch(let rhsTerm)):
+        return lhsTerm == rhsTerm
+    case (.TrafficCamera(let lhsId), .TrafficCamera(let rhsId)):
+        return lhsId == rhsId
+    default:
+        return false
     }
 }

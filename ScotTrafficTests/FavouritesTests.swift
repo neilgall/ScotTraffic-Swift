@@ -31,6 +31,14 @@ class FavouritesTests: XCTestCase {
         super.tearDown()
     }
     
+    func testLoadFromUserDefaults_Pre1_2() {
+        userDefaults.setObject(["4_1181_cam1.jpg", "4_1193_cam1.jpg"], forKey: "favouriteItems")
+        favourites.reloadFromUserDefaults()
+        
+        let identifiers = favourites.trafficCameras.mapSeq({ $0.identifier }).latest()
+        XCTAssertEqual(identifiers.latestValue.get!, ["4_1181_cam1.jpg", "4_1193_cam1.jpg"])
+    }
+    
     func testMoveDown() {
         let (a,b,c,d,e) = ("4_1181_cam1.jpg", "4_1193_cam1.jpg", "4_1193_cam2.jpg", "4_6020_cam1.jpg", "4_6020_cam2.jpg")
         userDefaults.setObject([a,b,c,d,e], forKey: "favouriteItems")

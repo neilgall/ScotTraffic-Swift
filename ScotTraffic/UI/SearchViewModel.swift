@@ -127,13 +127,11 @@ class SearchViewModel {
     }
     
     func setSearchActive(active: Bool) {
-        self.searchActive <-- active
+        searchActive <-- active
     }
     
     func deleteFavouriteAtIndex(index: Int) {
-        favourites.trafficCameras.map({ $0[index] }) --> { favouriteToDelete in
-            self.favourites.toggleItem(favouriteToDelete)
-        }
+        favourites.deleteItemAtIndex(index)
     }
     
     func moveFavouriteAtIndex(sourceIndex: Int, toIndex destinationIndex: Int) {

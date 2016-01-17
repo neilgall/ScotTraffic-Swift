@@ -149,6 +149,10 @@ public class Input<Value>: Signal<Value>, InputType {
     public init(initial: Value) {
         value = initial
     }
+    
+    public func modify(transform: Value -> Value) {
+        value = transform(value)
+    }
 }
 
 // A ComputedSignal cannot propagate changes, but stores a closure which is returned
