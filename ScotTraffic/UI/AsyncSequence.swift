@@ -8,21 +8,21 @@
 
 import Foundation
 
-public class AsyncSequence {
+class AsyncSequence {
     
-    public typealias AsyncCompletionBlock = Void -> Void
-    public typealias AsyncBlock = AsyncCompletionBlock -> Void
+    typealias AsyncCompletionBlock = Void -> Void
+    typealias AsyncBlock = AsyncCompletionBlock -> Void
 
-    public let busy: Signal<Bool>
+    let busy: Signal<Bool>
 
     private var sequence: [AsyncBlock] = []
     private let _busy: Input<Bool> = Input(initial: false)
 
-    public init() {
+    init() {
         busy = _busy
     }
     
-    public func dispatch(block: AsyncBlock) {
+    func dispatch(block: AsyncBlock) {
         sequence.append(block)
         if sequence.count == 1 {
             dispatch_async(dispatch_get_main_queue()) {

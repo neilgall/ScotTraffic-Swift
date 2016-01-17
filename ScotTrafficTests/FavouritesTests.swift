@@ -7,7 +7,7 @@
 //
 
 import XCTest
-import ScotTraffic
+@testable import ScotTraffic
 
 class FavouritesTests: XCTestCase {
 

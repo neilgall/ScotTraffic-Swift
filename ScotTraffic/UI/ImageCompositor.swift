@@ -10,7 +10,7 @@ import UIKit
 
 private var cache = [String : UIImage]()
 
-public func compositeImagesNamed(imageComponents: [String]) -> UIImage? {
+func compositeImagesNamed(imageComponents: [String]) -> UIImage? {
     if imageComponents.isEmpty {
         return nil
     } else if imageComponents.count == 1 {

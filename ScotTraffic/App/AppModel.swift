@@ -8,31 +8,34 @@
 
 import Foundation
 
-public class AppModel: ScotTraffic {
+class AppModel: ScotTraffic {
     
     // ScotTraffic interface
-    public let trafficCameraLocations: Signal<[TrafficCameraLocation]>
-    public let safetyCameras: Signal<[SafetyCamera]>
-    public let alerts: Signal<[Incident]>
-    public let roadworks: Signal<[Incident]>
-    public let bridges: Signal<[BridgeStatus]>
-    public let weather: Signal<WeatherFinder>
-    public let messageOfTheDay: Signal<MessageOfTheDay?>
-    public let settings: Settings
-    public let favourites: Favourites
-    public let remoteNotifications: RemoteNotifications
+    let trafficCameraLocations: Signal<[TrafficCameraLocation]>
+    let safetyCameras: Signal<[SafetyCamera]>
+    let alerts: Signal<[Incident]>
+    let roadworks: Signal<[Incident]>
+    let bridges: Signal<[BridgeStatus]>
+    let weather: Signal<WeatherFinder>
+    let messageOfTheDay: Signal<MessageOfTheDay?>
+    let settings: Settings
+    let favourites: Favourites
+    let remoteNotifications: RemoteNotifications
     
-    public let httpAccess: HTTPAccess
+    let httpAccess: HTTPAccess
 
     private let diskCache: DiskCache
     private let fetchStarters: [PeriodicStarter]
     private var receivers = [ReceiverType]()
     
-    public init() {
+    init() {
         let diskCache = DiskCache(withPath: "scottraffic")
         let httpAccess = HTTPAccess(baseURL: scotTrafficBaseURL, indicator: AppNetworkActivityIndicator())
         
         let cachedDataSource = CachedHTTPDataSource.dataSourceWithHTTPAccess(httpAccess, cache: diskCache)
+        let fiveMinuteCache = cachedDataSource(300)
+        let fifteenMinuteCache = cachedDataSource(900)
+        let dailyCache = cachedDataSource(86400)
         
         guard let userDefaults = NSUserDefaults(suiteName: scotTrafficAppGroup) else {
             fatalError("unable to create NSUserDefaults with suite name \(scotTrafficAppGroup)")
@@ -44,8 +47,8 @@ public class AppModel: ScotTraffic {
         
         // -- Traffic Cameras --
         
-        let trafficCamerasSource = cachedDataSource(maximumCacheAge: 900)(path: "trafficcameras.json")
-        let trafficCamerasContext = TrafficCameraDecodeContext(makeImageDataSource: cachedDataSource(maximumCacheAge: 300))
+        let trafficCamerasSource = fifteenMinuteCache("trafficcameras.json")
+        let trafficCamerasContext = TrafficCameraDecodeContext(makeImageDataSource: fiveMinuteCache)
         let trafficCameraLocations = trafficCamerasSource.value.map {
             return $0.map(Array<TrafficCameraLocation>.decodeJSON(trafficCamerasContext) <== JSONArrayFromData)
         }
@@ -56,8 +59,8 @@ public class AppModel: ScotTraffic {
         
         // -- Safety Cameras --
         
-        let safetyCamerasSource = cachedDataSource(maximumCacheAge: 900)(path: "safetycameras.json")
-        let safetyCamerasContext = SafetyCameraDecodeContext(makeImageDataSource: cachedDataSource(maximumCacheAge: 86400))
+        let safetyCamerasSource = fifteenMinuteCache("safetycameras.json")
+        let safetyCamerasContext = SafetyCameraDecodeContext(makeImageDataSource: dailyCache)
         let safetyCameras = safetyCamerasSource.value.map({
             $0.map(Array<SafetyCamera>.decodeJSON(safetyCamerasContext) <== JSONArrayFromData)
         })
@@ -66,7 +69,7 @@ public class AppModel: ScotTraffic {
         
         // -- Incidents / Roadworks --
         
-        let incidentsSource = cachedDataSource(maximumCacheAge: 300)(path: "incidents.json")
+        let incidentsSource = fiveMinuteCache("incidents.json")
         let incidents = incidentsSource.value.map({
             $0.map(Array<Incident>.decodeJSON(Void) <== JSONArrayFromData)
         })
@@ -76,7 +79,7 @@ public class AppModel: ScotTraffic {
         
         // -- Bridge Status --
         
-        let bridgeStatusSource = cachedDataSource(maximumCacheAge: 1)(path: "bridges.json")
+        let bridgeStatusSource = fiveMinuteCache("bridges.json")
         let bridges = bridgeStatusSource.value.map({
             $0.map(Array<BridgeStatus>.decodeJSON(Void) <== JSONArrayFromData)
         })
@@ -85,7 +88,7 @@ public class AppModel: ScotTraffic {
         
         // -- Weather --
         
-        let weatherSource = cachedDataSource(maximumCacheAge: 900)(path: "weather.json")
+        let weatherSource = fifteenMinuteCache("weather.json")
         let weather = weatherSource.value.map({
             $0.map(Array<Weather>.decodeJSON(Void) <== JSONArrayFromData)
         })

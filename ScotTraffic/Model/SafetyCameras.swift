@@ -9,7 +9,7 @@
 import CoreLocation
 import MapKit
 
-public enum SpeedLimit {
+enum SpeedLimit {
     case Unknown
     case MPH20
     case MPH30
@@ -20,18 +20,18 @@ public enum SpeedLimit {
     case National
 }
 
-public final class SafetyCamera: MapItem, ImageDataSource {
-    public let name: String
-    public let road: String
-    public let url: NSURL?
-    public let mapPoint: MKMapPoint
-    public let speedLimit: SpeedLimit
-    public let images: [String]
-    public let count: Int = 1
-    public let iconName = "safetycamera"
-    public let dataSource: DataSource
+final class SafetyCamera: MapItem, ImageDataSource {
+    let name: String
+    let road: String
+    let url: NSURL?
+    let mapPoint: MKMapPoint
+    let speedLimit: SpeedLimit
+    let images: [String]
+    let count: Int = 1
+    let iconName = "safetycamera"
+    let dataSource: DataSource
     
-    public init(name: String, road: String, url: NSURL?, speedLimit: SpeedLimit, mapPoint: MKMapPoint, images: [String], dataSourceFactory: String->DataSource) {
+    init(name: String, road: String, url: NSURL?, speedLimit: SpeedLimit, mapPoint: MKMapPoint, images: [String], dataSourceFactory: String->DataSource) {
         self.name = name
         self.road = road
         self.url = url
@@ -48,7 +48,7 @@ public final class SafetyCamera: MapItem, ImageDataSource {
 }
 
 extension SpeedLimit: JSONValueDecodable {
-    public static func decodeJSON(json: JSONValue, forKey key: JSONKey) throws -> SpeedLimit {
+    static func decodeJSON(json: JSONValue, forKey key: JSONKey) throws -> SpeedLimit {
         guard let str = json.value as? String else {
             throw JSONError.ExpectedValue(key: key, type: String.self)
         }
@@ -65,16 +65,16 @@ extension SpeedLimit: JSONValueDecodable {
     }
 }
 
-public struct SafetyCameraDecodeContext {
+struct SafetyCameraDecodeContext {
     let makeImageDataSource: String -> DataSource
     
-    public init(makeImageDataSource: String -> DataSource) {
+    init(makeImageDataSource: String -> DataSource) {
         self.makeImageDataSource = makeImageDataSource
     }
 }
 
 extension SafetyCamera: JSONObjectDecodable {
-    public static func decodeJSON(json: JSONObject, forKey key: JSONKey) throws -> SafetyCamera {
+    static func decodeJSON(json: JSONObject, forKey key: JSONKey) throws -> SafetyCamera {
         guard let context = json.context as? SafetyCameraDecodeContext else {
             fatalError("invalid JSON decode context")
         }

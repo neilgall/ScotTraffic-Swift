@@ -8,7 +8,7 @@
 
 import XCTest
 import MapKit
-import ScotTraffic
+@testable import ScotTraffic
 
 private let scotlandMapRect = MKMapRectMake(129244330.1, 79649811.3, 3762380.0, 6443076.1)
 

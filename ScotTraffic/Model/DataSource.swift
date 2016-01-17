@@ -8,23 +8,23 @@
 
 import Foundation
 
-public enum DataSourceValue<ValueType> {
+enum DataSourceValue<ValueType> {
     case Cached(ValueType, expired: Bool)
     case Fresh(ValueType)
     case Error(AppError)
     case Empty
 }
 
-public typealias DataSourceData = DataSourceValue<NSData>
+typealias DataSourceData = DataSourceValue<NSData>
 
-public protocol DataSource: Startable {
+protocol DataSource: Startable {
     var value: Signal<DataSourceData> { get }
 }
 
-public extension DataSourceValue {
+extension DataSourceValue {
     
     // Construct a DataSourceValue from an optional of the same ValueType
-    public static func fromOptional(optional: ValueType?) -> DataSourceValue {
+    static func fromOptional(optional: ValueType?) -> DataSourceValue {
         if let value = optional {
             return .Fresh(value)
         } else {
@@ -32,7 +32,7 @@ public extension DataSourceValue {
         }
     }
     
-    public func map<TargetValueType>(transform: ValueType throws -> TargetValueType) -> DataSourceValue<TargetValueType> {
+    func map<TargetValueType>(transform: ValueType throws -> TargetValueType) -> DataSourceValue<TargetValueType> {
         do {
             switch self {
             case .Cached(let data, let expired):
@@ -49,7 +49,7 @@ public extension DataSourceValue {
         }
     }
     
-    public var value: ValueType? {
+    var value: ValueType? {
         switch self {
         case .Cached(let value, _):
             return value
@@ -70,11 +70,11 @@ public extension DataSourceValue {
     }
 }
 
-public class EmptyDataSource: DataSource {
-    public var value: Signal<DataSourceData> {
+class EmptyDataSource: DataSource {
+    var value: Signal<DataSourceData> {
         return Const(.Empty)
     }
     
-    public func start() {
+    func start() {
     }
 }

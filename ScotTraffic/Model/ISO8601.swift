@@ -8,11 +8,11 @@
 
 import Foundation
 
-public extension NSDateFormatter {
+extension NSDateFormatter {
     private static let iso8601DateFormatter = NSDateFormatter()
     private static var initialised = dispatch_once_t()
 
-    public static var ISO8601: NSDateFormatter {
+    static var ISO8601: NSDateFormatter {
         dispatch_once(&initialised) {
             iso8601DateFormatter.locale = NSLocale(localeIdentifier: "en_US_POSIX")
             iso8601DateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZZZZZ"

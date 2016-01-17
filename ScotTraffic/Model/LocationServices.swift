@@ -8,16 +8,16 @@
 
 import CoreLocation
 
-public class LocationServices: NSObject, CLLocationManagerDelegate {
+class LocationServices: NSObject, CLLocationManagerDelegate {
     
     // Outputs
-    public let authorised = Signal<Bool>()
+    let authorised = Signal<Bool>()
 
     private let locationManager = CLLocationManager()
     private let authorisationStatus = Input(initial: CLAuthorizationStatus.NotDetermined)
     private var receivers = [ReceiverType]()
     
-    public init(enabled: Input<Bool>) {
+    init(enabled: Input<Bool>) {
         super.init()
 
         locationManager.delegate = self
@@ -44,7 +44,7 @@ public class LocationServices: NSObject, CLLocationManagerDelegate {
         })
     }
     
-    public func locationManager(manager: CLLocationManager, didChangeAuthorizationStatus status: CLAuthorizationStatus) {
+    func locationManager(manager: CLLocationManager, didChangeAuthorizationStatus status: CLAuthorizationStatus) {
         self.authorisationStatus <-- status
     }
 }

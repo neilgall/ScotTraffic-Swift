@@ -10,10 +10,10 @@ import UIKit
 
 private var nextKey: Int = 0
 
-public class ViewKeyedMap<Element> {
+class ViewKeyedMap<Element> {
     private var mapping = [Int:Element]()
     
-    public subscript(view: UIView) -> Element? {
+    subscript(view: UIView) -> Element? {
         get {
             return mapping[view.tag]
         }

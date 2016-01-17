@@ -8,7 +8,7 @@
 
 import Foundation
 
-public protocol UserDefaultsProtocol: class {
+protocol UserDefaultsProtocol: class {
     func synchronize() -> Bool
     
     func objectForKey(key: String) -> AnyObject?

@@ -11,16 +11,16 @@ import MapKit
 
 private let coordinateEqualityAccuracy = 1e-6
 
-public class MapAnnotation: NSObject, MKAnnotation {
+class MapAnnotation: NSObject, MKAnnotation {
 
-    public let mapItems: [MapItem]
-    public let coordinate: CLLocationCoordinate2D
-    public let title: String?
-    public let subtitle: String?
-    public let reuseIdentifier: String
-    public let image: UIImage?
+    let mapItems: [MapItem]
+    let coordinate: CLLocationCoordinate2D
+    let title: String?
+    let subtitle: String?
+    let reuseIdentifier: String
+    let image: UIImage?
     
-    public init(mapItems: [MapItem]) {
+    init(mapItems: [MapItem]) {
         self.mapItems = mapItems
         
         coordinate = MKCoordinateForMapPoint(mapItems.centrePoint)
@@ -68,12 +68,12 @@ public class MapAnnotation: NSObject, MKAnnotation {
         image = compositeImagesNamed(imageComponents)
     }
 
-    override public var hashValue: Int {
+    override var hashValue: Int {
         return (Int(coordinate.latitude / coordinateEqualityAccuracy) * 31)
             ^ Int(coordinate.longitude / coordinateEqualityAccuracy)
     }
     
-    override public func isEqual(object: AnyObject?) -> Bool {
+    override func isEqual(object: AnyObject?) -> Bool {
         guard let annotation = object as? MapAnnotation else {
             return false
         }
@@ -82,7 +82,7 @@ public class MapAnnotation: NSObject, MKAnnotation {
     }
 }
 
-public func == (a: MapAnnotation, b: MapAnnotation) -> Bool {
+func == (a: MapAnnotation, b: MapAnnotation) -> Bool {
     return a.isEqual(b)
 }
 

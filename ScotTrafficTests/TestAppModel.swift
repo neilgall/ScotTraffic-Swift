@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import ScotTraffic
+@testable import ScotTraffic
 
 class TestAppModel: ScotTraffic {
     

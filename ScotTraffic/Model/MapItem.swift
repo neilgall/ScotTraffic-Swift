@@ -8,7 +8,7 @@
 
 import MapKit
 
-public protocol MapItem {
+protocol MapItem {
     var name: String { get }
     var road: String { get }
     var mapPoint: MKMapPoint { get }
@@ -16,14 +16,14 @@ public protocol MapItem {
     var iconName: String { get }
 }
 
-public func == (a: MapItem, b: MapItem) -> Bool {
+func == (a: MapItem, b: MapItem) -> Bool {
     return (a.name == b.name
         && a.road == b.road
         && MKMapPointEqualToPoint(a.mapPoint, b.mapPoint))
 }
 
 extension MKMapPoint {
-    public func distanceSqToMapPoint(other: MKMapPoint) -> Double {
+    func distanceSqToMapPoint(other: MKMapPoint) -> Double {
         let xd = x - other.x
         let yd = y - other.y
         return xd * xd + yd * yd
@@ -31,7 +31,7 @@ extension MKMapPoint {
 }
 
 extension MKMapRect: Equatable {
-    public func addPoint(point: MKMapPoint) -> MKMapRect {
+    func addPoint(point: MKMapPoint) -> MKMapRect {
         if MKMapRectIsNull(self) {
             return MKMapRectMake(point.x, point.y, 0, 0)
         }
@@ -59,11 +59,11 @@ extension MKMapRect: Equatable {
         return rect
     }
     
-    public var centrePoint: MKMapPoint {
+    var centrePoint: MKMapPoint {
         return MKMapPointMake(MKMapRectGetMidX(self), MKMapRectGetMidY(self))
     }
     
-    public func contains(point: MKMapPoint) -> Bool {
+    func contains(point: MKMapPoint) -> Bool {
         return MKMapRectContainsPoint(self, point)
     }
 }
@@ -76,23 +76,23 @@ public func == (lhs: MKMapRect, rhs: MKMapRect) -> Bool {
         && fabs(lhs.size.height - rhs.size.height) < accuracy
 }
 
-public enum GeographicAxis {
+enum GeographicAxis {
     case NorthSouth
     case EastWest
 }
 
 extension SequenceType where Generator.Element == MapItem {
-    public var boundingRect: MKMapRect {
+    var boundingRect: MKMapRect {
         return reduce(MKMapRectNull) { rect, mapItem in
             rect.addPoint(mapItem.mapPoint)
         }
     }
     
-    public var centrePoint: MKMapPoint {
+    var centrePoint: MKMapPoint {
         return boundingRect.centrePoint
     }
     
-    public var majorAxis: GeographicAxis {
+    var majorAxis: GeographicAxis {
         let rect = boundingRect
         if rect.size.width > rect.size.height {
             return GeographicAxis.EastWest
@@ -101,7 +101,7 @@ extension SequenceType where Generator.Element == MapItem {
         }
     }
     
-    public func sortGeographically() -> [Generator.Element] {
+    func sortGeographically() -> [Generator.Element] {
         if majorAxis == GeographicAxis.EastWest {
             return sort { item1, item2 in item1.mapPoint.x < item2.mapPoint.x }
         } else {
@@ -109,7 +109,7 @@ extension SequenceType where Generator.Element == MapItem {
         }
     }
     
-    public var flatCount: Int {
+    var flatCount: Int {
         return reduce(0) { $0 + $1.count }
     }
 }

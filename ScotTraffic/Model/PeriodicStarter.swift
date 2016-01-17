@@ -8,16 +8,16 @@
 
 import Foundation
 
-public protocol Startable {
+protocol Startable {
     func start()
 }
 
-public class PeriodicStarter {
+class PeriodicStarter {
     let timer: dispatch_source_t
     let period: NSTimeInterval
     let startables: [Startable]
     
-    public init(startables: [Startable], period: NSTimeInterval) {
+    init(startables: [Startable], period: NSTimeInterval) {
         self.timer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, dispatch_get_main_queue())
         self.period = period
         self.startables = startables
@@ -33,7 +33,7 @@ public class PeriodicStarter {
         dispatch_source_cancel(self.timer)
     }
     
-    public func restart(fireImmediately fireImmediately: Bool) {
+    func restart(fireImmediately fireImmediately: Bool) {
         stop()
         if fireImmediately {
             fire()

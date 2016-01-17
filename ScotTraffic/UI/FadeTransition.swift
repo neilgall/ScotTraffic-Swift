@@ -8,11 +8,11 @@
 
 import UIKit
 
-public class FadeTranstion: NSObject, UIViewControllerAnimatedTransitioning {
+class FadeTranstion: NSObject, UIViewControllerAnimatedTransitioning {
     
     private static let duration = 0.3
 
-    public func animateTransition(transitionContext: UIViewControllerContextTransitioning) {
+    func animateTransition(transitionContext: UIViewControllerContextTransitioning) {
         guard let toViewController = transitionContext.viewControllerForKey(UITransitionContextToViewControllerKey),
             let toView = toViewController.view else {
                 transitionContext.transitionWasCancelled()
@@ -29,7 +29,7 @@ public class FadeTranstion: NSObject, UIViewControllerAnimatedTransitioning {
         })
     }
     
-    public func transitionDuration(transitionContext: UIViewControllerContextTransitioning?) -> NSTimeInterval {
+    func transitionDuration(transitionContext: UIViewControllerContextTransitioning?) -> NSTimeInterval {
         return FadeTranstion.duration
     }
 }

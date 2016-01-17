@@ -8,9 +8,9 @@
 
 import Foundation
 
-public typealias WeatherFinder = MapItem -> Weather?
+typealias WeatherFinder = MapItem -> Weather?
 
-public protocol ScotTraffic {
+protocol ScotTraffic {
     var trafficCameraLocations: Signal<[TrafficCameraLocation]> { get }
     var safetyCameras: Signal<[SafetyCamera]> { get }
     var alerts: Signal<[Incident]> { get }

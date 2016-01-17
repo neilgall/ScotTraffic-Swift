@@ -8,7 +8,7 @@
 
 import Foundation
 
-public class PersistentSetting<Value>: Input<Value>, Startable {
+class PersistentSetting<Value>: Input<Value>, Startable {
     let userDefaults: UserDefaultsProtocol
     let key: String
     let marshallTo: Value -> AnyObject?
@@ -24,7 +24,7 @@ public class PersistentSetting<Value>: Input<Value>, Startable {
         super.init(initial: defaultValue)
     }
     
-    public func start() {
+    func start() {
         if let value = userDefaults.objectForKey(key).flatMap(marshallFrom) {
             with(&updating) {
                 self <-- value
@@ -32,7 +32,7 @@ public class PersistentSetting<Value>: Input<Value>, Startable {
         }
     }
     
-    override public func pushValue(value: Value) {
+    override func pushValue(value: Value) {
         super.pushValue(value)
         if !updating, let object = marshallTo(value) {
             userDefaults.setObject(object, forKey: key)

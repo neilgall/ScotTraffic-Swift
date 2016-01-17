@@ -8,7 +8,7 @@
 
 import UIKit
 
-public class MapItemCollectionViewController: UIViewController {
+class MapItemCollectionViewController: UIViewController {
 
     @IBOutlet var collectionView: UICollectionView?
     @IBOutlet var collectionViewLayout: UICollectionViewFlowLayout?
@@ -26,7 +26,7 @@ public class MapItemCollectionViewController: UIViewController {
         }
     }
     
-    override public func viewDidLoad() {
+    override func viewDidLoad() {
         super.viewDidLoad()
         
         if let collectionView = collectionView {
@@ -36,19 +36,19 @@ public class MapItemCollectionViewController: UIViewController {
         reload()
     }
     
-    override public func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         dispatch_async(dispatch_get_main_queue()) {
             self.connectToModel()
         }
     }
     
-    override public func viewWillDisappear(animated: Bool) {
+    override func viewWillDisappear(animated: Bool) {
         super.viewWillDisappear(animated)
         disconnectFromModel()
     }
     
-    override public func viewDidLayoutSubviews() {
+    override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
         if let size = collectionView?.bounds.size {
@@ -56,7 +56,7 @@ public class MapItemCollectionViewController: UIViewController {
         }
     }
     
-    override public func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if segue.identifier == "embedWeather", let weatherViewController = segue.destinationViewController as? WeatherViewController {
             weatherViewController.weatherViewModel = viewModel?.weatherViewModel
         }
@@ -132,7 +132,7 @@ public class MapItemCollectionViewController: UIViewController {
 extension MapItemCollectionViewController: UICollectionViewDelegate {
     // -- MARK: UICollectionViewDelegate
     
-    public func collectionView(collectionView: UICollectionView, willDisplayCell cell: UICollectionViewCell, forItemAtIndexPath indexPath: NSIndexPath) {
+    func collectionView(collectionView: UICollectionView, willDisplayCell cell: UICollectionViewCell, forItemAtIndexPath indexPath: NSIndexPath) {
         if let item = viewModel?.cellItems.latestValue.get?[indexPath.item] {
             switch item {
             case .TrafficCameraItem(let location, let camera):
@@ -152,11 +152,11 @@ extension MapItemCollectionViewController: UICollectionViewDelegate {
 extension MapItemCollectionViewController: UIScrollViewDelegate {
     // -- MARK: UIScrollViewDelegate
     
-    public func scrollViewDidEndDragging(scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+    func scrollViewDidEndDragging(scrollView: UIScrollView, willDecelerate decelerate: Bool) {
         pageControl?.currentPage = mostVisiblePageIndex()
     }
     
-    public func scrollViewDidEndDecelerating(scrollView: UIScrollView) {
+    func scrollViewDidEndDecelerating(scrollView: UIScrollView) {
         pageControl?.currentPage = mostVisiblePageIndex()
     }    
 }

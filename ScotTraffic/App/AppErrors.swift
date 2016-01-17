@@ -8,14 +8,14 @@
 
 import Foundation
 
-public enum AppError: ErrorType {
+enum AppError: ErrorType {
     case Network(NetworkError)
     case Image(ImageError)
     case JSON(JSONError)
     case System(NSError)
     case Unknown(ErrorType)
     
-    public static func wrap(e: ErrorType) -> AppError {
+    static func wrap(e: ErrorType) -> AppError {
         if let ae = e as? AppError {
             return ae
         } else if let ne = e as? NetworkError {
@@ -31,7 +31,7 @@ public enum AppError: ErrorType {
         }
     }
     
-    public var name: String {
+    var name: String {
         switch self {
         case Network: return "Network"
         case Image: return "Image"
@@ -41,7 +41,7 @@ public enum AppError: ErrorType {
         }
     }
     
-    public var toNSError: NSError {
+    var toNSError: NSError {
         switch self {
         case Network(let network): return network.toNSError
         case Image(let image): return image.toNSError
@@ -53,7 +53,7 @@ public enum AppError: ErrorType {
 }
 
 extension ErrorType where Self: CustomStringConvertible {
-    public var toNSError: NSError {
+    var toNSError: NSError {
         return NSError(domain: String(self.dynamicType), code: 0, userInfo: ["description": self.description])
     }
 }

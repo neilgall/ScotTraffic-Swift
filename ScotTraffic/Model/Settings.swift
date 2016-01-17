@@ -10,21 +10,21 @@ import MapKit
 
 private let scotlandMapRect = MKMapRectMake(129244330.1, 79649811.3, 3762380.0, 6443076.1)
 
-public class Settings {
-    public let showTrafficOnMap: PersistentSetting<Bool>
-    public let showTrafficCamerasOnMap: PersistentSetting<Bool>
-    public let showSafetyCamerasOnMap: PersistentSetting<Bool>
-    public let showAlertsOnMap: PersistentSetting<Bool>
-    public let showRoadworksOnMap: PersistentSetting<Bool>
-    public let showBridgesOnMap: PersistentSetting<Bool>
-    public let showCurrentLocationOnMap: PersistentSetting<Bool>
-    public let temperatureUnit: PersistentSetting<TemperatureUnit>
-    public let visibleMapRect: PersistentSetting<MKMapRect>
-    public let bridgeNotifications: Signal<[(BridgeStatus, PersistentSetting<Bool>)]>
+class Settings {
+    let showTrafficOnMap: PersistentSetting<Bool>
+    let showTrafficCamerasOnMap: PersistentSetting<Bool>
+    let showSafetyCamerasOnMap: PersistentSetting<Bool>
+    let showAlertsOnMap: PersistentSetting<Bool>
+    let showRoadworksOnMap: PersistentSetting<Bool>
+    let showBridgesOnMap: PersistentSetting<Bool>
+    let showCurrentLocationOnMap: PersistentSetting<Bool>
+    let temperatureUnit: PersistentSetting<TemperatureUnit>
+    let visibleMapRect: PersistentSetting<MKMapRect>
+    let bridgeNotifications: Signal<[(BridgeStatus, PersistentSetting<Bool>)]>
     
     private var receivers: [ReceiverType] = []
 
-    public init(userDefaults: UserDefaultsProtocol, bridges: Signal<[BridgeStatus]>) {
+    init(userDefaults: UserDefaultsProtocol, bridges: Signal<[BridgeStatus]>) {
         showTrafficOnMap = userDefaults.boolSetting("showTrafficOnMap", false)
         showTrafficCamerasOnMap = userDefaults.boolSetting("showTrafficCamerasOnMap", true)
         showSafetyCamerasOnMap = userDefaults.boolSetting("showSafetyCamerasOnMap", true)
@@ -50,7 +50,7 @@ public class Settings {
         reload()
     }
     
-    public func reload() {
+    func reload() {
         showTrafficOnMap.start()
         showTrafficCamerasOnMap.start()
         showSafetyCamerasOnMap.start()

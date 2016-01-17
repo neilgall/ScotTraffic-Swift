@@ -8,8 +8,8 @@
 
 import UIKit
 
-public class RemoteNotifications {
-    public typealias OptionsDict = [NSObject: AnyObject]
+class RemoteNotifications {
+    typealias OptionsDict = [NSObject: AnyObject]
 
     private let bridgeIdentifier: Input<String?>
     
@@ -27,7 +27,7 @@ public class RemoteNotifications {
         showNotification = Input(initial: nil)
     }
     
-    public func parseLaunchOptions(options: OptionsDict?) {
+    func parseLaunchOptions(options: OptionsDict?) {
         guard let options = options else {
             return
         }
@@ -37,7 +37,7 @@ public class RemoteNotifications {
         }
     }
     
-    public func parseRemoteNotificationOptions(options: OptionsDict, inApplicationState state: UIApplicationState) {
+    func parseRemoteNotificationOptions(options: OptionsDict, inApplicationState state: UIApplicationState) {
         switch state {
         case .Inactive:
             if let identifier = options["bridgeIdentifier"] as? String {
@@ -55,7 +55,7 @@ public class RemoteNotifications {
         }
     }
     
-    public func clear() {
+    func clear() {
         bridgeIdentifier <-- nil
         showNotification <-- nil
     }

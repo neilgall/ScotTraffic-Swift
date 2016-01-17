@@ -9,30 +9,30 @@
 import UIKit
 import MapKit
 
-public class SearchViewModel {
+class SearchViewModel {
     private enum DisplayContent {
         case Favourites
         case SearchResults
     }
     
     // A selected search result is a MapItem and an index into its sub-items
-    public typealias Selection = (mapItem: MapItem, index: Int)
+    typealias Selection = (mapItem: MapItem, index: Int)
     
     // Inputs
-    public let searchActive: Input<Bool>
-    public let searchTerm: Input<String>
-    public let searchSelectionIndex: Input<Int?>
+    let searchActive: Input<Bool>
+    let searchTerm: Input<String>
+    let searchSelectionIndex: Input<Int?>
     
     // Outputs
-    public var dataSource: Signal<TableViewDataSourceAdapter<Signal<[SearchResultItem]>>>
-    public var sectionHeader: Signal<String>
-    public var searchSelection: Signal<Selection?>
+    var dataSource: Signal<TableViewDataSourceAdapter<Signal<[SearchResultItem]>>>
+    var sectionHeader: Signal<String>
+    var searchSelection: Signal<Selection?>
     
     private var favourites: Favourites
     private var receivers = [ReceiverType]()
 
     
-    public init(scotTraffic: ScotTraffic) {
+    init(scotTraffic: ScotTraffic) {
         searchActive = Input(initial: false)
         searchTerm = Input(initial: "")
         searchSelectionIndex = Input(initial: nil)
@@ -126,17 +126,17 @@ public class SearchViewModel {
         })
     }
     
-    public func setSearchActive(active: Bool) {
+    func setSearchActive(active: Bool) {
         self.searchActive <-- active
     }
     
-    public func deleteFavouriteAtIndex(index: Int) {
+    func deleteFavouriteAtIndex(index: Int) {
         favourites.trafficCameras.map({ $0[index] }) --> { favouriteToDelete in
             self.favourites.toggleItem(favouriteToDelete)
         }
     }
     
-    public func moveFavouriteAtIndex(sourceIndex: Int, toIndex destinationIndex: Int) {
+    func moveFavouriteAtIndex(sourceIndex: Int, toIndex destinationIndex: Int) {
         favourites.moveItemFromIndex(sourceIndex, toIndex: destinationIndex)
     }
 }
@@ -152,12 +152,12 @@ func applyFilterToMapItems<T: MapItem> (sourceList: [T], enabled: Bool, searchTe
     }
 }
 
-public struct SearchResultItem: TableViewCellConfigurator {
-    public let name: String
-    public let mapItem: MapItem
-    public let index: Int
+struct SearchResultItem: TableViewCellConfigurator {
+    let name: String
+    let mapItem: MapItem
+    let index: Int
 
-    public func configureCell(cell: UITableViewCell) {
+    func configureCell(cell: UITableViewCell) {
         if let resultCell = cell as? SearchResultCell {
             resultCell.nameLabel?.text = name
             resultCell.roadLabel?.text = mapItem.road

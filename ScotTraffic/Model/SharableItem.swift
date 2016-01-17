@@ -8,7 +8,7 @@
 
 import UIKit
 
-public protocol SharableItem {
+protocol SharableItem {
     var name: String { get }
     var text: String { get }
     var image: UIImage? { get }

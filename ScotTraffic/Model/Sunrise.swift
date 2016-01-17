@@ -8,7 +8,7 @@
 
 import Foundation
 
-func degreesToRadians(a: Double) -> Double {
+private func degreesToRadians(a: Double) -> Double {
     return a * M_PI / 180.0
 }
 

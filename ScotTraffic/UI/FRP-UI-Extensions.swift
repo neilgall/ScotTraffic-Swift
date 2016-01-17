@@ -8,18 +8,18 @@
 
 import UIKit
 
-public protocol TableViewCellConfigurator {
+protocol TableViewCellConfigurator {
     func configureCell(cell: UITableViewCell)
 }
 
-public class TableViewDataSourceAdapter
+class TableViewDataSourceAdapter
     <Source: SignalType where Source.ValueType: CollectionType,
         Source.ValueType.Generator.Element: TableViewCellConfigurator,
         Source.ValueType.Index: IntegerType>
     : NSObject, UITableViewDataSource {
 
-    public let cellIdentifier: String
-    public let source: Signal<Source.ValueType>
+    let cellIdentifier: String
+    let source: Signal<Source.ValueType>
     private var observation: ReceiverType!
     
     init(source: Source, cellIdentifier: String) {
@@ -27,7 +27,7 @@ public class TableViewDataSourceAdapter
         self.source = source.latest()
     }
     
-    public func reloadTableViewOnChange(tableView: UITableView) {
+    func reloadTableViewOnChange(tableView: UITableView) {
         observation = source --> { [weak tableView] _ in
             if let tableView = tableView where !tableView.editing {
                 tableView.reloadData()
@@ -35,15 +35,15 @@ public class TableViewDataSourceAdapter
         }
     }
     
-    public func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         return 1
     }
     
-    public func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return (source.latestValue.get?.count as? Int) ?? 0
     }
     
-    public func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier(cellIdentifier, forIndexPath: indexPath)
         source.latestValue.get?[indexPath.row as! Source.ValueType.Index].configureCell(cell) // swiftlint:disable:this force_cast
         return cell
@@ -56,7 +56,7 @@ extension SignalType where ValueType: CollectionType, ValueType.Generator.Elemen
     // create a table view data source drawing from this Signal, and refreshing the table when the
     // contents update
     
-    public func tableViewDataSource(cellIdentifier: String) -> TableViewDataSourceAdapter<Self> {
+    func tableViewDataSource(cellIdentifier: String) -> TableViewDataSourceAdapter<Self> {
         return TableViewDataSourceAdapter(source: self, cellIdentifier: cellIdentifier)
     }
 }

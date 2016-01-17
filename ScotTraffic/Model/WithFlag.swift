@@ -8,7 +8,7 @@
 
 import Foundation
 
-public func with(inout flag: Bool, _ closure: Void -> Void) {
+func with(inout flag: Bool, _ closure: Void -> Void) {
     let oldValue = flag
     flag = true
     closure()

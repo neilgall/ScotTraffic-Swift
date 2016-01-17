@@ -7,7 +7,7 @@
 //
 
 import XCTest
-import ScotTraffic
+@testable import ScotTraffic
 
 // Must be a class so it can be mutated inside the observer closure
 private class Capture<T> {

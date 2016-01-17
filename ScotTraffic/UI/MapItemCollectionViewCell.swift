@@ -8,7 +8,7 @@
 
 import UIKit
 
-public enum MapItemCollectionViewItemType: String {
+enum MapItemCollectionViewItemType: String {
     case TrafficCameraCell
     case SafetyCameraCell
     case IncidentCell
@@ -20,7 +20,7 @@ public enum MapItemCollectionViewItemType: String {
 
     static private let allValues = [TrafficCameraCell, SafetyCameraCell, IncidentCell, BridgeStatusCell]
     
-    public static func registerTypesWith(collectionView: UICollectionView) {
+    static func registerTypesWith(collectionView: UICollectionView) {
         for type in allValues {
             let cellClass: AnyClass? = NSClassFromString(type.rawValue)
             let cellNib = UINib(nibName: type.rawValue, bundle: nil)
@@ -31,7 +31,7 @@ public enum MapItemCollectionViewItemType: String {
     }
 }
 
-public enum MapItemCollectionViewItem {
+enum MapItemCollectionViewItem {
     case TrafficCameraItem(TrafficCameraLocation, TrafficCamera)
     case SafetyCameraItem(SafetyCamera)
     case IncidentItem(Incident)
@@ -81,20 +81,20 @@ public enum MapItemCollectionViewItem {
     }
 }
 
-public protocol MapItemCollectionViewCellDelegate: class {
+protocol MapItemCollectionViewCellDelegate: class {
     func collectionViewCell(cell: UICollectionViewCell, didRequestShareItem item: SharableItem, fromRect rect: CGRect)
     func collectionViewCellDidToggleFavourite(item: FavouriteTrafficCamera)
     func collectionViewItemIsFavourite(item: FavouriteTrafficCamera) -> Bool
 }
 
-public protocol MapItemCollectionViewCell {
+protocol MapItemCollectionViewCell {
     weak var delegate: MapItemCollectionViewCellDelegate? { get set }
     func configure(item: MapItemCollectionViewItem)
 }
 
 extension MapItemCollectionViewCell where Self: UICollectionViewCell {
     
-    public func fillCellWithFirstSubview() {
+    func fillCellWithFirstSubview() {
         if let subview = self.subviews.first {
             subview.translatesAutoresizingMaskIntoConstraints = false
             for attribute: NSLayoutAttribute in [.Left, .Right, .Top, .Bottom] {

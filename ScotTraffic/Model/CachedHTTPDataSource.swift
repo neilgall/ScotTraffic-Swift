@@ -8,10 +8,10 @@
 
 import Foundation
 
-public class CachedHTTPDataSource: DataSource {
+class CachedHTTPDataSource: DataSource {
 
     // Output
-    public let value = Signal<DataSourceData>()
+    let value = Signal<DataSourceData>()
     
     private let diskCache: DiskCache
     private let httpAccess: HTTPAccess
@@ -29,7 +29,7 @@ public class CachedHTTPDataSource: DataSource {
         self.key = path
     }
     
-    public func start() {
+    func start() {
         guard !inFlight else {
             // already in-flight
             return
@@ -92,7 +92,11 @@ public class CachedHTTPDataSource: DataSource {
         inFlight = false
     }
 
-    public static func dataSourceWithHTTPAccess(httpAccess: HTTPAccess, cache: DiskCache)(maximumCacheAge: NSTimeInterval)(path: String) -> DataSource {
-        return CachedHTTPDataSource(httpAccess: httpAccess, cache: cache, maximumCacheAge: maximumCacheAge, path: path)
+    static func dataSourceWithHTTPAccess(httpAccess: HTTPAccess, cache: DiskCache) -> NSTimeInterval -> String -> DataSource {
+        return { maximumCacheAge in
+            return { path in
+                CachedHTTPDataSource(httpAccess: httpAccess, cache: cache, maximumCacheAge: maximumCacheAge, path: path)
+            }
+        }
     }
 }

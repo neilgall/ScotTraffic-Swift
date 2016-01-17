@@ -10,16 +10,16 @@ import MapKit
 
 typealias KPH = Double
 
-public final class BridgeStatus: MapItem, Hashable {
-    public let identifier: String
-    public let name: String
-    public let road: String
-    public let message: String
-    public let mapPoint: MKMapPoint
-    public let iconName = "bridge"
-    public let count = 1
+final class BridgeStatus: MapItem, Hashable {
+    let identifier: String
+    let name: String
+    let road: String
+    let message: String
+    let mapPoint: MKMapPoint
+    let iconName = "bridge"
+    let count = 1
     
-    public init(identifier: String, name: String, road: String, message: String, mapPoint: MKMapPoint) {
+    init(identifier: String, name: String, road: String, message: String, mapPoint: MKMapPoint) {
         self.identifier = identifier
         self.name = name
         self.road = road
@@ -27,12 +27,12 @@ public final class BridgeStatus: MapItem, Hashable {
         self.mapPoint = mapPoint
     }
     
-    public var hashValue: Int {
+    var hashValue: Int {
         return identifier.hashValue
     }
 }
 
-public func == (lhs: BridgeStatus, rhs: BridgeStatus) -> Bool {
+func == (lhs: BridgeStatus, rhs: BridgeStatus) -> Bool {
     return lhs.identifier == rhs.identifier
 }
 
@@ -44,7 +44,7 @@ extension BridgeStatus {
 }
 
 extension BridgeStatus: JSONObjectDecodable {
-    public static func decodeJSON(json: JSONObject, forKey key: JSONKey) throws -> BridgeStatus {
+    static func decodeJSON(json: JSONObject, forKey key: JSONKey) throws -> BridgeStatus {
         return try BridgeStatus(
             identifier: json <~ "identifier",
             name: json <~ "name",

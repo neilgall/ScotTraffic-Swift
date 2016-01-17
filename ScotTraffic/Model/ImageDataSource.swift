@@ -8,19 +8,19 @@
 
 import UIKit
 
-public enum ImageError: ErrorType, CustomStringConvertible {
+enum ImageError: ErrorType, CustomStringConvertible {
     case CannotDecode
     
-    public var description: String {
+    var description: String {
         return "Cannot decode image"
     }
 }
 
-public protocol ImageDataSource {
+protocol ImageDataSource {
     var dataSource: DataSource { get }
 }
 
-public typealias DataSourceImage = DataSourceValue<UIImage>
+typealias DataSourceImage = DataSourceValue<UIImage>
 
 extension ImageDataSource {
 

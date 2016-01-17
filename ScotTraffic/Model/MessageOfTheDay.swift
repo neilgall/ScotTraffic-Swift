@@ -10,7 +10,7 @@ import Foundation
 
 private let messageOfTheDaySHAKey = "messageOfTheDaySHA"
 
-public struct MessageOfTheDay {
+struct MessageOfTheDay {
     let title: String
     let body: String
     let date: NSDate
@@ -30,7 +30,7 @@ public struct MessageOfTheDay {
 }
 
 extension MessageOfTheDay: JSONObjectDecodable {
-    public static func decodeJSON(json: JSONObject, forKey key: JSONKey) throws -> MessageOfTheDay {
+    static func decodeJSON(json: JSONObject, forKey key: JSONKey) throws -> MessageOfTheDay {
         return try MessageOfTheDay(
             title: json <~ "title",
             body: json <~ "body",
@@ -51,14 +51,14 @@ private func parseURL(json: JSONObject) throws -> NSURL? {
 }
 
 extension UserDefaultsProtocol {
-    public func messageOfTheDaySeenBefore(message: MessageOfTheDay) -> Bool {
+    func messageOfTheDaySeenBefore(message: MessageOfTheDay) -> Bool {
         guard let lastMessageSHA = objectForKey(messageOfTheDaySHAKey) as? NSData else {
             return false
         }
         return lastMessageSHA == message.sha1
     }
     
-    public func noteMessageOfTheDaySeen(message: MessageOfTheDay) {
+    func noteMessageOfTheDaySeen(message: MessageOfTheDay) {
         setObject(message.sha1, forKey: messageOfTheDaySHAKey)
     }
 }

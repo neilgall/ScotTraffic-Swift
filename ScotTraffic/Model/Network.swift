@@ -10,13 +10,13 @@ import UIKit
 
 private let requestTimeout: NSTimeInterval = 30
 
-public enum NetworkError: ErrorType, CustomStringConvertible {
+enum NetworkError: ErrorType, CustomStringConvertible {
     case MalformedURL
     case FetchError(NSError)
     case HTTPError(Int)
     case CannotParseImage
     
-    public var description: String {
+    var description: String {
         switch self {
         case .MalformedURL: return "malformed URL"
         case .FetchError(let error): return "URL fetch error: \(error)"
@@ -26,15 +26,15 @@ public enum NetworkError: ErrorType, CustomStringConvertible {
     }
 }
 
-public class HTTPAccess: NSObject, NSURLSessionDelegate {
+class HTTPAccess: NSObject, NSURLSessionDelegate {
     private let indicator: NetworkActivityIndicator?
     private let baseURL: NSURL
     private let reachability: Reachability?
     private var session: NSURLSession!
     
-    public let serverIsReachable: Signal<Bool>
+    let serverIsReachable: Signal<Bool>
     
-    public enum HTTPMethod: String {
+    enum HTTPMethod: String {
         case GET
         case PUT
         case POST
@@ -42,7 +42,7 @@ public class HTTPAccess: NSObject, NSURLSessionDelegate {
         case HEAD
     }
     
-    public init(baseURL: NSURL, indicator: NetworkActivityIndicator?) {
+    init(baseURL: NSURL, indicator: NetworkActivityIndicator?) {
         self.baseURL = baseURL
         self.indicator = indicator
         do {
@@ -72,7 +72,7 @@ public class HTTPAccess: NSObject, NSURLSessionDelegate {
         }
     }
     
-    public func startReachabilityNotifier() {
+    func startReachabilityNotifier() {
         do {
             try reachability?.startNotifier()
         } catch {
@@ -84,15 +84,15 @@ public class HTTPAccess: NSObject, NSURLSessionDelegate {
         }
     }
 
-    public func URLSession(session: NSURLSession, didBecomeInvalidWithError error: NSError?) {
+    func URLSession(session: NSURLSession, didBecomeInvalidWithError error: NSError?) {
     }
     
-    public func fetchDataAtPath(path: String, completion: DataSourceData -> Void) {
+    func fetchDataAtPath(path: String, completion: DataSourceData -> Void) {
         return request(.GET, data: nil, path: path, completion: completion)
         
     }
     
-    public func request(method: HTTPMethod, data: NSData?, path: String, completion: DataSourceData -> Void) {
+    func request(method: HTTPMethod, data: NSData?, path: String, completion: DataSourceData -> Void) {
         guard let url = NSURL(string: path, relativeToURL: baseURL) else {
             completion(DataSourceValue.Error(.Network(.MalformedURL)))
             return
@@ -144,7 +144,7 @@ class HTTPDataSource: DataSource {
 }
 
 
-public func JSONArrayFromData(data: NSData) throws -> ContextlessJSONArray {
+func JSONArrayFromData(data: NSData) throws -> ContextlessJSONArray {
     let json = try NSJSONSerialization.JSONObjectWithData(data, options: [])
     guard let array = json as? ContextlessJSONArray else {
         throw JSONError.ExpectedArray(key: "")
@@ -152,7 +152,7 @@ public func JSONArrayFromData(data: NSData) throws -> ContextlessJSONArray {
     return array
 }
 
-public func JSONObjectFromData(data: NSData) throws -> ContextlessJSONObject {
+func JSONObjectFromData(data: NSData) throws -> ContextlessJSONObject {
     let json = try NSJSONSerialization.JSONObjectWithData(data, options: [])
     guard let object = json as? ContextlessJSONObject else {
         throw JSONError.ExpectedDictionary(key: "")
@@ -160,14 +160,14 @@ public func JSONObjectFromData(data: NSData) throws -> ContextlessJSONObject {
     return object
 }
 
-public func UIImageFromData(data: NSData) throws -> UIImage {
+func UIImageFromData(data: NSData) throws -> UIImage {
     guard let image = UIImage(data: data) else {
         throw NetworkError.CannotParseImage
     }
     return image
 }
 
-public protocol NetworkActivityIndicator {
+protocol NetworkActivityIndicator {
     func push()
     func pop()
 }

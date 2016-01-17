@@ -32,6 +32,8 @@ class TodayViewModel {
         let httpAccess = HTTPAccess(baseURL: scotTrafficBaseURL, indicator: nil)
         
         let cachedDataSource = CachedHTTPDataSource.dataSourceWithHTTPAccess(httpAccess, cache: diskCache)
+        let fiveMinuteCache = cachedDataSource(300)
+        let fifteenMinuteCache = cachedDataSource(900)
         
         guard let userDefaults = NSUserDefaults(suiteName: scotTrafficAppGroup) else {
             fatalError("cannot create NSUserDefaults with suiteName \(scotTrafficAppGroup)")
@@ -43,15 +45,15 @@ class TodayViewModel {
         
         // -- traffic cameras
         
-        self.trafficCamerasSource = cachedDataSource(maximumCacheAge: 900)(path: "trafficcameras.json")
-        let trafficCamerasContext = TrafficCameraDecodeContext(makeImageDataSource: cachedDataSource(maximumCacheAge: 300))
+        self.trafficCamerasSource = fifteenMinuteCache("trafficcameras.json")
+        let trafficCamerasContext = TrafficCameraDecodeContext(makeImageDataSource: fiveMinuteCache)
         let trafficCameraLocations = trafficCamerasSource.value.map {
             return $0.map(Array<TrafficCameraLocation>.decodeJSON(trafficCamerasContext) <== JSONArrayFromData)
         }
         
         // -- weather
         
-        self.weatherSource = cachedDataSource(maximumCacheAge: 900)(path: "weather.json")
+        self.weatherSource = fifteenMinuteCache("weather.json")
         let weather = weatherSource.value.map {
             $0.map(Array<Weather>.decodeJSON(Void) <== JSONArrayFromData)
         }

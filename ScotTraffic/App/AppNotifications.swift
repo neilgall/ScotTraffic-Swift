@@ -20,7 +20,7 @@ func == (lhs: Registration, rhs: Registration) -> Bool {
         && lhs.enable == rhs.enable
 }
 
-public class AppNotifications {
+class AppNotifications {
     
     private let settings: Settings
     private let httpAccess: HTTPAccess
@@ -28,7 +28,7 @@ public class AppNotifications {
     private var notificationReceivers: [ReceiverType] = []
     private var deviceToken: Input<String?> = Input(initial: nil)
     
-    public init(settings: Settings, httpAccess: HTTPAccess) {
+    init(settings: Settings, httpAccess: HTTPAccess) {
         self.settings = settings
         self.httpAccess = httpAccess
         
@@ -81,11 +81,11 @@ public class AppNotifications {
         analyticsEvent(registration.enable ? .EnableNotifications : .DisableNotifications, ["identifier": registration.identifier])
     }
     
-    public func didFailToRegisterWithError(error: NSError) {
+    func didFailToRegisterWithError(error: NSError) {
         deviceToken <-- nil
     }
     
-    public func didRegisterWithDeviceToken(token: NSData) {
+    func didRegisterWithDeviceToken(token: NSData) {
         deviceToken <-- hexStringFromData(token)
     }
 }

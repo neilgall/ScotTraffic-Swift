@@ -9,22 +9,22 @@
 import CoreLocation
 import MapKit
 
-public enum IncidentType {
+enum IncidentType {
     case Alert
     case Roadworks
 }
 
-public final class Incident: MapItem {
-    public let type: IncidentType
-    public let name: String
-    public let road: String = ""
-    public let text: String
-    public let mapPoint: MKMapPoint
-    public let date: NSDate
-    public let url: NSURL
-    public let count: Int = 1
+final class Incident: MapItem {
+    let type: IncidentType
+    let name: String
+    let road: String = ""
+    let text: String
+    let mapPoint: MKMapPoint
+    let date: NSDate
+    let url: NSURL
+    let count: Int = 1
     
-    public init(type: IncidentType, name: String, text: String, mapPoint: MKMapPoint, date: NSDate, url: NSURL) {
+    init(type: IncidentType, name: String, text: String, mapPoint: MKMapPoint, date: NSDate, url: NSURL) {
         self.type = type
         self.name = name
         self.text = text
@@ -33,7 +33,7 @@ public final class Incident: MapItem {
         self.url = url
     }
     
-    public var iconName: String {
+    var iconName: String {
         switch type {
         case .Alert: return "incident"
         case .Roadworks: return "roadworks"
@@ -42,7 +42,7 @@ public final class Incident: MapItem {
 }
 
 extension IncidentType: JSONValueDecodable {
-    public static func decodeJSON(json: JSONValue, forKey key: JSONKey) throws -> IncidentType {
+    static func decodeJSON(json: JSONValue, forKey key: JSONKey) throws -> IncidentType {
         guard let str = json.value as? String else {
             throw JSONError.ExpectedValue(key: key, type: String.self)
         }
@@ -55,7 +55,7 @@ extension IncidentType: JSONValueDecodable {
 }
 
 extension Incident: JSONObjectDecodable {
-    public static func decodeJSON(json: JSONObject, forKey key: JSONKey) throws -> Incident {
+    static func decodeJSON(json: JSONObject, forKey key: JSONKey) throws -> Incident {
         let dateFormatter = NSDateFormatter()
         dateFormatter.locale = NSLocale(localeIdentifier: "en_GB")
         dateFormatter.dateFormat = "EEE, dd MMM yyyy HH:mm:ss z"

@@ -12,39 +12,39 @@ private let visibleMapRectInsetRatio: Double = -0.2
 
 typealias MapItemGroup = [MapItem]
 
-public protocol MapViewModelDelegate {
+protocol MapViewModelDelegate {
     func annotationAtMapPoint(mapPoint1: MKMapPoint, wouldOverlapWithAnnotationAtMapPoint mapPoint2: MKMapPoint) -> Bool
 }
 
-public class MapViewModel {
+class MapViewModel {
 
     // -- MARK: Inputs
     
     // The visible map rect
-    public let visibleMapRect: Input<MKMapRect>
+    let visibleMapRect: Input<MKMapRect>
     
     // The map items selected outside of the map view, if any
-    public let selectedMapItem: Input<MapItem?>
+    let selectedMapItem: Input<MapItem?>
 
     // A delegate to answer queries on map annotation overlaps
-    public let delegate: Input<MapViewModelDelegate?>
+    let delegate: Input<MapViewModelDelegate?>
     
     // A flag indicating whether the map is currently animating its visible rect
-    public let animatingMapRect: Input<Bool>
+    let animatingMapRect: Input<Bool>
     
     // -- MARK: Outputs
     
     // The set of annotations in the visible map rect
-    public let annotations: Signal<[MapAnnotation]>
+    let annotations: Signal<[MapAnnotation]>
     
     // The selected annotation, if any
-    public let selectedAnnotation: Signal<MapAnnotation?>
+    let selectedAnnotation: Signal<MapAnnotation?>
     
     // Indicates whether the user location should be shown on the map
-    public let showsUserLocationOnMap: Signal<Bool>
+    let showsUserLocationOnMap: Signal<Bool>
     
     // Indicates whether traffic should be shown on the map
-    public let showTrafficOnMap: Signal<Bool>
+    let showTrafficOnMap: Signal<Bool>
     
     
     // -- MARK: private data
@@ -52,7 +52,7 @@ public class MapViewModel {
     private let locationServices: LocationServices
     private var receivers = [ReceiverType]()
 
-    public init(scotTraffic: ScotTraffic) {
+    init(scotTraffic: ScotTraffic) {
         
         visibleMapRect = scotTraffic.settings.visibleMapRect
         locationServices = LocationServices(enabled: scotTraffic.settings.showCurrentLocationOnMap)
@@ -122,7 +122,7 @@ public class MapViewModel {
         }
     }
     
-    public func annotationForMapItem(mapItem: MapItem) -> MapAnnotation? {
+    func annotationForMapItem(mapItem: MapItem) -> MapAnnotation? {
         for annotation in annotations.latestValue.get ?? [] {
             if annotation.mapItems.contains({ $0 == mapItem }) {
                 return annotation

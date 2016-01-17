@@ -12,40 +12,40 @@ let favouritesKey = "favouriteItems"
 
 private typealias FavouriteIdentifier = String
 
-public struct FavouriteTrafficCamera {
+struct FavouriteTrafficCamera {
     let location: TrafficCameraLocation
     let cameraIndex: Int
     
-    public init?(location: TrafficCameraLocation, camera: TrafficCamera) {
+    init?(location: TrafficCameraLocation, camera: TrafficCamera) {
         guard let cameraIndex = location.cameras.indexOf({ $0.identifier == camera.identifier }) else {
             return nil
         }
         self.init(location: location, cameraIndex: cameraIndex)
     }
     
-    public init(location: TrafficCameraLocation, cameraIndex: Int) {
+    init(location: TrafficCameraLocation, cameraIndex: Int) {
         self.location = location
         self.cameraIndex = cameraIndex
     }
     
-    public var identifier: String {
+    var identifier: String {
         return location.cameras[cameraIndex].identifier
     }
     
-    public var name: String {
+    var name: String {
         return trafficCameraName(location.cameras[cameraIndex], atLocation: location)
     }
 }
 
 
-public class Favourites {
+class Favourites {
     private let userDefaults: UserDefaultsProtocol
     private let items: Input<[FavouriteIdentifier]>
-    public let trafficCameras: Signal<[FavouriteTrafficCamera]>
+    let trafficCameras: Signal<[FavouriteTrafficCamera]>
     
     private var receivers = [ReceiverType]()
     
-    public init(userDefaults: UserDefaultsProtocol, trafficCameraLocations: Signal<[TrafficCameraLocation]>) {
+    init(userDefaults: UserDefaultsProtocol, trafficCameraLocations: Signal<[TrafficCameraLocation]>) {
         self.userDefaults = userDefaults
         self.items = Input(initial: [])
         self.trafficCameras = combine(trafficCameraLocations, self.items, combine: favouriteTrafficCamerasFromLocations)
@@ -57,7 +57,7 @@ public class Favourites {
         })
     }
     
-    public func toggleItem(item: FavouriteTrafficCamera) {
+    func toggleItem(item: FavouriteTrafficCamera) {
         let identifier = item.identifier
         
         var items = self.items.value
@@ -71,7 +71,7 @@ public class Favourites {
         self.items <-- items
     }
     
-    public func moveItemFromIndex(fromIndex: Int, toIndex: Int) {
+    func moveItemFromIndex(fromIndex: Int, toIndex: Int) {
         var items = self.items.value
         if fromIndex > toIndex {
             items.insert(items[fromIndex], atIndex: toIndex)
@@ -84,11 +84,11 @@ public class Favourites {
         self.items <-- items
     }
     
-    public func containsItem(item: FavouriteTrafficCamera) -> Bool {
+    func containsItem(item: FavouriteTrafficCamera) -> Bool {
         return self.items.value.contains(item.identifier)
     }
     
-    public func reloadFromUserDefaults() {
+    func reloadFromUserDefaults() {
         let object = userDefaults.objectForKey(favouritesKey)
         guard let items = object as? [FavouriteIdentifier] else {
             return

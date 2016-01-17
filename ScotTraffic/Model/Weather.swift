@@ -8,15 +8,15 @@
 
 import MapKit
 
-public typealias Celcius = Float
-public typealias WindSpeedKPH = Float
+typealias Celcius = Float
+typealias WindSpeedKPH = Float
 
-public enum TemperatureUnit: Int {
+enum TemperatureUnit: Int {
     case Celcius
     case Fahrenheit
 }
 
-public enum WindDirection {
+enum WindDirection {
     case North
     case NorthNorthEast
     case NorthEast
@@ -35,7 +35,7 @@ public enum WindDirection {
     case NorthNorthWest
 }
 
-public enum WeatherType: String {
+enum WeatherType: String {
     case Clear = "clear"
     case PartCloudy = "part-cloudy"
     case Mist = "mist"
@@ -60,7 +60,7 @@ public enum WeatherType: String {
     case Unknown = "unknown"
 }
 
-public final class Weather {
+final class Weather {
     let name: String
     let mapPoint: MKMapPoint
     let temperature: Celcius
@@ -68,7 +68,7 @@ public final class Weather {
     let windDirection: WindDirection
     let weatherType: WeatherType
     
-    public init(name: String, mapPoint: MKMapPoint, temperature: Celcius, windSpeed: WindSpeedKPH, windDirection: WindDirection, weatherType: WeatherType) {
+    init(name: String, mapPoint: MKMapPoint, temperature: Celcius, windSpeed: WindSpeedKPH, windDirection: WindDirection, weatherType: WeatherType) {
         self.name = name
         self.mapPoint = mapPoint
         self.temperature = temperature
@@ -77,13 +77,13 @@ public final class Weather {
         self.weatherType = weatherType
     }
     
-    public var temperatureFahrenheit: Float {
+    var temperatureFahrenheit: Float {
         return temperature * 1.8 + 32
     }
 }
 
 extension WindDirection: JSONValueDecodable {
-    public static func decodeJSON(json: JSONValue, forKey key: JSONKey) throws -> WindDirection {
+    static func decodeJSON(json: JSONValue, forKey key: JSONKey) throws -> WindDirection {
         guard let str: String = json.value as? String else {
             throw JSONError.ExpectedValue(key: key, type: String.self)
         }
@@ -110,7 +110,7 @@ extension WindDirection: JSONValueDecodable {
 }
 
 extension Weather: JSONObjectDecodable {
-    public static func decodeJSON(json: JSONObject, forKey key: JSONKey) throws -> Weather {
+    static func decodeJSON(json: JSONObject, forKey key: JSONKey) throws -> Weather {
         return try Weather(
             name: json <~ "name",
             mapPoint: MKMapPointForCoordinate(CLLocationCoordinate2D(latitude: json <~ "latitude", longitude: json <~ "longitude")),

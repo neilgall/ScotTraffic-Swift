@@ -8,9 +8,9 @@
 
 import UIKit
 
-public class DiskCache {
+class DiskCache {
    
-    public enum Result {
+    enum Result {
         case Hit(data: NSData, date: NSDate)
         case Miss
     }
@@ -20,7 +20,7 @@ public class DiskCache {
     private let writeQueue: NSOperationQueue
     private let fileManager: NSFileManager
     
-    public init(withPath path: String) {
+    init(withPath path: String) {
         readQueue = NSOperationQueue()
         writeQueue = NSOperationQueue()
         fileManager = NSFileManager()
@@ -42,7 +42,7 @@ public class DiskCache {
         NSLog("using cache at \(directoryURL)")
     }
     
-    public func dataForKey(key: String, completion: Result -> ()) {
+    func dataForKey(key: String, completion: Result -> ()) {
         let operation = NSBlockOperation() {
             let result = self.readCacheDataForKey(key)
             dispatch_async(dispatch_get_main_queue()) {
@@ -53,7 +53,7 @@ public class DiskCache {
         addReadOperation(operation)
     }
     
-    public func storeData(data: NSData, forKey key: String) {
+    func storeData(data: NSData, forKey key: String) {
         let operation = NSBlockOperation() {
             self.writeCacheData(data, forKey: key)
         }
@@ -61,7 +61,7 @@ public class DiskCache {
         addWriteOperation(operation)
     }
     
-    public func removeDataForKey(key: String) {
+    func removeDataForKey(key: String) {
         let operation = NSBlockOperation() {
             self.deleteCacheDataForKey(key)
         }

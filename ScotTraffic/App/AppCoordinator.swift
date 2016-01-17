@@ -10,7 +10,7 @@ import UIKit
 
 let maximumItemsInDetailView = 10
 
-public class AppCoordinator: NSObject {
+class AppCoordinator: NSObject {
     let appModel: AppModel
     let rootWindow: UIWindow
     
@@ -25,7 +25,7 @@ public class AppCoordinator: NSObject {
     let collectionViewModel: MapItemCollectionViewModel
     var receivers = [ReceiverType]()
     
-    public init(appModel: AppModel, rootWindow: UIWindow) {
+    init(appModel: AppModel, rootWindow: UIWindow) {
         self.appModel = appModel
         self.rootWindow = rootWindow
         
@@ -59,7 +59,7 @@ public class AppCoordinator: NSObject {
         collectionViewModel = MapItemCollectionViewModel(scotTraffic: appModel, selection: searchViewModel.searchSelection)
     }
     
-    public func start() {
+    func start() {
         splitViewController.delegate = self
 
         mapViewController.calloutConstructor = viewControllerWithMapItems
@@ -254,15 +254,15 @@ public class AppCoordinator: NSObject {
 
 extension AppCoordinator: NGSplitViewControllerDelegate {
 
-    public func splitViewController(splitViewController: NGSplitViewController, shouldShowMasterViewControllerForHorizontalSizeClass horizontalSizeClass: UIUserInterfaceSizeClass, viewWidth: CGFloat) -> Bool {
+    func splitViewController(splitViewController: NGSplitViewController, shouldShowMasterViewControllerForHorizontalSizeClass horizontalSizeClass: UIUserInterfaceSizeClass, viewWidth: CGFloat) -> Bool {
         return horizontalSizeClass == .Regular && viewWidth > 768
     }
     
-    public func splitViewController(splitViewController: NGSplitViewController, didChangeMasterViewControllerVisibility viewController: UIViewController) {
+    func splitViewController(splitViewController: NGSplitViewController, didChangeMasterViewControllerVisibility viewController: UIViewController) {
         updateShowSearchButton()
     }
     
-    public func splitViewController(splitViewController: NGSplitViewController, didChangeDetailViewControllerVisibility viewController: UIViewController) {
+    func splitViewController(splitViewController: NGSplitViewController, didChangeDetailViewControllerVisibility viewController: UIViewController) {
         updateCancelSearchButton()
     }
 }
