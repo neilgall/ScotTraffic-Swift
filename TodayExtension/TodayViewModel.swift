@@ -69,7 +69,7 @@ class TodayViewModel {
         self.favourites = Favourites(userDefaults: userDefaults)
     
         let locations = trafficCameraLocations.map({ $0.value ?? [] }).latest()
-        let favouriteTrafficCameras = trafficCamerasFromLocations(locations, forFavourites: favourites)
+        let favouriteTrafficCameras = favourites.trafficCamerasFromLocations(locations)
         
         let selectedFavourite: Signal<FavouriteTrafficCamera> = combine(favouriteTrafficCameras, settings.imageIndex) { favourites, imageIndex in
             let index = max(0, min(imageIndex, favourites.count))

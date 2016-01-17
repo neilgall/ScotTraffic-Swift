@@ -6,7 +6,7 @@
 //  Copyright © 2015 Neil Gall. All rights reserved.
 //
 
-import MapKit
+import Foundation
 
 private let favouritesKey = "favouriteItems"
 private let typeKey = "type"
@@ -15,11 +15,9 @@ private let typeTrafficCamera = "trafficCamera"
 private let termKey = "term"
 private let identifierKey = "identifier"
 
-typealias FavouriteIdentifier = String
-
 enum FavouriteItem {
     case SavedSearch(term: String)
-    case TrafficCamera(identifier: FavouriteIdentifier)
+    case TrafficCamera(identifier: String)
 }
 
 class Favourites {
@@ -60,6 +58,7 @@ class Favourites {
     func deleteItemAtIndex(index: Int) {
         items.modify { items in
             let item = items[index]
+            analyticsEvent(.DeleteFavourite, dictionaryFromFavouriteItem(item))
             return items.filter({ $0 != item })
         }
     }
@@ -84,46 +83,6 @@ class Favourites {
         }
         self.items <-- items.flatMap(favouriteItemFromObject)
     }
-}
-
-struct FavouriteTrafficCamera {
-    let location: TrafficCameraLocation
-    let cameraIndex: Int
-    
-    init?(location: TrafficCameraLocation, camera: TrafficCamera) {
-        guard let cameraIndex = location.cameras.indexOf({ $0.identifier == camera.identifier }) else {
-            return nil
-        }
-        self.init(location: location, cameraIndex: cameraIndex)
-    }
-    
-    init(location: TrafficCameraLocation, cameraIndex: Int) {
-        self.location = location
-        self.cameraIndex = cameraIndex
-    }
-    
-    var identifier: String {
-        return location.cameras[cameraIndex].identifier
-    }
-    
-    var name: String {
-        return location.nameAtIndex(cameraIndex)
-    }
-}
-
-func trafficCamerasFromLocations(locations: Signal<[TrafficCameraLocation]>, forFavourites favourites: Favourites) -> Signal<[FavouriteTrafficCamera]> {
-    return combine(locations, favourites.items, combine: { locations, favourites in
-        favourites.flatMap { favourite in
-            switch favourite {
-            case .SavedSearch:
-                return nil
-            case .TrafficCamera(let identifier):
-                return locations.findIdentifier(identifier).map({ location, cameraIndex in
-                    return FavouriteTrafficCamera(location: location, cameraIndex: cameraIndex)
-                })
-            }
-        }
-    })
 }
 
 private func favouriteItemFromObject(object: AnyObject) -> FavouriteItem? {

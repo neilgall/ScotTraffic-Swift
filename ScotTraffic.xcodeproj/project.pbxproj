@@ -116,6 +116,7 @@
 		28B6D8761C486979001EBFC9 /* GrayImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28B6D8751C486979001EBFC9 /* GrayImage.swift */; };
 		28B6D8771C48698F001EBFC9 /* GrayImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28B6D8751C486979001EBFC9 /* GrayImage.swift */; };
 		28BFBC5B1BBC91AA00827069 /* FRPTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28BFBC5A1BBC91AA00827069 /* FRPTests.swift */; };
+		28CF0EDD1C4C25720075B31A /* FavouriteTrafficCamera.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28CF0EDC1C4C25720075B31A /* FavouriteTrafficCamera.swift */; };
 		28D3928C1BEE942800924F16 /* BackgroundMapImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28D3928B1BEE942800924F16 /* BackgroundMapImage.swift */; };
 		28DB3BF31BC025D0001AAC2A /* Functions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28DB3BF21BC025D0001AAC2A /* Functions.swift */; };
 		28DB3BF51BC02892001AAC2A /* SafetyCameras.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28DB3BF41BC02892001AAC2A /* SafetyCameras.swift */; };
@@ -282,6 +283,7 @@
 		28AF4A0A1BD849C0009B0AE8 /* PopoverContentSize.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PopoverContentSize.swift; sourceTree = "<group>"; };
 		28B6D8751C486979001EBFC9 /* GrayImage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GrayImage.swift; sourceTree = "<group>"; };
 		28BFBC5A1BBC91AA00827069 /* FRPTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FRPTests.swift; sourceTree = "<group>"; };
+		28CF0EDC1C4C25720075B31A /* FavouriteTrafficCamera.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FavouriteTrafficCamera.swift; sourceTree = "<group>"; };
 		28D3928B1BEE942800924F16 /* BackgroundMapImage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BackgroundMapImage.swift; sourceTree = "<group>"; };
 		28DB3BF21BC025D0001AAC2A /* Functions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Functions.swift; sourceTree = "<group>"; };
 		28DB3BF41BC02892001AAC2A /* SafetyCameras.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SafetyCameras.swift; sourceTree = "<group>"; };
@@ -537,6 +539,7 @@
 				287F75481C00C8910040EE8A /* TodayExtension.entitlements */,
 				287F75261C00C59A0040EE8A /* TodayViewController.swift */,
 				287F75371C00C6CD0040EE8A /* TodayViewModel.swift */,
+				28CF0EDC1C4C25720075B31A /* FavouriteTrafficCamera.swift */,
 				287F75491C00C8DE0040EE8A /* TodaySettings.swift */,
 				287F75281C00C59A0040EE8A /* MainInterface.storyboard */,
 				287F75351C00C6470040EE8A /* Images.xcassets */,
@@ -1003,6 +1006,7 @@
 				28B6D8771C48698F001EBFC9 /* GrayImage.swift in Sources */,
 				287F753A1C00C7AB0040EE8A /* Network.swift in Sources */,
 				287F75501C00D0A50040EE8A /* AppErrors.swift in Sources */,
+				28CF0EDD1C4C25720075B31A /* FavouriteTrafficCamera.swift in Sources */,
 				287F75271C00C59A0040EE8A /* TodayViewController.swift in Sources */,
 				28910E6E1C3AB4D200438645 /* Sequences.swift in Sources */,
 				287F753B1C00C7AE0040EE8A /* DiskCache.swift in Sources */,
