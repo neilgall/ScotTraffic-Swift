@@ -9,9 +9,22 @@
 import XCTest
 @testable import ScotTraffic
 
+extension SearchViewModel.ContentItem {
+    var name: String {
+        switch self {
+        case .TrafficCameraItem(let location, let index):
+            return location.nameAtIndex(index)
+        case .OtherMapItem(let mapItem):
+            return mapItem.name
+        case .SearchItem(let term):
+            return term
+        }
+    }
+}
+
 class SearchViewModelTests: XCTestCase {
     
-    func testDataSourceIsFavouritesWhenSearchTermIsEmpty() {
+    func testContentTypeIsFavouritesWhenSearchTermIsEmpty() {
         let testData = TestAppModel()
         
         testData.userDefaults.setObject(["7_1005.jpg","7_608.jpg"], forKey: "favouriteItems")
@@ -20,14 +33,14 @@ class SearchViewModelTests: XCTestCase {
         let viewModel = SearchViewModel(scotTraffic: testData)
         viewModel.searchTerm.value = ""
         
-        guard let searchResults = viewModel.dataSource.latestValue.get?.source.latestValue.get else {
+        guard let searchResults = viewModel.content.latestValue.get else {
             XCTFail()
             return
         }
         
         XCTAssertEqual(searchResults.count, 2)
-        XCTAssertEqual(searchResults[0].mapItem.name, "Aldclune")
-        XCTAssertEqual(searchResults[1].mapItem.name, "Auchengeich")
+        XCTAssertEqual(searchResults[0].name, "Aldclune")
+        XCTAssertEqual(searchResults[1].name, "Auchengeich")
     }
     
     func testHeaderIsFavouritesWhenSearchTermIsEmpty() {
@@ -48,7 +61,7 @@ class SearchViewModelTests: XCTestCase {
         let viewModel = SearchViewModel(scotTraffic: testData)
         viewModel.searchTerm.value = "M80"
         
-        guard let searchResults = viewModel.dataSource.latestValue.get?.source.latestValue.get else {
+        guard let searchResults = viewModel.content.latestValue.get else {
             XCTFail()
             return
         }
@@ -87,7 +100,7 @@ class SearchViewModelTests: XCTestCase {
         let viewModel = SearchViewModel(scotTraffic: testData)
         viewModel.searchTerm.value = ""
 
-        guard let selection = viewModel.searchSelection.latestValue.get else {
+        guard let selection = viewModel.contentSelection.latestValue.get else {
             XCTFail()
             return
         }
@@ -101,7 +114,7 @@ class SearchViewModelTests: XCTestCase {
         viewModel.searchTerm.value = "M8"
         viewModel.searchSelectionIndex.value = 3
         
-        guard let selection = viewModel.searchSelection.latestValue.get else {
+        guard let selection = viewModel.contentSelection.latestValue.get else {
             XCTFail()
             return
         }
@@ -116,7 +129,7 @@ class SearchViewModelTests: XCTestCase {
         viewModel.searchSelectionIndex.value = 3
         viewModel.searchTerm.value = ""
         
-        guard let selection = viewModel.searchSelection.latestValue.get else {
+        guard let selection = viewModel.contentSelection.latestValue.get else {
             XCTFail()
             return
         }
@@ -131,7 +144,7 @@ class SearchViewModelTests: XCTestCase {
         viewModel.searchSelectionIndex.value = 3
         viewModel.searchTerm.value = "M80"
 
-        guard let selection = viewModel.searchSelection.latestValue.get else {
+        guard let selection = viewModel.contentSelection.latestValue.get else {
             XCTFail()
             return
         }
@@ -147,7 +160,7 @@ class SearchViewModelTests: XCTestCase {
         
         viewModel.searchActive.value = false
         
-        guard let term = viewModel.searchTerm.latestValue.get, selection = viewModel.searchSelection.latestValue.get else {
+        guard let term = viewModel.searchTerm.latestValue.get, selection = viewModel.contentSelection.latestValue.get else {
             XCTFail()
             return
         }
