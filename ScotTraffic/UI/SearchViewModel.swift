@@ -126,15 +126,15 @@ class SearchViewModel {
             }
         })
         
-        canSaveSearch = combine(favourites.items, searchTerm, combine: { favourites, searchTerm in
-            !favourites.savedSearches.contains(searchTerm)
-        })
-        
         savedSearchSelection = combine(searchSelectionIndex, content, combine: { index, content in
             guard let index = index, case .SearchItem(let term) = content[index] else {
                 return nil
             }
             return term
+        })
+        
+        canSaveSearch = combine(favourites.items, searchTerm, combine: { favourites, searchTerm in
+            !favourites.savedSearches.contains(searchTerm)
         })
         
         // cancel selection before search term changes
