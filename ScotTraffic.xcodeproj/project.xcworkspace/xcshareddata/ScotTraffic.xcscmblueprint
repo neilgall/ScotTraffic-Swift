@@ -1,0 +1,30 @@
+{
+  "DVTSourceControlWorkspaceBlueprintPrimaryRemoteRepositoryKey" : "366F6747DC55B0ACE664B8898E2FBFBD3BD9BE57",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyRepositoryLocationsKey" : {
+
+  },
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
+    "366F6747DC55B0ACE664B8898E2FBFBD3BD9BE57" : 0,
+    "53964F28C4CCA0826677C9F951DD3F64C20326C4" : 0
+  },
+  "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "0695F458-DF98-4005-A5B6-546BA077A2E5",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
+    "366F6747DC55B0ACE664B8898E2FBFBD3BD9BE57" : "ScotTraffic\/",
+    "53964F28C4CCA0826677C9F951DD3F64C20326C4" : "ScotTraffic\/Submodules\/SwiftCheck\/"
+  },
+  "DVTSourceControlWorkspaceBlueprintNameKey" : "ScotTraffic",
+  "DVTSourceControlWorkspaceBlueprintVersion" : 204,
+  "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : "ScotTraffic.xcodeproj",
+  "DVTSourceControlWorkspaceBlueprintRemoteRepositoriesKey" : [
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "bitbucket.org:zbsmobile\/scottraffic-swift.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "366F6747DC55B0ACE664B8898E2FBFBD3BD9BE57"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "github.com:typelift\/SwiftCheck.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "53964F28C4CCA0826677C9F951DD3F64C20326C4"
+    }
+  ]
+}

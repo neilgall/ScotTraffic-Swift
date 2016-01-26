@@ -7,6 +7,7 @@
 //
 
 import XCTest
+import SwiftCheck
 @testable import ScotTraffic
 
 // Must be a class so it can be mutated inside the observer closure
@@ -23,25 +24,39 @@ private class Capture<T> {
 
 class FRPTests: XCTestCase {
 
-    func testInputCanOutput() {
-        let s = Input<Int>(initial: 0)
-        let c = Capture(s)
+    func testProperties() {
         
-        s.value = 123
-        s.value = 234
-        XCTAssertEqual(c.vals, [0, 123, 234])
-    }
-    
-    func testDiscardingReceiverTypeCancelsOutput() {
-        let s = Input<Int>(initial: 66)
-        let c = Capture(s)
+        property("inputs output their values") <- forAll { (ns: ArrayOf<Int>) in
+            return ns.getArray.count > 0 ==> {
+                let s = Input<Int>(initial: ns.getArray[0])
+                let c = Capture(s)
         
-        s.value = 123
-        XCTAssertEqual(c.vals, [66, 123])
+                ns.getArray.dropFirst().forEach {
+                    s.value = $0
+                }
+            
+                return c.vals == ns.getArray
+            }
+        }
         
-        c.obs.removeAll()
-        s.value = 234
-        XCTAssertEqual(c.vals, [66, 123])
+        property("discarding receiver cancels output") <- forAll { (ns: ArrayOf<Int>) in
+            return ns.getArray.count > 0 ==> {
+                let s = Input<Int>(initial: ns.getArray[0])
+                let c = Capture(s)
+        
+                ns.getArray.dropFirst().forEach {
+                    s.value = $0
+                }
+                
+                c.obs.removeAll()
+                
+                ns.getArray.forEach {
+                    s.value = $0
+                }
+                
+                return c.vals == ns.getArray
+            }
+        }
     }
     
     func testMap_pushable() {
