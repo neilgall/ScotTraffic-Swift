@@ -24,119 +24,143 @@ private class Capture<T> {
 
 class FRPTests: XCTestCase {
 
-    func testProperties() {
+    func testBasicProperties() {
         
-        property("inputs output their values") <- forAll { (ns: ArrayOf<Int>) in
-            return ns.getArray.count > 0 ==> {
-                let s = Input<Int>(initial: ns.getArray[0])
-                let c = Capture(s)
+        property("inputs output their values") <- forAll { (initial: Int, ns: ArrayOf<Int>) in
+            let s = Input<Int>(initial: initial)
+            let c = Capture(s)
+    
+            ns.getArray.forEach {
+                s.value = $0
+            }
         
-                ns.getArray.dropFirst().forEach {
-                    s.value = $0
-                }
+            return c.vals == [initial] + ns.getArray
+        }
+        
+        property("discarding receiver cancels output") <- forAll { (initial: Int, ns: ArrayOf<Int>) in
+            let s = Input<Int>(initial: initial)
+            let c = Capture(s)
+    
+            ns.getArray.forEach {
+                s.value = $0
+            }
             
-                return c.vals == ns.getArray
+            c.obs.removeAll()
+            
+            ns.getArray.forEach {
+                s.value = $0
             }
-        }
-        
-        property("discarding receiver cancels output") <- forAll { (ns: ArrayOf<Int>) in
-            return ns.getArray.count > 0 ==> {
-                let s = Input<Int>(initial: ns.getArray[0])
-                let c = Capture(s)
-        
-                ns.getArray.dropFirst().forEach {
-                    s.value = $0
-                }
-                
-                c.obs.removeAll()
-                
-                ns.getArray.forEach {
-                    s.value = $0
-                }
-                
-                return c.vals == ns.getArray
-            }
+            
+            return c.vals == [initial] + ns.getArray
         }
     }
     
-    func testMap_pushable() {
-        let s = Input<Int>(initial: 7)
-        let m = s.map { $0 + 1 }
-        let c = Capture(m)
+    func testMapProperties() {
+        property("a mapped input propagates initial and changes") <- forAll { (initial: Int, ns: ArrayOf<Int>) in
+            let s = Input<Int>(initial: initial)
+            let m = s.map { $0 + 1 }
+            let c = Capture(m)
+    
+            ns.getArray.forEach {
+                s.value = $0
+            }
+            
+            return c.vals == ([initial] + ns.getArray).map { $0 + 1 }
+        }
         
-        s.value = 123
-        XCTAssertEqual(c.vals, [8, 124])
+        property("a mapped signal propagates changes") <- forAll { (ns: ArrayOf<Int>) in
+            let s = Signal<Int>()
+            let m = s.map { $0 * 2 }
+            let c = Capture(m)
+        
+            ns.getArray.forEach {
+                s.pushValue($0)
+            }
+            
+            return c.vals == ns.getArray.map { $0 * 2 }
+        }
     }
     
-    func testMap_notPushable() {
-        let s = Signal<Int>()
-        let m = s.map { $0 * 2 }
-        let c = Capture(m)
+    func testFilterProperties() {
+        property("a filtered input propagates changes") <- forAll { (initial: Int, ns: ArrayOf<Int>, pivot: Int) in
+            let s = Input<Int>(initial: initial)
+            let f = s.filter { $0 > pivot }
+            let c = Capture(f)
+    
+            ns.getArray.forEach {
+                s.value = $0
+            }
+            
+            return c.vals == ns.getArray.filter { $0 > pivot }
+        }
         
-        s.pushValue(18)
-        XCTAssertEqual(c.vals, [36])
+        property("a filtered signal propagates changes") <- forAll { (ns: ArrayOf<Int>, pivot: Int) in
+            let s = Signal<Int>()
+            let f = s.filter { $0 < pivot }
+            let c = Capture(f)
+            
+            ns.getArray.forEach {
+                s.pushValue($0)
+            }
+            
+            return c.vals == ns.getArray.filter { $0 < pivot }
+        }
     }
     
-    func testFilter_pushable() {
-        let s = Input<Int>(initial: 0)
-        let f = s.filter { $0 > 5 }
-        let c = Capture(f)
+    func testUnionProperties() {
+        property("union of inputs propagates only changes") <- forAll { (n0: Int, m0: Int, ns: ArrayOf<Int>, ms: ArrayOf<Int>) in
+            let s1 = Input<Int>(initial: n0)
+            let s2 = Input<Int>(initial: m0)
+            let u = union(s1, s2)
+            let c = Capture(u)
+            
+            let pairs = zip(ns.getArray, ms.getArray)
+                
+            pairs.forEach {
+                s1.value = $0
+                s2.value = $1
+            }
+            
+            return c.vals == pairs.reduce([]) { $0 + [$1.0, $1.1] }
+        }
         
-        s.value = 2
-        s.value = 9
-        s.value = 6
-        s.value = 4
-        XCTAssertEqual(c.vals, [9, 6])
+        property("union of signals propagates changes") <- forAll { (ns: ArrayOf<Int>, ms: ArrayOf<Int>) in
+            let s1 = Signal<Int>()
+            let s2 = Signal<Int>()
+            let u = union(s1, s2)
+            let c = Capture(u)
+            
+            let pairs = zip(ns.getArray, ms.getArray)
+                
+            pairs.forEach {
+                s1.pushValue($0)
+                s2.pushValue($1)
+            }
+            
+            return c.vals == pairs.reduce([]) { $0 + [$1.0, $1.1] }
+        }
     }
     
-    func testFilter_notPushable() {
-        let s = Signal<Int>()
-        let f = s.filter { $0 < 5 }
-        let c = Capture(f)
-        
-        s.pushValue(7)
-        s.pushValue(2)
-        XCTAssertEqual(c.vals, [2])
-    }
-    
-    func testUnion_pushable() {
-        let s1 = Input<Int>(initial: 0)
-        let s2 = Input<Int>(initial: 0)
-        let u = union(s1, s2)
-        let c = Capture(u)
-        
-        s1.value = 6
-        s2.value = 3
-        s1.value = 10
-        s1.value = 7
-        s2.value = 14
-        XCTAssertEqual(c.vals, [6,3,10,7,14])
-    }
-    
-    func tetsUnion_notPushable() {
-        let s1 = Signal<Int>()
-        let s2 = Signal<Int>()
-        let u = union(s1, s2)
-        let c = Capture(u)
-        
-        s1.pushValue(6)
-        s2.pushValue(3)
-        s1.pushValue(10)
-        s1.pushValue(7)
-        s2.pushValue(14)
-        XCTAssertEqual(c.vals, [6,3,10,7,14])
-    }
-    
-    func testCombine2_independentInputs() {
-        let s1 = Input<Int>(initial: 0)
-        let s2 = Input<String>(initial: "")
-        let m = combine(s1, s2) { i,s in "\(i):\(s)" }
-        let c = Capture(m)
+    func testCombine2Properties() {
+        property("combine2 propagates on every change") <- forAll { (i1: Int, i2: String, ns: ArrayOf<Int>, ms: ArrayOf<String>) in
+            let s1 = Input<Int>(initial: i1)
+            let s2 = Input<String>(initial: i2)
+            let m = combine(s1, s2) { i,s in "\(i):\(s)" }
+            let c = Capture(m)
 
-        s1.value = 123
-        s2.value = "foo"
-
-        XCTAssertEqual(c.vals, ["0:", "123:", "123:foo"])
+            let pairs = zip(ns.getArray, ms.getArray)
+            
+            pairs.forEach {
+                s1.value = $0
+                s2.value = $1
+            }
+            
+            let expect = pairs.reduce((["\(i1):\(i2)"], i2)) { (results, pair) in
+                return (results.0 + ["\(pair.0):\(results.1)", "\(pair.0):\(pair.1)"], pair.1)
+            }
+            
+            return c.vals == expect.0
+        }
     }
     
     func testCombine2_dependentInputs() {

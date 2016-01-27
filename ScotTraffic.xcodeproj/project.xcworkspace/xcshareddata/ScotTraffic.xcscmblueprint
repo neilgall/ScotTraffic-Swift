@@ -5,12 +5,14 @@
   },
   "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
     "366F6747DC55B0ACE664B8898E2FBFBD3BD9BE57" : 0,
-    "53964F28C4CCA0826677C9F951DD3F64C20326C4" : 0
+    "53964F28C4CCA0826677C9F951DD3F64C20326C4" : 0,
+    "B1566CF92CFABA5E37554B7B555A1BA50691C03A" : 0
   },
   "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "0695F458-DF98-4005-A5B6-546BA077A2E5",
   "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
     "366F6747DC55B0ACE664B8898E2FBFBD3BD9BE57" : "ScotTraffic\/",
-    "53964F28C4CCA0826677C9F951DD3F64C20326C4" : "ScotTraffic\/Submodules\/SwiftCheck\/"
+    "53964F28C4CCA0826677C9F951DD3F64C20326C4" : "ScotTraffic\/Submodules\/SwiftCheck\/",
+    "B1566CF92CFABA5E37554B7B555A1BA50691C03A" : "ScotTraffic\/Submodules\/SwiftCheck\/Carthage\/Checkouts\/Operadics\/"
   },
   "DVTSourceControlWorkspaceBlueprintNameKey" : "ScotTraffic",
   "DVTSourceControlWorkspaceBlueprintVersion" : 204,
@@ -25,6 +27,11 @@
       "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "github.com:typelift\/SwiftCheck.git",
       "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
       "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "53964F28C4CCA0826677C9F951DD3F64C20326C4"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/typelift\/Operadics.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "B1566CF92CFABA5E37554B7B555A1BA50691C03A"
     }
   ]
 }
