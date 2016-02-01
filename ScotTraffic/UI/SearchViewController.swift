@@ -87,6 +87,10 @@ class SearchViewController: UITableViewController {
         self.editingFavourites <-- false
     }
     
+    func searchBarResignFirstResponder() {
+        (navigationItem.titleView as? UISearchBar)?.resignFirstResponder()
+    }
+    
     // -- MARK: Actions
     
     @IBAction func editFavourites(sender: UIButton) {
@@ -95,6 +99,7 @@ class SearchViewController: UITableViewController {
     
     @IBAction func saveSearch(sender: UIButton) {
         searchViewModel?.saveSearch()
+        searchBarResignFirstResponder()
     }
 
     @IBAction func cancelSearch() {
@@ -175,6 +180,14 @@ extension SearchViewController {
         if let searchSelectionIndex = searchViewModel?.searchSelectionIndex {
             searchSelectionIndex <-- nil
         }
+    }
+}
+
+extension SearchViewController {
+    // -- MARK: UIScrollViewDelegate
+    
+    override func scrollViewWillBeginDragging(scrollView: UIScrollView) {
+        searchBarResignFirstResponder()
     }
 }
 
