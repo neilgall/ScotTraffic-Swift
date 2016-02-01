@@ -40,7 +40,7 @@ class CalloutContainerView: UIView {
         let calloutFrame = calloutFrameForPreferredSize(preferredSize, fromAnnotationView: annotationView)
         
         view.translatesAutoresizingMaskIntoConstraints = true
-        view.bounds = CGRect(origin: CGPointZero, size: calloutFrame.size)
+        view.bounds = CGRect(origin: CGPoint.zero, size: calloutFrame.size)
         view.center = centerOfView(annotationView)
         view.transform = scaleDownTransformFromSize(calloutFrame.size, toSize: annotationView.bounds.size)
         view.alpha = minimumContainedViewAlpha

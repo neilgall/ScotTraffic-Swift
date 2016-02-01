@@ -212,7 +212,7 @@ extension MapViewController: MKMapViewDelegate {
         if mapAnnotation.mapItems.count > 1 {
             if let zoomInImage = UIImage(named: "736-zoom-in") {
                 let button = UIButton(type: .Custom)
-                button.frame = CGRect(origin: CGPointZero, size: zoomInImage.size)
+                button.frame = CGRect(origin: CGPoint.zero, size: zoomInImage.size)
                 button.setImage(zoomInImage, forState: .Normal)
                 annotationView.rightCalloutAccessoryView = button
             }

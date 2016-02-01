@@ -275,7 +275,7 @@ public class NGSplitViewController: UIViewController {
             detailFrame = frames.right
             
         case .MasterOverlay:
-            masterFrame = CGRect(origin: CGPointZero, size: CGSize(width: 320, height: view.bounds.size.height))
+            masterFrame = CGRect(origin: CGPoint.zero, size: CGSize(width: 320, height: view.bounds.size.height))
             
         case .DetailOnly:
             // fudge to fix a strange unexpected call to viewWillLayoutSubviews() on the animate-out transition
@@ -499,8 +499,8 @@ public class NGSplitViewController: UIViewController {
 
 private extension CGRect {
     func divide(split: CGFloat) -> (left: CGRect, right: CGRect) {
-        var left: CGRect = CGRectZero
-        var right: CGRect = CGRectZero
+        var left: CGRect = CGRect.zero
+        var right: CGRect = CGRect.zero
         CGRectDivide(self, &left, &right, size.width*split, .MinXEdge)
         return (left: left, right: right)
     }

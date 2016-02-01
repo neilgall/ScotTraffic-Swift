@@ -24,7 +24,7 @@ func imageWithGrayColorspace(image: UIImage?) -> UIImage? {
         CGImageAlphaInfo.None.rawValue)
     
     CGContextSetAlpha(context, 0.5)
-    CGContextDrawImage(context, CGRect(origin: CGPointZero, size: size), image.CGImage)
+    CGContextDrawImage(context, CGRect(origin: CGPoint.zero, size: size), image.CGImage)
     let grayImage = CGBitmapContextCreateImage(context)
     
     return grayImage.map { UIImage(CGImage: $0) }
