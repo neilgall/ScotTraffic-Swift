@@ -110,7 +110,7 @@ class SearchViewModel {
                 case .EastWest: return "WestToEastHeadingView"
                 }
             }
-        }
+        }.latest()
         
         contentSelection = combine(searchSelectionIndex, content, combine: { index, content in
             guard let index = index else {

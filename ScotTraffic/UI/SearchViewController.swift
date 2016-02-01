@@ -57,8 +57,10 @@ class SearchViewController: UITableViewController {
             })
             
             receivers.append(searchViewModel.content --> { [weak self] _ in
-                if let tableView = self?.tableView where !tableView.editing {
-                    tableView.reloadSections(NSIndexSet(index: 0), withRowAnimation: .Automatic)
+                dispatch_async(dispatch_get_main_queue()) {
+                    if let tableView = self?.tableView where !tableView.editing {
+                        tableView.reloadSections(NSIndexSet(index: 0), withRowAnimation: .Automatic)
+                    }
                 }
             })
 
