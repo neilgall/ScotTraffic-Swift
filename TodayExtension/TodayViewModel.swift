@@ -28,16 +28,13 @@ class TodayViewModel {
     var observeImageDataSource: ReceiverType? = nil
     
     init() {
+        let userDefaults = Configuration.sharedUserDefaults()
         let diskCache = DiskCache(withPath: "scottraffic")
         let httpAccess = HTTPAccess(baseURL: scotTrafficBaseURL, indicator: nil)
         
         let cachedDataSource = CachedHTTPDataSource.dataSourceWithHTTPAccess(httpAccess, cache: diskCache)
         let fiveMinuteCache = cachedDataSource(300)
         let fifteenMinuteCache = cachedDataSource(900)
-        
-        guard let userDefaults = NSUserDefaults(suiteName: scotTrafficAppGroup) else {
-            fatalError("cannot create NSUserDefaults with suiteName \(scotTrafficAppGroup)")
-        }
         
         self.diskCache = diskCache
         self.httpAccess = httpAccess

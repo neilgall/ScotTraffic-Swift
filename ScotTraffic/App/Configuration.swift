@@ -14,8 +14,17 @@ import Foundation
     let scotTrafficBaseURL = NSURL(string: "https://scottraffic.co.uk")!
 #endif
 
-let scotTrafficAppGroup = "group.uk.co.scottraffic.ios.favourites"
-let todayExtensionBundleIdentifier = "uk.co.ScotTraffic.iOS.TodayExtension"
+struct Configuration {
+    static let scotTrafficAppGroup = "group.uk.co.scottraffic.ios.favourites"
+    static let todayExtensionBundleIdentifier = "uk.co.ScotTraffic.iOS.TodayExtension"
+    static let sharedUserDefaults: Void -> NSUserDefaults = {
+        guard let userDefaults = NSUserDefaults(suiteName: scotTrafficAppGroup) else {
+            fatalError("cannot create NSUserDefaults for app Group \(scotTrafficAppGroup)")
+        }
+        return userDefaults
+    }
+    static let iCloudUserDefaults = NSUbiquitousKeyValueStore.defaultStore()
 
-let runningOnSimulator = (TARGET_OS_SIMULATOR != 0)
-let runningUnitTests = (NSClassFromString("XCTestCase") != nil)
+    static let runningOnSimulator = (TARGET_OS_SIMULATOR != 0)
+    static let runningUnitTests = (NSClassFromString("XCTestCase") != nil)
+}

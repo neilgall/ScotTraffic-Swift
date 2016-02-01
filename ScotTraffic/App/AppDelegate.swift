@@ -25,7 +25,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         appWidgetManager = AppWidgetManager(favourites: appModel.favourites)
         appNotifications = AppNotifications(settings: appModel.settings, httpAccess: appModel.httpAccess)
         
-        if let window = window where !runningUnitTests {
+        if let window = window where !Configuration.runningUnitTests {
             let appCoordinator = AppCoordinator(appModel: appModel, rootWindow: window)
             appCoordinator.start()
             self.appCoordinator = appCoordinator
@@ -33,7 +33,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         appModel.remoteNotifications.parseLaunchOptions(launchOptions)
 
-        if runningOnSimulator {
+        if Configuration.runningOnSimulator {
             application.remoteNotificationsPort = 9930
             application.listenForRemoteNotifications()
         }

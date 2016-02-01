@@ -29,6 +29,7 @@ class AppModel: ScotTraffic {
     private var receivers = [ReceiverType]()
     
     init() {
+        let userDefaults = Configuration.sharedUserDefaults()
         let diskCache = DiskCache(withPath: "scottraffic")
         let httpAccess = HTTPAccess(baseURL: scotTrafficBaseURL, indicator: AppNetworkActivityIndicator())
         
@@ -37,10 +38,6 @@ class AppModel: ScotTraffic {
         let fifteenMinuteCache = cachedDataSource(900)
         let dailyCache = cachedDataSource(86400)
         
-        guard let userDefaults = NSUserDefaults(suiteName: scotTrafficAppGroup) else {
-            fatalError("unable to create NSUserDefaults with suite name \(scotTrafficAppGroup)")
-        }
-
         self.diskCache = diskCache
         self.httpAccess = httpAccess
         

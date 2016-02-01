@@ -12,9 +12,7 @@ let hasMigratedKey = "userDefaultsMigration"
 let hasMigratedValue = 1
 
 func migrateUserDefaultsToAppGroup() {
-    guard let appGroupUserDefaults = NSUserDefaults(suiteName: scotTrafficAppGroup) else {
-        fatalError("cannot create NSUserDefaults for \(scotTrafficAppGroup)")
-    }
+    let appGroupUserDefaults = Configuration.sharedUserDefaults()
     guard appGroupUserDefaults.integerForKey(hasMigratedKey) < hasMigratedValue else {
         return
     }
