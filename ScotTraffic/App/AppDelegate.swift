@@ -25,7 +25,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         appWidgetManager = AppWidgetManager(favourites: appModel.favourites)
         appNotifications = AppNotifications(settings: appModel.settings, httpAccess: appModel.httpAccess)
         
-        if let window = window {
+        if let window = window where !runningUnitTests {
             let appCoordinator = AppCoordinator(appModel: appModel, rootWindow: window)
             appCoordinator.start()
             self.appCoordinator = appCoordinator
