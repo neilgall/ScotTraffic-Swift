@@ -8,8 +8,9 @@
 
 import UIKit
 
-private let notificationDisplayTime = 4.0
-private let notificationAppearTime = 0.25
+private let notificationAppearTime: NSTimeInterval = 0.66
+private let notificationDisplayTime: NSTimeInterval = 4.0
+private let notificationDisappearTime: NSTimeInterval = 0.4
 
 extension NGSplitViewController {
     
@@ -32,19 +33,42 @@ extension NGSplitViewController {
                 constant: 0.0)
         })
         
+        let slideOnConstraint = constraints[0]
+        let slideOffConstraint = NSLayoutConstraint(item: background,
+            attribute: .Top,
+            relatedBy: .Equal,
+            toItem: view,
+            attribute: .Top,
+            multiplier: 1.0,
+            constant: -view.frame.height)
+        
+        slideOnConstraint.priority = 998
+        slideOffConstraint.priority = 999
+        
+        background.translatesAutoresizingMaskIntoConstraints = false
         background.addSubview(label)
         view.addSubview(background)
         view.addConstraints(constraints)
-
-        background.alpha = 0
-        let animations = {
-            UIView.addKeyframeWithRelativeStartTime(0, relativeDuration: notificationAppearTime / notificationDisplayTime) {
-                background.alpha = 1.0
-            }
-        }
-        UIView.animateKeyframesWithDuration(notificationDisplayTime, delay: 0, options: [.Autoreverse], animations: animations) { _ in
-            self.view.removeConstraints(constraints)
-            background.removeFromSuperview()
+        view.addConstraint(slideOffConstraint)
+        
+        dispatch_async(dispatch_get_main_queue()) {
+            
+            // adjust slide off constraint to laid out height of background
+            slideOffConstraint.constant = -background.frame.height
+            
+            UIView.animateWithDuration(notificationAppearTime, delay: 0, options: [.CurveEaseOut], animations: {
+                slideOnConstraint.priority = 999
+                slideOffConstraint.priority = 998
+                self.view.layoutIfNeeded()
+            }, completion: { _ in
+                UIView.animateWithDuration(notificationDisappearTime, delay: notificationDisplayTime, options: [.CurveEaseIn], animations: { () -> Void in
+                    slideOnConstraint.priority = 998
+                    slideOffConstraint.priority = 999
+                    self.view.layoutIfNeeded()
+                }, completion: { _ in
+                    background.removeFromSuperview()
+                })
+            })
         }
     }
 }

@@ -10,6 +10,7 @@
 #define ScotTraffic_Bridging_Header_h
 
 #import <CommonCrypto/CommonCrypto.h>
+#import "SimulatorRemoteNotifications/UIApplication+SimulatorRemoteNotifications.h"
 #import "Flurry.h"
 
 #endif /* ScotTraffic_Bridging_Header_h */

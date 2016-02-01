@@ -16,3 +16,5 @@ import Foundation
 
 let scotTrafficAppGroup = "group.uk.co.scottraffic.ios.favourites"
 let todayExtensionBundleIdentifier = "uk.co.ScotTraffic.iOS.TodayExtension"
+
+let runningOnSimulator = (TARGET_OS_SIMULATOR != 0)

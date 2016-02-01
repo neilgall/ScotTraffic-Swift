@@ -33,6 +33,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         appModel.remoteNotifications.parseLaunchOptions(launchOptions)
 
+        if runningOnSimulator {
+            application.remoteNotificationsPort = 9930
+            application.listenForRemoteNotifications()
+        }
+        
         return true
     }
 

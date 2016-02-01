@@ -88,6 +88,7 @@
 		28875EA41BBC72FB00E67A16 /* Network.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28875EA31BBC72FB00E67A16 /* Network.swift */; };
 		28875EA71BBC739100E67A16 /* JSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28875EA61BBC739100E67A16 /* JSON.swift */; };
 		28875EA91BBC7A2F00E67A16 /* JSONTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28875EA81BBC7A2F00E67A16 /* JSONTests.swift */; };
+		288877181C5FDD1500CBCE32 /* libSimulatorRemoteNotifications-iOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 288877091C5FDCFF00CBCE32 /* libSimulatorRemoteNotifications-iOS.a */; };
 		288AC88D1BCFA062004EA6A0 /* MapItemCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 288AC88C1BCFA062004EA6A0 /* MapItemCollectionViewCell.swift */; };
 		288AC88F1BCFA43B004EA6A0 /* SharableItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 288AC88E1BCFA43B004EA6A0 /* SharableItem.swift */; };
 		288AC8911BCFABE2004EA6A0 /* SafetyCameraCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 288AC8901BCFABE2004EA6A0 /* SafetyCameraCell.swift */; };
@@ -215,6 +216,62 @@
 			remoteGlobalIDString = 8240CCBA1C3A123700EF4D29;
 			remoteInfo = "SwiftCheck-tvOSTests";
 		};
+		288877081C5FDCFF00CBCE32 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 288876FD1C5FDCFF00CBCE32 /* SimulatorRemoteNotifications.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 51D3517B18B9B0F500ECA215;
+			remoteInfo = "SimulatorRemoteNotifications-iOS";
+		};
+		2888770A1C5FDCFF00CBCE32 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 288876FD1C5FDCFF00CBCE32 /* SimulatorRemoteNotifications.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 515184BB16CC71AC007E471F;
+			remoteInfo = SimulatorRemoteNotificationsExample;
+		};
+		2888770C1C5FDCFF00CBCE32 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 288876FD1C5FDCFF00CBCE32 /* SimulatorRemoteNotifications.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 515184DC16CC71AC007E471F;
+			remoteInfo = SimulatorRemoteNotificationsExampleTests;
+		};
+		2888770E1C5FDCFF00CBCE32 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 288876FD1C5FDCFF00CBCE32 /* SimulatorRemoteNotifications.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 5188297A182AD38E00EF0ADB;
+			remoteInfo = SimulatorRemoteNotificationsBackgroundExample;
+		};
+		288877101C5FDCFF00CBCE32 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 288876FD1C5FDCFF00CBCE32 /* SimulatorRemoteNotifications.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 51EB436218B82B76002479EA;
+			remoteInfo = SimulatorRemoteNotificationsBackgroundExampleTests;
+		};
+		288877121C5FDCFF00CBCE32 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 288876FD1C5FDCFF00CBCE32 /* SimulatorRemoteNotifications.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 51C4957418B9B4710062E968;
+			remoteInfo = "iOS Simulator Notifications";
+		};
+		288877141C5FDCFF00CBCE32 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 288876FD1C5FDCFF00CBCE32 /* SimulatorRemoteNotifications.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 517C989918B801C800FC4694;
+			remoteInfo = "SimulatorRemoteNotifications-OSX";
+		};
+		288877161C5FDD0A00CBCE32 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 288876FD1C5FDCFF00CBCE32 /* SimulatorRemoteNotifications.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 51D3517118B9B0F500ECA215;
+			remoteInfo = "SimulatorRemoteNotifications-iOS";
+		};
 		28C77E4F1C58295000628CD9 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 288416551C58221A00D290A9 /* SwiftCheck.xcodeproj */;
@@ -336,6 +393,7 @@
 		28875EA31BBC72FB00E67A16 /* Network.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Network.swift; sourceTree = "<group>"; };
 		28875EA61BBC739100E67A16 /* JSON.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JSON.swift; sourceTree = "<group>"; };
 		28875EA81BBC7A2F00E67A16 /* JSONTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JSONTests.swift; sourceTree = "<group>"; };
+		288876FD1C5FDCFF00CBCE32 /* SimulatorRemoteNotifications.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = SimulatorRemoteNotifications.xcodeproj; path = Submodules/SimulatorRemoteNotifications/SimulatorRemoteNotifications.xcodeproj; sourceTree = "<group>"; };
 		288AC88C1BCFA062004EA6A0 /* MapItemCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapItemCollectionViewCell.swift; sourceTree = "<group>"; };
 		288AC88E1BCFA43B004EA6A0 /* SharableItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SharableItem.swift; sourceTree = "<group>"; };
 		288AC8901BCFABE2004EA6A0 /* SafetyCameraCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SafetyCameraCell.swift; sourceTree = "<group>"; };
@@ -394,6 +452,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				288877181C5FDD1500CBCE32 /* libSimulatorRemoteNotifications-iOS.a in Frameworks */,
 				2804865E1BC092F2003BA360 /* MapKit.framework in Frameworks */,
 				286BB4461C46FBC7008B5983 /* libFlurry_7.3.0.a in Frameworks */,
 				2804865B1BC091C5003BA360 /* CoreLocation.framework in Frameworks */,
@@ -446,6 +505,7 @@
 				287F75251C00C59A0040EE8A /* TodayExtension */,
 				2804865C1BC091CA003BA360 /* Frameworks */,
 				286BB4411C46FBC7008B5983 /* Libraries */,
+				288876F91C5FDCE900CBCE32 /* Submodules */,
 				280493561BA8BB4800990BD1 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -651,6 +711,28 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		288876F91C5FDCE900CBCE32 /* Submodules */ = {
+			isa = PBXGroup;
+			children = (
+				288876FD1C5FDCFF00CBCE32 /* SimulatorRemoteNotifications.xcodeproj */,
+			);
+			name = Submodules;
+			sourceTree = "<group>";
+		};
+		288876FE1C5FDCFF00CBCE32 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				288877091C5FDCFF00CBCE32 /* libSimulatorRemoteNotifications-iOS.a */,
+				2888770B1C5FDCFF00CBCE32 /* SimulatorRemoteNotificationsExample.app */,
+				2888770D1C5FDCFF00CBCE32 /* SimulatorRemoteNotificationsExampleTests.octest */,
+				2888770F1C5FDCFF00CBCE32 /* SimulatorRemoteNotificationsBackgroundExample.app */,
+				288877111C5FDCFF00CBCE32 /* SimulatorRemoteNotificationsBackgroundExampleTests.octest */,
+				288877131C5FDCFF00CBCE32 /* iOS Simulator Notifications.app */,
+				288877151C5FDCFF00CBCE32 /* libSimulatorRemoteNotifications-OSX.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		289201CE1BBC570300DA4A9A /* App */ = {
 			isa = PBXGroup;
 			children = (
@@ -778,6 +860,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				288877171C5FDD0A00CBCE32 /* PBXTargetDependency */,
 				287F752D1C00C59A0040EE8A /* PBXTargetDependency */,
 			);
 			name = ScotTraffic;
@@ -896,6 +979,10 @@
 			projectDirPath = "";
 			projectReferences = (
 				{
+					ProductGroup = 288876FE1C5FDCFF00CBCE32 /* Products */;
+					ProjectRef = 288876FD1C5FDCFF00CBCE32 /* SimulatorRemoteNotifications.xcodeproj */;
+				},
+				{
 					ProductGroup = 288416561C58221A00D290A9 /* Products */;
 					ProjectRef = 288416551C58221A00D290A9 /* SwiftCheck.xcodeproj */;
 				},
@@ -951,6 +1038,55 @@
 			fileType = wrapper.cfbundle;
 			path = "SwiftCheck-tvOSTests.xctest";
 			remoteRef = 288416681C58221A00D290A9 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		288877091C5FDCFF00CBCE32 /* libSimulatorRemoteNotifications-iOS.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = "libSimulatorRemoteNotifications-iOS.a";
+			remoteRef = 288877081C5FDCFF00CBCE32 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		2888770B1C5FDCFF00CBCE32 /* SimulatorRemoteNotificationsExample.app */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.application;
+			path = SimulatorRemoteNotificationsExample.app;
+			remoteRef = 2888770A1C5FDCFF00CBCE32 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		2888770D1C5FDCFF00CBCE32 /* SimulatorRemoteNotificationsExampleTests.octest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = SimulatorRemoteNotificationsExampleTests.octest;
+			remoteRef = 2888770C1C5FDCFF00CBCE32 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		2888770F1C5FDCFF00CBCE32 /* SimulatorRemoteNotificationsBackgroundExample.app */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.application;
+			path = SimulatorRemoteNotificationsBackgroundExample.app;
+			remoteRef = 2888770E1C5FDCFF00CBCE32 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		288877111C5FDCFF00CBCE32 /* SimulatorRemoteNotificationsBackgroundExampleTests.octest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = SimulatorRemoteNotificationsBackgroundExampleTests.octest;
+			remoteRef = 288877101C5FDCFF00CBCE32 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		288877131C5FDCFF00CBCE32 /* iOS Simulator Notifications.app */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.application;
+			path = "iOS Simulator Notifications.app";
+			remoteRef = 288877121C5FDCFF00CBCE32 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		288877151C5FDCFF00CBCE32 /* libSimulatorRemoteNotifications-OSX.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = "libSimulatorRemoteNotifications-OSX.a";
+			remoteRef = 288877141C5FDCFF00CBCE32 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */
@@ -1185,6 +1321,11 @@
 			target = 287F75211C00C59A0040EE8A /* TodayExtension */;
 			targetProxy = 287F752C1C00C59A0040EE8A /* PBXContainerItemProxy */;
 		};
+		288877171C5FDD0A00CBCE32 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "SimulatorRemoteNotifications-iOS";
+			targetProxy = 288877161C5FDD0A00CBCE32 /* PBXContainerItemProxy */;
+		};
 		28C77E501C58295000628CD9 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = "SwiftCheck-iOS";
@@ -1233,7 +1374,7 @@
 		2804937B1BA8BB4800990BD1 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
+				ALWAYS_SEARCH_USER_PATHS = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
@@ -1266,7 +1407,9 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/Submodules/**";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				LIBRARY_SEARCH_PATHS = "$(PROJECT_DIR)/Libraries/Flurry";
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_SWIFT_FLAGS = "-DDEBUG";
@@ -1279,7 +1422,7 @@
 		2804937C1BA8BB4800990BD1 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
+				ALWAYS_SEARCH_USER_PATHS = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
@@ -1306,7 +1449,9 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/Submodules/**";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				LIBRARY_SEARCH_PATHS = "$(PROJECT_DIR)/Libraries/Flurry";
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				SWIFT_OBJC_BRIDGING_HEADER = ScotTraffic/ScotTraffic_Bridging_Header.h;
@@ -1323,13 +1468,12 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
+				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = ScotTraffic/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/Libraries/Flurry",
-				);
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_BUNDLE_IDENTIFIER = uk.co.ScotTraffic.iOS;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
@@ -1347,13 +1491,12 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
+				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = ScotTraffic/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/Libraries/Flurry",
-				);
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_BUNDLE_IDENTIFIER = uk.co.ScotTraffic.iOS;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
