@@ -163,7 +163,7 @@ extension SearchViewController {
         guard let title = searchViewModel?.sectionHeader.latestValue.get where !title.isEmpty else {
             return 0
         }
-        return 34
+        return 44
     }
     
     override func tableView(tableView: UITableView, editingStyleForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCellEditingStyle {
