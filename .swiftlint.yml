@@ -5,8 +5,8 @@ disabled_rules:
   - file_length
   - line_length
   - type_body_length
+  - function_parameter_count
   - function_body_length
-  - variable_name_min_length
   - opening_brace
   - variable_name
   - cyclomatic_complexity
