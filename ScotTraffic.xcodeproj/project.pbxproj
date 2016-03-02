@@ -88,7 +88,6 @@
 		28875EA41BBC72FB00E67A16 /* Network.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28875EA31BBC72FB00E67A16 /* Network.swift */; };
 		28875EA71BBC739100E67A16 /* JSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28875EA61BBC739100E67A16 /* JSON.swift */; };
 		28875EA91BBC7A2F00E67A16 /* JSONTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28875EA81BBC7A2F00E67A16 /* JSONTests.swift */; };
-		288877181C5FDD1500CBCE32 /* libSimulatorRemoteNotifications-iOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 288877091C5FDCFF00CBCE32 /* libSimulatorRemoteNotifications-iOS.a */; };
 		288AC88D1BCFA062004EA6A0 /* MapItemCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 288AC88C1BCFA062004EA6A0 /* MapItemCollectionViewCell.swift */; };
 		288AC88F1BCFA43B004EA6A0 /* SharableItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 288AC88E1BCFA43B004EA6A0 /* SharableItem.swift */; };
 		288AC8911BCFABE2004EA6A0 /* SafetyCameraCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 288AC8901BCFABE2004EA6A0 /* SafetyCameraCell.swift */; };
@@ -264,13 +263,6 @@
 			proxyType = 2;
 			remoteGlobalIDString = 517C989918B801C800FC4694;
 			remoteInfo = "SimulatorRemoteNotifications-OSX";
-		};
-		288877161C5FDD0A00CBCE32 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 288876FD1C5FDCFF00CBCE32 /* SimulatorRemoteNotifications.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = 51D3517118B9B0F500ECA215;
-			remoteInfo = "SimulatorRemoteNotifications-iOS";
 		};
 		28C77E4F1C58295000628CD9 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -452,7 +444,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				288877181C5FDD1500CBCE32 /* libSimulatorRemoteNotifications-iOS.a in Frameworks */,
 				2804865E1BC092F2003BA360 /* MapKit.framework in Frameworks */,
 				286BB4461C46FBC7008B5983 /* libFlurry_7.3.0.a in Frameworks */,
 				2804865B1BC091C5003BA360 /* CoreLocation.framework in Frameworks */,
@@ -860,7 +851,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				288877171C5FDD0A00CBCE32 /* PBXTargetDependency */,
 				287F752D1C00C59A0040EE8A /* PBXTargetDependency */,
 			);
 			name = ScotTraffic;
@@ -1323,11 +1313,6 @@
 			isa = PBXTargetDependency;
 			target = 287F75211C00C59A0040EE8A /* TodayExtension */;
 			targetProxy = 287F752C1C00C59A0040EE8A /* PBXContainerItemProxy */;
-		};
-		288877171C5FDD0A00CBCE32 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = "SimulatorRemoteNotifications-iOS";
-			targetProxy = 288877161C5FDD0A00CBCE32 /* PBXContainerItemProxy */;
 		};
 		28C77E501C58295000628CD9 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
