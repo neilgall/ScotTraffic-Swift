@@ -88,8 +88,11 @@ class MapItemCollectionViewController: UIViewController {
     }
     
     private func selectItemIndex(index: Int) {
+        guard let collectionView = collectionView where 0 <= index && index < collectionView.numberOfItemsInSection(0) else {
+            return
+        }
         let indexPath = NSIndexPath(forItem: index, inSection: 0)
-        collectionView?.scrollToItemAtIndexPath(indexPath, atScrollPosition: .CenteredHorizontally, animated: false)
+        collectionView.scrollToItemAtIndexPath(indexPath, atScrollPosition: .CenteredHorizontally, animated: false)
         pageControl?.currentPage = index
     }
     
