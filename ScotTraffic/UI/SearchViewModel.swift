@@ -101,19 +101,19 @@ class SearchViewModel {
             }
         }).latest()
                 
-        sectionHeader = combine(contentType, searchResultsMajorAxis) {
-            if case .Favourites = $0 {
+        sectionHeader = combine(contentType, searchResultsMajorAxis, combine: { type, axis in
+            if case .Favourites = type {
                 return "FavouritesHeadingView"
             } else {
-                switch $1 {
+                switch axis {
                 case .NorthSouth: return "NorthToSouthHeadingView"
                 case .EastWest: return "WestToEastHeadingView"
                 }
             }
-        }.latest()
+        }).latest()
         
         contentSelection = combine(searchSelectionIndex, content, combine: { index, content in
-            guard let index = index else {
+            guard let index = index where 0 <= index && index < content.count else {
                 return nil
             }
             switch content[index] {
@@ -127,7 +127,10 @@ class SearchViewModel {
         })
         
         savedSearchSelection = combine(searchSelectionIndex, content, combine: { index, content in
-            guard let index = index, case .SearchItem(let term) = content[index] else {
+            guard let index = index where 0 <= index && index < content.count else {
+                return nil
+            }
+            guard case .SearchItem(let term) = content[index] else {
                 return nil
             }
             return term
