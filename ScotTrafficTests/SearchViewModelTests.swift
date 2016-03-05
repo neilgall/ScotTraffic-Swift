@@ -95,64 +95,48 @@ class SearchViewModelTests: XCTestCase {
         XCTAssertEqual(header, "WestToEastHeadingView")
     }
     
-    func testDefaultSearchSelectionIsNil() {
+    func testDefaultSearchSelectionIsNone() {
         let testData = TestAppModel()
         let viewModel = SearchViewModel(scotTraffic: testData)
         viewModel.searchTerm.value = ""
 
-        guard let selection = viewModel.contentSelection.latestValue.get else {
+        let selection = viewModel.contentSelection.latestValue
+        guard case .None = selection else {
             XCTFail()
             return
         }
-        
-        XCTAssertNil(selection)
     }
     
     func testSearchSelectionSetBySelectionIndex() {
         let testData = TestAppModel()
         let viewModel = SearchViewModel(scotTraffic: testData)
+        let selection = viewModel.contentSelection.latest()
+        
         viewModel.searchTerm.value = "M8"
         viewModel.searchSelectionIndex.value = 3
         
-        guard let selection = viewModel.contentSelection.latestValue.get else {
+        guard let selectionValue = selection.latestValue.get else {
             XCTFail()
             return
         }
         
-        XCTAssertEqual(selection?.mapItem.name, "Glasgow Airport")
+        XCTAssertEqual(selectionValue?.mapItem.name, "Glasgow Airport")
     }
     
-    func testSearchSelectionClearedByCancellingSearch() {
+    func testSearchSelectionIsEvent() {
         let testData = TestAppModel()
         let viewModel = SearchViewModel(scotTraffic: testData)
         viewModel.searchTerm.value = "M8"
         viewModel.searchSelectionIndex.value = 3
-        viewModel.searchTerm.value = ""
         
-        guard let selection = viewModel.contentSelection.latestValue.get else {
+        let selection = viewModel.contentSelection.latestValue
+        guard case .None = selection else {
             XCTFail()
             return
         }
-        
-        XCTAssertNil(selection)
     }
     
-    func testSearchSelectionClearedByChangingSearchTerm() {
-        let testData = TestAppModel()
-        let viewModel = SearchViewModel(scotTraffic: testData)
-        viewModel.searchTerm.value = "M8"
-        viewModel.searchSelectionIndex.value = 3
-        viewModel.searchTerm.value = "M80"
-
-        guard let selection = viewModel.contentSelection.latestValue.get else {
-            XCTFail()
-            return
-        }
-        
-        XCTAssertNil(selection)
-    }
-    
-    func testDeactivatingSearchClearsSearchTermAndSelection() {
+    func testDeactivatingSearchClearsSearchTerm() {
         let viewModel = SearchViewModel(scotTraffic: TestAppModel())
         viewModel.searchActive.value = true
         viewModel.searchTerm.value = "M80"
@@ -160,12 +144,11 @@ class SearchViewModelTests: XCTestCase {
         
         viewModel.searchActive.value = false
         
-        guard let term = viewModel.searchTerm.latestValue.get, selection = viewModel.contentSelection.latestValue.get else {
+        guard let term = viewModel.searchTerm.latestValue.get else {
             XCTFail()
             return
         }
         
         XCTAssertTrue(term.isEmpty)
-        XCTAssertNil(selection)
     }
 }
