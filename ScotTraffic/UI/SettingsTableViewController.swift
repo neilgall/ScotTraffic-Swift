@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import MessageUI
 
 protocol SettingsTableViewControllerDelegate {
     func settingsViewControllerDidDismiss(settingsViewController: SettingsTableViewController)
@@ -104,17 +105,22 @@ class SettingsTableViewController: UITableViewController {
             SettingsInfoConfiguration(
                 text: "Version",
                 detailText: NSBundle.mainBundle().objectForInfoDictionaryKey("CFBundleShortVersionString") as? String,
-                pageTitle: nil),
+                type: .InformationOnly),
             
             SettingsInfoConfiguration(
                 text: "About ScotTraffic",
                 detailText: nil,
-                pageTitle: "about"),
+                type: .WebPage(pageTitle: "about")),
             
             SettingsInfoConfiguration(
                 text: "Support",
                 detailText: nil,
-                pageTitle: "index")
+                type: .WebPage(pageTitle: "index")),
+            
+            SettingsInfoConfiguration(
+                text: "Send Diagnostics Email",
+                detailText: nil,
+                type: .DiagnosticEmail)
         ]
         
         receivers.append(combine(contentConfigurations, notificationConfigurations, combine:{ ($0, $1) }) --> {
@@ -169,10 +175,37 @@ extension SettingsTableViewController {
     
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         let configuration = configurations[indexPath.section].1[indexPath.row]
-        guard let config = configuration as? SettingsInfoConfiguration, title = config.pageTitle else {
+        guard let config = configuration as? SettingsInfoConfiguration else {
             return
         }
         
-        pushWebView(title)
+        switch config.type {
+        case .WebPage(let pageTitle):
+            pushWebView(pageTitle)
+            
+        case .DiagnosticEmail:
+            sendDiagnosticsEmail()
+            
+        case .InformationOnly:
+            break
+        }
     }
+}
+
+extension SettingsTableViewController: MFMailComposeViewControllerDelegate {
+    
+    func sendDiagnosticsEmail() {
+        let emailViewController = MFMailComposeViewController()
+        emailViewController.mailComposeDelegate = self
+        
+        populateDiagnosticsEmail(emailViewController)
+        presentViewController(emailViewController, animated: true, completion: nil)
+    }
+    
+    func mailComposeController(controller: MFMailComposeViewController, didFinishWithResult result: MFMailComposeResult, error: NSError?) {
+        dismissViewControllerAnimated(true, completion: nil)
+    }
+}
+
+extension MFMailComposeViewController: DiagnosticsEmail {
 }

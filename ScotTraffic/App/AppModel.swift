@@ -44,7 +44,7 @@ class AppModel: ScotTraffic {
         
         // -- Traffic Cameras --
         
-        let trafficCamerasSource = fifteenMinuteCache("trafficcameras.json")
+        let trafficCamerasSource = fiveMinuteCache("trafficcameras.json")
         let trafficCamerasContext = TrafficCameraDecodeContext(makeImageDataSource: fiveMinuteCache)
         let trafficCameraLocations = trafficCamerasSource.value.map {
             return $0.map(Array<TrafficCameraLocation>.decodeJSON(trafficCamerasContext) <== JSONArrayFromData)

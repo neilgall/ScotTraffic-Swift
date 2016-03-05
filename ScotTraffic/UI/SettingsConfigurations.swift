@@ -28,10 +28,16 @@ struct SettingsIntConfiguration: SettingConfiguration {
 }
 
 struct SettingsInfoConfiguration: SettingConfiguration {
+    enum Type {
+        case InformationOnly
+        case WebPage(pageTitle: String)
+        case DiagnosticEmail
+    }
+
     let cellIdentifier = "SettingsInfoTableViewCell"
     let text: String
     let detailText: String?
-    let pageTitle: String?
+    let type: Type
 }
 
 // Use to bidirectionally map an Input<EnumType> to an Input<Int> for use in SettingsIntConfiguration
