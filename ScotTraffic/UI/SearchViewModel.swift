@@ -40,7 +40,6 @@ class SearchViewModel {
     private var favourites: Favourites
     private var receivers = [ReceiverType]()
 
-    
     init(scotTraffic: ScotTraffic) {
         searchActive = Input(initial: false)
         searchTerm = Input(initial: "")
@@ -112,7 +111,7 @@ class SearchViewModel {
             }
         }).latest()
         
-        contentSelection = combine(searchSelectionIndex, content, combine: { index, content in
+        contentSelection = searchSelectionIndex.mapWith(content, transform: { index, content in
             guard let index = index where 0 <= index && index < content.count else {
                 return nil
             }
@@ -124,9 +123,9 @@ class SearchViewModel {
             case .SearchItem:
                 return nil
             }
-        })
+        }).event()
         
-        savedSearchSelection = combine(searchSelectionIndex, content, combine: { index, content in
+        savedSearchSelection = searchSelectionIndex.mapWith(content, transform: { index, content in
             guard let index = index where 0 <= index && index < content.count else {
                 return nil
             }
@@ -140,15 +139,15 @@ class SearchViewModel {
             !favourites.savedSearches.contains(searchTerm)
         })
         
-        // cancel selection before search term changes
-        receivers.append(searchTerm.willOutput({
-            self.searchSelectionIndex <-- nil
-        }))
+//        // cancel selection before search term changes
+//        receivers.append(searchTerm.willOutput({
+//            self.searchSelectionInput <-- nil
+//        }))
         
         // clear search term and selection on deactivating search
         receivers.append(searchActive.onFallingEdge {
             self.searchTerm <-- ""
-            self.searchSelectionIndex <-- nil
+//            self.searchSelectionInput <-- nil
         })
     }
     

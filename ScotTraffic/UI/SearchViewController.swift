@@ -23,6 +23,7 @@ class SearchViewController: UITableViewController {
     var dataSource: UITableViewDataSource?
     var saveSearchButtonSignal: Input<UIButton?> = Input(initial: nil)
     var receivers = [ReceiverType]()
+    var modifyingTable: Bool = false
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -57,6 +58,9 @@ class SearchViewController: UITableViewController {
             })
             
             receivers.append(searchViewModel.content --> { [weak self] _ in
+                guard let modifyingTable = self?.modifyingTable where !modifyingTable else {
+                    return
+                }
                 dispatch_async(dispatch_get_main_queue()) {
                     if let tableView = self?.tableView where !tableView.editing {
                         tableView.reloadSections(NSIndexSet(index: 0), withRowAnimation: .Automatic)
@@ -136,15 +140,19 @@ extension SearchViewController {
         guard editingStyle == .Delete else {
             return
         }
-        searchViewModel?.deleteFavouriteAtIndex(indexPath.row)
-        tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Automatic)
+        with(&modifyingTable) {
+            searchViewModel?.deleteFavouriteAtIndex(indexPath.row)
+            tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
+        }
     }
     
     override func tableView(tableView: UITableView, moveRowAtIndexPath sourceIndexPath: NSIndexPath, toIndexPath destinationIndexPath: NSIndexPath) {
         guard let model = searchViewModel else {
             return
         }
-        model.moveFavouriteAtIndex(sourceIndexPath.row, toIndex: destinationIndexPath.row)
+        with(&modifyingTable) {
+            model.moveFavouriteAtIndex(sourceIndexPath.row, toIndex: destinationIndexPath.row)
+        }
     }
 }
 
@@ -173,6 +181,7 @@ extension SearchViewController {
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         if let searchSelectionIndex = searchViewModel?.searchSelectionIndex {
             searchSelectionIndex <-- indexPath.row
+            tableView.deselectRowAtIndexPath(indexPath, animated: true)
         }
     }
     

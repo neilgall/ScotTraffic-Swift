@@ -28,6 +28,19 @@ public class Const<Value> : Signal<Value> {
     }
 }
 
+// Event only propagates value changes, hiding the latestValue from any underlying signal
+//
+class Event<Source: SignalType> : Signal<Source.ValueType> {
+    private var receiver: ReceiverType!
+    
+    init(_ source: Source) {
+        super.init()
+        receiver = Receiver(source) { [weak self] transaction in
+            self?.pushTransaction(transaction)
+        }
+    }
+}
+
 // Filter only propagates values from a source signal which satisfy a predicate. Transactions
 // which fail the predicate are cancelled.
 //
@@ -80,6 +93,57 @@ class Mapped<Source: SignalType, MappedType> : Signal<MappedType> {
             return .Computed({ self.transform(sourceValue) })
         case .Computed(let getSourceValue):
             return .Computed({ self.transform(getSourceValue()) })
+        }
+    }
+}
+
+// MappedWith transforms a signal combined with the latest value of another signal
+//
+class MappedWith<Source: SignalType, WithSource: SignalType, MappedType> : Signal<MappedType> {
+    private let source: Source
+    private let withSource: WithSource
+    private let transform: (Source.ValueType, WithSource.ValueType) -> MappedType
+    private var receiver: ReceiverType!
+
+    init(_ source: Source, withSource: WithSource, transform: (Source.ValueType, WithSource.ValueType) -> MappedType) {
+        self.source = source
+        self.withSource = withSource
+        self.transform = transform
+        
+        super.init()
+        
+        self.receiver = Receiver(source) { [weak self] transaction in
+            switch transaction {
+            case .Begin:
+                self?.pushTransaction(.Begin)
+            case .End(let sourceValue):
+                if let withValue = withSource.latestValue.get {
+                    self?.pushTransaction(.End(transform(sourceValue, withValue)))
+                } else {
+                    self?.pushTransaction(.Cancel)
+                }
+            case .Cancel:
+                self?.pushTransaction(.Cancel)
+            }
+        }
+    }
+    
+    override var latestValue: LatestValue<MappedType> {
+        switch source.latestValue {
+        case .None:
+            return .None
+        case .Stored(let sourceValue):
+            if let withValue = withSource.latestValue.get {
+                return .Computed({ self.transform(sourceValue, withValue) })
+            } else {
+                return .None
+            }
+        case .Computed(let getSourceValue):
+            if let withValue = withSource.latestValue.get {
+                return .Computed({ self.transform(getSourceValue(), withValue) })
+            } else {
+                return .None
+            }
         }
     }
 }
@@ -212,6 +276,10 @@ extension SignalType {
         return WrappedSignal(self)
     }
     
+    public func event() -> Signal<ValueType> {
+        return Event(self)
+    }
+    
     public func latest() -> Signal<ValueType> {
         // if the source signal can already provide a stored value, there's no point wrapping it in a Latest
         if let signal = self as? Signal<ValueType>, case .Stored = signal.latestValue {
@@ -223,6 +291,10 @@ extension SignalType {
     
     public func map<TargetType>(transform: ValueType -> TargetType) -> Signal<TargetType> {
         return Mapped(self, transform)
+    }
+    
+    public func mapWith<WithSignal: SignalType, TargetType>(with: WithSignal, transform: (ValueType, WithSignal.ValueType) -> TargetType) -> Signal<TargetType> {
+        return MappedWith(self, withSource: with, transform: transform)
     }
     
     public func filter(predicate: ValueType -> Bool) -> Signal<ValueType> {
