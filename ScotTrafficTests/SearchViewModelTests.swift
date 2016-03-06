@@ -31,7 +31,7 @@ class FavouritesAndSearchViewModelTests: XCTestCase {
         testData.favourites.reloadFromUserDefaults()
 
         let viewModel = FavouritesAndSearchViewModel(scotTraffic: testData)
-        viewModel.searchTerm.value = ""
+        viewModel.liveSearchTerm.value = ""
         
         guard let content = viewModel.content.latestValue.get else {
             XCTFail()
@@ -47,7 +47,7 @@ class FavouritesAndSearchViewModelTests: XCTestCase {
     func testContentIsSearchResultsWhenSearchTermIsNonEmpty() {
         let testData = TestAppModel()
         let viewModel = FavouritesAndSearchViewModel(scotTraffic: testData)
-        viewModel.searchTerm.value = "M80"
+        viewModel.liveSearchTerm.value = "M80"
         
         guard let content = viewModel.content.latestValue.get else {
             XCTFail()
@@ -61,7 +61,7 @@ class FavouritesAndSearchViewModelTests: XCTestCase {
     func testResultsAxisIsNorthToSouthForA90Search() {
         let testData = TestAppModel()
         let viewModel = FavouritesAndSearchViewModel(scotTraffic: testData)
-        viewModel.searchTerm.value = "A90"
+        viewModel.liveSearchTerm.value = "A90"
         
         guard let content = viewModel.content.latestValue.get else {
             XCTFail()
@@ -74,7 +74,7 @@ class FavouritesAndSearchViewModelTests: XCTestCase {
     func testResultsAxisIsWestToEastForM8Search() {
         let testData = TestAppModel()
         let viewModel = FavouritesAndSearchViewModel(scotTraffic: testData)
-        viewModel.searchTerm.value = "M8"
+        viewModel.liveSearchTerm.value = "M8"
         
         guard let content = viewModel.content.latestValue.get else {
             XCTFail()
@@ -87,7 +87,7 @@ class FavouritesAndSearchViewModelTests: XCTestCase {
     func testDefaultSearchSelectionIsNone() {
         let testData = TestAppModel()
         let viewModel = FavouritesAndSearchViewModel(scotTraffic: testData)
-        viewModel.searchTerm.value = ""
+        viewModel.liveSearchTerm.value = ""
 
         let selection = viewModel.contentSelection.latestValue
         guard case .None = selection else {
@@ -101,8 +101,8 @@ class FavouritesAndSearchViewModelTests: XCTestCase {
         let viewModel = FavouritesAndSearchViewModel(scotTraffic: testData)
         let selection = viewModel.contentSelection.latest()
         
-        viewModel.searchTerm.value = "M8"
-        viewModel.searchSelectionIndex.value = 3
+        viewModel.liveSearchTerm.value = "M8"
+        viewModel.selectionIndex.value = 3
         
         guard case .Some(let selectionValue) = selection.latestValue.get, case .Item(let selectionItem, _) = selectionValue else {
             XCTFail()
@@ -115,8 +115,8 @@ class FavouritesAndSearchViewModelTests: XCTestCase {
     func testSearchSelectionIsEvent() {
         let testData = TestAppModel()
         let viewModel = FavouritesAndSearchViewModel(scotTraffic: testData)
-        viewModel.searchTerm.value = "M8"
-        viewModel.searchSelectionIndex.value = 3
+        viewModel.liveSearchTerm.value = "M8"
+        viewModel.selectionIndex.value = 3
         
         let selection = viewModel.contentSelection.latestValue
         guard case .None = selection else {

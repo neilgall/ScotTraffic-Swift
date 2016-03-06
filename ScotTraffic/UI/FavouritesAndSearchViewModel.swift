@@ -17,7 +17,7 @@ struct FavouritesAndSearchViewModel {
     // Inputs
     let liveSearchTerm: Input<String>
     let enteredSearchTerm: Input<String>
-    let searchSelectionIndex: Input<Int?>
+    let selectionIndex: Input<Int?>
     
     // Outputs
     let searchActive = Input(initial: false)
@@ -33,19 +33,19 @@ struct FavouritesAndSearchViewModel {
         
         liveSearchTerm = liveSearchResultsViewModel.searchTerm
         enteredSearchTerm = Input(initial: "")
-        searchSelectionIndex = Input(initial: nil)
+        selectionIndex = Input(initial: nil)
         
         content = liveSearchTerm.map({ (text: String) -> Signal<Search.Content> in
             let model: SearchContentViewModel = text.isEmpty ? favouritesViewModel : liveSearchResultsViewModel
             return model.content
         }).join()
         
-        let currentSearchSelection: Signal<SearchResultsViewModel?> = enteredSearchTerm.event().mapWith(content, transform: { term, content in
+        let enteredSearchViewModel: Signal<SearchResultsViewModel?> = enteredSearchTerm.event().mapWith(content, transform: { term, content in
             return SearchResultsViewModel(scotTraffic: scotTraffic, term: term)
         })
         
-        let savedSearchSelection: Signal<SearchResultsViewModel?> = searchSelectionIndex.event().mapWith(content, transform: { index, content in
-            guard let index = index where content ~= index else {
+        let savedSearchViewModel: Signal<SearchResultsViewModel?> = notNil(selectionIndex.event()).mapWith(content, transform: { index, content in
+            guard content ~= index else {
                 return nil
             }
             guard case .SearchItem(let term) = content.items[index] else {
@@ -54,8 +54,8 @@ struct FavouritesAndSearchViewModel {
             return SearchResultsViewModel(scotTraffic: scotTraffic, term: term)
         })
         
-        let localItemSelection: Signal<Search.Selection> = searchSelectionIndex.mapWith(content, transform: { index, content in
-            guard let index = index where content ~= index else {
+        let localItemSelection: Signal<Search.Selection> = notNil(selectionIndex.event()).mapWith(content, transform: { index, content in
+            guard content ~= index else {
                 return .None
             }
             switch content.items[index] {
@@ -66,9 +66,9 @@ struct FavouritesAndSearchViewModel {
             case .SearchItem:
                 return .None
             }
-        }).event()
+        })
         
-        searchSelection = union(currentSearchSelection, savedSearchSelection)
+        searchSelection = union(enteredSearchViewModel, savedSearchViewModel)
 
         let savedSearchItemSelection = searchSelection.map({
             return $0?.contentSelection ?? Const(.None)

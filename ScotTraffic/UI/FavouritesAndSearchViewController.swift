@@ -183,15 +183,15 @@ extension FavouritesAndSearchViewController {
     }
     
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        if let searchSelectionIndex = viewModel?.searchSelectionIndex {
-            searchSelectionIndex <-- indexPath.row
+        if let selectionIndex = viewModel?.selectionIndex {
+            selectionIndex <-- indexPath.row
             tableView.deselectRowAtIndexPath(indexPath, animated: true)
         }
     }
     
     override func tableView(tableView: UITableView, didDeselectRowAtIndexPath indexPath: NSIndexPath) {
-        if let searchSelectionIndex = viewModel?.searchSelectionIndex {
-            searchSelectionIndex <-- nil
+        if let selectionIndex = viewModel?.selectionIndex {
+            selectionIndex <-- nil
         }
     }
 }

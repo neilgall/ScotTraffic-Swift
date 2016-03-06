@@ -312,3 +312,6 @@ public func union<Source: SignalType>(sources: Source...) -> Signal<Source.Value
     return Union(sources)
 }
 
+public func notNil<S: SignalType, T where S.ValueType == T?>(signal: S) -> Signal<T> {
+    return signal.filter({ $0 != nil }).map({ $0! })
+}
