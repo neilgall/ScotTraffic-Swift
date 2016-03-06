@@ -235,6 +235,15 @@ public class NGSplitViewController: UIViewController {
         
         addChild(masterViewController, withFrame: frames.master)
         addChild(detailViewController, withFrame: frames.detail)
+        
+        switch presentationStyle {
+        case .MasterOnly:
+            removeChildView(detailViewController)
+        case .DetailOnly:
+            removeChildView(masterViewController)
+        default:
+            break
+        }
     }
     
     public override func viewWillAppear(animated: Bool) {
@@ -477,23 +486,13 @@ public class NGSplitViewController: UIViewController {
     }
     
     private func crossFadeFromViewController(from: UIViewController, toViewController to: UIViewController) {
-        from.beginAppearanceTransition(false, animated: true)
-        to.beginAppearanceTransition(true, animated: true)
-        view.insertSubview(to.view, belowSubview: from.view)
-        to.view.alpha = 0.0
-        
-        UIView.animateWithDuration(transitionDuration,
-            delay: 0,
-            options: [.CurveEaseInOut],
-            animations: {
-                to.view.alpha = 1.0
-                from.view.alpha = 0.0
-            },
-            completion: { _ in
-                from.view.removeFromSuperview()
-                from.endAppearanceTransition()
-                to.endAppearanceTransition()
-        })
+        to.view.setNeedsLayout()
+        transitionFromViewController(from,
+            toViewController: to,
+            duration: transitionDuration,
+            options: [.TransitionCrossDissolve],
+            animations: { },
+            completion: nil)
     }
 }
 
