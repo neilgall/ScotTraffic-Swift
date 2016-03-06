@@ -19,6 +19,7 @@ extension BackgroundMapImage where Self: UICollectionViewCell, Self: MKMapViewDe
     
     func configureMap(mapItem: MapItem, forReferenceView view: UIView) -> MKMapView {
         let mapView = MKMapView(frame: view.frame)
+        mapView.mapType = .Hybrid
         mapView.delegate = self
         mapView.translatesAutoresizingMaskIntoConstraints = false
         view.superview!.insertSubview(mapView, atIndex: 0)
