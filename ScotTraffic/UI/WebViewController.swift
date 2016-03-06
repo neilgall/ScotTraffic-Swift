@@ -36,7 +36,7 @@ class WebViewController: UIViewController {
     func reload() {
         var url: NSURL? = nil
         if let page = page where loadFromWeb {
-            url = NSURL(string: "support/\(page).html", relativeToURL: scotTrafficBaseURL)
+            url = NSURL(string: "support/\(page).html", relativeToURL: Configuration.scotTrafficBaseURL)
         } else {
             if let path = NSBundle.mainBundle().pathForResource(page, ofType: "html", inDirectory: "www") {
                 url = NSURL(fileURLWithPath: path)

@@ -18,7 +18,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         
-        loadUserDefaultsFromDiagnosticDataIfPresent()
+        if Configuration.betaTesting {
+            loadUserDefaultsFromDiagnosticDataIfPresent()
+        }
         
         analyticsStart()
         migrateUserDefaultsToAppGroup()
@@ -42,20 +44,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         NSUserDefaults.standardUserDefaults().synchronize()
     }
 
-    func applicationDidEnterBackground(application: UIApplication) {
-    }
-
     func applicationWillEnterForeground(application: UIApplication) {
         if let appModel = appCoordinator?.appModel {
             appModel.settings.reload()
             appModel.favourites.reloadFromUserDefaults()
         }
-    }
-
-    func applicationDidBecomeActive(application: UIApplication) {
-    }
-
-    func applicationWillTerminate(application: UIApplication) {
     }
 
     // -- MARK: Notifications

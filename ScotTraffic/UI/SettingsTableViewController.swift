@@ -101,7 +101,7 @@ class SettingsTableViewController: UITableViewController {
                 ])
         ]
 
-        let infoConfigurations: [SettingConfiguration] = [
+        var infoConfigurations: [SettingConfiguration] = [
             SettingsInfoConfiguration(
                 text: "Version",
                 detailText: NSBundle.mainBundle().objectForInfoDictionaryKey("CFBundleShortVersionString") as? String,
@@ -115,13 +115,15 @@ class SettingsTableViewController: UITableViewController {
             SettingsInfoConfiguration(
                 text: "Support",
                 detailText: nil,
-                type: .WebPage(pageTitle: "index")),
-            
-            SettingsInfoConfiguration(
+                type: .WebPage(pageTitle: "index"))
+        ]
+        
+        if Configuration.betaTesting {
+            infoConfigurations.append(SettingsInfoConfiguration(
                 text: "Send Diagnostics Email",
                 detailText: nil,
-                type: .DiagnosticEmail)
-        ]
+                type: .DiagnosticEmail))
+        }
         
         receivers.append(combine(contentConfigurations, notificationConfigurations, combine:{ ($0, $1) }) --> {
             [weak self] contentConfigurations, notificationConfigurations in

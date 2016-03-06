@@ -30,7 +30,7 @@ class TodayViewModel {
     init() {
         let userDefaults = Configuration.sharedUserDefaults()
         let diskCache = DiskCache(withPath: "scottraffic")
-        let httpAccess = HTTPAccess(baseURL: scotTrafficBaseURL, indicator: nil)
+        let httpAccess = HTTPAccess(baseURL: Configuration.scotTrafficBaseURL, indicator: nil)
         
         let cachedDataSource = CachedHTTPDataSource.dataSourceWithHTTPAccess(httpAccess, cache: diskCache)
         let fiveMinuteCache = cachedDataSource(300)

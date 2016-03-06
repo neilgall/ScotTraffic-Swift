@@ -31,7 +31,7 @@ class AppModel: ScotTraffic {
     init() {
         let userDefaults = Configuration.sharedUserDefaults()
         let diskCache = DiskCache(withPath: "scottraffic")
-        let httpAccess = HTTPAccess(baseURL: scotTrafficBaseURL, indicator: AppNetworkActivityIndicator())
+        let httpAccess = HTTPAccess(baseURL: Configuration.scotTrafficBaseURL, indicator: AppNetworkActivityIndicator())
         
         let cachedDataSource = CachedHTTPDataSource.dataSourceWithHTTPAccess(httpAccess, cache: diskCache)
         let fiveMinuteCache = cachedDataSource(300)
