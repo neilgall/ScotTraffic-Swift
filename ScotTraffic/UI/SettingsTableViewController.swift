@@ -104,7 +104,7 @@ class SettingsTableViewController: UITableViewController {
         var infoConfigurations: [SettingConfiguration] = [
             SettingsInfoConfiguration(
                 text: "Version",
-                detailText: NSBundle.mainBundle().objectForInfoDictionaryKey("CFBundleShortVersionString") as? String,
+                detailText: versionString(),
                 type: .InformationOnly),
             
             SettingsInfoConfiguration(
@@ -210,4 +210,13 @@ extension SettingsTableViewController: MFMailComposeViewControllerDelegate {
 }
 
 extension MFMailComposeViewController: DiagnosticsEmail {
+}
+
+private func versionString() -> String {
+    let bundle = NSBundle.mainBundle()
+    guard let shortVersion = bundle.objectForInfoDictionaryKey("CFBundleShortVersionString") as? String,
+        buildNumber = bundle.objectForInfoDictionaryKey("CFBundleVersion") as? String else {
+            return "unknown"
+    }
+    return "\(shortVersion) (\(buildNumber))"
 }
