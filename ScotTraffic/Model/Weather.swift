@@ -60,22 +60,13 @@ enum WeatherType: String {
     case Unknown = "unknown"
 }
 
-final class Weather {
+struct Weather {
     let name: String
     let mapPoint: MKMapPoint
     let temperature: Celcius
     let windSpeed: WindSpeedKPH
     let windDirection: WindDirection
     let weatherType: WeatherType
-    
-    init(name: String, mapPoint: MKMapPoint, temperature: Celcius, windSpeed: WindSpeedKPH, windDirection: WindDirection, weatherType: WeatherType) {
-        self.name = name
-        self.mapPoint = mapPoint
-        self.temperature = temperature
-        self.windSpeed = windSpeed
-        self.windDirection = windDirection
-        self.weatherType = weatherType
-    }
     
     var temperatureFahrenheit: Float {
         return temperature * 1.8 + 32

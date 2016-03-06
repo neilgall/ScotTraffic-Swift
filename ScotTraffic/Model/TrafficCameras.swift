@@ -18,19 +18,12 @@ enum TrafficCameraDirection: String {
 
 typealias TrafficCameraIndex = Int
 
-final class TrafficCameraLocation: MapItem {
+struct TrafficCameraLocation: MapItem {
     let name: String
     let road: String
     let mapPoint: MKMapPoint
     let cameras: [TrafficCamera]
     let iconName = "camera"
-    
-    init(name: String, road: String, mapPoint: MKMapPoint, cameras: [TrafficCamera]) {
-        self.name = name
-        self.road = road
-        self.mapPoint = mapPoint
-        self.cameras = cameras
-    }
     
     var count: Int {
         return cameras.count
@@ -45,7 +38,7 @@ final class TrafficCameraLocation: MapItem {
     }
 }
 
-final class TrafficCamera: ImageDataSource {
+struct TrafficCamera: ImageDataSource {
     let identifier: String
     let direction: TrafficCameraDirection?
     let isAvailable: Bool
@@ -77,7 +70,7 @@ extension TrafficCameraLocation {
     }
 }
 
-extension SequenceType where Generator.Element: TrafficCameraLocation {
+extension SequenceType where Generator.Element == TrafficCameraLocation {
     func findIdentifier(identifier: String) -> (location: TrafficCameraLocation, cameraIndex: TrafficCameraIndex)? {
         return flatMap({ (location: TrafficCameraLocation) -> (location: TrafficCameraLocation, cameraIndex: TrafficCameraIndex)? in
             guard let cameraIndex = location.indexOfCameraWithIdentifier(identifier) else {

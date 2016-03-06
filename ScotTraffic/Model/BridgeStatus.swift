@@ -10,7 +10,7 @@ import MapKit
 
 typealias KPH = Double
 
-final class BridgeStatus: MapItem, Hashable {
+struct BridgeStatus: MapItem {
     let identifier: String
     let name: String
     let road: String
@@ -18,15 +18,9 @@ final class BridgeStatus: MapItem, Hashable {
     let mapPoint: MKMapPoint
     let iconName = "bridge"
     let count = 1
-    
-    init(identifier: String, name: String, road: String, message: String, mapPoint: MKMapPoint) {
-        self.identifier = identifier
-        self.name = name
-        self.road = road
-        self.message = message
-        self.mapPoint = mapPoint
-    }
-    
+}
+
+extension BridgeStatus: Hashable {
     var hashValue: Int {
         return identifier.hashValue
     }

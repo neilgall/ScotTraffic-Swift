@@ -14,7 +14,7 @@ enum IncidentType {
     case Roadworks
 }
 
-final class Incident: MapItem {
+struct Incident: MapItem {
     let type: IncidentType
     let name: String
     let road: String = ""
@@ -23,15 +23,6 @@ final class Incident: MapItem {
     let date: NSDate
     let url: NSURL
     let count: Int = 1
-    
-    init(type: IncidentType, name: String, text: String, mapPoint: MKMapPoint, date: NSDate, url: NSURL) {
-        self.type = type
-        self.name = name
-        self.text = text
-        self.mapPoint = mapPoint
-        self.date = date
-        self.url = url
-    }
     
     var iconName: String {
         switch type {

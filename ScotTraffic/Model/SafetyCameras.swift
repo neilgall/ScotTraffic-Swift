@@ -20,7 +20,7 @@ enum SpeedLimit {
     case National
 }
 
-final class SafetyCamera: MapItem, ImageDataSource {
+struct SafetyCamera: MapItem, ImageDataSource {
     let name: String
     let road: String
     let url: NSURL?
@@ -30,21 +30,6 @@ final class SafetyCamera: MapItem, ImageDataSource {
     let count: Int = 1
     let iconName = "safetycamera"
     let dataSource: DataSource
-    
-    init(name: String, road: String, url: NSURL?, speedLimit: SpeedLimit, mapPoint: MKMapPoint, images: [String], dataSourceFactory: String->DataSource) {
-        self.name = name
-        self.road = road
-        self.url = url
-        self.speedLimit = speedLimit
-        self.mapPoint = mapPoint
-        self.images = images
-        
-        if let image = images.first {
-            self.dataSource = dataSourceFactory(image)
-        } else {
-            self.dataSource = EmptyDataSource()
-        }
-    }
 }
 
 extension SpeedLimit: JSONValueDecodable {
@@ -78,14 +63,25 @@ extension SafetyCamera: JSONObjectDecodable {
         guard let context = json.context as? SafetyCameraDecodeContext else {
             fatalError("invalid JSON decode context")
         }
+        let images: [String] = try json <~ "images"
+        let dataSource = dataSourceForImages(images, factory: context.makeImageDataSource)
+        
         return try SafetyCamera(
             name: json <~ "name",
             road: json <~ "road",
             url: (json <~ "url").flatMap { NSURL(string: $0) },
-            speedLimit: json <~ "speedLimit",
             mapPoint: MKMapPointForCoordinate(CLLocationCoordinate2DMake(json <~ "latitude", json <~ "longitude")),
-            images: json <~ "images",
-            dataSourceFactory: context.makeImageDataSource
+            speedLimit: json <~ "speedLimit",
+            images: images,
+            dataSource: dataSource
         )
+    }
+}
+
+func dataSourceForImages(images: [String], factory: String -> DataSource) -> DataSource {
+    if let image = images.first {
+        return factory(image)
+    } else {
+        return EmptyDataSource()
     }
 }
