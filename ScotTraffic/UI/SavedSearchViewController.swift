@@ -18,7 +18,7 @@ class SavedSearchViewController: UITableViewController {
     }
 
     var viewModel: SearchResultsViewModel?
-    var headerNib: Signal<UINib>?
+    var headerNib: Signal<String>?
     var dataSource: UITableViewDataSource?
     var receivers = [ReceiverType]()
 
@@ -37,19 +37,7 @@ class SavedSearchViewController: UITableViewController {
             self?.tableView.reloadData()
         })
         
-        headerNib = viewModel.content.map({
-            switch $0.type {
-            case .Favourites:
-                return UINib(nibName: "FavouritesHeadingView", bundle: nil)
-            case .SearchResults(let axis):
-                switch axis {
-                case .NorthSouth:
-                    return UINib(nibName: "NorthToSouthHeadingView", bundle: nil)
-                case .EastWest:
-                    return UINib(nibName: "WestToEastHeadingView", bundle: nil)
-                }
-            }
-        }).latest()
+        headerNib = headerNibSignal(viewModel.content)
         
         dataSource = viewModel.content.map({ $0.items }).tableViewDataSource(SearchResultCell.cellIdentifier)
     }
@@ -75,9 +63,10 @@ extension SavedSearchViewController {
     // -- MARK: UITableViewDelegate
     
     override func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        guard let nib = headerNib?.latestValue.get else {
+        guard let nibName = headerNib?.latestValue.get else {
             return nil
         }
+        let nib = UINib(nibName: nibName, bundle: nil)
         return nib.instantiateWithOwner(self, options: nil).first as? UIView
     }
     

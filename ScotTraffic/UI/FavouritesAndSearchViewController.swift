@@ -20,7 +20,7 @@ class FavouritesAndSearchViewController: UITableViewController {
     
     let editingFavourites: Input<Bool> = Input(initial: false)
     var viewModel: FavouritesAndSearchViewModel?
-    var headerNib: Signal<UINib>?
+    var headerNib: Signal<String>?
     var dataSource: UITableViewDataSource?
     var saveSearchButtonSignal: Input<UIButton?> = Input(initial: nil)
     var receivers = [ReceiverType]()
@@ -42,35 +42,24 @@ class FavouritesAndSearchViewController: UITableViewController {
         searchBar.showsCancelButton = false
         navigationItem.titleView = searchBar
 
-        receivers.append(combine(saveSearchButtonSignal, viewModel.canSaveSearch, combine: { ($0, $1) }) --> { button, canSave in
-            button?.enabled = canSave
-        })
+        headerNib = headerNibSignal(viewModel.content)
         
+        // YUCK: must remain above dataSource init due to dependency on observation order
         receivers.append(viewModel.content --> { [weak self] _ in
             self?.reloadTableIfNotModifying()
         })
         
-        headerNib = viewModel.content.map({
-            switch $0.type {
-            case .Favourites:
-                return UINib(nibName: "FavouritesHeadingView", bundle: nil)
-            case .SearchResults(let axis):
-                switch axis {
-                case .NorthSouth:
-                    return UINib(nibName: "NorthToSouthHeadingView", bundle: nil)
-                case .EastWest:
-                    return UINib(nibName: "WestToEastHeadingView", bundle: nil)
-                }
-            }
-        }).latest()
-        
         dataSource = viewModel.content.map({ $0.items }).tableViewDataSource(SearchResultCell.cellIdentifier)
+        
+        receivers.append(combine(saveSearchButtonSignal, viewModel.canSaveSearch, combine: { ($0, $1) }) --> { button, canSave in
+            button?.enabled = canSave
+        })
         
         receivers.append(editingFavourites --> { [weak self] editing in
             self?.navigationItem.rightBarButtonItem?.enabled = !editing
             self?.tableView.setEditing(editing, animated: true)
             self?.editingFavouritesButton?.setTitle(editing ? "Done" : "Edit", forState: .Normal)
-            })
+        })
         
         receivers.append(viewModel.savedSearchSelection --> { [weak self] in
             guard let resultsModel = $0, savedSearchViewController = self?.storyboard?.instantiateViewControllerWithIdentifier("savedSearchViewController") as? SavedSearchViewController else {
@@ -180,9 +169,10 @@ extension FavouritesAndSearchViewController {
     // -- MARK: UITableViewDelegate
     
     override func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        guard let nib = headerNib?.latestValue.get else {
+        guard let nibName = headerNib?.latestValue.get else {
             return nil
         }
+        let nib = UINib(nibName: nibName, bundle: nil)
         return nib.instantiateWithOwner(self, options: nil).first as? UIView
     }
     

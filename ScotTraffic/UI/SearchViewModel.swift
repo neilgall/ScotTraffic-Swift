@@ -132,7 +132,7 @@ struct SearchResultsViewModel: SearchContentViewModel {
                 type: .SearchResults(majorAxis: items.majorAxis),
                 items: items.map({ .OtherMapItem($0) })
             )
-        }).latest()
+        })
 
         contentSelection = searchSelectionIndex.mapWith(content, transform: { index, content in
             guard let index = index where content ~= index else {
@@ -146,7 +146,23 @@ struct SearchResultsViewModel: SearchContentViewModel {
     }
 }
 
-func applyFilterToMapItems<T: MapItem> (sourceList: [T], enabled: Bool, searchTerm: String) -> [MapItem] {
+func headerNibSignal(content: Signal<Search.Content>) -> Signal<String> {
+    return content.map({
+        switch $0.type {
+        case .Favourites:
+            return "FavouritesHeadingView"
+        case .SearchResults(let axis):
+            switch axis {
+            case .NorthSouth:
+                return "NorthToSouthHeadingView"
+            case .EastWest:
+                return "WestToEastHeadingView"
+            }
+        }
+    }).latest()
+}
+
+private func applyFilterToMapItems<T: MapItem> (sourceList: [T], enabled: Bool, searchTerm: String) -> [MapItem] {
     if !enabled {
         return []
     } else {
@@ -168,3 +184,4 @@ private func contentItemsForFavourites(favourites: [FavouriteItem], locations: [
         }
     })
 }
+
