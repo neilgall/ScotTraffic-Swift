@@ -16,12 +16,12 @@ class AppCoordinator: NSObject {
     
     let storyboard: UIStoryboard
     let splitViewController: NGSplitViewController
-    let searchViewController: SearchViewController
+    let searchViewController: FavouritesAndSearchViewController
     let mapViewController: MapViewController
     var collectionController: MapItemCollectionViewController?
     
     let mapViewModel: MapViewModel
-    let searchViewModel: SearchViewModel
+    let favouritesAndSearchViewModel: FavouritesAndSearchViewModel
     let collectionViewModel: MapItemCollectionViewModel
     var receivers = [ReceiverType]()
     
@@ -35,7 +35,7 @@ class AppCoordinator: NSObject {
             let storyboard = splitViewController.storyboard,
             let masterNavigationController = storyboard.instantiateViewControllerWithIdentifier("searchNavigationController") as? UINavigationController,
             let detailNavigationController = storyboard.instantiateViewControllerWithIdentifier("mapNavigationController") as? UINavigationController,
-            let searchViewController = masterNavigationController.topViewController as? SearchViewController,
+            let searchViewController = masterNavigationController.topViewController as? FavouritesAndSearchViewController,
             let mapViewController = detailNavigationController.topViewController as? MapViewController
         else {
             fatalError("Unexpected storyboard structure")
@@ -49,14 +49,14 @@ class AppCoordinator: NSObject {
         splitViewController.masterViewController = masterNavigationController
         splitViewController.detailViewController = detailNavigationController
         
-        searchViewModel = SearchViewModel(scotTraffic: appModel)
-        searchViewController.searchViewModel = searchViewModel
+        favouritesAndSearchViewModel = FavouritesAndSearchViewModel(scotTraffic: appModel)
+        searchViewController.viewModel = favouritesAndSearchViewModel
         
         mapViewModel = MapViewModel(scotTraffic: appModel)
         mapViewController.viewModel = mapViewModel
         mapViewController.maximumDetailItemsForCollectionCallout = maximumItemsInDetailView
         
-        collectionViewModel = MapItemCollectionViewModel(scotTraffic: appModel, selection: searchViewModel.contentSelection)
+        collectionViewModel = MapItemCollectionViewModel(scotTraffic: appModel, selection: favouritesAndSearchViewModel.contentSelection)
     }
     
     func start() {
@@ -72,10 +72,10 @@ class AppCoordinator: NSObject {
         receivers.append(appModel.messageOfTheDay --> showMessageOfTheDay)
         
         // show map when search cancelled
-        receivers.append(searchViewModel.searchActive.onFallingEdge(showMap))
+        receivers.append(favouritesAndSearchViewModel.searchActive.onFallingEdge(showMap))
         
         // show map when search selection changes
-        receivers.append(searchViewModel.contentSelection --> contentSelectionChanged)
+        receivers.append(favouritesAndSearchViewModel.contentSelection --> contentSelectionChanged)
         
         // sharing
         receivers.append(collectionViewModel.shareAction --> shareAction)
@@ -125,17 +125,19 @@ class AppCoordinator: NSObject {
         collectionController = nil
     }
     
-    private func contentSelectionChanged(selection: SearchViewModel.Selection?) {
-        if selection != nil {
-            showMap()
+    private func contentSelectionChanged(selection: Search.Selection) {
+        guard case .Item(let mapItem, _) = selection else {
+            return
         }
+        
+        showMap()
         
         // This is to guard against rapid taps in the search view controller racing with the
         // map view and callout animations. Need a better, more general solution to queue requests
         // or cancel the imperative and latent consequences of earlier updates.
         
         if mapViewModel.selectedMapItem.value == nil {
-            mapViewModel.selectedMapItem <-- selection?.mapItem
+            mapViewModel.selectedMapItem <-- mapItem
         }
     }
     

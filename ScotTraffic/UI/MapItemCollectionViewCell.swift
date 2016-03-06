@@ -46,19 +46,24 @@ enum MapItemCollectionViewItem {
         }
     }
     
-    func matchesSelection(selection: SearchViewModel.Selection) -> Bool {
-        switch self {
-        case .TrafficCameraItem(let location, let index):
-            return location == selection.mapItem && index == selection.index
-            
-        case .SafetyCameraItem(let safetyCamera):
-            return safetyCamera == selection.mapItem
-            
-        case .IncidentItem(let incident):
-            return incident == selection.mapItem
-            
-        case .BridgeStatusItem(let bridgeStatus, _):
-            return bridgeStatus == selection.mapItem
+    func matchesSelection(selection: Search.Selection) -> Bool {
+        switch selection {
+        case .None:
+            return false
+        case .Item(let selectionItem, let selectionIndex):
+            switch self {
+            case .TrafficCameraItem(let location, let index):
+                return location == selectionItem && index == selectionIndex
+                
+            case .SafetyCameraItem(let safetyCamera):
+                return safetyCamera == selectionItem
+                
+            case .IncidentItem(let incident):
+                return incident == selectionItem
+                
+            case .BridgeStatusItem(let bridgeStatus, _):
+                return bridgeStatus == selectionItem
+            }
         }
     }
     

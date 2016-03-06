@@ -139,13 +139,13 @@ extension SequenceType where Generator.Element == FavouriteItem {
         }))
     }
     
-    var savedSearches: Set<String> {
-        return Set(flatMap({
-            if case .SavedSearch(let term) = $0 {
-                return term
+    func containsSavedSearch(searchTerm: String) -> Bool {
+        return contains({
+            if case .SavedSearch(let savedTerm) = $0 where savedTerm == searchTerm {
+                return true
             } else {
-                return nil
+                return false
             }
-        }))
+        })
     }
 }

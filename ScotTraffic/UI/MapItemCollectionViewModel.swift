@@ -22,7 +22,7 @@ class MapItemCollectionViewModel: NSObject {
     let selectedItemIndex: Signal<Int?>
     let shareAction: Input<ShareAction?>
     
-    init(scotTraffic: ScotTraffic, selection: Signal<SearchViewModel.Selection?>) {
+    init(scotTraffic: ScotTraffic, selection: Signal<Search.Selection>) {
         self.favourites = scotTraffic.favourites
 
         mapItems = Input(initial: [])
@@ -42,11 +42,7 @@ class MapItemCollectionViewModel: NSObject {
         
         // Map the selected search result to a collection view cell
         selectedItemIndex = combine(cellItems, selection) { cellItems, selection in
-            selection.flatMap { selection in
-                cellItems.indexOf { item in
-                    item.matchesSelection(selection)
-                }
-            }
+            return cellItems.indexOf({ $0.matchesSelection(selection) })
         }
     }
 }
