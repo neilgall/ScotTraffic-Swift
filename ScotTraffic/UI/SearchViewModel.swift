@@ -76,7 +76,7 @@ struct FavouritesViewModel: SearchContentViewModel {
                 type: .Favourites,
                 items: contentItemsForFavourites(favourites, locations: trafficCameraLocations)
             )
-        })
+        }).latest()
     }
 }
 
@@ -130,9 +130,9 @@ struct SearchResultsViewModel: SearchContentViewModel {
         content = combinedResults.map({ (items: [MapItem]) -> Search.Content in
             Search.Content(
                 type: .SearchResults(majorAxis: items.majorAxis),
-                items: items.map({ .OtherMapItem($0) })
+                items: items.sortGeographically().map({ .OtherMapItem($0) })
             )
-        })
+        }).latest()
 
         contentSelection = searchSelectionIndex.mapWith(content, transform: { index, content in
             guard let index = index where content ~= index else {

@@ -117,7 +117,7 @@ class FavouritesAndSearchViewController: UITableViewController {
 
     @IBAction func cancelSearch() {
         if let viewModel = viewModel {
-            viewModel.searchActive <-- false
+            viewModel.searchTerm <-- ""
         }
     }
 }
