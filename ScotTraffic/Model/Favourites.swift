@@ -15,7 +15,7 @@ private let typeTrafficCamera = "trafficCamera"
 private let termKey = "term"
 private let identifierKey = "identifier"
 
-enum FavouriteItem {
+enum FavouriteItem: Equatable {
     case SavedSearch(term: String)
     case TrafficCamera(identifier: String)
 }
@@ -114,8 +114,6 @@ private func dictionaryFromFavouriteItem(favourite: FavouriteItem) -> [String:St
         return [ typeKey: typeTrafficCamera, identifierKey: identifier ]
     }
 }
-
-extension FavouriteItem: Equatable {}
 
 func == (lhs: FavouriteItem, rhs: FavouriteItem) -> Bool {
     switch (lhs, rhs) {

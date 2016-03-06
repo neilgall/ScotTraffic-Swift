@@ -14,15 +14,17 @@ class FavouritesAndSearchViewController: UITableViewController {
     @IBOutlet var editingFavouritesButton: UIButton?
     @IBOutlet var saveSearchButton: UIButton? {
         didSet {
-            saveSearchButtonSignal <-- saveSearchButton
+            saveSearchButton?.hidden = true
         }
+    }
+    var searchBar: UISearchBar? {
+        return navigationItem.titleView as? UISearchBar
     }
     
     let editingFavourites: Input<Bool> = Input(initial: false)
     var viewModel: FavouritesAndSearchViewModel?
     var headerNib: Signal<String>?
     var dataSource: UITableViewDataSource?
-    var saveSearchButtonSignal: Input<UIButton?> = Input(initial: nil)
     var receivers = [ReceiverType]()
     var modifyingTable: Bool = false
 
@@ -51,22 +53,18 @@ class FavouritesAndSearchViewController: UITableViewController {
         
         dataSource = viewModel.content.map({ $0.items }).tableViewDataSource(SearchResultCell.cellIdentifier)
         
-        receivers.append(combine(saveSearchButtonSignal, viewModel.canSaveSearch, combine: { ($0, $1) }) --> { button, canSave in
-            button?.enabled = canSave
-        })
-        
         receivers.append(editingFavourites --> { [weak self] editing in
             self?.navigationItem.rightBarButtonItem?.enabled = !editing
             self?.tableView.setEditing(editing, animated: true)
             self?.editingFavouritesButton?.setTitle(editing ? "Done" : "Edit", forState: .Normal)
         })
         
-        receivers.append(viewModel.savedSearchSelection --> { [weak self] in
-            guard let resultsModel = $0, savedSearchViewController = self?.storyboard?.instantiateViewControllerWithIdentifier("savedSearchViewController") as? SavedSearchViewController else {
+        receivers.append(viewModel.searchSelection --> { [weak self] in
+            guard let resultsModel = $0, searchResultViewController = self?.searchResultViewController() else {
                 return
             }
-            savedSearchViewController.viewModel = resultsModel
-            self?.navigationController?.pushViewController(savedSearchViewController, animated: true)
+            searchResultViewController.viewModel = resultsModel
+            self?.navigationController?.pushViewController(searchResultViewController, animated: true)
         })
     }
 
@@ -76,7 +74,11 @@ class FavouritesAndSearchViewController: UITableViewController {
         if let viewModel = viewModel {
             viewModel.searchActive <-- true
         }
-
+        
+        if let searchBar = navigationItem.titleView as? UISearchBar, text = searchBar.text where !text.isEmpty {
+            searchBar.becomeFirstResponder()
+        }
+            
         tableView.reloadData()
     }
     
@@ -96,28 +98,21 @@ class FavouritesAndSearchViewController: UITableViewController {
         tableView.reloadSections(NSIndexSet(index: 0), withRowAnimation: .Automatic)
     }
     
-    func searchBarResignFirstResponder() {
-        (navigationItem.titleView as? UISearchBar)?.resignFirstResponder()
-    }
-    
-    func backButton() -> UIBarButtonItem {
-        return UIBarButtonItem(title: "Favourites", style: .Plain, target: self, action: Selector("backToFavourites:"))
+    func searchResultViewController() -> SearchResultViewController? {
+        return storyboard?.instantiateViewControllerWithIdentifier("searchResultViewController") as? SearchResultViewController
     }
 
     // -- MARK: Actions
     
     @IBAction func editFavourites(sender: UIButton) {
-        editingFavourites <-- !(editingFavourites.latestValue.get!)
+        searchBar?.resignFirstResponder()
+        editingFavourites.modify({ return !$0 })
     }
     
-    @IBAction func saveSearch(sender: UIButton) {
-        viewModel?.saveSearch()
-        searchBarResignFirstResponder()
-    }
-
     @IBAction func cancelSearch() {
         if let viewModel = viewModel {
-            viewModel.searchTerm <-- ""
+            viewModel.liveSearchTerm <-- ""
+            viewModel.enteredSearchTerm <-- ""
         }
     }
 }
@@ -201,24 +196,30 @@ extension FavouritesAndSearchViewController {
     }
 }
 
-extension FavouritesAndSearchViewController {
-    // -- MARK: UIScrollViewDelegate
-    
-    override func scrollViewWillBeginDragging(scrollView: UIScrollView) {
-        searchBarResignFirstResponder()
-    }
-}
-
 extension FavouritesAndSearchViewController: UISearchBarDelegate {
     // -- MARK: UISearchBarDelegate
+
+    func searchBar(searchBar: UISearchBar, shouldChangeTextInRange range: NSRange, replacementText text: String) -> Bool {
+        cancelEditingFavourites()
+        return true
+    }
     
     func searchBar(searchBar: UISearchBar, textDidChange searchText: String) {
-        if let searchTerm = viewModel?.searchTerm {
-            searchTerm <-- searchText
+        if let viewModel = viewModel {
+            viewModel.liveSearchTerm <-- searchText
         }
     }
     
     func searchBarSearchButtonClicked(searchBar: UISearchBar) {
+        if let viewModel = viewModel, text = searchBar.text {
+            viewModel.liveSearchTerm <-- ""
+            viewModel.enteredSearchTerm <-- text
+        }
+        searchBar.text = ""
+        searchBar.resignFirstResponder()
+    }
+    
+    func searchBarCancelButtonClicked(searchBar: UISearchBar) {
         searchBar.resignFirstResponder()
     }
 }

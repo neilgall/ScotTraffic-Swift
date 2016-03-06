@@ -15,31 +15,36 @@ struct FavouritesAndSearchViewModel {
     private let searchResultsViewModel: SearchResultsViewModel
     
     // Inputs
-    let searchTerm: Input<String>
+    let liveSearchTerm: Input<String>
+    let enteredSearchTerm: Input<String>
     let searchSelectionIndex: Input<Int?>
     
     // Outputs
     let searchActive = Input(initial: false)
     let content: Signal<Search.Content>
-    let canSaveSearch: Signal<Bool>
     let contentSelection: Signal<Search.Selection>
-    let savedSearchSelection: Signal<SearchResultsViewModel?>
+    let searchSelection: Signal<SearchResultsViewModel?>
     
     init(scotTraffic: ScotTraffic) {
         self.favourites = scotTraffic.favourites
         
         let favouritesViewModel = FavouritesViewModel(scotTraffic: scotTraffic)
-        let searchResultsViewModel = SearchResultsViewModel(scotTraffic: scotTraffic)
+        let liveSearchResultsViewModel = SearchResultsViewModel(scotTraffic: scotTraffic)
         
-        searchTerm = searchResultsViewModel.searchTerm
+        liveSearchTerm = liveSearchResultsViewModel.searchTerm
+        enteredSearchTerm = Input(initial: "")
         searchSelectionIndex = Input(initial: nil)
         
-        content = searchTerm.map({ (text: String) -> Signal<Search.Content> in
-            let model: SearchContentViewModel = text.isEmpty ? favouritesViewModel : searchResultsViewModel
+        content = liveSearchTerm.map({ (text: String) -> Signal<Search.Content> in
+            let model: SearchContentViewModel = text.isEmpty ? favouritesViewModel : liveSearchResultsViewModel
             return model.content
         }).join()
         
-        savedSearchSelection = searchSelectionIndex.mapWith(content, transform: { index, content in
+        let currentSearchSelection: Signal<SearchResultsViewModel?> = enteredSearchTerm.event().mapWith(content, transform: { term, content in
+            return SearchResultsViewModel(scotTraffic: scotTraffic, term: term)
+        })
+        
+        let savedSearchSelection: Signal<SearchResultsViewModel?> = searchSelectionIndex.event().mapWith(content, transform: { index, content in
             guard let index = index where content ~= index else {
                 return nil
             }
@@ -47,11 +52,7 @@ struct FavouritesAndSearchViewModel {
                 return nil
             }
             return SearchResultsViewModel(scotTraffic: scotTraffic, term: term)
-        }).event()
-        
-        let savedSearchItemSelection = savedSearchSelection.map({
-            return $0?.contentSelection ?? Const(.None)
-        }).join()
+        })
         
         let localItemSelection: Signal<Search.Selection> = searchSelectionIndex.mapWith(content, transform: { index, content in
             guard let index = index where content ~= index else {
@@ -67,14 +68,16 @@ struct FavouritesAndSearchViewModel {
             }
         }).event()
         
+        searchSelection = union(currentSearchSelection, savedSearchSelection)
+
+        let savedSearchItemSelection = searchSelection.map({
+            return $0?.contentSelection ?? Const(.None)
+        }).join()
+        
         contentSelection = union(localItemSelection, savedSearchItemSelection)
         
-        canSaveSearch = combine(scotTraffic.favourites.items, searchTerm, combine: { favourites, searchTerm in
-            !favourites.containsSavedSearch(searchTerm)
-        })
-        
         self.favouritesViewModel = favouritesViewModel
-        self.searchResultsViewModel = searchResultsViewModel
+        self.searchResultsViewModel = liveSearchResultsViewModel
     }
     
     func deleteFavouriteAtIndex(index: Int) {
@@ -83,12 +86,6 @@ struct FavouritesAndSearchViewModel {
     
     func moveFavouriteAtIndex(sourceIndex: Int, toIndex destinationIndex: Int) {
         favourites.moveItemFromIndex(sourceIndex, toIndex: destinationIndex)
-    }
-    
-    func saveSearch() {
-        if let searchTerm = searchTerm.latestValue.get {
-            favourites.addItem(.SavedSearch(term: searchTerm))
-        }
     }
 }
 

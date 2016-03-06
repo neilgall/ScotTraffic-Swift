@@ -81,6 +81,8 @@ struct FavouritesViewModel: SearchContentViewModel {
 }
 
 struct SearchResultsViewModel: SearchContentViewModel {
+    private let favourites: Favourites
+    
     // Inputs
     let searchTerm: Input<String>
     let searchSelectionIndex: Input<Int?>
@@ -88,8 +90,10 @@ struct SearchResultsViewModel: SearchContentViewModel {
     // Outputs
     let content: Signal<Search.Content>
     let contentSelection: Signal<Search.Selection>
+    let isSaved: Signal<Bool>
     
     init(scotTraffic: ScotTraffic, term: String = "") {
+        favourites = scotTraffic.favourites
         searchTerm = Input(initial: term)
         searchSelectionIndex = Input(initial: nil)
         
@@ -143,6 +147,23 @@ struct SearchResultsViewModel: SearchContentViewModel {
             }
             return .Item(mapItem: mapItem, index: 0)
         }).event()
+
+        isSaved = combine(scotTraffic.favourites.items, searchTerm, combine: { favourites, searchTerm in
+            favourites.containsSavedSearch(searchTerm)
+        })
+        
+    }
+    
+    func toggleSaveSearch() {
+        let action: Signal<Void->Void> = combine(searchTerm, isSaved, combine: { searchTerm, isSaved in
+            let item = FavouriteItem.SavedSearch(term: searchTerm)
+            if isSaved {
+                return { self.favourites.deleteItem(item) }
+            } else {
+                return { self.favourites.addItem(item) }
+            }
+        })
+        action --> { $0() }
     }
 }
 

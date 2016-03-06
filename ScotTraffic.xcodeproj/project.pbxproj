@@ -93,7 +93,7 @@
 		288AC8911BCFABE2004EA6A0 /* SafetyCameraCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 288AC8901BCFABE2004EA6A0 /* SafetyCameraCell.swift */; };
 		288AC8931BCFB954004EA6A0 /* IncidentCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 288AC8921BCFB954004EA6A0 /* IncidentCell.swift */; };
 		288B97FD1C8B18E9009DC9F7 /* DiagnosticEmail.swift in Sources */ = {isa = PBXBuildFile; fileRef = 288B97FC1C8B18E9009DC9F7 /* DiagnosticEmail.swift */; };
-		288B98041C8C9274009DC9F7 /* SavedSearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 288B98031C8C9274009DC9F7 /* SavedSearchViewController.swift */; };
+		288B98041C8C9274009DC9F7 /* SearchResultViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 288B98031C8C9274009DC9F7 /* SearchResultViewController.swift */; };
 		288B98061C8C938D009DC9F7 /* SearchViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 288B98051C8C938D009DC9F7 /* SearchViewModel.swift */; };
 		28903ABE1BE62E2500EC8054 /* Reachability.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28903ABD1BE62E2500EC8054 /* Reachability.swift */; };
 		28910E6E1C3AB4D200438645 /* Sequences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 282BFE601C3AB2D800E531BC /* Sequences.swift */; };
@@ -394,7 +394,7 @@
 		288AC8901BCFABE2004EA6A0 /* SafetyCameraCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SafetyCameraCell.swift; sourceTree = "<group>"; };
 		288AC8921BCFB954004EA6A0 /* IncidentCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IncidentCell.swift; sourceTree = "<group>"; };
 		288B97FC1C8B18E9009DC9F7 /* DiagnosticEmail.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DiagnosticEmail.swift; sourceTree = "<group>"; };
-		288B98031C8C9274009DC9F7 /* SavedSearchViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SavedSearchViewController.swift; sourceTree = "<group>"; };
+		288B98031C8C9274009DC9F7 /* SearchResultViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchResultViewController.swift; sourceTree = "<group>"; };
 		288B98051C8C938D009DC9F7 /* SearchViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchViewModel.swift; sourceTree = "<group>"; };
 		28903ABD1BE62E2500EC8054 /* Reachability.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Reachability.swift; sourceTree = "<group>"; };
 		289201D11BBC580300DA4A9A /* TrafficCameras.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TrafficCameras.swift; sourceTree = "<group>"; };
@@ -607,7 +607,7 @@
 			isa = PBXGroup;
 			children = (
 				280486521BC08711003BA360 /* FavouritesAndSearchViewController.swift */,
-				288B98031C8C9274009DC9F7 /* SavedSearchViewController.swift */,
+				288B98031C8C9274009DC9F7 /* SearchResultViewController.swift */,
 				288B98051C8C938D009DC9F7 /* SearchViewModel.swift */,
 				280486541BC087B6003BA360 /* FavouritesAndSearchViewModel.swift */,
 				28AF4A041BD6ECD9009B0AE8 /* SearchResultCell.swift */,
@@ -1181,7 +1181,7 @@
 				280388041C0F9AF100F8C149 /* Configuration.swift in Sources */,
 				286BB4481C46FC95008B5983 /* Analytics.swift in Sources */,
 				718F00C91BCEFF8800D51B43 /* TrafficCameraCell.swift in Sources */,
-				288B98041C8C9274009DC9F7 /* SavedSearchViewController.swift in Sources */,
+				288B98041C8C9274009DC9F7 /* SearchResultViewController.swift in Sources */,
 				28DB3BF51BC02892001AAC2A /* SafetyCameras.swift in Sources */,
 				280486511BC08216003BA360 /* PeriodicStarter.swift in Sources */,
 				286157D11BF2AD60000C11D4 /* LocationServices.swift in Sources */,
