@@ -255,9 +255,7 @@ public class NGSplitViewController: UIViewController {
     }
     
     public override func traitCollectionDidChange(previousTraitCollection: UITraitCollection?) {
-        updatePresentationStyleForHorizontalSizeClass(traitCollection.horizontalSizeClass, viewWidth: self.view.bounds.size.width)
-        updateChildTraitCollections()
-        view.setNeedsLayout()
+        changePresentationStyle()
     }
     
     public override func viewWillTransitionToSize(size: CGSize, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {
@@ -268,6 +266,12 @@ public class NGSplitViewController: UIViewController {
     
     public override func viewWillLayoutSubviews() {
         updateFrames()
+    }
+    
+    public func changePresentationStyle() {
+        updatePresentationStyleForHorizontalSizeClass(traitCollection.horizontalSizeClass, viewWidth: view.bounds.width)
+        updateChildTraitCollections()
+        view.setNeedsLayout()
     }
     
     // -- MARK: Layout

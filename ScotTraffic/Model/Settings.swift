@@ -11,6 +11,7 @@ import MapKit
 private let scotlandMapRect = MKMapRectMake(129244330.1, 79649811.3, 3762380.0, 6443076.1)
 
 class Settings {
+    let searchViewPinned: PersistentSetting<Bool>
     let showTrafficOnMap: PersistentSetting<Bool>
     let showTrafficCamerasOnMap: PersistentSetting<Bool>
     let showSafetyCamerasOnMap: PersistentSetting<Bool>
@@ -25,6 +26,7 @@ class Settings {
     private var receivers: [ReceiverType] = []
 
     init(userDefaults: UserDefaultsProtocol, bridges: Signal<[BridgeStatus]>) {
+        searchViewPinned = userDefaults.boolSetting("searchViewPinned", false)
         showTrafficOnMap = userDefaults.boolSetting("showTrafficOnMap", false)
         showTrafficCamerasOnMap = userDefaults.boolSetting("showTrafficCamerasOnMap", true)
         showSafetyCamerasOnMap = userDefaults.boolSetting("showSafetyCamerasOnMap", true)
@@ -51,6 +53,7 @@ class Settings {
     }
     
     func reload() {
+        searchViewPinned.start()
         showTrafficOnMap.start()
         showTrafficCamerasOnMap.start()
         showSafetyCamerasOnMap.start()

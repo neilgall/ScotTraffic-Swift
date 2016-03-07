@@ -99,8 +99,13 @@ class AppCoordinator: NSObject {
             }
         })
         
+        receivers.append(appModel.settings.searchViewPinned --> { [weak self] pinned in
+            self?.splitViewController.changePresentationStyle()
+            self?.updateCancelOrPinSearchButton()
+        })
+        
         updateShowSearchButton()
-        updateCancelSearchButton()
+        updateCancelOrPinSearchButton()
     
         // defer any initial reachability notification until the view has appeared
         dispatch_async(dispatch_get_main_queue()) {
@@ -153,12 +158,26 @@ class AppCoordinator: NSObject {
         }
     }
     
-    private func updateCancelSearchButton() {
-        if splitViewController.detailViewControllerIsVisible {
+    private func updateCancelOrPinSearchButton() {
+        let canPinSearch = canPinSearchView(splitViewController.traitCollection.horizontalSizeClass,
+            width: splitViewController.view.bounds.width)
+        
+        if canPinSearch {
+            let pinned = appModel.settings.searchViewPinned.latestValue.get ?? false
+            let image = UIImage(named: pinned ? "940-pin-selected" : "940-pin")
+            let button = UIBarButtonItem(image: image, style: .Plain, target: self, action: Selector("pinSearchButtonTapped:"))
+            searchViewController.navigationItem.rightBarButtonItem = button
+
+        } else if splitViewController.detailViewControllerIsVisible {
             searchViewController.navigationItem.rightBarButtonItem = nil
+        
         } else {
             searchViewController.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Done, target: self, action: Selector("searchDoneButtonTapped:"))
         }
+    }
+    
+    private func canPinSearchView(horizontalSizeClass: UIUserInterfaceSizeClass, width: CGFloat) -> Bool {
+        return horizontalSizeClass == .Regular && width > 768
     }
     
     private func shareAction(action: ShareAction?) {
@@ -251,21 +270,28 @@ class AppCoordinator: NSObject {
         
         splitViewController.presentViewController(navigationController, animated: true, completion: nil)
     }
-
+    
+    func pinSearchButtonTapped(button: UIBarButtonItem) {
+        appModel.settings.searchViewPinned.modify {
+            return !$0
+        }
+    }
 }
 
 extension AppCoordinator: NGSplitViewControllerDelegate {
 
     func splitViewController(splitViewController: NGSplitViewController, shouldShowMasterViewControllerForHorizontalSizeClass horizontalSizeClass: UIUserInterfaceSizeClass, viewWidth: CGFloat) -> Bool {
-        return horizontalSizeClass == .Regular && viewWidth > 768
+        let pinned = appModel.settings.searchViewPinned.latestValue.get ?? false
+        return canPinSearchView(horizontalSizeClass, width: viewWidth) && pinned
     }
     
     func splitViewController(splitViewController: NGSplitViewController, didChangeMasterViewControllerVisibility viewController: UIViewController) {
         updateShowSearchButton()
+        updateCancelOrPinSearchButton()
     }
     
     func splitViewController(splitViewController: NGSplitViewController, didChangeDetailViewControllerVisibility viewController: UIViewController) {
-        updateCancelSearchButton()
+        updateCancelOrPinSearchButton()
     }
 }
 
