@@ -157,10 +157,9 @@ public class NGSplitViewController: UIViewController {
     }
     
     /**
-     * The ratio of the master view controller's view width to the overall split view controller's view
-     * in side-by-side presentation. Defaults to 320/1024 as per UISplitViewController
+     * The width of the master view controller's view width in side-by-side presentation
      */
-    public var splitRatio: CGFloat = 320.0/1024.0 {
+    public var masterWidthInSideBySidePresentation: CGFloat = 320.0 {
         didSet {
             view.setNeedsLayout()
         }
@@ -283,7 +282,7 @@ public class NGSplitViewController: UIViewController {
         switch presentationStyle {
             
         case .SideBySide:
-            let frames = view.bounds.divide(splitRatio)
+            let frames = view.bounds.split(masterWidthInSideBySidePresentation)
             masterFrame = frames.left
             detailFrame = frames.right
             
@@ -501,15 +500,14 @@ public class NGSplitViewController: UIViewController {
 }
 
 private extension CGRect {
-    func divide(split: CGFloat) -> (left: CGRect, right: CGRect) {
-        var left: CGRect = CGRect.zero
-        var right: CGRect = CGRect.zero
-        CGRectDivide(self, &left, &right, size.width*split, .MinXEdge)
+    func split(leftWidth: CGFloat) -> (left: CGRect, right: CGRect) {
+        let left = CGRect(x: 0, y: 0, width: leftWidth, height: height)
+        let right = CGRect(x: leftWidth, y: 0, width: width - leftWidth, height: height)
         return (left: left, right: right)
     }
-    
+
     var integral: CGRect {
-        return CGRect(origin: CGPoint(x: round(origin.x), y: round(origin.y)), size: CGSize(width: round(size.width), height: round(size.height)))
+        return CGRect(x: round(origin.x), y: round(origin.y), width: round(size.width), height: round(size.height))
     }
 }
 
