@@ -9,6 +9,8 @@
 import MapKit
 
 private let visibleMapRectInsetRatio: Double = -0.2
+private let zoomToMapItemInsetX: Double = -40000
+private let zoomToMapItemInsetY: Double = -40000
 
 typealias MapItemGroup = [MapItem]
 
@@ -18,6 +20,8 @@ protocol MapViewModelDelegate {
 
 class MapViewModel {
 
+    let maximumItemsInDetailView: Int
+    
     // -- MARK: Inputs
     
     // The visible map rect
@@ -52,7 +56,9 @@ class MapViewModel {
     private let locationServices: LocationServices
     private var receivers = [ReceiverType]()
 
-    init(scotTraffic: ScotTraffic) {
+    init(scotTraffic: ScotTraffic, maximumItemsInDetailView: Int) {
+        
+        self.maximumItemsInDetailView = maximumItemsInDetailView
         
         visibleMapRect = scotTraffic.settings.visibleMapRect
         locationServices = LocationServices(enabled: scotTraffic.settings.showCurrentLocationOnMap)
@@ -111,24 +117,42 @@ class MapViewModel {
             $0.map { group in MapAnnotation(mapItems: group) }
         }).latest()
 
-        let selectionInputWhenNotAnimating = not(animatingMapRect).gate(selectedMapItem)
+        let selectedMapItemEvent = selectedMapItem.event()
         
-        let selectedMapItemGroup = combine(mapItemGroups, selectionInputWhenNotAnimating) { groups, item in
+        let shouldZoomToMapItem = notNil(selectedMapItemEvent).mapWith(visibleMapRect, annotations,
+            transform: { (mapItem: MapItem, mapRect: MKMapRect, annotations: [MapAnnotation]) -> Bool in
+                if !mapRect.contains(mapItem.mapPoint) {
+                    return true
+                }
+                if let annotation = annotations.filter({ $0.mapItems.contains({ $0 == mapItem }) }).first
+                    where annotation.mapItems.flatCount > maximumItemsInDetailView {
+                        return true
+                }
+                return false
+        })
+        
+        let zoomToMapItem: Signal<MKMapRect?> = shouldZoomToMapItem.mapWith(selectedMapItem, transform: {
+            guard let mapItem = $1 where $0 else {
+                return nil
+            }
+            return MKMapRectInset(MKMapRectNull.addPoint(mapItem.mapPoint), zoomToMapItemInsetX, zoomToMapItemInsetY)
+        })
+        
+        let selectionInputWhenNotAnimating = not(animatingMapRect).gate(selectedMapItemEvent)
+        
+        let selectedMapItemGroup = selectionInputWhenNotAnimating.mapWith(mapItemGroups, transform: { item, groups in
             return mapItemGroupFromGroups(groups, containingItem: item)
-        }
+        })
         
         selectedAnnotation = selectedMapItemGroup.map { optionalGroup in
-            optionalGroup.map { items in MapAnnotation(mapItems: items) }
+            optionalGroup.map({ items in MapAnnotation(mapItems: items) })
         }
-    }
-    
-    func annotationForMapItem(mapItem: MapItem) -> MapAnnotation? {
-        for annotation in annotations.latestValue.get ?? [] {
-            if annotation.mapItems.contains({ $0 == mapItem }) {
-                return annotation
+
+        receivers.append(notNil(zoomToMapItem) --> { [weak self] in
+            if let visibleMapRect = self?.visibleMapRect {
+                visibleMapRect <-- $0
             }
-        }
-        return nil
+        })
     }
 }
 

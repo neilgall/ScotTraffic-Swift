@@ -52,9 +52,8 @@ class AppCoordinator: NSObject {
         favouritesAndSearchViewModel = FavouritesAndSearchViewModel(scotTraffic: appModel)
         searchViewController.viewModel = favouritesAndSearchViewModel
         
-        mapViewModel = MapViewModel(scotTraffic: appModel)
+        mapViewModel = MapViewModel(scotTraffic: appModel, maximumItemsInDetailView: maximumItemsInDetailView)
         mapViewController.viewModel = mapViewModel
-        mapViewController.maximumDetailItemsForCollectionCallout = maximumItemsInDetailView
         
         collectionViewModel = MapItemCollectionViewModel(scotTraffic: appModel, selection: favouritesAndSearchViewModel.contentSelection)
     }
@@ -136,14 +135,7 @@ class AppCoordinator: NSObject {
         }
         
         showMap()
-        
-        // This is to guard against rapid taps in the search view controller racing with the
-        // map view and callout animations. Need a better, more general solution to queue requests
-        // or cancel the imperative and latent consequences of earlier updates.
-        
-        if mapViewModel.selectedMapItem.value == nil {
-            mapViewModel.selectedMapItem <-- mapItem
-        }
+        mapViewModel.selectedMapItem <-- mapItem
     }
     
     private func showMap() {

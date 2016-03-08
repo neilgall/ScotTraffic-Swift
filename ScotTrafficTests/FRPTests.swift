@@ -334,6 +334,35 @@ class FRPTests: XCTestCase {
         XCTAssertEqual(c.vals, [6])
     }
     
+    func testGateDefersEvents() {
+        let s = Input<Int>(initial: 0)
+        let g = Input<Bool>(initial: false)
+        let t = g.gate(s.event())
+        let c = Capture(t)
+        
+        s.value = 5
+        s.value = 6
+        XCTAssertEqual(c.vals, [])
+        
+        g.value = true
+        XCTAssertEqual(c.vals, [6])
+    }
+    
+    func testGateDefersEventsOnlyOnce() {
+        let s = Input<Int>(initial: 0)
+        let g = Input<Bool>(initial: false)
+        let t = g.gate(s.event())
+        let c = Capture(t)
+        
+        s.value = 6
+        XCTAssertEqual(c.vals, [])
+        
+        g.value = true
+        g.value = false
+        g.value = true
+        XCTAssertEqual(c.vals, [6])
+    }
+    
     func testBooleanOr() {
         let s = Input<Bool>(initial: false)
         let t = Input<Bool>(initial: false)
@@ -394,5 +423,20 @@ class FRPTests: XCTestCase {
         t.value = false
         
         XCTAssertEqual(c.vals, [true, true, false, true, true])
+    }
+    
+    func testEvent() {
+        let s = Input<Int>(initial: 0)
+        let e = s.event()
+        let c = Capture(e)
+        
+        XCTAssertEqual(s.latestValue.get, .Some(0))
+        XCTAssertNil(e.latestValue.get)
+        XCTAssertEqual(c.vals, [])
+        
+        s.value = 5
+        XCTAssertEqual(s.latestValue.get, .Some(5))
+        XCTAssertNil(e.latestValue.get)
+        XCTAssertEqual(c.vals, [5])
     }
 }

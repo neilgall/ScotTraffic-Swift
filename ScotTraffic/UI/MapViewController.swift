@@ -12,21 +12,18 @@ import UIKit
 private let minimumAnnotationSpacingX: CGFloat = 35
 private let minimumAnnotationSpacingY: CGFloat = 32
 private let zoomEdgePadding = UIEdgeInsetsMake(60, 40, 60, 40)
-private let zoomToMapItemInsetX: Double = -40000
-private let zoomToMapItemInsetY: Double = -40000
 
 class MapViewController: UIViewController {
 
     @IBOutlet var mapView: MKMapView!
     @IBOutlet var calloutContainerView: CalloutContainerView!
     
-    var maximumDetailItemsForCollectionCallout: Int = 1
-    
     var viewModel: MapViewModel?
     var receivers = [ReceiverType]()
     var calloutConstructor: ([MapItem] -> UIViewController)?
     var calloutViewControllerByAnnotation = ViewKeyedMap<UIViewController>()
     var animationSequence = AsyncSequence()
+    var zoomingMapRect: Bool = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -35,11 +32,29 @@ class MapViewController: UIViewController {
             viewModel.delegate <-- self
             calloutContainerView.delegate = self
             
-            receivers.append(viewModel.annotations --> updateAnnotations)
-            receivers.append(viewModel.selectedMapItem --> zoomToSelectedMapItem)
-            receivers.append(not(animationSequence.busy).gate(viewModel.selectedAnnotation) --> autoSelectAnnotation)
-            receivers.append(viewModel.showsUserLocationOnMap --> updateShowsCurrentLocation)
-            receivers.append(viewModel.showTrafficOnMap --> updateShowsTraffic)
+            receivers.append(viewModel.visibleMapRect --> { [weak self] in
+                self?.zoomToMapRectWithPadding($0, animated: true)
+            })
+            
+            receivers.append(viewModel.annotations --> { [weak self] in
+                self?.updateAnnotations($0)
+            })
+            
+            let animating = animationSequence.busy || viewModel.animatingMapRect
+            
+            receivers.append(not(animating).gate(viewModel.selectedAnnotation) --> { [weak self] in
+                self?.autoSelectAnnotation($0)
+            })
+            
+            receivers.append(viewModel.showsUserLocationOnMap --> { [weak self] in
+                self?.mapView.showsUserLocation = $0
+            })
+            
+            if #available(iOS 9.0, *) {
+                receivers.append(viewModel.showTrafficOnMap --> { [weak self] in
+                    self?.mapView.showsTraffic = $0
+                })
+            }
             
             mapView.setVisibleMapRect(viewModel.visibleMapRect.value, animated: false)
         }
@@ -58,30 +73,15 @@ class MapViewController: UIViewController {
         mapView.addAnnotations(Array(annotationsToAdd))
     }
     
-    func updateShowsCurrentLocation(enable: Bool) {
-        mapView.showsUserLocation = enable
-    }
-    
-    func updateShowsTraffic(enable: Bool) {
-        if #available(iOS 9.0, *) {
-            mapView.showsTraffic = enable
-        }
-    }
-    
     func autoSelectAnnotation(annotation: MapAnnotation?) {
-        guard let annotation = annotation where annotation.mapItems.flatCount <= maximumDetailItemsForCollectionCallout else {
-            return
+        guard let annotation = annotation, viewModel = viewModel
+            where annotation.mapItems.flatCount <= viewModel.maximumItemsInDetailView else {
+                return
         }
         
         for unselected in currentAnnotations {
             if unselected == annotation {
                 mapView.selectAnnotation(unselected, animated: true)
-
-                if let selectedMapItem = viewModel?.selectedMapItem {
-                    dispatch_async(dispatch_get_main_queue()) {
-                        selectedMapItem <-- nil
-                    }
-                }
                 return
             }
         }
@@ -142,7 +142,7 @@ class MapViewController: UIViewController {
     
     private func removeOrphanedChildViewControllers() {
         if childViewControllers.count > 0 {
-            print("removing \(childViewControllers.count) orphans")
+            analyticsEvent(.RemoveOrphanedViewControllersWorkaround, ["count": "\(childViewControllers.count)"])
         }
         for viewController in childViewControllers {
             viewController.willMoveToParentViewController(nil)
@@ -154,27 +154,11 @@ class MapViewController: UIViewController {
     }
 
     // MARK: - Navigation
-
-    func zoomToSelectedMapItem(item: MapItem?) {
-        if let item = item where shouldZoomToMapItem(item) {
-            let targetRect = MKMapRectInset(MKMapRectNull.addPoint(item.mapPoint), zoomToMapItemInsetX, zoomToMapItemInsetY)
-            zoomToMapRectWithPadding(targetRect, animated: true)
-        }
-    }
     
     func zoomToMapRectWithPadding(targetRect: MKMapRect, animated: Bool) {
-        mapView.setVisibleMapRect(targetRect, animated: true)
-    }
-
-    func shouldZoomToMapItem(mapItem: MapItem) -> Bool {
-        if !mapView.visibleMapRect.contains(mapItem.mapPoint) {
-            return true
+        with(&zoomingMapRect) {
+            mapView.setVisibleMapRect(targetRect, animated: true)
         }
-        if let annotation = viewModel?.annotationForMapItem(mapItem)
-            where annotation.mapItems.flatCount > maximumDetailItemsForCollectionCallout {
-                return true
-        }
-        return false
     }
 }
 
@@ -189,18 +173,18 @@ extension MapViewController: MKMapViewDelegate {
     }
     
     func mapView(mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
-        if let viewModel = viewModel {
+        if let viewModel = viewModel where !zoomingMapRect {
             viewModel.animatingMapRect <-- false
             viewModel.visibleMapRect <-- mapView.visibleMapRect
         }
     }
     
     func mapView(mapView: MKMapView, viewForAnnotation annotation: MKAnnotation) -> MKAnnotationView? {
-        guard let mapAnnotation = annotation as? MapAnnotation else {
+        guard let mapAnnotation = annotation as? MapAnnotation, viewModel = viewModel else {
             return nil
         }
         
-        let showsCustomCallout = mapAnnotation.mapItems.flatCount <= maximumDetailItemsForCollectionCallout
+        let showsCustomCallout = mapAnnotation.mapItems.flatCount <= viewModel.maximumItemsInDetailView
         let reuseIdentifier = "\(mapAnnotation.reuseIdentifier).\(showsCustomCallout)"
         
         let annotationView = mapView.dequeueReusableAnnotationViewWithIdentifier(reuseIdentifier)

@@ -97,57 +97,6 @@ class Mapped<Source: SignalType, MappedType> : Signal<MappedType> {
     }
 }
 
-// MappedWith transforms a signal combined with the latest value of another signal
-//
-class MappedWith<Source: SignalType, WithSource: SignalType, MappedType> : Signal<MappedType> {
-    private let source: Source
-    private let withSource: WithSource
-    private let transform: (Source.ValueType, WithSource.ValueType) -> MappedType
-    private var receiver: ReceiverType!
-
-    init(_ source: Source, withSource: WithSource, transform: (Source.ValueType, WithSource.ValueType) -> MappedType) {
-        self.source = source
-        self.withSource = withSource
-        self.transform = transform
-        
-        super.init()
-        
-        self.receiver = Receiver(source) { [weak self] transaction in
-            switch transaction {
-            case .Begin:
-                self?.pushTransaction(.Begin)
-            case .End(let sourceValue):
-                if let withValue = withSource.latestValue.get {
-                    self?.pushTransaction(.End(transform(sourceValue, withValue)))
-                } else {
-                    self?.pushTransaction(.Cancel)
-                }
-            case .Cancel:
-                self?.pushTransaction(.Cancel)
-            }
-        }
-    }
-    
-    override var latestValue: LatestValue<MappedType> {
-        switch source.latestValue {
-        case .None:
-            return .None
-        case .Stored(let sourceValue):
-            if let withValue = withSource.latestValue.get {
-                return .Computed({ self.transform(sourceValue, withValue) })
-            } else {
-                return .None
-            }
-        case .Computed(let getSourceValue):
-            if let withValue = withSource.latestValue.get {
-                return .Computed({ self.transform(getSourceValue(), withValue) })
-            } else {
-                return .None
-            }
-        }
-    }
-}
-
 // Union combines values from multiple signals of the same type into a single stream.
 //
 class Union<Source: SignalType> : Signal<Source.ValueType> {
@@ -291,10 +240,6 @@ extension SignalType {
     
     public func map<TargetType>(transform: ValueType -> TargetType) -> Signal<TargetType> {
         return Mapped(self, transform)
-    }
-    
-    public func mapWith<WithSignal: SignalType, TargetType>(with: WithSignal, transform: (ValueType, WithSignal.ValueType) -> TargetType) -> Signal<TargetType> {
-        return MappedWith(self, withSource: with, transform: transform)
     }
     
     public func filter(predicate: ValueType -> Bool) -> Signal<ValueType> {

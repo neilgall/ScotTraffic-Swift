@@ -13,42 +13,53 @@ import Foundation
 // value frm the source signal is then propagated.
 //
 class Gate<Source: SignalType, Gate: SignalType where Gate.ValueType: BooleanType> : Signal<Source.ValueType> {
-    let valueLatest: Signal<Source.ValueType>
     let gateLatest: Signal<Gate.ValueType>
+    var valueLatest: Source.ValueType?
     var receivers: [ReceiverType] = []
     var transactionCount = 0
-    var needsUpdate = false
     
     init(_ source: Source, gate: Gate) {
-        valueLatest = source.latest()
         gateLatest = gate.latest()
         super.init()
-        receivers.append(Receiver(valueLatest) { [weak self] t in self?.update(t) })
-        receivers.append(Receiver(gateLatest) { [weak self] t in self?.update(t) })
+        
+        receivers.append(Receiver(source) { [weak self] in
+            switch $0 {
+            case .Begin:
+                self?.beginTransaction()
+                self?.valueLatest = nil
+            case .End(let value):
+                self?.valueLatest = value
+                self?.endTransaction()
+            case .Cancel:
+                self?.endTransaction()
+            }
+        })
+        
+        receivers.append(Receiver(gateLatest) { [weak self] in
+            switch $0 {
+            case .Begin:
+                self?.beginTransaction()
+            case .End, .Cancel:
+                self?.endTransaction()
+            }
+        })
+    }
+
+    private func beginTransaction() {
+        if transactionCount == 0 {
+            pushTransaction(.Begin)
+        }
+        transactionCount += 1
     }
     
-    private func update<S>(transaction: Transaction<S>) {
-        switch transaction {
-        case .Begin:
-            if transactionCount == 0 {
-                pushTransaction(.Begin)
-                needsUpdate = false
-            }
-            transactionCount += 1
-            
-        case .End:
-            needsUpdate = true
-            fallthrough
-            
-        case .Cancel:
-            transactionCount -= 1
-            if transactionCount == 0 {
-                if needsUpdate, let value = valueLatest.latestValue.get, let gate = gateLatest.latestValue.get where gate.boolValue == true {
-                    pushTransaction(.End(value))
-                    needsUpdate = false
-                } else {
-                    pushTransaction(.Cancel)
-                }
+    private func endTransaction() {
+        transactionCount -= 1
+        if transactionCount == 0 {
+            if let value = valueLatest, gate = gateLatest.latestValue.get where gate.boolValue {
+                pushTransaction(.End(value))
+                valueLatest = nil
+            } else {
+                pushTransaction(.Cancel)
             }
         }
     }

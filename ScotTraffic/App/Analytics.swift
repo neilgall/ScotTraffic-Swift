@@ -22,6 +22,7 @@ enum AnalyticsEvent: String {
     case ViewIncident
     case ViewBridgeStatus
     case ShareItem
+    case RemoveOrphanedViewControllersWorkaround
 }
 
 func analyticsStart() {

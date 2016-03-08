@@ -8,7 +8,7 @@
 
 import NotificationCenter
 
-class AppWidgetManager {
+struct AppWidgetManager {
     
     let observation: ReceiverType
     
