@@ -33,10 +33,8 @@ class TestAppModel: ScotTraffic {
             return { mapItems in nil }
         }
         
-        let incidents = Input<[Incident]>(initial: loadTestData("incidents", context: ()))
-        alerts = incidents.map { $0.filter { $0.type == .Alert } }
-        roadworks = incidents.map { $0.filter { $0.type == .Roadworks } }
-        
+        alerts = Input<[Alert]>(initial: loadTestData("alerts", context: IncidentType.Alert))
+        roadworks = Input<[Roadwork]>(initial: loadTestData("roadworks", context: IncidentType.Roadworks))
         bridges = Input<[BridgeStatus]>(initial: loadTestData("bridges", context: ()))
         
         userDefaults = TestUserDefaults()

@@ -109,7 +109,8 @@ class FavouritesAndSearchViewModelTests: XCTestCase {
             return
         }
         
-        XCTAssertEqual(selectionItem.name, "Glasgow Airport")
+        // the exact value here depends on the test data
+        XCTAssertEqual(selectionItem.name, "Erskine Br (M8)")
     }
     
     func testSearchSelectionIsEvent() {
