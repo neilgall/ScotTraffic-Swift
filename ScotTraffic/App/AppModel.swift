@@ -13,8 +13,8 @@ class AppModel: ScotTraffic {
     // ScotTraffic interface
     let trafficCameraLocations: Signal<[TrafficCameraLocation]>
     let safetyCameras: Signal<[SafetyCamera]>
-    let alerts: Signal<[Incident]>
-    let roadworks: Signal<[Incident]>
+    let alerts: Signal<[Alert]>
+    let roadworks: Signal<[Roadwork]>
     let bridges: Signal<[BridgeStatus]>
     let weather: Signal<WeatherFinder>
     let messageOfTheDay: Signal<MessageOfTheDay?>
@@ -62,15 +62,23 @@ class AppModel: ScotTraffic {
         self.safetyCameras = safetyCameras.map({ $0.value ?? [] }).latest()
  
         
-        // -- Incidents / Roadworks --
+        // -- Alerts --
         
-        let incidentsSource = fiveMinuteCache("incidents.json")
-        let incidents = incidentsSource.value.map({
-            $0.map(Array<Incident>.decodeJSON(Void) <== JSONArrayFromData)
+        let alertsSource = fiveMinuteCache("alerts.json")
+        let alerts = alertsSource.value.map({
+            $0.map(Array<Alert>.decodeJSON(IncidentType.Alert) <== JSONArrayFromData)
         })
-        let allIncidents = incidents.map({ $0.value ?? [] })
-        self.alerts = allIncidents.map({ $0.filter({ $0.type == IncidentType.Alert }) }).latest()
-        self.roadworks = allIncidents.map({ $0.filter({ $0.type == IncidentType.Roadworks }) }).latest()
+        self.alerts = alerts.map({ $0.value ?? [] })
+        
+        
+        // -- Roadworks --
+        
+        let roadworksSource = fiveMinuteCache("roadworks.json")
+        let roadworks = roadworksSource.value.map({
+            $0.map(Array<Alert>.decodeJSON(IncidentType.Roadworks) <== JSONArrayFromData)
+        })
+        self.roadworks = roadworks.map({ $0.value ?? [] })
+        
         
         // -- Bridge Status --
         
@@ -125,7 +133,7 @@ class AppModel: ScotTraffic {
         
         // -- Auto refresh --
         
-        let fiveMinuteRefresh = PeriodicStarter(startables: [trafficCamerasSource, incidentsSource, bridgeStatusSource], period: 300)
+        let fiveMinuteRefresh = PeriodicStarter(startables: [trafficCamerasSource, alertsSource, roadworksSource, bridgeStatusSource], period: 300)
         let halfHourlyRefresh = PeriodicStarter(startables: [safetyCamerasSource, weatherSource, messageOfTheDaySource], period: 1800)
         self.fetchStarters = [fiveMinuteRefresh, halfHourlyRefresh]
         
@@ -138,12 +146,14 @@ class AppModel: ScotTraffic {
             }
         }))
         
+        
         // -- Error reporting
         
         let errors: Signal<AppError?> = union(
             trafficCameraLocations.map({ $0.error }),
             safetyCameras.map({ $0.error }),
-            incidents.map({ $0.error }),
+            alerts.map({ $0.error }),
+            roadworks.map({ $0.error }),
             weather.map({ $0.error }),
             bridges.map({ $0.error }),
             messageOfTheDay.map({ $0.error }))

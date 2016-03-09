@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="9531" systemVersion="15C50" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="9532" systemVersion="15D21" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9529"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9530"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="ZBSIncidentCell"/>
@@ -34,7 +34,7 @@
                             </mask>
                         </variation>
                     </imageView>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="260" verticalCompressionResistancePriority="999" text="Label" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BqJ-0V-LEo" userLabel="Title">
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="260" verticalCompressionResistancePriority="999" text="Label" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BqJ-0V-LEo" userLabel="Road">
                         <rect key="frame" x="100" y="16" width="49" height="24"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="62" id="7LQ-Dc-rCm"/>
@@ -75,6 +75,20 @@
                             <action selector="share" destination="gTV-IL-0wX" eventType="touchUpInside" id="jkb-hG-8yo"/>
                         </connections>
                     </button>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="260" verticalCompressionResistancePriority="999" text="Label" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="GOa-6m-hq9" userLabel="Title">
+                        <rect key="frame" x="100" y="54" width="212" height="21"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="62" id="nc3-gT-NBf"/>
+                        </constraints>
+                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                        <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <nil key="highlightedColor"/>
+                        <variation key="default">
+                            <mask key="constraints">
+                                <exclude reference="nc3-gT-NBf"/>
+                            </mask>
+                        </variation>
+                    </label>
                 </subviews>
                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
             </view>
@@ -89,15 +103,20 @@
                 <constraint firstItem="BqJ-0V-LEo" firstAttribute="centerY" secondItem="Dyw-ot-QPr" secondAttribute="centerY" id="8oh-yE-mDo"/>
                 <constraint firstItem="Ngo-q8-L8H" firstAttribute="bottom" secondItem="oZL-Ie-8F8" secondAttribute="bottom" id="CcQ-Qz-hjH"/>
                 <constraint firstItem="Dyw-ot-QPr" firstAttribute="top" relation="greaterThanOrEqual" secondItem="gTV-IL-0wX" secondAttribute="top" id="EpB-VM-XgR"/>
+                <constraint firstItem="qRP-Mi-obk" firstAttribute="top" relation="greaterThanOrEqual" secondItem="GOa-6m-hq9" secondAttribute="bottom" constant="10" id="GlD-pN-8Vi"/>
                 <constraint firstAttribute="trailing" secondItem="oZL-Ie-8F8" secondAttribute="trailing" id="ISd-Gg-lip"/>
                 <constraint firstItem="qRP-Mi-obk" firstAttribute="leading" secondItem="PMc-qd-2TC" secondAttribute="leading" id="KLZ-y7-yTB"/>
                 <constraint firstAttribute="bottom" secondItem="VEm-Am-XZP" secondAttribute="bottom" constant="20" id="KbS-8a-SoM"/>
+                <constraint firstItem="BqJ-0V-LEo" firstAttribute="leading" secondItem="GOa-6m-hq9" secondAttribute="leading" id="QIL-8o-G3y"/>
+                <constraint firstItem="GOa-6m-hq9" firstAttribute="top" relation="greaterThanOrEqual" secondItem="BqJ-0V-LEo" secondAttribute="bottom" constant="8" id="RpM-ru-eVc"/>
                 <constraint firstItem="PMc-qd-2TC" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" constant="10" id="Sda-lS-D2x"/>
                 <constraint firstAttribute="trailing" secondItem="Dyw-ot-QPr" secondAttribute="trailing" constant="8" id="UkW-4B-c6U"/>
                 <constraint firstItem="BqJ-0V-LEo" firstAttribute="leading" secondItem="PMc-qd-2TC" secondAttribute="trailing" constant="10" id="Vm7-An-9X6"/>
+                <constraint firstItem="GOa-6m-hq9" firstAttribute="trailing" secondItem="Dyw-ot-QPr" secondAttribute="trailing" id="WaQ-WW-Hfr"/>
                 <constraint firstItem="Dyw-ot-QPr" firstAttribute="centerY" secondItem="VEm-Am-XZP" secondAttribute="centerY" id="XRj-XZ-vnB"/>
                 <constraint firstItem="qRP-Mi-obk" firstAttribute="top" relation="greaterThanOrEqual" secondItem="PMc-qd-2TC" secondAttribute="bottom" constant="8" id="Yxv-f8-t8l"/>
                 <constraint firstItem="BqJ-0V-LEo" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" constant="16" id="aID-BV-Jns"/>
+                <constraint firstItem="GOa-6m-hq9" firstAttribute="top" secondItem="Dyw-ot-QPr" secondAttribute="bottom" constant="4" id="dDG-2R-ruY"/>
                 <constraint firstItem="VEm-Am-XZP" firstAttribute="top" secondItem="qRP-Mi-obk" secondAttribute="bottom" constant="8" id="dZX-eg-xG3"/>
                 <constraint firstItem="oZL-Ie-8F8" firstAttribute="bottom" secondItem="VEm-Am-XZP" secondAttribute="bottom" constant="8" id="fvb-9m-9We"/>
                 <constraint firstItem="qRP-Mi-obk" firstAttribute="top" secondItem="VEm-Am-XZP" secondAttribute="top" id="gvV-5b-O53"/>
@@ -111,6 +130,7 @@
             </constraints>
             <variation key="default">
                 <mask key="constraints">
+                    <exclude reference="3Ft-Jq-fkw"/>
                     <exclude reference="gvV-5b-O53"/>
                     <exclude reference="42s-JQ-bC7"/>
                     <exclude reference="n5h-fR-VEj"/>
@@ -122,9 +142,10 @@
                 <outlet property="backgroundImageView" destination="Ngo-q8-L8H" id="LrG-wq-p7T"/>
                 <outlet property="dateLabel" destination="VEm-Am-XZP" id="fmA-IX-FMx"/>
                 <outlet property="iconImageView" destination="PMc-qd-2TC" id="Y1W-6c-hfR"/>
+                <outlet property="roadLabel" destination="BqJ-0V-LEo" id="Fyd-1f-O5h"/>
                 <outlet property="shareButton" destination="Dyw-ot-QPr" id="OB8-ge-cFM"/>
                 <outlet property="textView" destination="qRP-Mi-obk" id="js1-c0-x6J"/>
-                <outlet property="titleLabel" destination="BqJ-0V-LEo" id="03l-XK-Qw7"/>
+                <outlet property="titleLabel" destination="GOa-6m-hq9" id="l6q-NX-nVK"/>
             </connections>
             <point key="canvasLocation" x="207" y="146"/>
         </collectionViewCell>

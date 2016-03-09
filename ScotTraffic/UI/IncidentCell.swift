@@ -14,6 +14,7 @@ class IncidentCell: UICollectionViewCell, MapItemCollectionViewCell, BackgroundM
     @IBOutlet var backgroundImageView: UIImageView?
     @IBOutlet var iconImageView: UIImageView?
     @IBOutlet var dateLabel: UILabel?
+    @IBOutlet var roadLabel: UILabel?
     @IBOutlet var titleLabel: UILabel?
     @IBOutlet var textView: UITextView?
     @IBOutlet var shareButton: UIButton?
@@ -30,6 +31,7 @@ class IncidentCell: UICollectionViewCell, MapItemCollectionViewCell, BackgroundM
         
         if case .IncidentItem(let incident) = item {
             iconImageView?.image = iconForIncidentType(incident.type)
+            roadLabel?.text = incident.road
             titleLabel?.text = incident.name
             dateLabel?.text = formatIncidentDate(incident.date)
 
@@ -41,17 +43,14 @@ class IncidentCell: UICollectionViewCell, MapItemCollectionViewCell, BackgroundM
                 self?.backgroundImageView?.image = image
             })
 
-            // The first time we parse HTML using NSAttributedString involves dynamically
-            // linking the WebKit framework which causes a noticable delay. Because the
-            // collection view cells are populated immediately on the transition to the
-            // view controller, defer setting the text to avoid a stutter in the animation.
-            dispatch_async(dispatch_get_main_queue()) {
-                let text = formatIncidentHTMLText(incident.text)
-                self.textView?.text = text
-                self.setNeedsLayout()
-                
-                self.item = SharableIncident(name: text, type: incident.type, link: incident.url, mapImage: self.mapImage.latest())
-            }
+            self.textView?.text = incident.text
+            self.setNeedsLayout()
+            
+            self.item = SharableIncident(
+                name: "\(incident.road) \(incident.text)",
+                type: incident.type,
+                link: incident.url,
+                mapImage: self.mapImage.latest())
         }
     }
     
@@ -103,21 +102,6 @@ private func formatIncidentDate(date: NSDate) -> String {
     formatter.dateStyle = .MediumStyle
     formatter.timeStyle = .ShortStyle
     return formatter.stringFromDate(date)
-}
-
-private func formatIncidentHTMLText(text: String) -> String {
-    guard let textData = text.dataUsingEncoding(NSUTF8StringEncoding) else {
-        return text
-    }
-    
-    do {
-        let attributedText = try NSAttributedString(data: textData,
-            options: [NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType],
-            documentAttributes: nil)
-        return attributedText.string.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet())
-    } catch {
-        return text
-    }
 }
 
 private struct SharableIncident: SharableItem {

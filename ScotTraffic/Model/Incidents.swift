@@ -17,7 +17,7 @@ enum IncidentType {
 struct Incident: MapItem {
     let type: IncidentType
     let name: String
-    let road: String = ""
+    let road: String
     let text: String
     let mapPoint: MKMapPoint
     let date: NSDate
@@ -32,40 +32,31 @@ struct Incident: MapItem {
     }
 }
 
-extension IncidentType: JSONValueDecodable {
-    static func decodeJSON(json: JSONValue, forKey key: JSONKey) throws -> IncidentType {
-        guard let str = json.value as? String else {
-            throw JSONError.ExpectedValue(key: key, type: String.self)
-        }
-        switch str {
-        case "incidents": return .Alert
-        case "roadworks": return .Roadworks
-        default: throw JSONError.ParseError(key: key, value: str, message: "should be 'incidents' or 'roadworks'")
-        }
-    }
-}
+typealias Alert = Incident
+typealias Roadwork = Incident
 
 extension Incident: JSONObjectDecodable {
     static func decodeJSON(json: JSONObject, forKey key: JSONKey) throws -> Incident {
-        let dateFormatter = NSDateFormatter()
-        dateFormatter.locale = NSLocale(localeIdentifier: "en_GB")
-        dateFormatter.dateFormat = "EEE, dd MMM yyyy HH:mm:ss z"
-
+        guard let type = json.context as? IncidentType else {
+            fatalError("invalid JSON context")
+        }
+    
         let dateStr: String = try json <~ "date"
-        guard let date = dateFormatter.dateFromString(dateStr) else {
+        guard let date = NSDateFormatter.ISO8601.dateFromString(dateStr) else {
             throw JSONError.ParseError(key: key, value: dateStr, message: "cannot parse date")
         }
 
-        let urlStr: String = try json <~ "orig_link"
+        let urlStr: String = try json <~ "link"
         guard let url = NSURL(string:urlStr) else {
             throw JSONError.ParseError(key: key, value: urlStr, message: "cannot parse URL")
         }
         
         return try Incident(
-            type: json <~ "type",
+            type: type,
             name: json <~ "title" ?? "",
-            text: json <~ "desc" ?? "",
-            mapPoint: MKMapPointForCoordinate(CLLocationCoordinate2DMake(json <~ "lat", json <~ "lon")),
+            road: json <~ "road" ?? "",
+            text: json <~ "description" ?? "",
+            mapPoint: MKMapPointForCoordinate(CLLocationCoordinate2DMake(json <~ "latitude", json <~ "longitude")),
             date: date,
             url: url)
     }
