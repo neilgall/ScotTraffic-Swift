@@ -117,30 +117,33 @@ class MapViewModel {
             $0.map { group in MapAnnotation(mapItems: group) }
         }).latest()
 
-        let selectedMapItemEvent = selectedMapItem.event()
+        let selectedMapItemEvent = notNil(selectedMapItem).event()
         
-        let shouldZoomToMapItem = notNil(selectedMapItemEvent).mapWith(visibleMapRect, annotations,
+        let shouldZoomToMapItem = selectedMapItemEvent.mapWith(visibleMapRect, annotations,
             transform: { (mapItem: MapItem, mapRect: MKMapRect, annotations: [MapAnnotation]) -> Bool in
+                
+                // if the map item isn't visible, zoom to it
                 if !mapRect.contains(mapItem.mapPoint) {
                     return true
                 }
+                
+                // if the annotation contains too many map items to open the collection view, zoom
                 if let annotation = annotations.filter({ $0.mapItems.contains({ $0 == mapItem }) }).first
                     where annotation.mapItems.flatCount > maximumItemsInDetailView {
                         return true
                 }
+                
+                // otherwise don't zoom on selection
                 return false
         })
         
-        let zoomToMapItem: Signal<MKMapRect?> = shouldZoomToMapItem.mapWith(selectedMapItem, transform: {
-            guard let mapItem = $1 where $0 else {
-                return nil
-            }
-            return MKMapRectInset(MKMapRectNull.addPoint(mapItem.mapPoint), zoomToMapItemInsetX, zoomToMapItemInsetY)
+        let zoomToMapItem: Signal<MKMapRect> = shouldZoomToMapItem.gate(selectedMapItemEvent).map({
+            MKMapRectInset(MKMapRectNull.addPoint($0.mapPoint), zoomToMapItemInsetX, zoomToMapItemInsetY)
         })
         
-        let selectionInputWhenNotAnimating = not(animatingMapRect).gate(selectedMapItemEvent)
+        let selectionInputAfterZooming = not(animatingMapRect).gate(selectedMapItem)
         
-        let selectedMapItemGroup = selectionInputWhenNotAnimating.mapWith(mapItemGroups, transform: { item, groups in
+        let selectedMapItemGroup = selectionInputAfterZooming.mapWith(mapItemGroups, transform: { item, groups in
             return mapItemGroupFromGroups(groups, containingItem: item)
         })
         
@@ -148,7 +151,7 @@ class MapViewModel {
             optionalGroup.map({ items in MapAnnotation(mapItems: items) })
         }
 
-        receivers.append(notNil(zoomToMapItem) --> { [weak self] in
+        receivers.append(zoomToMapItem --> { [weak self] in
             if let visibleMapRect = self?.visibleMapRect {
                 visibleMapRect <-- $0
             }
