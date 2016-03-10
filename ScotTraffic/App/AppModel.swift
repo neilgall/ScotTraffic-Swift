@@ -68,16 +68,16 @@ class AppModel: ScotTraffic {
         let alerts = alertsSource.value.map({
             $0.map(Array<Alert>.decodeJSON(IncidentType.Alert) <== JSONArrayFromData)
         })
-        self.alerts = alerts.map({ $0.value ?? [] })
+        self.alerts = alerts.map({ $0.value ?? [] }).latest()
         
         
         // -- Roadworks --
         
         let roadworksSource = fiveMinuteCache("roadworks.json")
         let roadworks = roadworksSource.value.map({
-            $0.map(Array<Alert>.decodeJSON(IncidentType.Roadworks) <== JSONArrayFromData)
+            $0.map(Array<Roadwork>.decodeJSON(IncidentType.Roadworks) <== JSONArrayFromData)
         })
-        self.roadworks = roadworks.map({ $0.value ?? [] })
+        self.roadworks = roadworks.map({ $0.value ?? [] }).latest()
         
         
         // -- Bridge Status --
