@@ -25,7 +25,7 @@ extension Search.ContentItem {
 class FavouritesAndSearchViewModelTests: XCTestCase {
     
     func testContentIsFavouritesWhenSearchTermIsEmpty() {
-        let testData = TestAppModel()
+        let testData = StubAppModel()
         
         testData.userDefaults.setObject(["7_1005.jpg","7_608.jpg"], forKey: "favouriteItems")
         testData.favourites.reloadFromUserDefaults()
@@ -45,7 +45,7 @@ class FavouritesAndSearchViewModelTests: XCTestCase {
     }
     
     func testContentIsSearchResultsWhenSearchTermIsNonEmpty() {
-        let testData = TestAppModel()
+        let testData = StubAppModel()
         let viewModel = FavouritesAndSearchViewModel(scotTraffic: testData)
         viewModel.liveSearchTerm.value = "M80"
         
@@ -59,7 +59,7 @@ class FavouritesAndSearchViewModelTests: XCTestCase {
     }
     
     func testResultsAxisIsNorthToSouthForA90Search() {
-        let testData = TestAppModel()
+        let testData = StubAppModel()
         let viewModel = FavouritesAndSearchViewModel(scotTraffic: testData)
         viewModel.liveSearchTerm.value = "A90"
         
@@ -72,7 +72,7 @@ class FavouritesAndSearchViewModelTests: XCTestCase {
     }
 
     func testResultsAxisIsWestToEastForM8Search() {
-        let testData = TestAppModel()
+        let testData = StubAppModel()
         let viewModel = FavouritesAndSearchViewModel(scotTraffic: testData)
         viewModel.liveSearchTerm.value = "M8"
         
@@ -85,7 +85,7 @@ class FavouritesAndSearchViewModelTests: XCTestCase {
     }
     
     func testDefaultSearchSelectionIsNone() {
-        let testData = TestAppModel()
+        let testData = StubAppModel()
         let viewModel = FavouritesAndSearchViewModel(scotTraffic: testData)
         viewModel.liveSearchTerm.value = ""
 
@@ -97,7 +97,7 @@ class FavouritesAndSearchViewModelTests: XCTestCase {
     }
     
     func testSearchSelectionSetBySelectionIndex() {
-        let testData = TestAppModel()
+        let testData = StubAppModel()
         let viewModel = FavouritesAndSearchViewModel(scotTraffic: testData)
         let selection = viewModel.contentSelection.latest()
         
@@ -114,7 +114,7 @@ class FavouritesAndSearchViewModelTests: XCTestCase {
     }
     
     func testSearchSelectionIsEvent() {
-        let testData = TestAppModel()
+        let testData = StubAppModel()
         let viewModel = FavouritesAndSearchViewModel(scotTraffic: testData)
         viewModel.liveSearchTerm.value = "M8"
         viewModel.selectionIndex.value = 3

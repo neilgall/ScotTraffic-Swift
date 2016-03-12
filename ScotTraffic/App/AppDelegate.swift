@@ -25,12 +25,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         analyticsStart()
         migrateUserDefaultsToAppGroup()
         
-        let appModel = AppModel()
+        let diskCache = DiskCache(withPath: "scottraffic")
+        let httpAccess = HTTPAccess(baseURL: Configuration.scotTrafficBaseURL, indicator: AppNetworkActivityIndicator())
+        let cacheSource = CachedHTTPDataSource.dataSourceWithHTTPAccess(httpAccess, cache: diskCache)
+
+        let appModel = AppModel(cacheSource: cacheSource, reachable: httpAccess.serverIsReachable, userDefaults: Configuration.sharedUserDefaults())
         appWidgetManager = AppWidgetManager(favourites: appModel.favourites)
-        appNotifications = AppNotifications(settings: appModel.settings, httpAccess: appModel.httpAccess)
+        appNotifications = AppNotifications(settings: appModel.settings, httpAccess: httpAccess)
         
         if let window = window where !Configuration.runningUnitTests {
-            let appCoordinator = AppCoordinator(appModel: appModel, rootWindow: window)
+            let appCoordinator = AppCoordinator(appModel: appModel, httpAccess: httpAccess, rootWindow: window)
             appCoordinator.start()
             self.appCoordinator = appCoordinator
         }

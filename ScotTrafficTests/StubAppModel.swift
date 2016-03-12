@@ -1,5 +1,5 @@
 //
-//  TestAppModel.swift
+//  StubAppModel.swift
 //  ScotTraffic
 //
 //  Created by ZBS on 12/10/2015.
@@ -9,7 +9,7 @@
 import Foundation
 @testable import ScotTraffic
 
-class TestAppModel: ScotTraffic {
+class StubAppModel: ScotTraffic {
     
     let trafficCameraLocations: Signal<[TrafficCameraLocation]>
     let safetyCameras: Signal<[SafetyCamera]>
@@ -37,7 +37,7 @@ class TestAppModel: ScotTraffic {
         roadworks = Input<[Roadwork]>(initial: loadTestData("roadworks", context: IncidentType.Roadworks))
         bridges = Input<[BridgeStatus]>(initial: loadTestData("bridges", context: ()))
         
-        userDefaults = TestUserDefaults()
+        userDefaults = StubUserDefaults()
         settings = Settings(userDefaults: userDefaults, bridges: bridges)
         favourites = Favourites(userDefaults: userDefaults)
     }
@@ -67,22 +67,3 @@ private class DummyDataSource: DataSource {
     }
 }
 
-class TestUserDefaults: UserDefaultsProtocol {
-    var userDefaults = [String:AnyObject]()
-
-    func objectForKey(key: String) -> AnyObject? {
-        return userDefaults[key]
-    }
-    
-    func setObject(object: AnyObject?, forKey key: String) {
-        userDefaults[key] = object
-    }
-    
-    func removeObjectForKey(key: String) {
-        userDefaults.removeValueForKey(key)
-    }
-    
-    func synchronize() -> Bool {
-        return true
-    }
-}

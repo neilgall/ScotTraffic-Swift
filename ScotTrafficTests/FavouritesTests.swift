@@ -11,13 +11,13 @@ import XCTest
 
 class FavouritesTests: XCTestCase {
 
-    var userDefaults: TestUserDefaults!
+    var userDefaults: StubUserDefaults!
     var favourites: Favourites!
     
     override func setUp() {
         super.setUp()
         
-        userDefaults = TestUserDefaults()
+        userDefaults = StubUserDefaults()
         favourites = Favourites(userDefaults: userDefaults)
     }
     

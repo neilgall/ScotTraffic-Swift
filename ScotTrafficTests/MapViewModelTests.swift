@@ -30,7 +30,7 @@ private extension MKMapPoint {
 class MapViewModelTests: XCTestCase {
  
 //    func testSelectMapItem() {
-//        let appData = TestAppModel()
+//        let appData = StubAppModel()
 //        let viewModel = MapViewModel(scotTraffic: appData)
 //        
 //        let selectedAnnotation = Capture(viewModel.selectedAnnotation)

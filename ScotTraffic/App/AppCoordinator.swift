@@ -13,6 +13,7 @@ let maximumItemsInDetailView = 10
 class AppCoordinator: NSObject {
     let appModel: AppModel
     let rootWindow: UIWindow
+    let httpAccess: HTTPAccess
     
     let storyboard: UIStoryboard
     let splitViewController: NGSplitViewController
@@ -25,8 +26,9 @@ class AppCoordinator: NSObject {
     let collectionViewModel: MapItemCollectionViewModel
     var receivers = [ReceiverType]()
     
-    init(appModel: AppModel, rootWindow: UIWindow) {
+    init(appModel: AppModel, httpAccess: HTTPAccess, rootWindow: UIWindow) {
         self.appModel = appModel
+        self.httpAccess = httpAccess
         self.rootWindow = rootWindow
         
         // Verify storyboard structure
@@ -65,7 +67,7 @@ class AppCoordinator: NSObject {
         mapViewController.navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named:"740-gear"), style: .Plain, target: self, action: Selector("settingsButtonTapped:"))
 
         // network reachability
-        receivers.append(appModel.httpAccess.serverIsReachable.onFallingEdge(notifyNoNetworkReachability))
+        receivers.append(httpAccess.serverIsReachable.onFallingEdge(notifyNoNetworkReachability))
 
         // message of the day
         receivers.append(appModel.messageOfTheDay --> showMessageOfTheDay)
@@ -108,7 +110,7 @@ class AppCoordinator: NSObject {
     
         // defer any initial reachability notification until the view has appeared
         dispatch_async(dispatch_get_main_queue()) {
-            self.appModel.httpAccess.startReachabilityNotifier()
+            self.httpAccess.startReachabilityNotifier()
         }
     }
 
@@ -256,7 +258,7 @@ class AppCoordinator: NSObject {
         }
         
         settingsViewController.settings = appModel.settings
-        settingsViewController.serverIsReachable = appModel.httpAccess.serverIsReachable
+        settingsViewController.serverIsReachable = httpAccess.serverIsReachable
         settingsViewController.preferredContentSize = CGSize(width: 320, height: 650)
         settingsViewController.delegate = self
         

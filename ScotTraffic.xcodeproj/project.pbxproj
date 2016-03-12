@@ -86,6 +86,8 @@
 		287F75521C00D1130040EE8A /* AppNetworkActivityIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 287F75511C00D1130040EE8A /* AppNetworkActivityIndicator.swift */; };
 		287F75581C00DC200040EE8A /* AppWidgetManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 287F75571C00DC200040EE8A /* AppWidgetManager.swift */; };
 		287F755A1C00E75E0040EE8A /* UserDefaultsMigration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 287F75591C00E75E0040EE8A /* UserDefaultsMigration.swift */; };
+		2881E0C11C948BED00E42818 /* AppModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2881E0C01C948BED00E42818 /* AppModelTests.swift */; };
+		2881E0C31C94939500E42818 /* StubUserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2881E0C21C94939500E42818 /* StubUserDefaults.swift */; };
 		28875EA41BBC72FB00E67A16 /* Network.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28875EA31BBC72FB00E67A16 /* Network.swift */; };
 		28875EA71BBC739100E67A16 /* JSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28875EA61BBC739100E67A16 /* JSON.swift */; };
 		28875EA91BBC7A2F00E67A16 /* JSONTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28875EA81BBC7A2F00E67A16 /* JSONTests.swift */; };
@@ -133,7 +135,7 @@
 		28F6009F1BDB8E3E00ED71CA /* NGSplitViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28F6009E1BDB8E3E00ED71CA /* NGSplitViewController.swift */; };
 		710535651BCC141C00FDB70C /* UserDefaultsProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 710535641BCC141C00FDB70C /* UserDefaultsProtocol.swift */; };
 		7105356C1BCDA83A00FDB70C /* SearchViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7105356A1BCDA83A00FDB70C /* SearchViewModelTests.swift */; };
-		7105356D1BCDA83A00FDB70C /* TestAppModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7105356B1BCDA83A00FDB70C /* TestAppModel.swift */; };
+		7105356D1BCDA83A00FDB70C /* StubAppModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7105356B1BCDA83A00FDB70C /* StubAppModel.swift */; };
 		716D9E951BCA5EA1005A6B49 /* MapItemCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 716D9E941BCA5EA1005A6B49 /* MapItemCollectionViewController.swift */; };
 		716D9E971BCA614D005A6B49 /* MapItemCollectionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 716D9E961BCA614D005A6B49 /* MapItemCollectionViewModel.swift */; };
 		716D9E991BCBC2F1005A6B49 /* ScotTraffic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 716D9E981BCBC2F1005A6B49 /* ScotTraffic.swift */; };
@@ -385,6 +387,8 @@
 		287F75511C00D1130040EE8A /* AppNetworkActivityIndicator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppNetworkActivityIndicator.swift; sourceTree = "<group>"; };
 		287F75571C00DC200040EE8A /* AppWidgetManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppWidgetManager.swift; sourceTree = "<group>"; };
 		287F75591C00E75E0040EE8A /* UserDefaultsMigration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserDefaultsMigration.swift; sourceTree = "<group>"; };
+		2881E0C01C948BED00E42818 /* AppModelTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppModelTests.swift; sourceTree = "<group>"; };
+		2881E0C21C94939500E42818 /* StubUserDefaults.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StubUserDefaults.swift; sourceTree = "<group>"; };
 		288416551C58221A00D290A9 /* SwiftCheck.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = SwiftCheck.xcodeproj; path = Submodules/SwiftCheck/SwiftCheck.xcodeproj; sourceTree = SOURCE_ROOT; };
 		28875EA31BBC72FB00E67A16 /* Network.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Network.swift; sourceTree = "<group>"; };
 		28875EA61BBC739100E67A16 /* JSON.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JSON.swift; sourceTree = "<group>"; };
@@ -429,7 +433,7 @@
 		710535641BCC141C00FDB70C /* UserDefaultsProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserDefaultsProtocol.swift; sourceTree = "<group>"; };
 		710535661BCDA81E00FDB70C /* Data */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Data; sourceTree = "<group>"; };
 		7105356A1BCDA83A00FDB70C /* SearchViewModelTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchViewModelTests.swift; sourceTree = "<group>"; };
-		7105356B1BCDA83A00FDB70C /* TestAppModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestAppModel.swift; sourceTree = "<group>"; };
+		7105356B1BCDA83A00FDB70C /* StubAppModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StubAppModel.swift; sourceTree = "<group>"; };
 		716D9E941BCA5EA1005A6B49 /* MapItemCollectionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapItemCollectionViewController.swift; sourceTree = "<group>"; };
 		716D9E961BCA614D005A6B49 /* MapItemCollectionViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapItemCollectionViewModel.swift; sourceTree = "<group>"; };
 		716D9E981BCBC2F1005A6B49 /* ScotTraffic.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScotTraffic.swift; sourceTree = "<group>"; };
@@ -534,9 +538,12 @@
 		2804936C1BA8BB4800990BD1 /* ScotTrafficTests */ = {
 			isa = PBXGroup;
 			children = (
+				7105356B1BCDA83A00FDB70C /* StubAppModel.swift */,
+				2881E0C21C94939500E42818 /* StubUserDefaults.swift */,
 				288416551C58221A00D290A9 /* SwiftCheck.xcodeproj */,
 				710535661BCDA81E00FDB70C /* Data */,
 				710535681BCDA82300FDB70C /* Core */,
+				2881E0BC1C948BD400E42818 /* App */,
 				710535691BCDA82800FDB70C /* ViewModels */,
 				2804936F1BA8BB4800990BD1 /* Info.plist */,
 			);
@@ -696,6 +703,14 @@
 			name = Resources;
 			sourceTree = "<group>";
 		};
+		2881E0BC1C948BD400E42818 /* App */ = {
+			isa = PBXGroup;
+			children = (
+				2881E0C01C948BED00E42818 /* AppModelTests.swift */,
+			);
+			name = App;
+			sourceTree = "<group>";
+		};
 		288416561C58221A00D290A9 /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -816,7 +831,6 @@
 		710535691BCDA82800FDB70C /* ViewModels */ = {
 			isa = PBXGroup;
 			children = (
-				7105356B1BCDA83A00FDB70C /* TestAppModel.swift */,
 				7105356A1BCDA83A00FDB70C /* SearchViewModelTests.swift */,
 				2876E6171BFBEA9C00C8A020 /* MapViewModelTests.swift */,
 				289B9AB61C348AC700C342F1 /* FavouritesTests.swift */,
@@ -1251,6 +1265,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2881E0C31C94939500E42818 /* StubUserDefaults.swift in Sources */,
+				2881E0C11C948BED00E42818 /* AppModelTests.swift in Sources */,
 				2876E6181BFBEA9C00C8A020 /* MapViewModelTests.swift in Sources */,
 				28BFBC5B1BBC91AA00827069 /* FRPTests.swift in Sources */,
 				7105356C1BCDA83A00FDB70C /* SearchViewModelTests.swift in Sources */,
@@ -1258,7 +1274,7 @@
 				28F4BF721C3BE4E400C257D5 /* AppErrorTests.swift in Sources */,
 				28875EA91BBC7A2F00E67A16 /* JSONTests.swift in Sources */,
 				282BFE5E1C3A9EA500E531BC /* FRPJoinTests.swift in Sources */,
-				7105356D1BCDA83A00FDB70C /* TestAppModel.swift in Sources */,
+				7105356D1BCDA83A00FDB70C /* StubAppModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

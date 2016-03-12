@@ -10,6 +10,8 @@ import Foundation
 
 class AppModel: ScotTraffic {
     
+    typealias CacheSource = (maximumAge: NSTimeInterval) -> (filename: String) -> DataSource
+    
     // ScotTraffic interface
     let trafficCameraLocations: Signal<[TrafficCameraLocation]>
     let safetyCameras: Signal<[SafetyCamera]>
@@ -21,30 +23,18 @@ class AppModel: ScotTraffic {
     let settings: Settings
     let favourites: Favourites
     let remoteNotifications: RemoteNotifications
-    
-    let httpAccess: HTTPAccess
 
-    private let diskCache: DiskCache
     private let fetchStarters: [PeriodicStarter]
     private var receivers = [ReceiverType]()
     
-    init() {
-        let userDefaults = Configuration.sharedUserDefaults()
-        let diskCache = DiskCache(withPath: "scottraffic")
-        let httpAccess = HTTPAccess(baseURL: Configuration.scotTrafficBaseURL, indicator: AppNetworkActivityIndicator())
-        
-        let cachedDataSource = CachedHTTPDataSource.dataSourceWithHTTPAccess(httpAccess, cache: diskCache)
-        let fiveMinuteCache = cachedDataSource(300)
-        let fifteenMinuteCache = cachedDataSource(900)
-        let dailyCache = cachedDataSource(86400)
-        
-        self.diskCache = diskCache
-        self.httpAccess = httpAccess
-        
+    init(cacheSource: CacheSource, reachable: Signal<Bool>, userDefaults: UserDefaultsProtocol) {
+        let fiveMinuteCache = cacheSource(maximumAge: 300)
+        let fifteenMinuteCache = cacheSource(maximumAge: 900)
+        let dailyCache = cacheSource(maximumAge: 86400)
         
         // -- Traffic Cameras --
         
-        let trafficCamerasSource = fiveMinuteCache("trafficcameras.json")
+        let trafficCamerasSource = fiveMinuteCache(filename: "trafficcameras.json")
         let trafficCamerasContext = TrafficCameraDecodeContext(makeImageDataSource: fiveMinuteCache)
         let trafficCameraLocations = trafficCamerasSource.value.map {
             return $0.map(Array<TrafficCameraLocation>.decodeJSON(trafficCamerasContext) <== JSONArrayFromData)
@@ -54,7 +44,7 @@ class AppModel: ScotTraffic {
         
         // -- Safety Cameras --
         
-        let safetyCamerasSource = fifteenMinuteCache("safetycameras.json")
+        let safetyCamerasSource = fifteenMinuteCache(filename: "safetycameras.json")
         let safetyCamerasContext = SafetyCameraDecodeContext(makeImageDataSource: dailyCache)
         let safetyCameras = safetyCamerasSource.value.map({
             $0.map(Array<SafetyCamera>.decodeJSON(safetyCamerasContext) <== JSONArrayFromData)
@@ -64,7 +54,7 @@ class AppModel: ScotTraffic {
         
         // -- Alerts --
         
-        let alertsSource = fiveMinuteCache("alerts.json")
+        let alertsSource = fiveMinuteCache(filename: "alerts.json")
         let alerts = alertsSource.value.map({
             $0.map(Array<Alert>.decodeJSON(IncidentType.Alert) <== JSONArrayFromData)
         })
@@ -73,7 +63,7 @@ class AppModel: ScotTraffic {
         
         // -- Roadworks --
         
-        let roadworksSource = fiveMinuteCache("roadworks.json")
+        let roadworksSource = fiveMinuteCache(filename: "roadworks.json")
         let roadworks = roadworksSource.value.map({
             $0.map(Array<Roadwork>.decodeJSON(IncidentType.Roadworks) <== JSONArrayFromData)
         })
@@ -82,7 +72,7 @@ class AppModel: ScotTraffic {
         
         // -- Bridge Status --
         
-        let bridgeStatusSource = fiveMinuteCache("bridges.json")
+        let bridgeStatusSource = fiveMinuteCache(filename: "bridges.json")
         let bridges = bridgeStatusSource.value.map({
             $0.map(Array<BridgeStatus>.decodeJSON(Void) <== JSONArrayFromData)
         })
@@ -91,7 +81,7 @@ class AppModel: ScotTraffic {
         
         // -- Weather --
         
-        let weatherSource = fifteenMinuteCache("weather.json")
+        let weatherSource = fifteenMinuteCache(filename: "weather.json")
         let weather = weatherSource.value.map({
             $0.map(Array<Weather>.decodeJSON(Void) <== JSONArrayFromData)
         })
@@ -104,7 +94,7 @@ class AppModel: ScotTraffic {
         
         // -- Message of the day --
         
-        let messageOfTheDaySource = HTTPDataSource(httpAccess: httpAccess, path: "message.json")
+        let messageOfTheDaySource = cacheSource(maximumAge: 60)(filename: "message.json")
         let messageOfTheDay = messageOfTheDaySource.value.map({
             $0.map(MessageOfTheDay.decodeJSON(Void) <== JSONObjectFromData)
         })
@@ -140,7 +130,7 @@ class AppModel: ScotTraffic {
         
         // -- Refresh on restoring internet connection
         
-        receivers.append(httpAccess.serverIsReachable.onRisingEdge({ [weak self] in
+        receivers.append(reachable.onRisingEdge({ [weak self] in
             self?.fetchStarters.forEach {
                 $0.restart(fireImmediately: true)
             }
