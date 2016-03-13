@@ -11,7 +11,7 @@ import UIKit
 
 private let minimumAnnotationSpacingX: CGFloat = 35
 private let minimumAnnotationSpacingY: CGFloat = 32
-private let zoomEdgePadding = UIEdgeInsetsMake(60, 40, 60, 40)
+private let zoomEdgePadding = UIEdgeInsets(top: 60, left: 40, bottom: 60, right: 40)
 
 class MapViewController: UIViewController {
 
@@ -79,10 +79,13 @@ class MapViewController: UIViewController {
                 return
         }
         
-        for unselected in currentAnnotations {
-            if unselected == annotation {
-                mapView.selectAnnotation(unselected, animated: true)
-                return
+        // defer annotation selection to ensure annotations have a chance to update first
+        dispatch_async(dispatch_get_main_queue()) {
+            for unselected in self.currentAnnotations {
+                if unselected == annotation {
+                    self.mapView.selectAnnotation(unselected, animated: true)
+                    return
+                }
             }
         }
     }
