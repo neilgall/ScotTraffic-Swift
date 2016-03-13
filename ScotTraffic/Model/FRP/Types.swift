@@ -58,9 +58,10 @@ public enum LatestValue<Value> {
 //
 public protocol SignalType {
     typealias ValueType
+    typealias Observer = Int
     
-    func addObserver(observer: Transaction<ValueType> -> Void) -> Int
-    func removeObserver(id: Int)
+    func addObserver(observer: Transaction<ValueType> -> Void) -> Observer
+    func removeObserver(id: Observer)
     
     func pushTransaction(transaction: Transaction<ValueType>)
     func pushValue(value: ValueType)
@@ -81,8 +82,7 @@ public protocol InputType {
 public class Signal<Value> : SignalType {
     public typealias ValueType = Value
     
-    private var observers: [Int : Transaction<ValueType> -> Void] = [:]
-    private var nextObserverId: Int = 0
+    private var observers = KeyedSet<Transaction<ValueType> -> Void>()
     
     public init() {
     }
@@ -98,13 +98,11 @@ public class Signal<Value> : SignalType {
         case .None:
             break
         }
-        let id = nextObserverId++
-        observers[id] = observer
-        return id
+        return observers.add(observer)
     }
     
     public func removeObserver(id: Int) {
-        observers.removeValueForKey(id)
+        observers.remove(id)
     }
     
     // Push
@@ -114,7 +112,7 @@ public class Signal<Value> : SignalType {
     }
     
     public func pushTransaction(transaction: Transaction<ValueType>) {
-        for observer in observers.values {
+        for observer in observers {
             observer(transaction)
         }
     }
@@ -174,16 +172,18 @@ public class ComputedSignal<Value>: Signal<Value> {
 // on transactions from that signal.
 //
 class Receiver<Source: SignalType>: ReceiverType {
-    let source: Source
-    private let id: Int
+    typealias ValueType = Source.ValueType
+    
+    private let source: Source
+    private let observer: Source.Observer
     
     init(_ source: Source, _ closure: Transaction<Source.ValueType> -> Void) {
         self.source = source
-        self.id = source.addObserver(closure)
+        self.observer = source.addObserver(closure)
     }
     
     deinit {
-        source.removeObserver(id)
+        source.removeObserver(observer)
     }
 }
 

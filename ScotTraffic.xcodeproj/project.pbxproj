@@ -88,6 +88,8 @@
 		287F755A1C00E75E0040EE8A /* UserDefaultsMigration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 287F75591C00E75E0040EE8A /* UserDefaultsMigration.swift */; };
 		2881E0C11C948BED00E42818 /* AppModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2881E0C01C948BED00E42818 /* AppModelTests.swift */; };
 		2881E0C31C94939500E42818 /* StubUserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2881E0C21C94939500E42818 /* StubUserDefaults.swift */; };
+		2881E0C51C96111000E42818 /* KeyedSet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2881E0C41C96111000E42818 /* KeyedSet.swift */; };
+		2881E0C61C96121C00E42818 /* KeyedSet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2881E0C41C96111000E42818 /* KeyedSet.swift */; };
 		28875EA41BBC72FB00E67A16 /* Network.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28875EA31BBC72FB00E67A16 /* Network.swift */; };
 		28875EA71BBC739100E67A16 /* JSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28875EA61BBC739100E67A16 /* JSON.swift */; };
 		28875EA91BBC7A2F00E67A16 /* JSONTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28875EA81BBC7A2F00E67A16 /* JSONTests.swift */; };
@@ -389,6 +391,7 @@
 		287F75591C00E75E0040EE8A /* UserDefaultsMigration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserDefaultsMigration.swift; sourceTree = "<group>"; };
 		2881E0C01C948BED00E42818 /* AppModelTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppModelTests.swift; sourceTree = "<group>"; };
 		2881E0C21C94939500E42818 /* StubUserDefaults.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StubUserDefaults.swift; sourceTree = "<group>"; };
+		2881E0C41C96111000E42818 /* KeyedSet.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeyedSet.swift; sourceTree = "<group>"; };
 		288416551C58221A00D290A9 /* SwiftCheck.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = SwiftCheck.xcodeproj; path = Submodules/SwiftCheck/SwiftCheck.xcodeproj; sourceTree = SOURCE_ROOT; };
 		28875EA31BBC72FB00E67A16 /* Network.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Network.swift; sourceTree = "<group>"; };
 		28875EA61BBC739100E67A16 /* JSON.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JSON.swift; sourceTree = "<group>"; };
@@ -806,6 +809,7 @@
 		289D27081C3A66BE00543F3C /* FRP */ = {
 			isa = PBXGroup;
 			children = (
+				2881E0C41C96111000E42818 /* KeyedSet.swift */,
 				289D270B1C3A675300543F3C /* Types.swift */,
 				289201D31BBC5AEB00DA4A9A /* Combinators.swift */,
 				289D27091C3A670100543F3C /* Combine.swift */,
@@ -1244,6 +1248,7 @@
 				282D4D371C8F88A600642AE4 /* MapWith.swift in Sources */,
 				28F4BF771C40685300C257D5 /* ISO8601.swift in Sources */,
 				285E17031BF760B000E13129 /* Sunrise.swift in Sources */,
+				2881E0C51C96111000E42818 /* KeyedSet.swift in Sources */,
 				28903ABE1BE62E2500EC8054 /* Reachability.swift in Sources */,
 				28AF4A0B1BD849C0009B0AE8 /* PopoverContentSize.swift in Sources */,
 				285E17051BF768E900E13129 /* WeatherViewModel.swift in Sources */,
@@ -1297,6 +1302,7 @@
 				287F754E1C00CD5F0040EE8A /* WithFlag.swift in Sources */,
 				287F75391C00C7A70040EE8A /* DataSource.swift in Sources */,
 				28B4F4881C1F57A500785C18 /* Configuration.swift in Sources */,
+				2881E0C61C96121C00E42818 /* KeyedSet.swift in Sources */,
 				287F754F1C00CEA20040EE8A /* PeriodicStarter.swift in Sources */,
 				287F753F1C00C7BC0040EE8A /* Functions.swift in Sources */,
 				286CC8C81C47018F00FB028B /* Analytics.swift in Sources */,
