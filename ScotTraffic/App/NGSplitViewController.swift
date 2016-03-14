@@ -42,6 +42,14 @@ import UIKit
         viewWidth: CGFloat) -> Bool
 
     /**
+     * Notify that the split view controller is about to change the master view controller's visibility.
+     *
+     * @param splitViewController The NGSplitViewController performing the notification
+     * @param viewController      The UIViewController in the master position which is about to change visibility
+     */
+    optional func splitViewController(splitViewController: NGSplitViewController, willChangeMasterViewControllerVisibility viewController: UIViewController)
+
+    /**
      * Notify that the split view controller has changed the master view controller's visibility. When the master is
      * hidden, the application should present some user interface to allow the master to be presented temporarily using
      * overlayMasterViewController()
@@ -51,6 +59,14 @@ import UIKit
      */
     optional func splitViewController(splitViewController: NGSplitViewController, didChangeMasterViewControllerVisibility viewController: UIViewController)
 
+    /**
+     * Notify that the split view controller is about to change the detail view controller's visibility.
+     *
+     * @param splitViewController The NGSplitViewController performing the notification
+     * @param viewController      The UIViewController in the detail position which is about to change visibility
+     */
+    optional func splitViewController(splitViewController: NGSplitViewController, willChangeDetailViewControllerVisibility viewController: UIViewController)
+    
     /**
      * Notify that the split view controller has changed the master view controller's visibility. When the detail is
      * hidden, the application should present some user interface to allow the detail to be shown again using
@@ -106,7 +122,7 @@ public class NGSplitViewController: UIViewController {
             }
             
             if presentationStyle.showsMaster, let oldVC = masterViewController, newVC = newMasterViewController {
-                crossFadeFromViewController(oldVC, toViewController: newVC)
+                crossFadeFromViewController(oldVC, toViewController: newVC, completion: {})
             }
             
             if let oldVC = masterViewController {
@@ -129,7 +145,7 @@ public class NGSplitViewController: UIViewController {
             }
             
             if presentationStyle.showsDetail, let oldVC = detailViewController, newVC = newDetailViewController {
-                crossFadeFromViewController(oldVC, toViewController: newVC)
+                crossFadeFromViewController(oldVC, toViewController: newVC, completion: {})
             }
             
             if let oldVC = detailViewController {
@@ -219,7 +235,6 @@ public class NGSplitViewController: UIViewController {
             transitionFromPresentationStyle(oldStyle, toPresentationStyle: presentationStyle)
             view.setNeedsLayout()
             updateChildTraitCollections()
-            notifyDelegateOfChangeFromPresentationStyle(oldStyle, toPresentationStyle: presentationStyle)
         }
     }
     
@@ -380,8 +395,9 @@ public class NGSplitViewController: UIViewController {
     
     // -- MARK: Transitions
     
-    private func animateInMasterViewControllerOverlay() {
+    private func animateInMasterViewControllerOverlay(completion: Void -> Void) {
         guard let master = masterViewController else {
+            completion()
             return
         }
         
@@ -406,11 +422,13 @@ public class NGSplitViewController: UIViewController {
             },
             completion: { _ in
                 self.animatingMasterOverlay = false
+                completion()
         })
     }
     
-    private func animateOutMasterViewControllerOverlay() {
+    private func animateOutMasterViewControllerOverlay(completion: Void -> Void) {
         guard let master = masterViewController else {
+            completion()
             return
         }
         
@@ -427,6 +445,7 @@ public class NGSplitViewController: UIViewController {
                 self.overlayHideButton = nil
                 self.removeChildView(master)
                 self.animatingMasterOverlay = false
+                completion()
         })
     }
     
@@ -435,46 +454,71 @@ public class NGSplitViewController: UIViewController {
             return
         }
         
+        notifyDelegatePrecedingChangeFromPresentationStyle(fromPresentationStyle, toPresentationStyle: toPresentationStyle)
+        let postNotify = {
+            self.notifyDelegateFollowingChangeFromPresentationStyle(fromPresentationStyle, toPresentationStyle: toPresentationStyle)
+        }
+
         switch (fromPresentationStyle, toPresentationStyle) {
 
         case (.SideBySide, .MasterOnly):
             removeChildView(detail)
+            postNotify()
             
         case (.SideBySide, .DetailOnly):
             removeChildView(master)
+            postNotify()
             
         case (.DetailOnly, .MasterOverlay):
-            animateInMasterViewControllerOverlay()
+            animateInMasterViewControllerOverlay(postNotify)
         
         case (.MasterOverlay, .DetailOnly):
-            animateOutMasterViewControllerOverlay()
+            animateOutMasterViewControllerOverlay(postNotify)
         
         case (.MasterOverlay, .MasterOnly):
             overlayHideButton = nil
+            postNotify()
 
         case (.MasterOnly, .DetailOnly):
             detail.view.frame = containerFrames.detail
-            crossFadeFromViewController(master, toViewController: detail)
+            crossFadeFromViewController(master, toViewController: detail, completion: postNotify)
 
         case (.DetailOnly, .MasterOnly):
             master.view.frame = containerFrames.master
-            crossFadeFromViewController(detail, toViewController: master)
+            crossFadeFromViewController(detail, toViewController: master, completion: postNotify)
 
         case (.DetailOnly, .SideBySide):
             addChildView(master, withFrame: containerFrames.master)
+            postNotify()
             
         case (.MasterOnly, .SideBySide):
             addChildView(detail, withFrame: containerFrames.detail)
+            postNotify()
             
         case (.MasterOverlay, .SideBySide):
             overlayHideButton = nil
+            postNotify()
 
         default:
             fatalError("illegal transition from \(fromPresentationStyle) to \(toPresentationStyle)")
         }
     }
     
-    private func notifyDelegateOfChangeFromPresentationStyle(fromPresentationStyle: PresentationStyle, toPresentationStyle: PresentationStyle) {
+    private func notifyDelegatePrecedingChangeFromPresentationStyle(fromPresentationStyle: PresentationStyle, toPresentationStyle: PresentationStyle) {
+        if let master = masterViewController {
+            if fromPresentationStyle.showsMaster != toPresentationStyle.showsMaster {
+                delegate?.splitViewController?(self, willChangeMasterViewControllerVisibility: master)
+            }
+        }
+        
+        if let detail = detailViewController {
+            if fromPresentationStyle.showsDetail != toPresentationStyle.showsDetail {
+                delegate?.splitViewController?(self, willChangeDetailViewControllerVisibility: detail)
+            }
+        }
+    }
+    
+    private func notifyDelegateFollowingChangeFromPresentationStyle(fromPresentationStyle: PresentationStyle, toPresentationStyle: PresentationStyle) {
         if let master = masterViewController {
             if fromPresentationStyle.showsMaster != toPresentationStyle.showsMaster {
                 delegate?.splitViewController?(self, didChangeMasterViewControllerVisibility: master)
@@ -487,15 +531,16 @@ public class NGSplitViewController: UIViewController {
             }
         }
     }
-    
-    private func crossFadeFromViewController(from: UIViewController, toViewController to: UIViewController) {
+
+    private func crossFadeFromViewController(from: UIViewController, toViewController to: UIViewController, completion: Void -> Void) {
         to.view.setNeedsLayout()
         transitionFromViewController(from,
             toViewController: to,
             duration: transitionDuration,
             options: [.TransitionCrossDissolve],
             animations: { },
-            completion: nil)
+            completion: { _ in completion() }
+        )
     }
 }
 
