@@ -63,9 +63,9 @@ private func compositedSize(imageComponents: [String]) -> (size: CGSize, scale: 
             return accumulator
         }
         return (
-            width:  max(accumulator.width,  image.size.width),
+            width:  max(accumulator.width, image.size.width),
             height: max(accumulator.height, image.size.height),
-            scale:  max(accumulator.scale,  image.scale)
+            scale:  max(accumulator.scale, image.scale)
         )
     }
     return (

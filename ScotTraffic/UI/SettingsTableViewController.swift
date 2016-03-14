@@ -128,10 +128,10 @@ class SettingsTableViewController: UITableViewController {
         receivers.append(combine(contentConfigurations, notificationConfigurations, combine:{ ($0, $1) }) --> {
             [weak self] contentConfigurations, notificationConfigurations in
             self?.configurations = [
-                ("Content",       contentConfigurations),
-                ("Settings",      settingConfigurations),
+                ("Content", contentConfigurations),
+                ("Settings", settingConfigurations),
                 ("Notifications", notificationConfigurations),
-                ("Help",          infoConfigurations)
+                ("Help", infoConfigurations)
             ]
             self?.tableView.reloadData()
         })

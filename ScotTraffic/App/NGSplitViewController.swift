@@ -539,8 +539,7 @@ public class NGSplitViewController: UIViewController {
             duration: transitionDuration,
             options: [.TransitionCrossDissolve],
             animations: { },
-            completion: { _ in completion() }
-        )
+            completion: { _ in completion() })
     }
 }
 
