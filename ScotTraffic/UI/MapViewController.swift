@@ -135,8 +135,8 @@ class MapViewController: UIViewController {
             viewController.willMoveToParentViewController(nil)
             viewController.beginAppearanceTransition(false, animated: true)
             self.calloutContainerView.hideCalloutView(viewController.view, animated: true) {
-                viewController.removeFromParentViewController()
                 viewController.endAppearanceTransition()
+                viewController.removeFromParentViewController()
                 self.calloutViewControllerByAnnotation[annotationView] = nil
                 completion()
             }

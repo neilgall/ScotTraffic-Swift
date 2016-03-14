@@ -283,9 +283,14 @@ extension AppCoordinator: NGSplitViewControllerDelegate {
         updateShowSearchButton()
         updateCancelOrPinSearchButton()
     }
+
+    func splitViewController(splitViewController: NGSplitViewController, willChangeDetailViewControllerVisibility viewController: UIViewController) {
+        mapViewModel.animatingVisibility <-- true
+    }
     
     func splitViewController(splitViewController: NGSplitViewController, didChangeDetailViewControllerVisibility viewController: UIViewController) {
         updateCancelOrPinSearchButton()
+        mapViewModel.animatingVisibility <-- false
     }
 }
 

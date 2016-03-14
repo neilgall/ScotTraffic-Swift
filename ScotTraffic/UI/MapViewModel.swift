@@ -36,6 +36,9 @@ class MapViewModel {
     // A flag indicating whether the map is currently animating its visible rect
     let animatingMapRect: Input<Bool>
     
+    // A flag indicating whether the entire map visibility is currently being animated
+    let animatingVisibility: Input<Bool>
+    
     // -- MARK: Outputs
     
     // The set of annotations in the visible map rect
@@ -67,6 +70,7 @@ class MapViewModel {
         
         selectedMapItem = Input(initial: nil)
         animatingMapRect = Input(initial: false)
+        animatingVisibility = Input(initial: false)
         delegate = Input(initial: nil)
         
         let expandedVisibleMapRect = visibleMapRect.map { rect in
@@ -141,7 +145,7 @@ class MapViewModel {
             MKMapRectInset(MKMapRectNull.addPoint($0.mapPoint), zoomToMapItemInsetX, zoomToMapItemInsetY)
         })
         
-        let selectionInputAfterZooming = not(animatingMapRect).gate(selectedMapItem)
+        let selectionInputAfterZooming = not(animatingMapRect || animatingVisibility).gate(selectedMapItem)
         
         let selectedMapItemGroup = selectionInputAfterZooming.mapWith(mapItemGroups, transform: { item, groups in
             return mapItemGroupFromGroups(groups, containingItem: item)
