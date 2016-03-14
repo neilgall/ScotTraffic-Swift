@@ -145,6 +145,8 @@ class MapViewModel {
             MKMapRectInset(MKMapRectNull.addPoint($0.mapPoint), zoomToMapItemInsetX, zoomToMapItemInsetY)
         })
         
+        // Defer annotation selection until after visibility animations (due to the split view controller
+        // transitions) and after any map rect transition also triggered by the selection.
         let selectionInputAfterZooming = not(animatingMapRect || animatingVisibility).gate(selectedMapItem)
         
         let selectedMapItemGroup = selectionInputAfterZooming.mapWith(mapItemGroups, transform: { item, groups in
