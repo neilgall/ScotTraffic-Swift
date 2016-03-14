@@ -21,7 +21,7 @@ class MapViewController: UIViewController {
     var viewModel: MapViewModel?
     var receivers = [ReceiverType]()
     var calloutConstructor: ([MapItem] -> UIViewController)?
-    var calloutViewControllerByAnnotation = ViewKeyedMap<UIViewController>()
+    var calloutViewController: UIViewController?
     var animationSequence = AsyncSequence()
     var zoomingMapRect: Bool = false
     
@@ -91,6 +91,8 @@ class MapViewController: UIViewController {
     }
     
     func deselectAnnotationsAnimated(animated: Bool) {
+        hideMapItemsAnimated(animated)
+        
         for selected in mapView.selectedAnnotations {
             mapView.deselectAnnotation(selected, animated: animated)
         }
@@ -105,11 +107,11 @@ class MapViewController: UIViewController {
         attachViewController(viewController, toAnnotationView: annotationView)
     }
     
-    private func hideMapItemsPresentedFromAnnotationView(annotationView: MKAnnotationView) {
-        guard let viewController = calloutViewControllerByAnnotation[annotationView] else {
+    private func hideMapItemsAnimated(animated: Bool) {
+        guard let viewController = calloutViewController else {
             return
         }
-        detachViewController(viewController, fromAnnotationView: annotationView)
+        detachViewController(viewController, animated: animated)
     }
     
     private func attachViewController(viewController: UIViewController, toAnnotationView annotationView: MKAnnotationView) {
@@ -118,7 +120,7 @@ class MapViewController: UIViewController {
             // resulting from a search selection.
             self.removeOrphanedChildViewControllers()
 
-            self.calloutViewControllerByAnnotation[annotationView] = viewController
+            self.calloutViewController = viewController
             viewController.willMoveToParentViewController(self)
             viewController.beginAppearanceTransition(true, animated: true)
             self.addChildViewController(viewController)
@@ -130,16 +132,22 @@ class MapViewController: UIViewController {
         }
     }
     
-    private func detachViewController(viewController: UIViewController, fromAnnotationView annotationView: MKAnnotationView) {
-        animationSequence.dispatch { completion in
+    private func detachViewController(viewController: UIViewController, animated: Bool) {
+        let task = { (completion: Void -> Void) -> Void in
             viewController.willMoveToParentViewController(nil)
             viewController.beginAppearanceTransition(false, animated: true)
-            self.calloutContainerView.hideCalloutView(viewController.view, animated: true) {
+            self.calloutContainerView.hideCalloutView(viewController.view, animated: animated) {
                 viewController.endAppearanceTransition()
                 viewController.removeFromParentViewController()
-                self.calloutViewControllerByAnnotation[annotationView] = nil
+                self.calloutViewController = nil
                 completion()
             }
+        }
+        
+        if animated {
+            animationSequence.dispatch(task)
+        } else {
+            task({})
         }
     }
     
@@ -169,7 +177,7 @@ extension MapViewController: MKMapViewDelegate {
     // -- MARK: MKMapViewDelegete --
     
     func mapView(mapView: MKMapView, regionWillChangeAnimated animated: Bool) {
-        deselectAnnotationsAnimated(animated)
+        deselectAnnotationsAnimated(true)
         if let viewModel = viewModel {
             viewModel.animatingMapRect <-- animated
         }
@@ -223,7 +231,7 @@ extension MapViewController: MKMapViewDelegate {
     }
     
     func mapView(mapView: MKMapView, didDeselectAnnotationView view: MKAnnotationView) {
-        hideMapItemsPresentedFromAnnotationView(view)
+        hideMapItemsAnimated(true)
     }
 }
 
