@@ -146,9 +146,9 @@ class AppCoordinator: NSObject {
     
     private func updateShowSearchButton() {
         if splitViewController.masterViewControllerIsVisible {
-            mapViewController.navigationItem.leftBarButtonItem = nil
+            mapViewController.navigationItem.setLeftBarButtonItem(nil, animated: true)
         } else {
-            mapViewController.navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "708-search"), style: .Plain, target: self, action: Selector("searchButtonTapped:"))
+            mapViewController.navigationItem.setLeftBarButtonItem(UIBarButtonItem(image: UIImage(named: "708-search"), style: .Plain, target: self, action: Selector("searchButtonTapped:")), animated: true)
         }
     }
     
@@ -163,10 +163,10 @@ class AppCoordinator: NSObject {
             searchViewController.navigationItem.rightBarButtonItem = button
 
         } else if splitViewController.detailViewControllerIsVisible {
-            searchViewController.navigationItem.rightBarButtonItem = nil
+            searchViewController.navigationItem.setRightBarButtonItem(nil, animated:  true)
         
         } else {
-            searchViewController.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Done, target: self, action: Selector("searchDoneButtonTapped:"))
+            searchViewController.navigationItem.setRightBarButtonItem(UIBarButtonItem(barButtonSystemItem: .Done, target: self, action: Selector("searchDoneButtonTapped:")), animated: true)
         }
     }
     
