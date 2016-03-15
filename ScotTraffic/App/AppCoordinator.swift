@@ -145,28 +145,47 @@ class AppCoordinator: NSObject {
     }
     
     private func updateShowSearchButton() {
-        if splitViewController.masterViewControllerIsVisible {
-            mapViewController.navigationItem.setLeftBarButtonItem(nil, animated: true)
+        if let coordinator = splitViewController.transitionCoordinator() {
+            coordinator.animateAlongsideTransition({ _ in
+                self.mapViewController.navigationItem.leftBarButtonItem = self.showSearchButton
+            }, completion: nil)
         } else {
-            mapViewController.navigationItem.setLeftBarButtonItem(UIBarButtonItem(image: UIImage(named: "708-search"), style: .Plain, target: self, action: Selector("searchButtonTapped:")), animated: true)
+            mapViewController.navigationItem.setLeftBarButtonItem(showSearchButton, animated: true)
+        }
+    }
+    
+    private var showSearchButton: UIBarButtonItem? {
+        if splitViewController.masterViewControllerIsVisible {
+            return nil
+        } else {
+            return UIBarButtonItem(image: UIImage(named: "708-search"), style: .Plain, target: self, action: Selector("searchButtonTapped:"))
         }
     }
     
     private func updateCancelOrPinSearchButton() {
+        if let coordinator = splitViewController.transitionCoordinator() {
+            coordinator.animateAlongsideTransition({ _ in
+                self.searchViewController.navigationItem.rightBarButtonItem = self.cancelOrPinSearchButton
+            }, completion: nil)
+        } else {
+            searchViewController.navigationItem.setRightBarButtonItem(cancelOrPinSearchButton, animated: true)
+        }
+    }
+    
+    private var cancelOrPinSearchButton: UIBarButtonItem? {
         let canPinSearch = canPinSearchView(splitViewController.traitCollection.horizontalSizeClass,
             width: splitViewController.view.bounds.width)
         
         if canPinSearch {
             let pinned = appModel.settings.searchViewPinned.latestValue.get ?? false
             let image = UIImage(named: pinned ? "940-pin-selected" : "940-pin")
-            let button = UIBarButtonItem(image: image, style: .Plain, target: self, action: Selector("pinSearchButtonTapped:"))
-            searchViewController.navigationItem.rightBarButtonItem = button
+            return UIBarButtonItem(image: image, style: .Plain, target: self, action: Selector("pinSearchButtonTapped:"))
 
         } else if splitViewController.detailViewControllerIsVisible {
-            searchViewController.navigationItem.setRightBarButtonItem(nil, animated:  true)
+            return nil
         
         } else {
-            searchViewController.navigationItem.setRightBarButtonItem(UIBarButtonItem(barButtonSystemItem: .Done, target: self, action: Selector("searchDoneButtonTapped:")), animated: true)
+            return UIBarButtonItem(barButtonSystemItem: .Done, target: self, action: Selector("searchDoneButtonTapped:"))
         }
     }
     
