@@ -190,9 +190,9 @@ public class NGSplitViewController: UIViewController {
         }
         
         if view.bounds.size.width <= 320 {
-            presentationStyle = .MasterOnly
+            setPresentationStyle(.MasterOnly, withTransitionCoordinator: nil)
         } else {
-            presentationStyle = .MasterOverlay
+            setPresentationStyle(.MasterOverlay, withTransitionCoordinator: nil)
         }
     }
     
@@ -201,7 +201,7 @@ public class NGSplitViewController: UIViewController {
      */
     public func dismissOverlaidMasterViewController() {
         if presentationStyle == .MasterOnly || presentationStyle == .MasterOverlay {
-            presentationStyle = .DetailOnly
+            setPresentationStyle(.DetailOnly, withTransitionCoordinator: nil)
         }
     }
 
@@ -230,14 +230,7 @@ public class NGSplitViewController: UIViewController {
         }
     }
     
-    private var presentationStyle: PresentationStyle = .SideBySide {
-        didSet(oldStyle) {
-            transitionFromPresentationStyle(oldStyle, toPresentationStyle: presentationStyle)
-            view.setNeedsLayout()
-            updateChildTraitCollections()
-        }
-    }
-    
+    private var presentationStyle: PresentationStyle = .SideBySide
     private var animatingMasterOverlay: Bool = false
 
     // -- MARK: UIViewController implementation
@@ -263,19 +256,19 @@ public class NGSplitViewController: UIViewController {
     public override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         
-        updatePresentationStyleForHorizontalSizeClass(traitCollection.horizontalSizeClass, viewWidth: self.view.bounds.size.width)
+        updatePresentationStyleForHorizontalSizeClass(traitCollection.horizontalSizeClass, viewWidth: self.view.bounds.size.width, withTransitionCoordinator: nil)
         updateFrames()
         updateChildTraitCollections()
     }
     
     public override func traitCollectionDidChange(previousTraitCollection: UITraitCollection?) {
+        updateChildTraitCollections()
         changePresentationStyle()
     }
     
     public override func viewWillTransitionToSize(size: CGSize, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {
-        updatePresentationStyleForHorizontalSizeClass(traitCollection.horizontalSizeClass, viewWidth: size.width)
-        updateChildTraitCollections()
-        view.setNeedsLayout()
+        updatePresentationStyleForHorizontalSizeClass(traitCollection.horizontalSizeClass, viewWidth: size.width, withTransitionCoordinator: coordinator)
+//        view.setNeedsLayout()
     }
     
     public override func viewWillLayoutSubviews() {
@@ -283,7 +276,7 @@ public class NGSplitViewController: UIViewController {
     }
     
     public func changePresentationStyle() {
-        updatePresentationStyleForHorizontalSizeClass(traitCollection.horizontalSizeClass, viewWidth: view.bounds.width)
+        updatePresentationStyleForHorizontalSizeClass(traitCollection.horizontalSizeClass, viewWidth: view.bounds.width, withTransitionCoordinator: nil)
         updateChildTraitCollections()
         view.setNeedsLayout()
     }
@@ -354,15 +347,31 @@ public class NGSplitViewController: UIViewController {
         childViewController?.view.removeFromSuperview()
     }
     
-    private func updatePresentationStyleForHorizontalSizeClass(horizontalSizeClass: UIUserInterfaceSizeClass, viewWidth: CGFloat) {
+    private func updatePresentationStyleForHorizontalSizeClass(horizontalSizeClass: UIUserInterfaceSizeClass, viewWidth: CGFloat, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator?) {
         let delegateOverride = delegate?.splitViewController?(self, shouldShowMasterViewControllerForHorizontalSizeClass: horizontalSizeClass, viewWidth: viewWidth)
         let showMaster = delegateOverride ?? (horizontalSizeClass == .Regular)
         
         if showMaster {
-            presentationStyle = .SideBySide
+            setPresentationStyle(.SideBySide, withTransitionCoordinator: coordinator)
         } else {
-            presentationStyle = .DetailOnly
+            setPresentationStyle(.DetailOnly, withTransitionCoordinator: coordinator)
         }
+    }
+    
+    private func setPresentationStyle(newStyle: PresentationStyle, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator?) {
+        let oldStyle = presentationStyle
+        presentationStyle = newStyle
+        
+        if let coordinator = coordinator {
+            coordinator.animateAlongsideTransition({ _ in
+                self.transitionFromPresentationStyle(oldStyle, toPresentationStyle: newStyle)
+            }, completion: nil)
+        } else {
+            transitionFromPresentationStyle(oldStyle, toPresentationStyle: newStyle)
+        }
+        
+        view.setNeedsLayout()
+        updateChildTraitCollections()
     }
    
     private func updateFrames() {
