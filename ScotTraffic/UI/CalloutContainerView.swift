@@ -56,7 +56,7 @@ class CalloutContainerView: UIView {
             completion()
         })
         
-        let swipe = UISwipeGestureRecognizer(target: self, action: Selector("handleSwipeGesture:"))
+        let swipe = UISwipeGestureRecognizer(target: self, action: .handleSwipeGesture)
         swipe.direction = [.Up, .Down]
         view.addGestureRecognizer(swipe)
     }
@@ -129,4 +129,8 @@ private func reduceSize(size: CGSize, toFitContainer containerSize: CGSize) -> C
 
 private func scaleDownTransformFromSize(fromSize: CGSize, toSize: CGSize) -> CGAffineTransform {
     return CGAffineTransformMakeScale(toSize.width / fromSize.width, toSize.height / fromSize.height)
+}
+
+private extension Selector {
+    static let handleSwipeGesture = #selector(CalloutContainerView.handleSwipeGesture(_:))
 }

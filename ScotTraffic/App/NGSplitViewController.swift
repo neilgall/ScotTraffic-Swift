@@ -416,7 +416,7 @@ public class NGSplitViewController: UIViewController {
         let button = UIButton(type: .Custom)
         button.translatesAutoresizingMaskIntoConstraints = true
         button.frame = frames.detail
-        button.addTarget(self, action: Selector("dismissOverlaidMasterViewController"), forControlEvents: .TouchUpInside)
+        button.addTarget(self, action: .dismissOverlaidMasterViewController, forControlEvents: .TouchUpInside)
         view.addSubview(button)
         
         overlayHideButton = button
@@ -564,3 +564,6 @@ private extension CGRect {
     }
 }
 
+private extension Selector {
+    static let dismissOverlaidMasterViewController = #selector(NGSplitViewController.dismissOverlaidMasterViewController)
+}

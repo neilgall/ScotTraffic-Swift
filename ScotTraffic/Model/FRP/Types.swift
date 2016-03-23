@@ -57,8 +57,8 @@ public enum LatestValue<Value> {
 // pushTransaction()
 //
 public protocol SignalType {
-    typealias ValueType
-    typealias Observer = Int
+    associatedtype ValueType
+    associatedtype Observer = Int
     
     func addObserver(observer: Transaction<ValueType> -> Void) -> Observer
     func removeObserver(id: Observer)
@@ -71,8 +71,8 @@ public protocol SignalType {
 
 // An Input is a signal whose value can be mutated directly.
 //
-public protocol InputType {
-    typealias ValueType
+public protocol InputType: class {
+    associatedtype ValueType
     
     var value: ValueType { get set }
 }

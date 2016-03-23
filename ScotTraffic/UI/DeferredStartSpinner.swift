@@ -15,7 +15,7 @@ public class DeferredStartSpinner: UIActivityIndicatorView {
     private weak var timer: NSTimer?
 
     public func startAnimatingDeferred() {
-        self.timer = NSTimer.scheduledTimerWithTimeInterval(startDelay, target: self, selector: Selector("startAnimating"), userInfo: nil, repeats: false)
+        self.timer = NSTimer.scheduledTimerWithTimeInterval(startDelay, target: self, selector: .startAnimating, userInfo: nil, repeats: false)
     }
     
     override public func startAnimating() {
@@ -27,4 +27,8 @@ public class DeferredStartSpinner: UIActivityIndicatorView {
         super.stopAnimating()
         self.timer?.invalidate()
     }
+}
+
+private extension Selector {
+    static let startAnimating = #selector(UIActivityIndicatorView.startAnimating)
 }

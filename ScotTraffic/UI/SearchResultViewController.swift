@@ -40,7 +40,7 @@ class SearchResultViewController: UITableViewController {
         
         receivers.append(viewModel.isSaved --> { [weak self] in
             let imageName = $0 ? "726-star-gray-selected" : "726-star-gray"
-            let button = UIBarButtonItem(image: UIImage(named: imageName), style: .Plain, target: self, action: Selector("toggleSaveSearch:"))
+            let button = UIBarButtonItem(image: UIImage(named: imageName), style: .Plain, target: self, action: .toggleSaveSearch)
             self?.navigationItem.rightBarButtonItem = button
         })
         
@@ -101,5 +101,6 @@ extension SearchResultViewController {
     }
 }
 
-
-
+private extension Selector {
+    static let toggleSaveSearch = #selector(SearchResultViewController.toggleSaveSearch(_:))
+}

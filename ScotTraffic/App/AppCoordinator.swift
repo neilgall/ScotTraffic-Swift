@@ -64,7 +64,11 @@ class AppCoordinator: NSObject {
         splitViewController.delegate = self
 
         mapViewController.calloutConstructor = viewControllerWithMapItems
-        mapViewController.navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named:"740-gear"), style: .Plain, target: self, action: Selector("settingsButtonTapped:"))
+        mapViewController.navigationItem.rightBarButtonItem = UIBarButtonItem(
+            image: UIImage(named:"740-gear"),
+            style: .Plain,
+            target: self,
+            action: .settingsButtonTapped)
 
         // network reachability
         receivers.append(httpAccess.serverIsReachable.onFallingEdge(notifyNoNetworkReachability))
@@ -158,7 +162,7 @@ class AppCoordinator: NSObject {
         if splitViewController.masterViewControllerIsVisible {
             return nil
         } else {
-            return UIBarButtonItem(image: UIImage(named: "708-search"), style: .Plain, target: self, action: Selector("searchButtonTapped:"))
+            return UIBarButtonItem(image: UIImage(named: "708-search"), style: .Plain, target: self, action: .searchButtonTapped)
         }
     }
     
@@ -179,13 +183,13 @@ class AppCoordinator: NSObject {
         if canPinSearch {
             let pinned = appModel.settings.searchViewPinned.latestValue.get ?? false
             let image = UIImage(named: pinned ? "940-pin-selected" : "940-pin")
-            return UIBarButtonItem(image: image, style: .Plain, target: self, action: Selector("pinSearchButtonTapped:"))
+            return UIBarButtonItem(image: image, style: .Plain, target: self, action: .pinSearchButtonTapped)
 
         } else if splitViewController.detailViewControllerIsVisible {
             return nil
         
         } else {
-            return UIBarButtonItem(barButtonSystemItem: .Done, target: self, action: Selector("searchDoneButtonTapped:"))
+            return UIBarButtonItem(barButtonSystemItem: .Done, target: self, action: .searchDoneButtonTapped)
         }
     }
     
@@ -318,4 +322,11 @@ extension AppCoordinator : SettingsTableViewControllerDelegate {
     func settingsViewControllerDidDismiss(settingsViewController: SettingsTableViewController) {
         splitViewController.dismissViewControllerAnimated(true, completion: nil)
     }
+}
+
+private extension Selector {
+    static let settingsButtonTapped = #selector(AppCoordinator.settingsButtonTapped(_:))
+    static let searchButtonTapped = #selector(AppCoordinator.searchButtonTapped(_:))
+    static let pinSearchButtonTapped = #selector(AppCoordinator.pinSearchButtonTapped(_:))
+    static let searchDoneButtonTapped = #selector(AppCoordinator.searchDoneButtonTapped(_:))
 }

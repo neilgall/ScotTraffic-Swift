@@ -21,8 +21,9 @@ class ViewKeyedMap<Element> {
             if element == nil {
                 mapping.removeValueForKey(view.tag)
             } else {
-                view.tag = nextKey++
+                view.tag = nextKey
                 mapping[view.tag] = element
+                nextKey += 1
             }
         }
     }

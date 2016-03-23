@@ -84,7 +84,7 @@ class FavouritesAndSearchViewController: UITableViewController {
     
     override func viewWillDisappear(animated: Bool) {
         super.viewWillDisappear(animated)
-        self.editingFavourites <-- false
+        editingFavourites <-- false
     }
     
     func cancelEditingFavourites() {

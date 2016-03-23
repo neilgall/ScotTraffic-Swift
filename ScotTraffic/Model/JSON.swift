@@ -134,8 +134,10 @@ extension Array where Element: JSONValueDecodable {
         return try decodeJSON(json, forKey: "")
     }
     
-    static func decodeJSON(context: JSONContext)(json: ContextlessJSONArray) throws -> [Element] {
-        return try decodeJSON(JSONArray(value: json, context: context), forKey: "")
+    static func decodeJSON(context: JSONContext) -> (json: ContextlessJSONArray) throws -> [Element] {
+        return { json in
+            try decodeJSON(JSONArray(value: json, context: context), forKey: "")
+        }
     }
 }
 
@@ -153,8 +155,10 @@ extension Array where Element: JSONObjectDecodable {
         return try decodeJSON(json, forKey: "")
     }
     
-    static func decodeJSON(context: JSONContext)(json: ContextlessJSONArray) throws -> [Element] {
-        return try decodeJSON(JSONArray(value: json, context: context), forKey: "")
+    static func decodeJSON(context: JSONContext) -> (json: ContextlessJSONArray) throws -> [Element] {
+        return { json in
+            try decodeJSON(JSONArray(value: json, context: context), forKey: "")
+        }
     }
 }
 
@@ -175,8 +179,10 @@ extension JSONObjectDecodable {
         return try decodeJSON(value, forKey: key)
     }
     
-    static func decodeJSON(context: JSONContext)(json: ContextlessJSONObject) throws -> Self {
-        return try decodeJSON(JSONObject(value: json, context: context), forKey: "")
+    static func decodeJSON(context: JSONContext) -> (json: ContextlessJSONObject) throws -> Self {
+        return { json in
+            try decodeJSON(JSONObject(value: json, context: context), forKey: "")
+        }
     }
 }
 
