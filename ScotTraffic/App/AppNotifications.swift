@@ -72,7 +72,7 @@ class AppNotifications {
     private func updateRegistration(registration: Registration) {
         let method: HTTPAccess.HTTPMethod = registration.enable ? .PUT : .DELETE
         let path = "/notifications/\(registration.identifier)/\(registration.deviceToken)"
-        httpAccess.request(method, data: nil, path: path) {
+        httpAccess.request(method, path: path, headers: nil, data: nil) {
             if case .Error(let error) = $0 {
                 analyticsError(path, error: error)
             }

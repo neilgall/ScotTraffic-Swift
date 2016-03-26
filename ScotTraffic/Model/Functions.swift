@@ -39,3 +39,9 @@ func second<A, B>(tuple: (A, B)) -> B {
 func not<A>(f: A -> Bool) -> A -> Bool {
     return { a in !f(a) }
 }
+
+// GCD
+//
+func onMainQueue(block: () -> ()) {
+    dispatch_async(dispatch_get_main_queue(), block)
+}

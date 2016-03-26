@@ -88,11 +88,11 @@ class HTTPAccess: NSObject, NSURLSessionDelegate {
     }
     
     func fetchDataAtPath(path: String, completion: DataSourceData -> Void) {
-        return request(.GET, data: nil, path: path, completion: completion)
+        return request(.GET, path: path, headers: nil, data: nil, completion: completion)
         
     }
     
-    func request(method: HTTPMethod, data: NSData?, path: String, completion: DataSourceData -> Void) {
+    func request(method: HTTPMethod, path: String, headers: [String: String]?, data: NSData?, completion: DataSourceData -> Void) {
         guard let url = NSURL(string: path, relativeToURL: baseURL) else {
             completion(DataSourceValue.Error(.Network(.MalformedURL)))
             return
@@ -100,6 +100,9 @@ class HTTPAccess: NSObject, NSURLSessionDelegate {
         let request = NSMutableURLRequest(URL: url, cachePolicy: .ReloadIgnoringLocalCacheData, timeoutInterval: requestTimeout)
         request.HTTPMethod = method.rawValue
         request.HTTPBody = data
+        headers?.forEach { (key, value) in
+            request.addValue(value, forHTTPHeaderField: key)
+        }
         
         runTaskForRequest(request, completion: completion)
     }
@@ -123,26 +126,6 @@ class HTTPAccess: NSObject, NSURLSessionDelegate {
         task.resume()
     }
 }
-
-class HTTPDataSource: DataSource {
-    let httpAccess: HTTPAccess
-    let path: String
-    let value = Signal<DataSourceData>()
-    
-    init(httpAccess: HTTPAccess, path: String) {
-        self.httpAccess = httpAccess
-        self.path = path
-    }
-    
-    func start() {
-        self.httpAccess.fetchDataAtPath(path) { data in
-            dispatch_async(dispatch_get_main_queue()) {
-                self.value.pushValue(data)
-            }
-        }
-    }
-}
-
 
 func JSONArrayFromData(data: NSData) throws -> ContextlessJSONArray {
     let json = try NSJSONSerialization.JSONObjectWithData(data, options: [])
