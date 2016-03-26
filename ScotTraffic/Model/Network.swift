@@ -61,12 +61,12 @@ class HTTPAccess: NSObject, NSURLSessionDelegate {
         session = NSURLSession(configuration: configuration, delegate: self, delegateQueue: nil)
         
         reachability?.whenReachable = { _ in
-            dispatch_async(dispatch_get_main_queue()) {
+            onMainQueue {
                 serverIsReachable <-- true
             }
         }
         reachability?.whenUnreachable = { _ in
-            dispatch_async(dispatch_get_main_queue()) {
+            onMainQueue {
                 serverIsReachable <-- false
             }
         }
@@ -85,11 +85,6 @@ class HTTPAccess: NSObject, NSURLSessionDelegate {
     }
 
     func URLSession(session: NSURLSession, didBecomeInvalidWithError error: NSError?) {
-    }
-    
-    func fetchDataAtPath(path: String, completion: DataSourceData -> Void) {
-        return request(.GET, path: path, headers: nil, data: nil, completion: completion)
-        
     }
     
     func request(method: HTTPMethod, path: String, headers: [String: String]?, data: NSData?, completion: DataSourceData -> Void) {

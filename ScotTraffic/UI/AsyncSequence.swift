@@ -25,7 +25,7 @@ class AsyncSequence {
     func dispatch(block: AsyncBlock) {
         sequence.append(block)
         if sequence.count == 1 {
-            dispatch_async(dispatch_get_main_queue()) {
+            onMainQueue {
                 self._busy <-- true
                 self.next()
             }

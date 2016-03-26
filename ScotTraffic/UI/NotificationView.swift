@@ -51,8 +51,7 @@ extension NGSplitViewController {
         view.addConstraints(constraints)
         view.addConstraint(slideOffConstraint)
         
-        dispatch_async(dispatch_get_main_queue()) {
-            
+        onMainQueue {            
             // adjust slide off constraint to laid out height of background
             slideOffConstraint.constant = -background.frame.height
             

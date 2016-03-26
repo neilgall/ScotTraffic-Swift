@@ -38,7 +38,7 @@ class MapItemCollectionViewController: UIViewController {
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
-        dispatch_async(dispatch_get_main_queue()) {
+        onMainQueue {
             self.connectToModel()
         }
     }
