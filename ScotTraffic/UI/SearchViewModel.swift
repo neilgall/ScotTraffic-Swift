@@ -134,7 +134,7 @@ struct SearchResultsViewModel: SearchContentViewModel {
         content = combinedResults.map({ (items: [MapItem]) -> Search.Content in
             Search.Content(
                 type: .SearchResults(majorAxis: items.majorAxis),
-                items: items.sortGeographically().map({ .OtherMapItem($0) })
+                items: items.sortGeographically().map(Search.ContentItem.OtherMapItem)
             )
         }).latest()
 
@@ -198,7 +198,7 @@ private func contentItemsForFavourites(favourites: [FavouriteItem], locations: [
     return favourites.flatMap({ favourite in
         switch favourite {
         case .TrafficCamera(let identifier):
-            return locations.findIdentifier(identifier).map({ .TrafficCameraItem($0, $1) })
+            return locations.findIdentifier(identifier).map(Search.ContentItem.TrafficCameraItem)
             
         case .SavedSearch(let term):
             return .SearchItem(term)

@@ -117,9 +117,7 @@ class MapViewModel {
             return groupMapItems([$0, $1, $2, $3, $4].flatten(), delegate: delegate)
         }
         
-        annotations = mapItemGroups.map({
-            $0.map { group in MapAnnotation(mapItems: group) }
-        }).latest()
+        annotations = mapItemGroups.mapSeq(MapAnnotation.init).latest()
 
         let selectedMapItemEvent = notNil(selectedMapItem).event()
         
@@ -184,9 +182,9 @@ func mapItemsFromRect<T: MapItem>(mapItems: [T], isEnabled: Bool, mapRect: MKMap
     guard isEnabled else {
         return []
     }
-    return mapItems.flatMap { item in
+    return mapItems.flatMap({ item in
         MKMapRectContainsPoint(mapRect, item.mapPoint) ? (item as MapItem) : nil
-    }
+    })
 }
 
 func groupMapItems<MapItems: CollectionType where MapItems.Generator.Element == MapItem>
@@ -207,18 +205,12 @@ func groupMapItems<MapItems: CollectionType where MapItems.Generator.Element == 
         groups.append(group)
     }
     
-    return groups.map { $0.items }
+    return groups.map({ $0.items })
 }
 
 func mapItemGroupFromGroups(groups: [MapItemGroup], containingItem item: MapItem?) -> [MapItem]? {
     guard let item = item else {
         return nil
     }
-    let possibleIndex = groups.indexOf { groupItems in
-        groupItems.contains({ $0 == item })
-    }
-    guard let index = possibleIndex else {
-        return nil
-    }
-    return groups[index]
+    return groups.lazy.filter({ $0.contains({ $0 == item }) }).first
 }
