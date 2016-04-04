@@ -80,7 +80,7 @@ class MapViewController: UIViewController {
         }
         
         // defer annotation selection to ensure annotations have a chance to update first
-        dispatch_async(dispatch_get_main_queue()) {
+        onMainQueue {
             for unselected in self.currentAnnotations {
                 if unselected == annotation {
                     self.mapView.selectAnnotation(unselected, animated: true)

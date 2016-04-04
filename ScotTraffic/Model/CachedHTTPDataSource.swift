@@ -17,9 +17,6 @@ class CachedHTTPDataSource: DataSource {
     private let httpAccess: HTTPAccess
     private let maximumCacheAge: NSTimeInterval
     private let key: String
-
-    private var httpSource: HTTPDataSource?
-    private var httpReceiverType: ReceiverType?
     private var inFlight = false
     
     init(httpAccess: HTTPAccess, cache: DiskCache, maximumCacheAge: NSTimeInterval, path: String) {
@@ -44,7 +41,7 @@ class CachedHTTPDataSource: DataSource {
                 self.cacheHit(data, age: age)
                 
             case .Miss:
-                self.startHTTPSource(false)
+                self.startHTTPSource(nil)
             }
         }
     }
@@ -57,46 +54,56 @@ class CachedHTTPDataSource: DataSource {
             inFlight = false
         } else {
             // cache hit but old, so follow up with network fetch
-            startHTTPSource(true)
+            startHTTPSource(age)
         }
     }
     
-    private func startHTTPSource(afterCacheHit: Bool) {
-        let httpSource = HTTPDataSource(httpAccess: httpAccess, path: self.key)
+    private func startHTTPSource(cacheAge: NSTimeInterval?) {
+        let headers: [String: String]? = cacheAge.map({ age in
+            let date = NSDate().dateByAddingTimeInterval(-age)
+            return ["If-Modified-Since": NSDateFormatter.RFC2822.stringFromDate(date)]
+        })
+        let key = self.key
         
-        httpReceiverType = httpSource.value --> { dataOrError in
+        httpAccess.request(.GET, path: key, headers: headers, data: nil) { [weak self] dataOrError in
             switch dataOrError {
             case .Fresh(let data):
-                self.diskCache.storeData(data, forKey: self.key)
-                self.value.pushValue(dataOrError)
+                self?.diskCache.storeData(data, forKey: key)
+                onMainQueue {
+                    self?.value.pushValue(dataOrError)
+                }
 
-            case .Error:
-                if !afterCacheHit {
-                    self.value.pushValue(dataOrError)
+            case .Error(let error):
+                if cacheAge == nil || !error.isHTTP(304) {
+                    onMainQueue {
+                        self?.value.pushValue(dataOrError)
+                    }
                 }
                 
             case .Cached, .Empty:
                 break
             }
             
-            self.endHTTPSource()
+            onMainQueue {
+                self?.inFlight = false
+            }
         }
-        
-        self.httpSource = httpSource
-        httpSource.start()
     }
     
-    private func endHTTPSource() {
-        httpSource = nil
-        httpReceiverType = nil
-        inFlight = false
-    }
-
     static func dataSourceWithHTTPAccess(httpAccess: HTTPAccess, cache: DiskCache) -> NSTimeInterval -> String -> DataSource {
         return { maximumCacheAge in
             return { path in
                 CachedHTTPDataSource(httpAccess: httpAccess, cache: cache, maximumCacheAge: maximumCacheAge, path: path)
             }
         }
+    }
+}
+
+private extension AppError {
+    func isHTTP(httpErrorCode: Int) -> Bool {
+        guard case .Network(let network) = self, case .HTTPError(let code) = network else {
+            return false
+        }
+        return code == httpErrorCode
     }
 }

@@ -24,12 +24,11 @@ class AppModel: ScotTraffic {
     let favourites: Favourites
     let remoteNotifications: RemoteNotifications
 
-    private let fetchStarters: [PeriodicStarter]
+    private let fetchStarter: PeriodicStarter
     private var receivers = [ReceiverType]()
     
     init(cacheSource: CacheSource, reachable: Signal<Bool>, userDefaults: UserDefaultsProtocol) {
         let fiveMinuteCache = cacheSource(maximumAge: 300)
-        let fifteenMinuteCache = cacheSource(maximumAge: 900)
         let dailyCache = cacheSource(maximumAge: 86400)
         
         // -- Traffic Cameras --
@@ -44,7 +43,7 @@ class AppModel: ScotTraffic {
         
         // -- Safety Cameras --
         
-        let safetyCamerasSource = fifteenMinuteCache(filename: "safetycameras.json")
+        let safetyCamerasSource = fiveMinuteCache(filename: "safetycameras.json")
         let safetyCamerasContext = SafetyCameraDecodeContext(makeImageDataSource: dailyCache)
         let safetyCameras = safetyCamerasSource.value.map({
             $0.map(Array<SafetyCamera>.decodeJSON(safetyCamerasContext) <== JSONArrayFromData)
@@ -81,7 +80,7 @@ class AppModel: ScotTraffic {
         
         // -- Weather --
         
-        let weatherSource = fifteenMinuteCache(filename: "weather.json")
+        let weatherSource = fiveMinuteCache(filename: "weather.json")
         let weather = weatherSource.value.map({
             $0.map(Array<Weather>.decodeJSON(Void) <== JSONArrayFromData)
         })
@@ -123,17 +122,20 @@ class AppModel: ScotTraffic {
         
         // -- Auto refresh --
         
-        let fiveMinuteRefresh = PeriodicStarter(startables: [trafficCamerasSource, alertsSource, roadworksSource, bridgeStatusSource], period: 300)
-        let halfHourlyRefresh = PeriodicStarter(startables: [safetyCamerasSource, weatherSource, messageOfTheDaySource], period: 1800)
-        self.fetchStarters = [fiveMinuteRefresh, halfHourlyRefresh]
+        self.fetchStarter = PeriodicStarter(startables: [
+            trafficCamerasSource,
+            safetyCamerasSource,
+            alertsSource,
+            roadworksSource,
+            bridgeStatusSource,
+            weatherSource,
+            messageOfTheDaySource], period: 300)
         
         
         // -- Refresh on restoring internet connection
         
         receivers.append(reachable.onRisingEdge({ [weak self] in
-            self?.fetchStarters.forEach {
-                $0.restart(fireImmediately: true)
-            }
+            self?.fetchStarter.restart(fireImmediately: true)
         }))
         
         

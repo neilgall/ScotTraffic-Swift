@@ -88,7 +88,7 @@ class AppCoordinator: NSObject {
         // remote notifications
         receivers.append(appModel.remoteNotifications.zoomToBridge --> { [weak self] in
             if let bridge = $0, my = self {
-                dispatch_async(dispatch_get_main_queue()) {
+                onMainQueue {
                     my.mapViewModel.selectedMapItem <-- bridge
                     my.appModel.remoteNotifications.clear()
                 }
@@ -97,7 +97,7 @@ class AppCoordinator: NSObject {
         
         receivers.append(appModel.remoteNotifications.showNotification --> { [weak self] in
             if let message = $0, my = self {
-                dispatch_async(dispatch_get_main_queue()) {
+                onMainQueue {
                     my.showNotificationMessage(message)
                     my.appModel.remoteNotifications.clear()
                 }
@@ -113,7 +113,7 @@ class AppCoordinator: NSObject {
         updateCancelOrPinSearchButton()
     
         // defer any initial reachability notification until the view has appeared
-        dispatch_async(dispatch_get_main_queue()) {
+        onMainQueue {
             self.httpAccess.startReachabilityNotifier()
         }
     }

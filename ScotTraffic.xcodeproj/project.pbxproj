@@ -35,6 +35,7 @@
 		283A90561BF4035B00BB5C46 /* WeatherViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 283A90551BF4035B00BB5C46 /* WeatherViewController.swift */; };
 		284DE0981BBDD0D800E6A678 /* AppModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 284DE0971BBDD0D800E6A678 /* AppModel.swift */; };
 		2854ADA81C44655400E44975 /* RemoteNotifications.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2854ADA71C44655400E44975 /* RemoteNotifications.swift */; };
+		285CB6231CA691310085B4D0 /* DateFormatters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28F4BF761C40685300C257D5 /* DateFormatters.swift */; };
 		285E17031BF760B000E13129 /* Sunrise.swift in Sources */ = {isa = PBXBuildFile; fileRef = 285E17021BF760B000E13129 /* Sunrise.swift */; };
 		285E17051BF768E900E13129 /* WeatherViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 285E17041BF768E900E13129 /* WeatherViewModel.swift */; };
 		286157C81BF29BD2000C11D4 /* SettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 286157C71BF29BD2000C11D4 /* SettingsTableViewController.swift */; };
@@ -133,7 +134,7 @@
 		28DB3BFA1BC02C88001AAC2A /* Incidents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28DB3BF91BC02C88001AAC2A /* Incidents.swift */; };
 		28F4BF721C3BE4E400C257D5 /* AppErrorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28F4BF711C3BE4E400C257D5 /* AppErrorTests.swift */; };
 		28F4BF741C403F4E00C257D5 /* MessageOfTheDay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28F4BF731C403F4E00C257D5 /* MessageOfTheDay.swift */; };
-		28F4BF771C40685300C257D5 /* ISO8601.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28F4BF761C40685300C257D5 /* ISO8601.swift */; };
+		28F4BF771C40685300C257D5 /* DateFormatters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28F4BF761C40685300C257D5 /* DateFormatters.swift */; };
 		28F6009F1BDB8E3E00ED71CA /* NGSplitViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28F6009E1BDB8E3E00ED71CA /* NGSplitViewController.swift */; };
 		710535651BCC141C00FDB70C /* UserDefaultsProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 710535641BCC141C00FDB70C /* UserDefaultsProtocol.swift */; };
 		7105356C1BCDA83A00FDB70C /* SearchViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7105356A1BCDA83A00FDB70C /* SearchViewModelTests.swift */; };
@@ -431,7 +432,7 @@
 		28F4BF711C3BE4E400C257D5 /* AppErrorTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppErrorTests.swift; sourceTree = "<group>"; };
 		28F4BF731C403F4E00C257D5 /* MessageOfTheDay.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageOfTheDay.swift; sourceTree = "<group>"; };
 		28F4BF751C40420A00C257D5 /* ScotTraffic_Bridging_Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ScotTraffic_Bridging_Header.h; sourceTree = "<group>"; };
-		28F4BF761C40685300C257D5 /* ISO8601.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ISO8601.swift; sourceTree = "<group>"; };
+		28F4BF761C40685300C257D5 /* DateFormatters.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DateFormatters.swift; sourceTree = "<group>"; };
 		28F6009E1BDB8E3E00ED71CA /* NGSplitViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NGSplitViewController.swift; sourceTree = "<group>"; };
 		710535641BCC141C00FDB70C /* UserDefaultsProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserDefaultsProtocol.swift; sourceTree = "<group>"; };
 		710535661BCDA81E00FDB70C /* Data */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Data; sourceTree = "<group>"; };
@@ -583,7 +584,7 @@
 		284DE0991BBDDEB800E6A678 /* Core */ = {
 			isa = PBXGroup;
 			children = (
-				28F4BF761C40685300C257D5 /* ISO8601.swift */,
+				28F4BF761C40685300C257D5 /* DateFormatters.swift */,
 				710535641BCC141C00FDB70C /* UserDefaultsProtocol.swift */,
 				28875EA61BBC739100E67A16 /* JSON.swift */,
 				28DB3BF21BC025D0001AAC2A /* Functions.swift */,
@@ -1246,7 +1247,7 @@
 				287F75521C00D1130040EE8A /* AppNetworkActivityIndicator.swift in Sources */,
 				716D9E971BCA614D005A6B49 /* MapItemCollectionViewModel.swift in Sources */,
 				282D4D371C8F88A600642AE4 /* MapWith.swift in Sources */,
-				28F4BF771C40685300C257D5 /* ISO8601.swift in Sources */,
+				28F4BF771C40685300C257D5 /* DateFormatters.swift in Sources */,
 				285E17031BF760B000E13129 /* Sunrise.swift in Sources */,
 				2881E0C51C96111000E42818 /* KeyedSet.swift in Sources */,
 				28903ABE1BE62E2500EC8054 /* Reachability.swift in Sources */,
@@ -1310,6 +1311,7 @@
 				287F75461C00C7DA0040EE8A /* ImageDataSource.swift in Sources */,
 				287F75451C00C7D80040EE8A /* MapItem.swift in Sources */,
 				287F754D1C00CD050040EE8A /* PersistentSetting.swift in Sources */,
+				285CB6231CA691310085B4D0 /* DateFormatters.swift in Sources */,
 				289D270F1C3A684F00543F3C /* Types.swift in Sources */,
 				287F753C1C00C7B00040EE8A /* CachedHTTPDataSource.swift in Sources */,
 				28B6D8771C48698F001EBFC9 /* GrayImage.swift in Sources */,

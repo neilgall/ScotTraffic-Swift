@@ -12,7 +12,7 @@ class AppNetworkActivityIndicator: NetworkActivityIndicator {
     private var count = 0
     
     func push() {
-        dispatch_async(dispatch_get_main_queue()) {
+        onMainQueue {
             if self.count == 0 {
                 UIApplication.sharedApplication().networkActivityIndicatorVisible = true
             }
@@ -21,7 +21,7 @@ class AppNetworkActivityIndicator: NetworkActivityIndicator {
     }
     
     func pop() {
-        dispatch_async(dispatch_get_main_queue()) {
+        onMainQueue {
             self.count -= 1
             if self.count == 0 {
                 UIApplication.sharedApplication().networkActivityIndicatorVisible = false
