@@ -16,12 +16,7 @@ struct Configuration {
 #endif
     static let scotTrafficAppGroup = "group.uk.co.scottraffic.ios.favourites"
     static let todayExtensionBundleIdentifier = "uk.co.ScotTraffic.iOS.TodayExtension"
-    static let sharedUserDefaults: Void -> NSUserDefaults = {
-        guard let userDefaults = NSUserDefaults(suiteName: scotTrafficAppGroup) else {
-            fatalError("cannot create NSUserDefaults for app Group \(scotTrafficAppGroup)")
-        }
-        return userDefaults
-    }
+    static let sharedUserDefaults = NSUserDefaults(suiteName: scotTrafficAppGroup)!
     static let iCloudUserDefaults = NSUbiquitousKeyValueStore.defaultStore()
 
     static let runningOnSimulator = (TARGET_OS_SIMULATOR != 0)

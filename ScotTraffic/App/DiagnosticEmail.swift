@@ -16,7 +16,7 @@ import Foundation
 }
 
 func populateDiagnosticsEmail(email: DiagnosticsEmail) {
-    let userDefaultsDictionary = Configuration.sharedUserDefaults().dictionaryRepresentation()
+    let userDefaultsDictionary = Configuration.sharedUserDefaults.dictionaryRepresentation()
     
     let device = UIDevice.currentDevice()
     let deviceData: [String: String] = [
@@ -49,7 +49,7 @@ func loadUserDefaultsFromDiagnosticDataIfPresent() {
                 fatalError("cannot unarchive diagnostic data: not a dictionary")
             }
         
-            let userDefaults = Configuration.sharedUserDefaults()
+            let userDefaults = Configuration.sharedUserDefaults
             
             for (key, value) in diagnosticUserDefaults {
                 if let key = key as? String {

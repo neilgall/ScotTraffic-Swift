@@ -28,7 +28,7 @@ class TodayViewModel {
     var observeImageDataSource: ReceiverType? = nil
     
     init() {
-        let userDefaults = Configuration.sharedUserDefaults()
+        let userDefaults = Configuration.sharedUserDefaults
         let diskCache = DiskCache(withPath: "scottraffic")
         let httpAccess = HTTPAccess(baseURL: Configuration.scotTrafficBaseURL, indicator: nil)
         

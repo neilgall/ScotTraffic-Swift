@@ -12,7 +12,7 @@ let hasMigratedKey = "userDefaultsMigration"
 let hasMigratedValue = 1
 
 func migrateUserDefaultsToAppGroup() {
-    let appGroupUserDefaults = Configuration.sharedUserDefaults()
+    let appGroupUserDefaults = Configuration.sharedUserDefaults
     guard appGroupUserDefaults.integerForKey(hasMigratedKey) < hasMigratedValue else {
         return
     }

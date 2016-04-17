@@ -29,7 +29,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let httpAccess = HTTPAccess(baseURL: Configuration.scotTrafficBaseURL, indicator: AppNetworkActivityIndicator())
         let cacheSource = CachedHTTPDataSource.dataSourceWithHTTPAccess(httpAccess, cache: diskCache)
 
-        let appModel = AppModel(cacheSource: cacheSource, reachable: httpAccess.serverIsReachable, userDefaults: Configuration.sharedUserDefaults())
+        let appModel = AppModel(cacheSource: cacheSource, reachable: httpAccess.serverIsReachable, userDefaults: Configuration.sharedUserDefaults)
         appWidgetManager = AppWidgetManager(favourites: appModel.favourites)
         appNotifications = AppNotifications(settings: appModel.settings, httpAccess: httpAccess)
         
