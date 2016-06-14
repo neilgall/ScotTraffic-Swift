@@ -14,7 +14,7 @@ infix operator <== { associativity right precedence 90 }
 //
 //  g <== f  means  \x -> g(f(x))
 //
-func <== <A, B, C> (g: B->C, f: A->B) -> A->C {
+func <== <A, B, C> (g: B -> C, f: A -> B) -> A -> C {
     return { a in g(f(a)) }
 }
 
@@ -23,6 +23,11 @@ func <== <A, B, C> (g: B->C, f: A->B) -> A->C {
 func <== <A, B, C> (g: B throws -> C, f: A throws -> B) -> A throws -> C {
     return { a in try g(try f(a)) }
 }
+
+// Monadic bind for optionals. Synonym for flatMap()
+//
+infix operator |> { associativity left precedence 40 }
+func |> <A, B> (lhs: A?, rhs: A -> B?) ->
 
 // Tuple selectors
 //
