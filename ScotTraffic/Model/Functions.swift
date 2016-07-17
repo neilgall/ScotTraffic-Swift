@@ -27,7 +27,9 @@ func <== <A, B, C> (g: B throws -> C, f: A throws -> B) -> A throws -> C {
 // Monadic bind for optionals. Synonym for flatMap()
 //
 infix operator |> { associativity left precedence 40 }
-func |> <A, B> (lhs: A?, rhs: A -> B?) ->
+func |> <A, B> (lhs: A?, rhs: A -> B?) -> B? {
+    return lhs.flatMap(rhs)
+}
 
 // Tuple selectors
 //

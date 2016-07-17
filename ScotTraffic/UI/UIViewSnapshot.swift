@@ -10,7 +10,7 @@ import UIKit
 
 extension UIView {
     
-    func snapshotImage() -> UIImage {
+    func snapshotImage() -> UIImage? {
         UIGraphicsBeginImageContext(bounds.size)
         layer.renderInContext(UIGraphicsGetCurrentContext()!)
         let image = UIGraphicsGetImageFromCurrentImageContext()

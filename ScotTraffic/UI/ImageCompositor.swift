@@ -10,6 +10,21 @@ import UIKit
 
 private var cache = [String : UIImage]()
 
+private struct CompositionSize {
+    let width: CGFloat
+    let height: CGFloat
+    let scale: CGFloat
+    
+    static let zero = CompositionSize(width: 0, height: 0, scale: 0)
+}
+
+private struct CompositionContext {
+    let context: CGContext
+    let width: CGFloat
+    let height: CGFloat
+    let scale: CGFloat
+}
+
 func compositeImagesNamed(imageComponents: [String]) -> UIImage? {
     if imageComponents.isEmpty {
         return nil
@@ -17,59 +32,74 @@ func compositeImagesNamed(imageComponents: [String]) -> UIImage? {
         return UIImage(named: imageComponents[0])
     }
     
-    let cacheKey = imageComponents.joinWithSeparator("/")
+    let cacheKey = imageComponents.joinWithSeparator("+")
     if let image = cache[cacheKey] {
         return image
     }
     
-    let draw = compositedSize(imageComponents)
-    
-    let context = CGBitmapContextCreate(nil,
-        Int(draw.size.width),
-        Int(draw.size.height),
-        8,
-        Int(draw.size.width*4),
-        CGColorSpaceCreateDeviceRGB(),
-        CGImageAlphaInfo.PremultipliedFirst.rawValue)
-    
-    imageComponents.forEach { imageName in
-        if let image = UIImage(named: imageName) {
-            let rect = CGRect(
-                origin: CGPoint(
-                    x: (draw.size.width - draw.scale*image.size.width) / 2,
-                    y: (draw.size.height - draw.scale*image.size.height) / 2),
-                size: CGSize(
-                    width: draw.scale * image.size.width,
-                    height: draw.scale * image.size.height))
-            CGContextDrawImage(context, rect, image.CGImage)
-        }
-    }
-    
-    guard let composited = CGBitmapContextCreateImage(context) else {
+    guard let context = imageComponents.map(sizeForImageNamed) |> compositedSize |> compositionContext else {
         return nil
     }
     
-    let image = UIImage(CGImage: composited, scale: draw.scale, orientation: UIImageOrientation.Up)
-    cache[cacheKey] = image
+    imageComponents.forEach {
+        draw(imageNamed: $0, inContext: context)
+    }
 
-    return image
+    guard let composited = image(fromContext: context) else {
+        return nil
+    }
     
+    cache[cacheKey] = composited
+    return composited
 }
 
-private func compositedSize(imageComponents: [String]) -> (size: CGSize, scale: CGFloat) {
-    let zero: CGFloat = 0
-    let result = imageComponents.reduce( (width:zero, height:zero, scale:zero) ) { accumulator, imageName in
-        guard let image = UIImage(named: imageName) else {
-            return accumulator
-        }
-        return (
-            width:  max(accumulator.width, image.size.width),
-            height: max(accumulator.height, image.size.height),
-            scale:  max(accumulator.scale, image.scale)
+private func sizeForImageNamed(imageName: String) -> CompositionSize {
+    guard let image = UIImage(named: imageName) else {
+        return .zero
+    }
+    return CompositionSize(width: image.size.width, height: image.size.height, scale: image.scale)
+}
+
+private func compositedSize(sizes: [CompositionSize]) -> CompositionSize {
+    return sizes.reduce(CompositionSize.zero) { accumulator, size in
+        CompositionSize(
+            width:  max(accumulator.width, size.width * size.scale),
+            height: max(accumulator.height, size.height * size.scale),
+            scale:  max(accumulator.scale, size.scale)
         )
     }
-    return (
-        size: CGSize(width: result.width * result.scale, height: result.height * result.scale),
-        scale: result.scale
-    )
+}
+
+private func compositionContext(size: CompositionSize) -> CompositionContext? {
+    guard let context = CGBitmapContextCreate(
+        nil,
+        Int(size.width),
+        Int(size.height),
+        8,
+        Int(size.width*4),
+        CGColorSpaceCreateDeviceRGB(),
+        CGImageAlphaInfo.PremultipliedFirst.rawValue) else {
+            return nil
+    }
+    
+    return CompositionContext(context: context, width: size.width, height: size.height, scale: size.scale)
+}
+
+private func draw(imageNamed imageName: String, inContext context: CompositionContext) {
+    guard let image = UIImage(named: imageName), cgImage = image.CGImage else {
+        return
+    }
+    let rect = CGRect(
+        origin: CGPoint(
+            x: (context.width - context.scale*image.size.width) / 2,
+            y: (context.height - context.scale*image.size.height) / 2),
+        size: CGSize(
+            width: context.scale * image.size.width,
+            height: context.scale * image.size.height))
+    CGContextDrawImage(context.context, rect, cgImage)
+}
+
+private func image(fromContext context: CompositionContext) -> UIImage? {
+    return CGBitmapContextCreateImage(context.context)
+        |> { UIImage(CGImage: $0, scale: context.scale, orientation: UIImageOrientation.Up) }
 }

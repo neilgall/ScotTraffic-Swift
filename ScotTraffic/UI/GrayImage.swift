@@ -13,19 +13,26 @@ func imageWithGrayColorspace(image: UIImage?) -> UIImage? {
         return nil
     }
     
-    let size = image.size
-    
-    let context = CGBitmapContextCreate(nil,
-        Int(size.width),
-        Int(size.height),
-        8,
-        Int(size.width),
-        CGColorSpaceCreateDeviceGray(),
-        CGImageAlphaInfo.None.rawValue)
-    
-    CGContextSetAlpha(context, 0.5)
-    CGContextDrawImage(context, CGRect(origin: CGPoint.zero, size: size), image.CGImage)
-    let grayImage = CGBitmapContextCreateImage(context)
-    
-    return grayImage.map { UIImage(CGImage: $0) }
+    return grayBitmapContext(ofSize: image.size)
+        |> { draw(image: image, inContext: $0, withAlpha: 0.5) }
+        |> { UIImage(CGImage: $0) }
+}
+
+private func grayBitmapContext(ofSize size: CGSize) -> CGContext? {
+    return CGBitmapContextCreate(nil,
+                                 Int(size.width),
+                                 Int(size.height),
+                                 8,
+                                 Int(size.width),
+                                 CGColorSpaceCreateDeviceGray(),
+                                 CGImageAlphaInfo.None.rawValue)
+}
+
+private func draw(image image: UIImage, inContext context: CGContext, withAlpha alpha: CGFloat) -> CGImage? {
+    guard let cgImage = image.CGImage else {
+        return nil
+    }
+    CGContextSetAlpha(context, alpha)
+    CGContextDrawImage(context, CGRect(origin: CGPoint.zero, size: image.size), cgImage)
+    return CGBitmapContextCreateImage(context)
 }
