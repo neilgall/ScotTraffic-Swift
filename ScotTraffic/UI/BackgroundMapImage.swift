@@ -48,39 +48,48 @@ extension BackgroundMapImage where Self: UICollectionViewCell, Self: MKMapViewDe
 }
 
 func applyGradientMask(image: UIImage?) -> UIImage? {
-    guard let image = image else {
+    guard let image = image, cgImage = image.CGImage else {
         return nil
     }
-    
-    let size = image.size
-    
-    let colorSpace = CGColorSpaceCreateDeviceGray()
-    let context = CGBitmapContextCreate(nil,
+
+    return image.size
+        |> alphaOnlyBitmap
+        |> alphaGradient([(1.0, 0.3), (0.0, 1.0)])
+        |> CGBitmapContextCreateImage
+        |> mask(cgImage)
+}
+
+private func alphaOnlyBitmap(size: CGSize) -> CGContext? {
+    return CGBitmapContextCreate(
+        nil,
         Int(size.width),
         Int(size.height),
         8,
         Int(size.width),
-        colorSpace,
+        CGColorSpaceCreateDeviceGray(),
         CGImageAlphaInfo.Only.rawValue)
-    
-    let colors = [
-        UIColor(white: 0, alpha: 1.0).CGColor,
-        UIColor(white: 0, alpha: 0.0).CGColor
-    ]
-    let colorLocations: [CGFloat] = [
-        0.3,
-        1.0
-    ]
-    
-    let gradient = CGGradientCreateWithColors(colorSpace, colors, colorLocations)
-    CGContextDrawLinearGradient(context,
-        gradient,
-        CGPoint(x: size.width/2, y: 0),
-        CGPoint(x: size.width/2, y: size.height),
-        CGGradientDrawingOptions.DrawsBeforeStartLocation)
-    
-    let mask = CGBitmapContextCreateImage(context)
-    
-    let maskedImage = CGImageCreateWithMask(image.CGImage, mask)
-    return maskedImage.map { UIImage(CGImage: $0) }
+}
+
+private func alphaGradient(stops: [(CGFloat, CGFloat)]) -> CGContext -> CGContext {
+    return { context in
+        let colors = stops.map({ UIColor(white: 0, alpha: $0.0).CGColor })
+        let colorLocations = stops.map({ $0.1 })
+        if let gradient = CGGradientCreateWithColors(CGColorSpaceCreateDeviceGray(), colors, colorLocations) {
+            let width = CGFloat(CGBitmapContextGetWidth(context))
+            let height = CGFloat(CGBitmapContextGetHeight(context))
+            CGContextDrawLinearGradient(context,
+                                        gradient,
+                                        CGPoint(x: width/2, y: 0),
+                                        CGPoint(x: width/2, y: height),
+                                        CGGradientDrawingOptions.DrawsBeforeStartLocation)
+        }
+        return context
+    }
+}
+
+private func mask(image: CGImage) -> CGImage -> UIImage? {
+    return { mask in
+        let maskedImage = CGImageCreateWithMask(image, mask)
+        return maskedImage.map { UIImage(CGImage: $0) }
+    }
 }
