@@ -56,12 +56,10 @@ class SettingsTableViewController: UITableViewController {
                 toggle: settings.showRoadworksOnMap),
         ]
         
-        if #available(iOS 9.0, *) {
-            fixedContentConfigurations.append(SettingsToggleConfiguration(
-                iconImageName: "warning-traffic",
-                title: "Traffic",
-                toggle: settings.showTrafficOnMap))
-        }
+        fixedContentConfigurations.append(SettingsToggleConfiguration(
+            iconImageName: "warning-traffic",
+            title: "Traffic",
+            toggle: settings.showTrafficOnMap))
         
         // make a dynamic content configuration set which includes a bridges switch if there are any bridges
         let contentConfigurations: Signal<[SettingConfiguration]> = settings.bridgeNotifications.map({

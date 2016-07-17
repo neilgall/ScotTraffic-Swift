@@ -36,28 +36,26 @@ func populateDiagnosticsEmail(email: DiagnosticsEmail) {
 }
 
 func loadUserDefaultsFromDiagnosticDataIfPresent() {
-    if #available(iOS 9.0, *) {
-        guard let documents = NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask).first,
-            path = NSURL(string: "diagnostics.plist", relativeToURL: documents),
-            data = NSData(contentsOfURL: path) else {
-                return
+    guard let documents = NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask).first,
+        path = NSURL(string: "diagnostics.plist", relativeToURL: documents),
+        data = NSData(contentsOfURL: path) else {
+            return
+    }
+    
+    do {
+        guard let diagnosticsDictionary = try NSKeyedUnarchiver.unarchiveTopLevelObjectWithData(data) as? NSDictionary,
+            diagnosticUserDefaults = diagnosticsDictionary["userDefaults"] as? NSDictionary else {
+            fatalError("cannot unarchive diagnostic data: not a dictionary")
         }
+    
+        let userDefaults = Configuration.sharedUserDefaults
         
-        do {
-            guard let diagnosticsDictionary = try NSKeyedUnarchiver.unarchiveTopLevelObjectWithData(data) as? NSDictionary,
-                diagnosticUserDefaults = diagnosticsDictionary["userDefaults"] as? NSDictionary else {
-                fatalError("cannot unarchive diagnostic data: not a dictionary")
+        for (key, value) in diagnosticUserDefaults {
+            if let key = key as? String {
+                userDefaults.setObject(value, forKey: key)
             }
-        
-            let userDefaults = Configuration.sharedUserDefaults
-            
-            for (key, value) in diagnosticUserDefaults {
-                if let key = key as? String {
-                    userDefaults.setObject(value, forKey: key)
-                }
-            }
-        } catch {
-            fatalError("cannot unarchive diagnostic data: \(error)")
         }
+    } catch {
+        fatalError("cannot unarchive diagnostic data: \(error)")
     }
 }

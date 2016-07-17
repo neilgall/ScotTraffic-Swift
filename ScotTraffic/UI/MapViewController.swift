@@ -50,11 +50,9 @@ class MapViewController: UIViewController {
                 self?.mapView.showsUserLocation = $0
             })
             
-            if #available(iOS 9.0, *) {
-                receivers.append(viewModel.showTrafficOnMap --> { [weak self] in
-                    self?.mapView.showsTraffic = $0
-                })
-            }
+            receivers.append(viewModel.showTrafficOnMap --> { [weak self] in
+                self?.mapView.showsTraffic = $0
+            })
             
             mapView.setVisibleMapRect(viewModel.visibleMapRect.value, animated: false)
         }
