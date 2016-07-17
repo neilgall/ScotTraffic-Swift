@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import NotificationCenter
 
 class TodayViewModel {
  
@@ -25,6 +26,7 @@ class TodayViewModel {
     let settings: TodaySettings
     let weatherViewModel: WeatherViewModel
     var receivers: [ReceiverType] = []
+    var refreshReceiver: ReceiverType?
     var observeImageDataSource: ReceiverType? = nil
     
     init() {
@@ -122,7 +124,25 @@ class TodayViewModel {
         })
     }
     
-    func refresh() {
+    func refresh(completion: (NCUpdateResult) -> ()) {
+        let refreshSignal: Signal<NCUpdateResult> = combine(trafficCamerasSource.value, weatherSource.value, favourites.items) {
+            switch ($0, $1, $2) {
+            case (.Error, _, _), (_, .Error, _):
+                return .Failed
+            case (_, _, let items) where items.isEmpty:
+                return .NoData
+            default:
+                return .NewData
+            }
+        }
+        
+        var completionOnce: ((NCUpdateResult) -> ())? = completion
+        
+        refreshReceiver = refreshSignal --> {
+            completionOnce?($0)
+            completionOnce = nil
+        }
+        
         trafficCamerasSource.start()
         weatherSource.start()
         favourites.reloadFromUserDefaults()

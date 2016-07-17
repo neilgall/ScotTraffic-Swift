@@ -54,7 +54,7 @@ class TodayViewController: UIViewController, NCWidgetProviding {
             self.weatherIconImageView?.image = UIImage(named: $0)
         })
         
-        model.refresh()
+        model.refresh({ _ in })
     }
     
     override func viewWillDisappear(animated: Bool) {
@@ -62,14 +62,13 @@ class TodayViewController: UIViewController, NCWidgetProviding {
         
         receivers.removeAll()
     }
-        
+    
     func widgetMarginInsetsForProposedMarginInsets(defaultMarginInsets: UIEdgeInsets) -> UIEdgeInsets {
         return UIEdgeInsetsZero
     }
     
     func widgetPerformUpdateWithCompletionHandler(completionHandler: ((NCUpdateResult) -> Void)) {
-        model.refresh()
-        completionHandler(NCUpdateResult.NewData)
+        model.refresh(completionHandler)
     }
     
     @IBAction func leftButtonTapped() {
@@ -79,4 +78,5 @@ class TodayViewController: UIViewController, NCWidgetProviding {
     @IBAction func rightButtonTapped() {
         model.moveToNextImage()
     }
+    
 }
