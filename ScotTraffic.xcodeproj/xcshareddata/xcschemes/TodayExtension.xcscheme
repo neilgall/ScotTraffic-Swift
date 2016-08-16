@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "0710"
+   LastUpgradeVersion = "0800"
    wasCreatedForAppExtension = "YES"
    version = "2.0">
    <BuildAction
@@ -16,8 +16,8 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "287F75211C00C59A0040EE8A"
-               BuildableName = "TodayExtension.appex"
-               BlueprintName = "TodayExtension"
+               BuildableName = "TrafficCamerasExtension.appex"
+               BlueprintName = "TrafficCamerasExtension"
                ReferencedContainer = "container:ScotTraffic.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -48,8 +48,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "287F75211C00C59A0040EE8A"
-            BuildableName = "TodayExtension.appex"
-            BlueprintName = "TodayExtension"
+            BuildableName = "TrafficCamerasExtension.appex"
+            BlueprintName = "TrafficCamerasExtension"
             ReferencedContainer = "container:ScotTraffic.xcodeproj">
          </BuildableReference>
       </MacroExpansion>

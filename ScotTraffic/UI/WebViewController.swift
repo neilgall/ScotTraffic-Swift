@@ -60,8 +60,8 @@ extension WebViewController: UIWebViewDelegate {
         spinner?.stopAnimating()
     }
 
-    func webView(webView: UIWebView, didFailLoadWithError error: NSError?) {
-        guard let failingURL = error?.userInfo[NSURLErrorFailingURLErrorKey] as? NSURL else {
+    func webView(webView: UIWebView, didFailLoadWithError error: NSError) {
+        guard let failingURL = error.userInfo[NSURLErrorFailingURLErrorKey] as? NSURL else {
             print("webView failed load but no failing URL: \(error)")
             return
         }

@@ -62,7 +62,7 @@
 		287F75241C00C59A0040EE8A /* NotificationCenter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 287F75231C00C59A0040EE8A /* NotificationCenter.framework */; };
 		287F75271C00C59A0040EE8A /* TodayViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 287F75261C00C59A0040EE8A /* TodayViewController.swift */; };
 		287F752A1C00C59A0040EE8A /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 287F75281C00C59A0040EE8A /* MainInterface.storyboard */; };
-		287F752E1C00C59A0040EE8A /* TodayExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 287F75221C00C59A0040EE8A /* TodayExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		287F752E1C00C59A0040EE8A /* TrafficCamerasExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 287F75221C00C59A0040EE8A /* TrafficCamerasExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		287F75361C00C6470040EE8A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 287F75351C00C6470040EE8A /* Images.xcassets */; };
 		287F75381C00C6CD0040EE8A /* TodayViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 287F75371C00C6CD0040EE8A /* TodayViewModel.swift */; };
 		287F75391C00C7A70040EE8A /* DataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2813B2DC1BE655020017F847 /* DataSource.swift */; };
@@ -286,13 +286,6 @@
 			remoteGlobalIDString = 844FCC8C198B320500EB242A;
 			remoteInfo = SwiftCheck;
 		};
-		28C77E571C58297800628CD9 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 288416551C58221A00D290A9 /* SwiftCheck.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = 8240CCB01C3A123600EF4D29;
-			remoteInfo = "SwiftCheck-tvOS";
-		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -302,7 +295,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
-				287F752E1C00C59A0040EE8A /* TodayExtension.appex in Embed App Extensions */,
+				287F752E1C00C59A0040EE8A /* TrafficCamerasExtension.appex in Embed App Extensions */,
 			);
 			name = "Embed App Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -376,7 +369,7 @@
 		2876E6171BFBEA9C00C8A020 /* MapViewModelTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapViewModelTests.swift; sourceTree = "<group>"; };
 		2879A9731BEE5DA900923FFE /* CalloutContainerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CalloutContainerView.swift; sourceTree = "<group>"; };
 		2879A9751BEE648800923FFE /* ViewKeyedMap.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewKeyedMap.swift; sourceTree = "<group>"; };
-		287F75221C00C59A0040EE8A /* TodayExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = TodayExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		287F75221C00C59A0040EE8A /* TrafficCamerasExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = TrafficCamerasExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		287F75231C00C59A0040EE8A /* NotificationCenter.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = NotificationCenter.framework; path = System/Library/Frameworks/NotificationCenter.framework; sourceTree = SDKROOT; };
 		287F75261C00C59A0040EE8A /* TodayViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayViewController.swift; sourceTree = "<group>"; };
 		287F75291C00C59A0040EE8A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/MainInterface.storyboard; sourceTree = "<group>"; };
@@ -384,7 +377,7 @@
 		287F75351C00C6470040EE8A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		287F75371C00C6CD0040EE8A /* TodayViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TodayViewModel.swift; sourceTree = "<group>"; };
 		287F75471C00C8850040EE8A /* ScotTraffic.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = ScotTraffic.entitlements; sourceTree = "<group>"; };
-		287F75481C00C8910040EE8A /* TodayExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = TodayExtension.entitlements; sourceTree = "<group>"; };
+		287F75481C00C8910040EE8A /* TrafficCamerasExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = TrafficCamerasExtension.entitlements; sourceTree = "<group>"; };
 		287F75491C00C8DE0040EE8A /* TodaySettings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TodaySettings.swift; sourceTree = "<group>"; };
 		287F754B1C00C9110040EE8A /* PersistentSetting.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PersistentSetting.swift; sourceTree = "<group>"; };
 		287F75511C00D1130040EE8A /* AppNetworkActivityIndicator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppNetworkActivityIndicator.swift; sourceTree = "<group>"; };
@@ -507,7 +500,7 @@
 				280493571BA8BB4800990BD1 /* ScotTraffic */,
 				2804936C1BA8BB4800990BD1 /* ScotTrafficTests */,
 				280493771BA8BB4800990BD1 /* ScotTrafficUITests */,
-				287F75251C00C59A0040EE8A /* TodayExtension */,
+				287F75251C00C59A0040EE8A /* TrafficCamerasExtension */,
 				2804865C1BC091CA003BA360 /* Frameworks */,
 				286BB4411C46FBC7008B5983 /* Libraries */,
 				288876F91C5FDCE900CBCE32 /* Submodules */,
@@ -521,7 +514,7 @@
 				280493551BA8BB4800990BD1 /* ScotTraffic.app */,
 				280493691BA8BB4800990BD1 /* ScotTrafficTests.xctest */,
 				280493741BA8BB4800990BD1 /* ScotTrafficUITests.xctest */,
-				287F75221C00C59A0040EE8A /* TodayExtension.appex */,
+				287F75221C00C59A0040EE8A /* TrafficCamerasExtension.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -680,10 +673,10 @@
 			path = Flurry;
 			sourceTree = "<group>";
 		};
-		287F75251C00C59A0040EE8A /* TodayExtension */ = {
+		287F75251C00C59A0040EE8A /* TrafficCamerasExtension */ = {
 			isa = PBXGroup;
 			children = (
-				287F75481C00C8910040EE8A /* TodayExtension.entitlements */,
+				287F75481C00C8910040EE8A /* TrafficCamerasExtension.entitlements */,
 				287F75261C00C59A0040EE8A /* TodayViewController.swift */,
 				287F75371C00C6CD0040EE8A /* TodayViewModel.swift */,
 				28CF0EDC1C4C25720075B31A /* FavouriteTrafficCamera.swift */,
@@ -692,7 +685,7 @@
 				287F75351C00C6470040EE8A /* Images.xcassets */,
 				287F752B1C00C59A0040EE8A /* Info.plist */,
 			);
-			path = TodayExtension;
+			path = TrafficCamerasExtension;
 			sourceTree = "<group>";
 		};
 		287F755E1C0F92740040EE8A /* Resources */ = {
@@ -899,7 +892,6 @@
 			);
 			dependencies = (
 				28C77E561C58297800628CD9 /* PBXTargetDependency */,
-				28C77E581C58297800628CD9 /* PBXTargetDependency */,
 				28C77E501C58295000628CD9 /* PBXTargetDependency */,
 				2804936B1BA8BB4800990BD1 /* PBXTargetDependency */,
 			);
@@ -926,9 +918,9 @@
 			productReference = 280493741BA8BB4800990BD1 /* ScotTrafficUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
-		287F75211C00C59A0040EE8A /* TodayExtension */ = {
+		287F75211C00C59A0040EE8A /* TrafficCamerasExtension */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 287F75311C00C59A0040EE8A /* Build configuration list for PBXNativeTarget "TodayExtension" */;
+			buildConfigurationList = 287F75311C00C59A0040EE8A /* Build configuration list for PBXNativeTarget "TrafficCamerasExtension" */;
 			buildPhases = (
 				287F751E1C00C59A0040EE8A /* Sources */,
 				287F751F1C00C59A0040EE8A /* Frameworks */,
@@ -938,9 +930,9 @@
 			);
 			dependencies = (
 			);
-			name = TodayExtension;
+			name = TrafficCamerasExtension;
 			productName = TodayExtension;
-			productReference = 287F75221C00C59A0040EE8A /* TodayExtension.appex */;
+			productReference = 287F75221C00C59A0040EE8A /* TrafficCamerasExtension.appex */;
 			productType = "com.apple.product-type.app-extension";
 		};
 /* End PBXNativeTarget section */
@@ -950,7 +942,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0720;
-				LastUpgradeCheck = 0710;
+				LastUpgradeCheck = 0800;
 				ORGANIZATIONNAME = "Neil Gall";
 				TargetAttributes = {
 					280493541BA8BB4800990BD1 = {
@@ -1013,7 +1005,7 @@
 				280493541BA8BB4800990BD1 /* ScotTraffic */,
 				280493681BA8BB4800990BD1 /* ScotTrafficTests */,
 				280493731BA8BB4800990BD1 /* ScotTrafficUITests */,
-				287F75211C00C59A0040EE8A /* TodayExtension */,
+				287F75211C00C59A0040EE8A /* TrafficCamerasExtension */,
 			);
 		};
 /* End PBXProject section */
@@ -1347,7 +1339,7 @@
 		};
 		287F752D1C00C59A0040EE8A /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 287F75211C00C59A0040EE8A /* TodayExtension */;
+			target = 287F75211C00C59A0040EE8A /* TrafficCamerasExtension */;
 			targetProxy = 287F752C1C00C59A0040EE8A /* PBXContainerItemProxy */;
 		};
 		28C77E501C58295000628CD9 /* PBXTargetDependency */ = {
@@ -1359,11 +1351,6 @@
 			isa = PBXTargetDependency;
 			name = SwiftCheck;
 			targetProxy = 28C77E551C58297800628CD9 /* PBXContainerItemProxy */;
-		};
-		28C77E581C58297800628CD9 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = "SwiftCheck-tvOS";
-			targetProxy = 28C77E571C58297800628CD9 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -1408,8 +1395,10 @@
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -1457,8 +1446,10 @@
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -1480,6 +1471,7 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				SWIFT_OBJC_BRIDGING_HEADER = ScotTraffic/ScotTraffic_Bridging_Header.h;
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 				SWIFT_VERSION = 2.3;
 				VALIDATE_PRODUCT = YES;
 			};
@@ -1488,12 +1480,12 @@
 		2804937E1BA8BB4800990BD1 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = ScotTraffic/ScotTraffic.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
 				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = ScotTraffic/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
@@ -1511,12 +1503,12 @@
 		2804937F1BA8BB4800990BD1 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = ScotTraffic/ScotTraffic.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
-				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
 				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = ScotTraffic/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
@@ -1584,10 +1576,10 @@
 		287F752F1C00C59A0040EE8A /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_ENTITLEMENTS = TodayExtension/TodayExtension.entitlements;
+				CODE_SIGN_ENTITLEMENTS = TrafficCamerasExtension/TrafficCamerasExtension.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				INFOPLIST_FILE = TodayExtension/Info.plist;
+				INFOPLIST_FILE = TrafficCamerasExtension/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
 				LIBRARY_SEARCH_PATHS = (
@@ -1604,10 +1596,10 @@
 		287F75301C00C59A0040EE8A /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_ENTITLEMENTS = TodayExtension/TodayExtension.entitlements;
+				CODE_SIGN_ENTITLEMENTS = TrafficCamerasExtension/TrafficCamerasExtension.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
-				INFOPLIST_FILE = TodayExtension/Info.plist;
+				INFOPLIST_FILE = TrafficCamerasExtension/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
 				LIBRARY_SEARCH_PATHS = (
@@ -1660,7 +1652,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		287F75311C00C59A0040EE8A /* Build configuration list for PBXNativeTarget "TodayExtension" */ = {
+		287F75311C00C59A0040EE8A /* Build configuration list for PBXNativeTarget "TrafficCamerasExtension" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				287F752F1C00C59A0040EE8A /* Debug */,
