@@ -1,4 +1,3 @@
-//
 //  AppWidgetManager.swift
 //  ScotTraffic
 //
