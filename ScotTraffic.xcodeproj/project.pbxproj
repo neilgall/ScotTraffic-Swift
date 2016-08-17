@@ -863,7 +863,6 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 2804937D1BA8BB4800990BD1 /* Build configuration list for PBXNativeTarget "ScotTraffic" */;
 			buildPhases = (
-				28F4BF6E1C3BDD5000C257D5 /* Swift Lint */,
 				280493511BA8BB4800990BD1 /* Sources */,
 				280493521BA8BB4800990BD1 /* Frameworks */,
 				280493531BA8BB4800990BD1 /* Resources */,
@@ -1150,24 +1149,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
-
-/* Begin PBXShellScriptBuildPhase section */
-		28F4BF6E1C3BDD5000C257D5 /* Swift Lint */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "Swift Lint";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "if which swiftlint >/dev/null; then\n  swiftlint\nelse\n  echo \"SwiftLint does not exist, download from https://github.com/realm/SwiftLint\"\nfi";
-			showEnvVarsInLog = 0;
-		};
-/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		280493511BA8BB4800990BD1 /* Sources */ = {
