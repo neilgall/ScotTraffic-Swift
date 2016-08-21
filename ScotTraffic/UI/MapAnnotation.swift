@@ -11,6 +11,7 @@ import MapKit
 
 private let coordinateEqualityAccuracy = 1e-6
 
+
 class MapAnnotation: NSObject, MKAnnotation {
 
     let mapItems: [MapItem]
@@ -32,40 +33,32 @@ class MapAnnotation: NSObject, MKAnnotation {
         } else {
             title = "\(mapItems.flatCount) items"
         }
-        
-        let trafficCameraCount = mapItems.filter(isTrafficCamera).count
-        let availableTrafficCameraCount = mapItems.filter(isAvailableTrafficCamera).count
-        let safetyCameraCount = mapItems.filter(isSafetyCamera).count
-        let alertCount = mapItems.filter(isAlert).count
-        let roadworksCount = mapItems.filter(isRoadworks).count
-        let bridgeCount = mapItems.filter(isBridgeStatus).count
 
-        reuseIdentifier = "\(trafficCameraCount > 0).\(availableTrafficCameraCount > 0).\(safetyCameraCount > 0).\(alertCount > 0).\(roadworksCount > 0).\(bridgeCount > 0)"
-        
         var imageComponents = [String]()
  
-        if availableTrafficCameraCount > 0 {
+        if mapItems.contains(isAvailableTrafficCamera) {
             imageComponents.append("camera")
         
-        } else if trafficCameraCount > safetyCameraCount {
+        } else if mapItems.filter({ $0 is TrafficCamera }).count > mapItems.filter({ $0 is SafetyCamera }).count {
             imageComponents.append("camera-unavailable")
 
-        } else if safetyCameraCount > 0 {
+        } else if mapItems.contains({ $0 is SafetyCamera }) {
             imageComponents.append("safetycamera")
         }
         
-        if alertCount > 0 {
+        if mapItems.contains(isAlert) {
             imageComponents.append("incident")
         
-        } else if roadworksCount > 0 {
+        } else if mapItems.contains(isRoadworks) {
             imageComponents.append("roadworks")
         }
 
-        if bridgeCount > 0 && imageComponents.isEmpty {
+        if imageComponents.isEmpty && mapItems.contains({ $0 is BridgeStatus }) {
             imageComponents.append("blue-circle")
         }
         
         image = compositeImagesNamed(imageComponents)
+        reuseIdentifier = imageComponents.joinWithSeparator(".")
     }
 
     override var hashValue: Int {
@@ -86,19 +79,11 @@ func == (a: MapAnnotation, b: MapAnnotation) -> Bool {
     return a.isEqual(b)
 }
 
-private func isTrafficCamera(mapItem: MapItem) -> Bool {
-    return mapItem as? TrafficCameraLocation != nil
-}
-
 private func isAvailableTrafficCamera(mapItem: MapItem) -> Bool {
     guard let location = mapItem as? TrafficCameraLocation else {
         return false
     }
     return location.cameras.filter({ $0.isAvailable }).count > 0
-}
-
-private func isSafetyCamera(mapItem: MapItem) -> Bool {
-    return mapItem as? SafetyCamera != nil
 }
 
 private func isAlert(mapItem: MapItem) -> Bool {
@@ -113,8 +98,4 @@ private func isRoadworks(mapItem: MapItem) -> Bool {
         return false
     }
     return incident.type == IncidentType.Roadworks
-}
-
-private func isBridgeStatus(mapItem: MapItem) -> Bool {
-    return mapItem as? BridgeStatus != nil
 }
