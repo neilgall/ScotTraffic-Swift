@@ -20,3 +20,6 @@ protocol UserDefaultsProtocol: class {
 
 extension NSUserDefaults: UserDefaultsProtocol {
 }
+
+extension NSUbiquitousKeyValueStore: UserDefaultsProtocol {
+}

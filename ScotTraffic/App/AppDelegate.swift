@@ -24,12 +24,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         analyticsStart()
         migrateUserDefaultsToAppGroup()
+        migrateUserDefaultsToiCloud()
+        registerForiCloudUserDefaultsNotifications()
         
         let diskCache = DiskCache(withPath: "scottraffic")
         let httpAccess = HTTPAccess(baseURL: Configuration.scotTrafficBaseURL, indicator: AppNetworkActivityIndicator())
         let cacheSource = CachedHTTPDataSource.dataSourceWithHTTPAccess(httpAccess, cache: diskCache)
 
-        let appModel = AppModel(cacheSource: cacheSource, reachable: httpAccess.serverIsReachable, userDefaults: Configuration.sharedUserDefaults)
+        let appModel = AppModel(cacheSource: cacheSource, reachable: httpAccess.serverIsReachable, userDefaults: Configuration.iCloudUserDefaults)
         appWidgetManager = AppWidgetManager(favourites: appModel.favourites)
         appNotifications = AppNotifications(settings: appModel.settings, httpAccess: httpAccess)
         
@@ -49,13 +51,25 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func applicationWillEnterForeground(application: UIApplication) {
+        reloadUserDefaults()
+    }
+    
+    // -- MARK: iCloud
+    
+    private func registerForiCloudUserDefaultsNotifications() {
+        NSNotificationCenter.defaultCenter().addObserverForName(NSUbiquitousKeyValueStoreDidChangeExternallyNotification, object: nil, queue: nil) { [weak self] _ in
+            self?.reloadUserDefaults()
+        }
+    }
+    
+    private func reloadUserDefaults() {
         if let appModel = appCoordinator?.appModel {
             appModel.settings.reload()
             appModel.favourites.reloadFromUserDefaults()
         }
     }
 
-    // -- MARK: Notifications
+    // -- MARK: Push Notifications
     
     func application(application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: NSError) {
         appNotifications?.didFailToRegisterWithError(error)

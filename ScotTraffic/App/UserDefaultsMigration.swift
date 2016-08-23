@@ -24,3 +24,17 @@ func migrateUserDefaultsToAppGroup() {
     
     appGroupUserDefaults.setInteger(hasMigratedValue, forKey: hasMigratedKey)
 }
+
+func migrateUserDefaultsToiCloud() {
+    let iCloudUserDefaults = Configuration.iCloudUserDefaults
+    guard iCloudUserDefaults.boolForKey(hasMigratedKey) == false else {
+        return
+    }
+    
+    let appGroupUserDefaults = Configuration.sharedUserDefaults
+    for (key, value) in appGroupUserDefaults.dictionaryRepresentation() {
+        iCloudUserDefaults.setObject(value, forKey: key)
+    }
+    
+    iCloudUserDefaults.setBool(true, forKey: hasMigratedKey)
+}
