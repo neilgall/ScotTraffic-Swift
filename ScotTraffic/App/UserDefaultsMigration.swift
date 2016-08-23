@@ -11,6 +11,8 @@ import Foundation
 let hasMigratedKey = "userDefaultsMigration"
 let hasMigratedValue = 1
 
+let hasMigratedToiCloudKey = "hasMigratedToiCloud"
+
 func migrateUserDefaultsToAppGroup() {
     let appGroupUserDefaults = Configuration.sharedUserDefaults
     guard appGroupUserDefaults.integerForKey(hasMigratedKey) < hasMigratedValue else {
@@ -26,15 +28,37 @@ func migrateUserDefaultsToAppGroup() {
 }
 
 func migrateUserDefaultsToiCloud() {
+    let localUserDefaults = Configuration.sharedUserDefaults
     let iCloudUserDefaults = Configuration.iCloudUserDefaults
-    guard iCloudUserDefaults.boolForKey(hasMigratedKey) == false else {
+
+    // if this device has already migrated to icloud, stop
+    guard localUserDefaults.boolForKey(hasMigratedToiCloudKey) == false else {
         return
     }
     
-    let appGroupUserDefaults = Configuration.sharedUserDefaults
-    for (key, value) in appGroupUserDefaults.dictionaryRepresentation() {
+    // if another device has migrated to icloud already, merge the favourites
+    if iCloudUserDefaults.boolForKey(hasMigratedToiCloudKey) {
+        mergeFavouritesFromUserDefaults(iCloudUserDefaults, toUserDefaults: localUserDefaults)
+    }
+
+    localUserDefaults.setBool(true, forKey: hasMigratedToiCloudKey)
+
+    // copy everything from the local user defaults to iCloud, including merged favourites
+    // (other settings are overwritten by the last device to do this)
+    for (key, value) in localUserDefaults.dictionaryRepresentation() {
         iCloudUserDefaults.setObject(value, forKey: key)
     }
+}
+
+private func mergeFavouritesFromUserDefaults(fromUserDefaults: UserDefaultsProtocol, toUserDefaults: UserDefaultsProtocol) {
+    let fromFavourites = Favourites(userDefaults: fromUserDefaults)
+    let toFavourites = Favourites(userDefaults: toUserDefaults)
     
-    iCloudUserDefaults.setBool(true, forKey: hasMigratedKey)
+    fromFavourites.items --> { items in
+        items.forEach { item in
+            if !toFavourites.containsItem(item) {
+                toFavourites.addItem(item)
+            }
+        }
+    }
 }
