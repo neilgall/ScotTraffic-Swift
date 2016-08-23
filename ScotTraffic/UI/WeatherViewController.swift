@@ -16,6 +16,12 @@ class WeatherViewController: UIViewController {
     var weatherViewModel: WeatherViewModel?
     var receivers = [ReceiverType]()
     
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.setContentCompressionResistancePriority(UILayoutPriorityRequired, forAxis: .Horizontal)
+    }
+    
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         
