@@ -1471,6 +1471,7 @@
 				CODE_SIGN_ENTITLEMENTS = ScotTraffic/ScotTraffic.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEVELOPMENT_TEAM = TXVS4QM239;
 				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = ScotTraffic/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
@@ -1494,6 +1495,7 @@
 				CODE_SIGN_ENTITLEMENTS = ScotTraffic/ScotTraffic.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEVELOPMENT_TEAM = TXVS4QM239;
 				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = ScotTraffic/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
@@ -1564,6 +1566,7 @@
 				CODE_SIGN_ENTITLEMENTS = TrafficCamerasExtension/TrafficCamerasExtension.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEVELOPMENT_TEAM = TXVS4QM239;
 				INFOPLIST_FILE = TrafficCamerasExtension/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
@@ -1585,6 +1588,7 @@
 				CODE_SIGN_ENTITLEMENTS = TrafficCamerasExtension/TrafficCamerasExtension.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEVELOPMENT_TEAM = TXVS4QM239;
 				INFOPLIST_FILE = TrafficCamerasExtension/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
