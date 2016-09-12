@@ -109,6 +109,6 @@ class TodayViewController: UIViewController, NCWidgetProviding {
     private func layoutForCompactDisplayMode(maxSize maxSize: CGSize) {
         mainStackView.axis = .Horizontal
         infoStackView.axis = .Vertical
-        titleLabel.textAlignment = .Center
+        titleLabel.textAlignment = .Right
     }
 }
