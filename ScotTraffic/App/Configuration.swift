@@ -21,5 +21,5 @@ struct Configuration {
 
     static let runningOnSimulator = (TARGET_OS_SIMULATOR != 0)
     static let runningUnitTests = (NSClassFromString("XCTestCase") != nil)
-    static let betaTesting = true
+    static let betaTesting = false
 }
