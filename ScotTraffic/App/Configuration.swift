@@ -15,7 +15,7 @@ struct Configuration {
     static let scotTrafficBaseURL = NSURL(string: "https://scottraffic.co.uk")!
 #endif
     static let scotTrafficAppGroup = "group.uk.co.scottraffic.ios.favourites"
-    static let todayExtensionBundleIdentifier = "uk.co.ScotTraffic.iOS.TrafficCamerasExtension"
+    static let todayExtensionBundleIdentifier = "uk.co.ScotTraffic.iOS.TodayExtension"
     static let sharedUserDefaults = NSUserDefaults(suiteName: scotTrafficAppGroup)!
     static let iCloudUserDefaults = NSUbiquitousKeyValueStore.defaultStore()
 
