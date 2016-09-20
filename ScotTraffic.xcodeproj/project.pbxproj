@@ -52,10 +52,8 @@
 		286559271BC32D880058A35A /* ImageCompositor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 286559261BC32D880058A35A /* ImageCompositor.swift */; };
 		286BB43C1C45BC27008B5983 /* NotificationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 286BB43B1C45BC27008B5983 /* NotificationView.swift */; };
 		286BB43E1C45C35F008B5983 /* NotificationView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 286BB43D1C45C35F008B5983 /* NotificationView.xib */; };
-		286BB4461C46FBC7008B5983 /* libFlurry_7.3.0.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 286BB4451C46FBC7008B5983 /* libFlurry_7.3.0.a */; };
 		286BB4481C46FC95008B5983 /* Analytics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 286BB4471C46FC95008B5983 /* Analytics.swift */; };
 		286CC8C81C47018F00FB028B /* Analytics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 286BB4471C46FC95008B5983 /* Analytics.swift */; };
-		286CC8C91C47019600FB028B /* libFlurry_7.3.0.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 286BB4451C46FBC7008B5983 /* libFlurry_7.3.0.a */; };
 		2876E6181BFBEA9C00C8A020 /* MapViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2876E6171BFBEA9C00C8A020 /* MapViewModelTests.swift */; };
 		2879A9741BEE5DA900923FFE /* CalloutContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2879A9731BEE5DA900923FFE /* CalloutContainerView.swift */; };
 		2879A9761BEE648800923FFE /* ViewKeyedMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2879A9751BEE648800923FFE /* ViewKeyedMap.swift */; };
@@ -136,6 +134,8 @@
 		28F4BF741C403F4E00C257D5 /* MessageOfTheDay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28F4BF731C403F4E00C257D5 /* MessageOfTheDay.swift */; };
 		28F4BF771C40685300C257D5 /* DateFormatters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28F4BF761C40685300C257D5 /* DateFormatters.swift */; };
 		28F6009F1BDB8E3E00ED71CA /* NGSplitViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28F6009E1BDB8E3E00ED71CA /* NGSplitViewController.swift */; };
+		28FD5F421D91EC89008FCC6B /* libFlurry_7.6.6.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 28FD5F411D91EC89008FCC6B /* libFlurry_7.6.6.a */; };
+		28FD5F431D91EC89008FCC6B /* libFlurry_7.6.6.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 28FD5F411D91EC89008FCC6B /* libFlurry_7.6.6.a */; };
 		710535651BCC141C00FDB70C /* UserDefaultsProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 710535641BCC141C00FDB70C /* UserDefaultsProtocol.swift */; };
 		7105356C1BCDA83A00FDB70C /* SearchViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7105356A1BCDA83A00FDB70C /* SearchViewModelTests.swift */; };
 		7105356D1BCDA83A00FDB70C /* StubAppModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7105356B1BCDA83A00FDB70C /* StubAppModel.swift */; };
@@ -362,9 +362,6 @@
 		286559261BC32D880058A35A /* ImageCompositor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageCompositor.swift; sourceTree = "<group>"; };
 		286BB43B1C45BC27008B5983 /* NotificationView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotificationView.swift; sourceTree = "<group>"; };
 		286BB43D1C45C35F008B5983 /* NotificationView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = NotificationView.xib; sourceTree = "<group>"; };
-		286BB4431C46FBC7008B5983 /* Flurry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Flurry.h; sourceTree = "<group>"; };
-		286BB4441C46FBC7008B5983 /* FlurryWatch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FlurryWatch.h; sourceTree = "<group>"; };
-		286BB4451C46FBC7008B5983 /* libFlurry_7.3.0.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libFlurry_7.3.0.a; sourceTree = "<group>"; };
 		286BB4471C46FC95008B5983 /* Analytics.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Analytics.swift; sourceTree = "<group>"; };
 		2876E6171BFBEA9C00C8A020 /* MapViewModelTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapViewModelTests.swift; sourceTree = "<group>"; };
 		2879A9731BEE5DA900923FFE /* CalloutContainerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CalloutContainerView.swift; sourceTree = "<group>"; };
@@ -427,6 +424,8 @@
 		28F4BF751C40420A00C257D5 /* ScotTraffic_Bridging_Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ScotTraffic_Bridging_Header.h; sourceTree = "<group>"; };
 		28F4BF761C40685300C257D5 /* DateFormatters.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DateFormatters.swift; sourceTree = "<group>"; };
 		28F6009E1BDB8E3E00ED71CA /* NGSplitViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NGSplitViewController.swift; sourceTree = "<group>"; };
+		28FD5F401D91EC89008FCC6B /* Flurry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Flurry.h; sourceTree = "<group>"; };
+		28FD5F411D91EC89008FCC6B /* libFlurry_7.6.6.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libFlurry_7.6.6.a; sourceTree = "<group>"; };
 		710535641BCC141C00FDB70C /* UserDefaultsProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserDefaultsProtocol.swift; sourceTree = "<group>"; };
 		710535661BCDA81E00FDB70C /* Data */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Data; sourceTree = "<group>"; };
 		7105356A1BCDA83A00FDB70C /* SearchViewModelTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchViewModelTests.swift; sourceTree = "<group>"; };
@@ -452,7 +451,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2804865E1BC092F2003BA360 /* MapKit.framework in Frameworks */,
-				286BB4461C46FBC7008B5983 /* libFlurry_7.3.0.a in Frameworks */,
+				28FD5F421D91EC89008FCC6B /* libFlurry_7.6.6.a in Frameworks */,
 				2804865B1BC091C5003BA360 /* CoreLocation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -476,8 +475,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				286CC8C91C47019600FB028B /* libFlurry_7.3.0.a in Frameworks */,
 				287F75241C00C59A0040EE8A /* NotificationCenter.framework in Frameworks */,
+				28FD5F431D91EC89008FCC6B /* libFlurry_7.6.6.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -666,9 +665,8 @@
 		286BB4421C46FBC7008B5983 /* Flurry */ = {
 			isa = PBXGroup;
 			children = (
-				286BB4431C46FBC7008B5983 /* Flurry.h */,
-				286BB4441C46FBC7008B5983 /* FlurryWatch.h */,
-				286BB4451C46FBC7008B5983 /* libFlurry_7.3.0.a */,
+				28FD5F401D91EC89008FCC6B /* Flurry.h */,
+				28FD5F411D91EC89008FCC6B /* libFlurry_7.6.6.a */,
 			);
 			path = Flurry;
 			sourceTree = "<group>";
